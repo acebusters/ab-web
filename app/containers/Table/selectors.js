@@ -101,11 +101,11 @@ const is0rTurnByAction = createSelector(
 
 const isShowTurnByAction = createSelector(
   [actionSelector, myPosByAction],
-  (action, myPos, whosTurn) => {
+  (action, myPos) => {
     if (!action || !action.hand || action.hand.state !== 'showdown') {
       return false;
     }
-
+    const whosTurn = pokerHelper.whosTurn(action.hand, action.hand.sb * 2);
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
     }
@@ -314,8 +314,8 @@ const makeMaxBetSelector = () => createSelector(
 );
 
 const makeMyMaxBetSelector = () => createSelector(
-  [makeLineupSelector(), makeSignerAddrSelector()],
-  (lineup, myAddress) => (lineup && lineup.toJS && myAddress) ? pokerHelper.getMyMaxBet(lineup.toJS(), myAddress) : -1
+  [makeLineupSelector(), makeSignerAddrSelector(), makeMyPosSelector()],
+  (lineup, myAddress, myPos) => (lineup && lineup.toJS && myAddress && myPos > -1) ? pokerHelper.getMyMaxBet(lineup.toJS(), myAddress) : -1
 );
 
 const makeMissingHandSelector = () => createSelector(
