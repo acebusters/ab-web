@@ -27,7 +27,7 @@ const makeAmountToCallSelector = () => createSelector(
 const makeMinSelector = () => createSelector(
   [makeSbSelector(), makeHandSelector(), makeMyStackSelector(), makeAmountToCallSelector()],
   (sb, hand, stack, amountToCall) => {
-    if (!sb || !hand) {
+    if (!sb || !hand || hand.get('state') === 'waiting') {
       return -1;
     }
     // if my stack smaller than BB return the left behind stack

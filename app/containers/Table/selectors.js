@@ -41,10 +41,15 @@ const isSbTurnByAction = createSelector(
     if (!action.hand) {
       return false;
     }
+    const active = pokerHelper.countActivePlayers(action.hand.lineup, action.hand.state);
+    if (active <= 1) {
+      return false;
+    }
     const sbPos = pokerHelper.getSbPos(action.hand.lineup, action.hand.dealer, action.hand.state);
     if (typeof sbPos === 'undefined' || sbPos < 0) {
       return false;
     }
+
     const whosTurn = pokerHelper.whosTurn(action.hand, action.hand.sb * 2);
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
@@ -96,11 +101,11 @@ const is0rTurnByAction = createSelector(
 
 const isShowTurnByAction = createSelector(
   [actionSelector, myPosByAction],
-  (action, myPos) => {
+  (action, myPos, whosTurn) => {
     if (!action || !action.hand || action.hand.state !== 'showdown') {
       return false;
     }
-    const whosTurn = pokerHelper.whosTurn(action.hand, action.hand.sb * 2);
+
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
     }
@@ -149,7 +154,7 @@ const makeSbSelector = () => createSelector(
 
 const makeWhosTurnSelector = () => createSelector(
   [makeHandSelector(), makeSbSelector()],
-  (hand, sb) => (hand && hand.get('lineup').size > 0) ? pokerHelper.whosTurn(hand.toJS(), sb * 2) : -1
+  (hand, sb) => (hand && hand.get('lineup').size > 0 && !(pokerHelper.isHandComplete(hand.get('lineup').toJS(), hand.get('dealer'), hand.get('state')))) ? pokerHelper.whosTurn(hand.toJS(), sb * 2) : -1
 );
 
 const lastAmountByAction = createSelector(
@@ -305,7 +310,7 @@ const makeIsMyTurnSelector = () => createSelector(
 
 const makeMaxBetSelector = () => createSelector(
   [makeHandSelector(), makeLineupSelector()],
-  (hand, lineup) => (hand && lineup && lineup.toJS) ? pokerHelper.getMaxBet(lineup.toJS(), hand.get('state')).amount : -1
+  (hand, lineup) => (hand && lineup && lineup.toJS && hand.get('state') !== 'waiting') ? pokerHelper.getMaxBet(lineup.toJS(), hand.get('state')).amount : -1
 );
 
 const makeMyMaxBetSelector = () => createSelector(
