@@ -284,10 +284,6 @@ const makeSitoutAmountSelector = () => createSelector(
   [makeSitoutSelector(), makeSbSelector(), makeHandStateSelector(), makeMyMaxBetSelector()],
   (sitout, sb, state, myMaxBet) => {
     if (sb && state && myMaxBet > -1) {
-      // we should not be able to comeback from sitout in the same hand
-      if (myMaxBet > sb * 2) {
-        return -1;
-      }
       // in waiting we can always toggle with 0
       if (state === 'waiting') {
         return 0;
