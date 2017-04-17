@@ -48,6 +48,7 @@ const makeMinSelector = () => createSelector(
       if (e.message === 'can not find minRaiseAmount.') {
         return (sb * 2) + amountToCall;
       }
+      throw (e);
     }
     if (!(maxBet === sb * 2 && amountToCall <= sb * 2)) {
       return minRaise + amountToCall;

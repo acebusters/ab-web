@@ -72,6 +72,7 @@ const isBbTurnByAction = createSelector(
       return false;
     }
     const whosTurn = pokerHelper.whosTurn(action.hand, action.hand.sb * 2);
+    console.log(action.hand.lineup, whosTurn);
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
     }
