@@ -178,7 +178,6 @@ export function* updateScanner() {
         continue; // eslint-disable-line no-continue
       }
       // check if turn to pay big blind
-      console.log(isBbTurnByAction(action, { address: myAddr, sb }));
       if (isBbTurnByAction(action, { address: myAddr, sb }) && !payedBlind[toggleKey]) {
         payedBlind[toggleKey] = true;
         yield put(bet(action.tableAddr, action.hand.handId, sb * 2, privKey));
