@@ -49,7 +49,6 @@ const isSbTurnByAction = createSelector(
     if (typeof sbPos === 'undefined' || sbPos < 0) {
       return false;
     }
-
     const whosTurn = pokerHelper.getWhosTurn(action.hand.lineup, action.hand.dealer, action.hand.state, action.hand.sb * 2);
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
@@ -106,6 +105,7 @@ const isShowTurnByAction = createSelector(
       return false;
     }
     const whosTurn = pokerHelper.getWhosTurn(action.hand.lineup, action.hand.dealer, action.hand.state, action.hand.sb * 2);
+
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
     }
