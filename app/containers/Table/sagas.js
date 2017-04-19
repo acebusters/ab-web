@@ -192,7 +192,6 @@ export function* updateScanner() {
       }
 
       // check if's showtime!
-
       const isShow = isShowTurnByAction(action, { address: myAddr, sb });
       if (isShow && !showed[toggleKey]) {
         showed[toggleKey] = true;

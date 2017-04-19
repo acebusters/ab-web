@@ -49,8 +49,7 @@ const isSbTurnByAction = createSelector(
     if (typeof sbPos === 'undefined' || sbPos < 0) {
       return false;
     }
-
-    const whosTurn = pokerHelper.whosTurn(action.hand, action.hand.sb * 2);
+    const whosTurn = pokerHelper.getWhosTurn(action.hand.lineup, action.hand.dealer, action.hand.state, action.hand.sb * 2);
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
     }
@@ -71,7 +70,7 @@ const isBbTurnByAction = createSelector(
     if (typeof bbPos === 'undefined' || bbPos < 0) {
       return false;
     }
-    const whosTurn = pokerHelper.whosTurn(action.hand, action.hand.sb * 2);
+    const whosTurn = pokerHelper.getWhosTurn(action.hand.lineup, action.hand.dealer, action.hand.state, action.hand.sb * 2);
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
     }
@@ -88,7 +87,7 @@ const is0rTurnByAction = createSelector(
     if (!action.hand || !action.hand.lineup) {
       return false;
     }
-    const whosTurn = pokerHelper.whosTurn(action.hand, action.hand.sb * 2);
+    const whosTurn = pokerHelper.getWhosTurn(action.hand.lineup, action.hand.dealer, action.hand.state, action.hand.sb * 2);
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
     }
@@ -101,10 +100,11 @@ const is0rTurnByAction = createSelector(
 
 const isShowTurnByAction = createSelector(
   [actionSelector, myPosByAction],
-  (action, myPos, whosTurn) => {
+  (action, myPos) => {
     if (!action || !action.hand || action.hand.state !== 'showdown') {
       return false;
     }
+    const whosTurn = pokerHelper.getWhosTurn(action.hand.lineup, action.hand.dealer, action.hand.state, action.hand.sb * 2);
 
     if (typeof whosTurn === 'undefined' || whosTurn < 0) {
       return false;
@@ -154,7 +154,20 @@ const makeSbSelector = () => createSelector(
 
 const makeWhosTurnSelector = () => createSelector(
   [makeHandSelector(), makeSbSelector()],
-  (hand, sb) => (hand && hand.get('lineup').size > 0 && !(pokerHelper.isHandComplete(hand.get('lineup').toJS(), hand.get('dealer'), hand.get('state')))) ? pokerHelper.whosTurn(hand.toJS(), sb * 2) : -1
+  (hand, sb) => {
+    let whosTurn;
+    try {
+      pokerHelper.isHandComplete(hand.get('lineup').toJS(), hand.get('dealer'), hand.get('state'));
+    } catch (e) {
+      return undefined;
+    }
+    try {
+      whosTurn = pokerHelper.whosTurn(hand.toJS(), sb * 2);
+    } catch (e) {
+      return undefined;
+    }
+    return whosTurn;
+  }
 );
 
 const lastAmountByAction = createSelector(
@@ -186,6 +199,7 @@ const makeLineupSelector = () => createSelector(
   [handSelector, tableStateSelector],
   (hand, table) => {
     // we have no table yet
+
     if (!table || !table.get('data')) {
       return null;
     }
@@ -194,7 +208,6 @@ const makeLineupSelector = () => createSelector(
     if (!hand || !hand.get('lineup')) {
       return table.getIn(['data', 'seats']);
     }
-
     // if we have a hand, just get the hand
     return hand.get('lineup');
   }
@@ -267,13 +280,19 @@ const makeSelectWinners = () => createSelector(
 
 const makeMyPosSelector = () => createSelector(
   [makeLineupSelector(), makeSignerAddrSelector()],
-  (lineup, myAddress) => (lineup && myAddress) ? pokerHelper.getMyPos(lineup.toJS(), myAddress) : -1
+  (lineup, myAddress) => {
+    try {
+      return pokerHelper.getMyPos(lineup.toJS(), myAddress);
+    } catch (e) {
+      return undefined;
+    }
+  }
 );
 
 const makeSitoutSelector = () => createSelector(
   [makeLineupSelector(), makeMyPosSelector()],
   (lineup, myPos) => {
-    if (lineup && myPos > -1) {
+    if (lineup && myPos !== undefined) {
       return (lineup.toJS()[myPos].sitout !== undefined);
     }
     return false;
@@ -284,10 +303,6 @@ const makeSitoutAmountSelector = () => createSelector(
   [makeSitoutSelector(), makeSbSelector(), makeHandStateSelector(), makeMyMaxBetSelector()],
   (sitout, sb, state, myMaxBet) => {
     if (sb && state && myMaxBet > -1) {
-      // we should not be able to comeback from sitout in the same hand
-      if (myMaxBet > sb * 2) {
-        return -1;
-      }
       // in waiting we can always toggle with 0
       if (state === 'waiting') {
         return 0;
@@ -305,17 +320,38 @@ const makeSitoutAmountSelector = () => createSelector(
 
 const makeIsMyTurnSelector = () => createSelector(
   [makeMyPosSelector(), makeWhosTurnSelector()],
-  (myPos, whosTurn) => (myPos > -1 && whosTurn > -1) ? myPos === whosTurn : false
+  (myPos, whosTurn) => (myPos !== undefined && whosTurn !== undefined) ? myPos === whosTurn : false
 );
 
 const makeMaxBetSelector = () => createSelector(
   [makeHandSelector(), makeLineupSelector()],
-  (hand, lineup) => (hand && lineup && lineup.toJS && hand.get('state') !== 'waiting') ? pokerHelper.getMaxBet(lineup.toJS(), hand.get('state')).amount : -1
+  (hand, lineup) => {
+    if (!hand || !lineup || !lineup.toJS || !hand.get('state')) {
+      return undefined;
+    }
+    try {
+      return pokerHelper.getMaxBet(lineup.toJS(), hand.get('state')).amount;
+    } catch (e) {
+      if (e.message === 'could not find max bet.') {
+        return undefined;
+      }
+      throw (e);
+    }
+  }
 );
 
 const makeMyMaxBetSelector = () => createSelector(
-  [makeLineupSelector(), makeSignerAddrSelector()],
-  (lineup, myAddress) => (lineup && lineup.toJS && myAddress) ? pokerHelper.getMyMaxBet(lineup.toJS(), myAddress) : -1
+  [makeLineupSelector(), makeSignerAddrSelector(), makeMyPosSelector()],
+  (lineup, myAddress, myPos) => {
+    if (!lineup || !lineup.toJS || !myAddress || myPos === undefined) {
+      return undefined;
+    }
+    try {
+      return pokerHelper.getMyMaxBet(lineup.toJS(), myAddress);
+    } catch (e) {
+      return undefined;
+    }
+  }
 );
 
 const makeMissingHandSelector = () => createSelector(
