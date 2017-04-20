@@ -243,7 +243,7 @@ const makeSelectWinners = () => createSelector(
 
     let complete;
     try {
-      complete = pokerHelper.isHandComplete(hand.get('lineup').toJS(), hand.get('dealer'), hand.get('state'));
+      complete = pokerHelper.isHandComplete(lineup, dealer, handState);
     } catch (e) {
       return null;
     }
