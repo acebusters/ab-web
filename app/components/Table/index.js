@@ -36,6 +36,7 @@ export const TableHeader = styled.div`
 export const Wrapper = styled.div`
   position: absolute;
   left: 2em;
+  z-index: 10;
   height: 10%
   width: 20%;
   bottom: 2em;
