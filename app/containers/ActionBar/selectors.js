@@ -21,30 +21,42 @@ const pokerHelper = new PokerHelper(rc);
 
 const makeAmountToCallSelector = () => createSelector(
   [makeMaxBetSelector(), makeMyMaxBetSelector()],
-  (maxBet, myMaxbet) => (maxBet > -1 && myMaxbet > -1) ? maxBet - myMaxbet : -1
+  (maxBet, myMaxbet) => {
+    if (maxBet === undefined || myMaxbet === undefined) {
+      return undefined;
+    }
+    return maxBet - myMaxbet;
+  }
 );
 
 const makeMinSelector = () => createSelector(
-  [makeSbSelector(), makeHandSelector(), makeMyStackSelector(), makeAmountToCallSelector()],
-  (sb, hand, stack, amountToCall) => {
+  [makeSbSelector(), makeHandSelector(), makeMyStackSelector(), makeAmountToCallSelector(), makeMaxBetSelector()],
+  (sb, hand, stack, amountToCall, maxBet) => {
     if (!sb || !hand || hand.get('state') === 'waiting') {
-      return -1;
+      return undefined;
     }
     // if my stack smaller than BB return the left behind stack
     if (stack < sb * 2) {
       return stack;
     }
-    const handState = hand.get('state');
     const lineup = hand.get('lineup').toJS();
     const dealer = hand.get('dealer');
-    const maxBet = pokerHelper.getMaxBet(lineup, handState).amount;
     // check if there was a raise exclude preflop sb and bb
     const lastRoundMaxBet = hand.get('lastRoundMaxBet');
-    const minRaise = pokerHelper.findMinRaiseAmount(lineup, dealer, lastRoundMaxBet);
-    if (!(maxBet === sb * 2 && amountToCall <= sb * 2) && minRaise > -1) {
+    let minRaise;
+    try {
+      minRaise = pokerHelper.findMinRaiseAmount(lineup, dealer, lastRoundMaxBet);
+    } catch (e) {
+      // there was no raise
+      if (e.message === 'can not find minRaiseAmount.') {
+        return (sb * 2) + amountToCall;
+      }
+      throw (e);
+    }
+
+    if (minRaise > 0 && maxBet !== sb * 2) {
       return minRaise + amountToCall;
     }
-    // otherwise return the BB
     return (sb * 2) + amountToCall;
   }
 );
@@ -54,14 +66,8 @@ const makeCallAmountSelector = () => createSelector(
   (amountToCall, stack) => (amountToCall > stack) ? stack : amountToCall
 );
 
-const makeMaxSelector = () => createSelector(
-  [makeMinSelector(), makeMyStackSelector()],
-  (min, stack) => (Math.floor(stack / min) * min) + min
-);
-
 export {
   makeAmountToCallSelector,
   makeMinSelector,
-  makeMaxSelector,
   makeCallAmountSelector,
 };
