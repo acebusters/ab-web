@@ -39,6 +39,7 @@ import {
 
 import {
   makeLastReceiptSelector,
+  makeSitoutSelector,
 } from '../Seat/selectors';
 
 import { blockNotify } from '../AccountProvider/actions';
@@ -384,6 +385,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
           winners={winners}
           myHand={this.props.myHand}
           pending={pending}
+          sitout={this.props.sitout}
           board={board}
           seats={seats}
           onLeave={() => this.handleLeave(this.props.myPos)}
@@ -422,6 +424,7 @@ const mapStateToProps = createStructuredSelector({
   latestHand: makeLatestHandSelector(),
   signerAddr: makeSignerAddrSelector(),
   privKey: makeSelectPrivKey(),
+  sitout: makeSitoutSelector(),
   lastReceipt: makeLastReceiptSelector(),
   proxyAddr: makeSelectProxyAddr(),
   winners: makeSelectWinners(),
@@ -434,6 +437,7 @@ Table.propTypes = {
   hand: React.PropTypes.object,
   myHand: React.PropTypes.object,
   lineup: React.PropTypes.object,
+  sitout: React.PropTypes.bool,
   params: React.PropTypes.object,
   privKey: React.PropTypes.string,
   lastReceipt: React.PropTypes.string,
