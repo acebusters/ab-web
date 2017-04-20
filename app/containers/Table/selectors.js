@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import EWT from 'ethereum-web-token';
 import { PokerHelper, ReceiptCache } from 'poker-helper';
 import Solver from 'ab-pokersolver';
 import { makeSignerAddrSelector } from '../AccountProvider/selectors';
@@ -220,48 +219,29 @@ const makeMyHandValueSelector = () => createSelector(
 const makeSelectWinners = () => createSelector(
   [makeHandSelector(), makeBoardSelector()],
   (hand, board) => {
-    if (!hand || !hand.get || !hand.get('distribution')) {
+    if (!hand || !hand.get ||
+        !pokerHelper.isHandComplete(hand.get('lineup').toJS(), hand.get('dealer'), hand.get('state'))) {
       return [];
     }
-    const boardCards = board.map((c) => valuesShort[c % 13] + suits[Math.floor([c / 13])]);
     const lineup = hand.get('lineup').toJS();
-    const tmp = [];
-    const winners = [];
-    const players = [];
-    Solver.Hand.winners(lineup.filter((obj) => obj.cards).map((player) => {
-      const pHand = [];
-      const card1 = valuesShort[player.cards[0] % 13] + suits[Math.floor([player.cards[0] / 13])];
-      const card2 = valuesShort[player.cards[1] % 13] + suits[Math.floor([player.cards[1] / 13])];
-      pHand.push(...boardCards, card1, card2);
-      const handObj = Solver.Hand.solve(pHand);
-      players.push(Object.assign(player, { hand: handObj }));
-      return handObj;
-    })).forEach((wHand) => {
-      players.forEach((player) => {
-        if (player.hand === wHand) {
-          const winner = {
-            addr: player.address,
-            hand: player.hand.descr,
-          };
-          tmp.push(winner);
-        }
-      });
-    });
+    const dealer = hand.get('dealer');
+    const handState = hand.get('state');
 
-    // add amounts
-    const distsRec = hand.get('distribution');
-    if (distsRec) {
-      const dists = rc.get(distsRec);
-      dists.values[2].forEach((dist) => {
-        const pDist = EWT.separate(dist);
-        tmp.forEach((winner) => {
-          if (pDist.address === winner.addr) {
-            winners.push(Object.assign(winner, { amount: pDist.amount }));
-          }
-        });
-      });
+    const amounts = pokerHelper.calcDistribution(lineup, handState, board, 0, '0x123');
+
+    if (handState !== 'showdown') {
+      const lastMan = pokerHelper.nextPlayer(lineup, 0, 'active', handState);
+      return [{ addr: lineup[lastMan].address, amount: amounts[lineup[lastMan].address] }];
     }
-    return winners;
+
+    const winners = pokerHelper.getWinners(lineup, dealer, board);
+    const winnersWithAmounts = [];
+    winners.forEach((winner) => {
+      if (amounts[winner.addr]) {
+        winnersWithAmounts.push(Object.assign({}, winner, { amount: amounts[winner.addr] }));
+      }
+    });
+    return winnersWithAmounts;
   }
 );
 
