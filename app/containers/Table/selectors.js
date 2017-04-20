@@ -219,13 +219,24 @@ const makeMyHandValueSelector = () => createSelector(
 const makeSelectWinners = () => createSelector(
   [makeHandSelector(), makeBoardSelector()],
   (hand, board) => {
-    if (!hand || !hand.get ||
-        !pokerHelper.isHandComplete(hand.get('lineup').toJS(), hand.get('dealer'), hand.get('state'))) {
-      return [];
+    if (!hand || !hand.get) {
+      return null;
     }
+
     const lineup = hand.get('lineup').toJS();
     const dealer = hand.get('dealer');
     const handState = hand.get('state');
+
+    let complete;
+    try {
+      complete = pokerHelper.isHandComplete(hand.get('lineup').toJS(), hand.get('dealer'), hand.get('state'));
+    } catch (e) {
+      return null;
+    }
+
+    if (!complete) {
+      return null;
+    }
 
     const amounts = pokerHelper.calcDistribution(lineup, handState, board, 0, '0x123');
 

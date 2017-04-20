@@ -368,7 +368,7 @@ describe('winnersSelector', () => {
     };
 
     const selectWinners = makeSelectWinners();
-    expect(selectWinners(mockedState, props)).toEqual([]);
+    expect(selectWinners(mockedState, props)).toEqual(null);
   });
 });
 
