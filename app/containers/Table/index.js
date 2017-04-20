@@ -39,7 +39,6 @@ import {
 
 import {
   makeLastReceiptSelector,
-  makeSitoutSelector,
 } from '../Seat/selectors';
 
 import { blockNotify } from '../AccountProvider/actions';
@@ -56,6 +55,7 @@ import {
   makeMyPosSelector,
   makeSitoutAmountSelector,
   makeMissingHandSelector,
+  makeMySitoutSelector,
   makeLatestHandSelector,
   makeSelectWinners,
 } from './selectors';
@@ -424,7 +424,7 @@ const mapStateToProps = createStructuredSelector({
   latestHand: makeLatestHandSelector(),
   signerAddr: makeSignerAddrSelector(),
   privKey: makeSelectPrivKey(),
-  sitout: makeSitoutSelector(),
+  sitout: makeMySitoutSelector(),
   lastReceipt: makeLastReceiptSelector(),
   proxyAddr: makeSelectProxyAddr(),
   winners: makeSelectWinners(),

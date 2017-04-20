@@ -65,6 +65,7 @@ const isBbTurnByAction = createSelector(
     if (!action.hand) {
       return false;
     }
+
     const bbPos = pokerHelper.getBbPos(action.hand.lineup, action.hand.dealer, action.hand.state);
     if (typeof bbPos === 'undefined' || bbPos < 0) {
       return false;
@@ -251,7 +252,13 @@ const makeSelectWinners = () => createSelector(
       return null;
     }
 
-    const amounts = pokerHelper.calcDistribution(lineup, handState, board, 0, '0x123');
+    let amounts;
+    try {
+      amounts = pokerHelper.calcDistribution(lineup, handState, board, 0, '0x123');
+    } catch (e) {
+      return null;
+    }
+
 
     if (handState !== 'showdown') {
       const lastMan = pokerHelper.nextPlayer(lineup, 0, 'active', handState);
@@ -267,6 +274,11 @@ const makeSelectWinners = () => createSelector(
     });
     return winnersWithAmounts;
   }
+);
+
+const makeMySitoutSelector = () => createSelector(
+  [makeLineupSelector(), makeMyPosSelector()],
+  (lineup, myPos) => (lineup && myPos > -1 && lineup.toJS()[myPos] && lineup.toJS()[myPos].sitout) ? true : false // eslint-disable-line 
 );
 
 const makeMyPosSelector = () => createSelector(
@@ -420,6 +432,7 @@ export {
     makeTableDataSelector,
     makeSbSelector,
     makeLineupSelector,
+    makeMySitoutSelector,
     makeSelectWinners,
     makeSitoutSelector,
     makeSitoutAmountSelector,
