@@ -77,7 +77,7 @@ const makeOpenSelector = () => createSelector(
 
 const makeSitoutSelector = () => createSelector(
   [makeLineupSelector(), posSelector],
-  (lineup, pos) => (lineup && pos > -1 && lineup.toJS()[pos]) ? true : false // eslint-disable-line
+  (lineup, pos) => (lineup && pos > -1 && lineup.toJS()[pos].sitout !== undefined)
 );
 
 const makePendingSelector = () => createSelector(

@@ -278,7 +278,7 @@ const makeSelectWinners = () => createSelector(
 
 const makeMySitoutSelector = () => createSelector(
   [makeLineupSelector(), makeMyPosSelector()],
-  (lineup, myPos) => (lineup && myPos > -1 && lineup.toJS()[myPos] && lineup.toJS()[myPos].sitout) ? true : false // eslint-disable-line
+  (lineup, myPos) => (lineup && myPos > -1 && lineup.toJS()[myPos] && lineup.toJS()[myPos].sitout !== undefined)
 );
 
 const makeMyPosSelector = () => createSelector(
