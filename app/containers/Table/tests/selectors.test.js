@@ -374,7 +374,7 @@ describe('winnersSelector', () => {
 
 
 describe('sitout Selector', () => {
-  it('should select BB to comeback from sitout`.', () => {
+  it('should select BB to comeback from sitout.', () => {
     const mockedState = fromJS({
       account: {
         privKey: PLAYER1.key,
@@ -408,7 +408,7 @@ describe('sitout Selector', () => {
       },
     };
     const selectSitoutAmount = makeSitoutAmountSelector();
-    expect(selectSitoutAmount(mockedState, props)).toEqual(100);
+    expect(selectSitoutAmount(mockedState, props)).toEqual(0);
   });
 
   it('should return 0 when state is waiting and i am not in sitout.', () => {
@@ -479,6 +479,6 @@ describe('sitout Selector', () => {
       },
     };
     const selectSitoutAmount = makeSitoutAmountSelector();
-    expect(selectSitoutAmount(mockedState, props)).toEqual(101);
+    expect(selectSitoutAmount(mockedState, props)).toEqual(100);
   });
 });

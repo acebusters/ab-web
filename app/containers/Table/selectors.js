@@ -305,19 +305,16 @@ const makeSitoutSelector = () => createSelector(
 const makeSitoutAmountSelector = () => createSelector(
   [makeSitoutSelector(), makeSbSelector(), makeHandStateSelector(), makeMyMaxBetSelector()],
   (sitout, sb, state, myMaxBet) => {
-    if (sb && state && myMaxBet > -1) {
+    if (sb && state && myMaxBet !== undefined) {
       // in waiting we can always toggle with 0
       if (state === 'waiting') {
         return 0;
       }
-      // if we comeback from sitout we have to pay the BB
-      if (sitout) {
-        return sb * 2;
-      }
+
       // If we want to sitout during any other state we have to pay at least 1
-      return myMaxBet + 1;
+      return myMaxBet;
     }
-    return -1;
+    return undefined;
   }
 );
 
