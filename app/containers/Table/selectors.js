@@ -305,7 +305,7 @@ const makeSitoutSelector = () => createSelector(
 const makeSitoutAmountSelector = () => createSelector(
   [makeSitoutSelector(), makeSbSelector(), makeHandStateSelector(), makeMyMaxBetSelector()],
   (sitout, sb, state, myMaxBet) => {
-    if (sb && state && myMaxBet !== undefined) {
+    if (sb && state && typeof myMaxBet !== 'undefined') {
       // in waiting we can always toggle with 0
       if (state === 'waiting') {
         return 0;
