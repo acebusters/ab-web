@@ -296,7 +296,7 @@ const makeSitoutSelector = () => createSelector(
   [makeLineupSelector(), makeMyPosSelector()],
   (lineup, myPos) => {
     if (lineup && myPos !== undefined) {
-      return (lineup.toJS()[myPos].sitout !== undefined);
+      return (typeof lineup.getIn([myPos, 'sitout']) === 'number');
     }
     return false;
   }
@@ -309,6 +309,11 @@ const makeSitoutAmountSelector = () => createSelector(
       // in waiting we can always toggle with 0
       if (state === 'waiting') {
         return 0;
+      }
+
+      // comeback from sitout
+      if (sitout) {
+        return 1;
       }
 
       // If we want to sitout during any other state we have to pay at least 1
