@@ -15,11 +15,6 @@ describe('withProgressBar()', () => {
     clock = sinon.restore();
   });
 
-  const storeMock = {
-    getState: () => {},
-    subscribe: () => {},
-  };
-
   function Component() {
     return (
       <div></div>
@@ -34,7 +29,7 @@ describe('withProgressBar()', () => {
 
   it('Should exist', () => {
     const renderedComponent = mount(
-      <HocComponent store={storeMock} />
+      <HocComponent />
     );
 
     expect(renderedComponent.find(Component).length).toBe(1);
@@ -42,7 +37,7 @@ describe('withProgressBar()', () => {
 
   it('Should render <ProgressBar />', () => {
     const renderedComponent = mount(
-      <HocComponent store={storeMock} />
+      <HocComponent />
     );
 
     expect(renderedComponent.find(ProgressBar).length).toBe(1);
@@ -50,7 +45,7 @@ describe('withProgressBar()', () => {
 
   it('Should initially have state.progress = -1', () => {
     const renderedComponent = mount(
-      <HocComponent store={storeMock} />
+      <HocComponent />
     );
 
     expect(renderedComponent.state().progress).toBe(-1);
@@ -58,7 +53,7 @@ describe('withProgressBar()', () => {
 
   it('Should initially have state.loadedRoutes = current route', () => {
     const renderedComponent = mount(
-      <HocComponent location={{ pathname: '/' }} store={storeMock} />
+      <HocComponent location={{ pathname: '/' }} />
     );
 
     expect(renderedComponent.state().loadedRoutes[0]).toBe('/');
@@ -66,7 +61,7 @@ describe('withProgressBar()', () => {
 
   it('Should listen to route changes', () => {
     const renderedComponent = mount(
-      <HocComponent location={{ pathname: '/' }} router={router} store={storeMock} />
+      <HocComponent location={{ pathname: '/' }} router={router} />
     );
 
     const inst = renderedComponent.instance();
@@ -85,7 +80,7 @@ describe('withProgressBar()', () => {
 
   it('Should update state.progress when called updateProgress()', () => {
     const renderedComponent = mount(
-      <HocComponent location={{ pathname: '/' }} router={router} store={storeMock} />
+      <HocComponent location={{ pathname: '/' }} router={router} />
     );
 
     const inst = renderedComponent.instance();
@@ -95,7 +90,7 @@ describe('withProgressBar()', () => {
 
   it('Should start progress bar for a new route', () => {
     const renderedComponent = mount(
-      <HocComponent location={{ pathname: '/' }} router={router} store={storeMock} />
+      <HocComponent location={{ pathname: '/' }} router={router} />
     );
 
     renderedComponent.setState({ loadedRoutes: [], progress: 10 });

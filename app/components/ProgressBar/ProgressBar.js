@@ -75,7 +75,7 @@ class ProgressBar extends React.Component {
      * and progress percent is less than 99.
     */
 
-    if (props.autoIncrement && (props.percent >= 0 && props.percent < 99)) {
+    if (props.autoIncrement && props.percent >= 0 && props.percent < 99) {
       this.interval = setInterval(this.increment, props.intervalTime);
     }
 
