@@ -105,8 +105,9 @@ class MouseEntropy extends React.Component {
       totalBits,
       size,
     } = this.props;
-    const { bitCount }  = this.state;
-    const percent       = ((100 * bitCount) / totalBits).toFixed(2);
+    const { bitCount, status }  = this.state;
+    const percent = ((100 * bitCount) / totalBits).toFixed(2);
+    const isReady = status === ST.DONE;
 
     return (
       <div style={{ width: `${size}px` }}>
@@ -115,9 +116,16 @@ class MouseEntropy extends React.Component {
           onMouseMove={this.onMouseMove}
           onTouchMove={this.onTouchMove}
           onClick={this.reset}
-          style={{ textAlign: 'center', background: '#ddd', width: `${size}px`, height: `${size}px`, lineHeight: `${size}px` }}
+          style={{
+            textAlign: 'center',
+            background: '#ddd',
+            width: `${size}px`,
+            height: `${size}px`,
+            lineHeight: `${size}px`,
+            color: isReady ? 'green' : 'black',
+          }}
         >
-          Click to reset
+          {isReady ? 'Done! ' : ''} Click to reset
         </div>
         <div style={{ width: `${percent}%`, height: '3px', background: '#dd2066' }}></div>
       </div>
