@@ -74,7 +74,8 @@ class ProgressBar extends React.Component {
      * Increment progress bar if auto increment is set to true
      * and progress percent is less than 99.
     */
-    if (props.autoIncrement && props.percent >= 0 && props.percent < 99) {
+
+    if (props.autoIncrement && (props.percent >= 0 && props.percent < 99)) {
       this.interval = setInterval(this.increment, props.intervalTime);
     }
 
@@ -103,10 +104,8 @@ class ProgressBar extends React.Component {
 
   render() {
     const { percent } = this.state;
-
     // Hide progress bar if percent is less than 0.
     const isHidden = percent < 0 || percent >= 100;
-
     // Set `state.percent` as width.
     const style = { width: `${(percent <= 0 ? 0 : percent)}%` };
 

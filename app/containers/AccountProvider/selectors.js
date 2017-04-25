@@ -8,6 +8,7 @@ import { ABI_TOKEN_CONTRACT, tokenContractAddress } from '../../app.config';
  */
 const selectAccount = (state) => state.get('account');
 
+
 /**
  * Other specific selectors
  */
