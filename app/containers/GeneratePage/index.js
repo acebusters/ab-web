@@ -30,6 +30,9 @@ const validate = (values) => {
   if (values.get('password') !== values.get('confirmedPassword')) {
     errors.confirmedPassword = 'Passwords dont match';
   }
+  if (!values.get('entropy') || !values.get('entropy').length) {
+    errors.entropy = 'Required';
+  }
   return errors;
 };
 
@@ -162,8 +165,9 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
           <Form
             onSubmit={handleSubmit(this.handleSubmit)}
           >
-            <Field name="entropy" type="hidden" component={renderField} label="Random Secret" value={entropy} />
-            <MouseEntropy totalBits={768} size={200} onFinish={updateEntropy} sampleRate={0} />
+            <Label style={{ float: 'none' }}>Random Secret</Label>
+            <MouseEntropy totalBits={768} width="100%" height="200px" onFinish={updateEntropy} sampleRate={0} />
+            <Field name="entropy" type="hidden" component={renderField} label="" value={entropy} />
             <Field name="password" type="password" component={renderField} label="password" />
             <Field name="confirmedPassword" type="password" component={renderField} label="confirm password" />
             {error && <ErrorMessage error={error} />}

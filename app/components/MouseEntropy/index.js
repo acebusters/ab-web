@@ -103,31 +103,31 @@ class MouseEntropy extends React.Component {
   render() {
     const {
       totalBits,
-      size,
+      width,
+      height,
     } = this.props;
     const { bitCount, status }  = this.state;
     const percent = ((100 * bitCount) / totalBits).toFixed(2);
     const isReady = status === ST.DONE;
 
     return (
-      <div style={{ width: `${size}px` }}>
+      <div style={{ width }}>
         <div
           role="button"
           onMouseMove={this.onMouseMove}
           onTouchMove={this.onTouchMove}
-          onClick={this.reset}
           style={{
+            width,
+            height,
+            lineHeight: `${height}`,
             textAlign: 'center',
-            background: '#ddd',
-            width: `${size}px`,
-            height: `${size}px`,
-            lineHeight: `${size}px`,
+            background: isReady ? '#dfd' : '#ddd',
             color: isReady ? 'green' : 'black',
           }}
         >
-          {isReady ? 'Done! ' : ''} Click to reset
+          {isReady ? 'Done! ' : 'Move in this area'}
         </div>
-        <div style={{ width: `${percent}%`, height: '3px', background: '#dd2066' }}></div>
+        <div style={{ width: `${percent}%`, height: '3px', background: '#20dd66' }}></div>
       </div>
     );
   }
@@ -136,7 +136,8 @@ class MouseEntropy extends React.Component {
 MouseEntropy.propTypes = {
   onFinish:   React.PropTypes.func.isRequired,
   totalBits:  React.PropTypes.number.isRequired,
-  size:       React.PropTypes.number.isRequired,
+  width:      React.PropTypes.string.isRequired,
+  height:     React.PropTypes.string.isRequired,
   sampleRate: React.PropTypes.number.isRequired,
 };
 
