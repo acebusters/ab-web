@@ -82,14 +82,14 @@ export class ConfirmPage extends React.PureComponent { // eslint-disable-line re
   }
 
   render() {
-    const { error, handleSubmit, submitting } = this.props;
+    const { error, handleSubmit, invalid, submitting } = this.props;
     return (
       <Container>
         <H1>Please confirm your registration!</H1>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <Field name="confCode" component={renderField} type="text" placeholder="code" label="Please enter the code you received via email:" />
           {error && <strong>{error}</strong>}
-          <Button type="submit" size="large" disabled={submitting}>
+          <Button type="submit" size="large" disabled={submitting || invalid}>
             { (!submitting) ? 'Submit' : 'Please wait ...' }
           </Button>
         </Form>
