@@ -22,7 +22,7 @@ const ButtonBox = styled.div`
 `;
 
 
-class RebuyDialog extends React.Component {
+export class RebuyDialog extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -14,6 +14,7 @@ describe('Rebuy Dialog', () => {
     const rebuyDialog = shallow(
       <RebuyDialog {...props} />
     );
-    expect(rebuyDialog.nodes[0].props.children[0].props.children).toEqual('Sorry!');
+
+    expect(rebuyDialog.nodes[0].props.children[0].props.children.props.defaultMessage).toEqual('Sorry!');
   });
 });
