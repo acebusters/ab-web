@@ -10,7 +10,7 @@ import Container from '../../components/Container';
 import { ErrorMessage, WarningMessage } from '../../components/FormMessages';
 import account from '../../services/account';
 import { workerError, walletImported, login } from './actions';
-import { modalAdd, modalDismiss } from '../App/actions';
+import { modalAdd, modalDismiss, setProgress } from '../App/actions';
 import { setAuthState } from '../AccountProvider/actions';
 import H1 from '../../components/H1';
 
@@ -96,11 +96,16 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
           email: values.get('email'),
           loggedIn: true,
         }));
+
         const { location } = this.props;
         let nextPath = '/lobby';
+
         if (location.state && location.state.nextPathname) {
           nextPath = location.state.nextPathname;
+        } else if (location.query && location.query.redirect) {
+          nextPath = decodeURIComponent(location.query.redirect);
         }
+
         browserHistory.push(nextPath); // Go to page that was requested
       });
     });
@@ -122,7 +127,7 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
       // the worker js is talking
       this.props.onWorkerInitialized();
     } else if (data.action === 'progress') {
-      this.props.onWorkerProgress(parseInt(data.percent, 10));
+      this.props.setProgress(parseInt(data.percent, 10));
     } else if (data.action === 'imported') {
       if (data.hexSeed === null) {
         this.props.onWorkerError('Message Authentication Code mismatch (wrong password)');
@@ -165,12 +170,12 @@ LoginPage.propTypes = {
   workerPath: React.PropTypes.string,
   onWorkerError: React.PropTypes.func,
   onWorkerInitialized: React.PropTypes.func,
-  onWorkerProgress: React.PropTypes.func,
   onWalletImported: React.PropTypes.func,
   location: React.PropTypes.any,
   isWorkerInitialized: React.PropTypes.bool,
   progress: React.PropTypes.any,
   modalAdd: React.PropTypes.func,
+  setProgress: React.PropTypes.func,
   modalStack: React.PropTypes.array,
 };
 
@@ -179,10 +184,10 @@ function mapDispatchToProps(dispatch) {
   return {
     onWorkerError: (event) => dispatch(workerError(event)),
     onWorkerInitialized: () => dispatch(change('login', 'isWorkerInitialized', true)),
-    onWorkerProgress: (percent) => dispatch(change('login', 'workerProgress', percent)),
     onWalletImported: (data) => dispatch(walletImported(data)),
     modalAdd: (node) => dispatch(modalAdd(node)),
     modalDismiss: () => dispatch(modalDismiss()),
+    setProgress: (percent) => dispatch(setProgress(percent)),
   };
 }
 
@@ -192,7 +197,6 @@ const mapStateToProps = (state) => ({
   initialValues: {
     isWorkerInitialized: false,
   },
-  progress: selector(state, 'workerProgress'),
   isWorkerInitialized: selector(state, 'isWorkerInitialized'),
 });
 
