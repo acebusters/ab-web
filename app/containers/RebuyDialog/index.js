@@ -51,7 +51,7 @@ class RebuyDialog extends React.Component {
     const max = Math.min(this.props.balance, this.props.sb * 200);
     const { amount } = this.state;
 
-    if (false && this.props.balance < min) {
+    if (this.props.balance < min) {
       return (
         <div style={{ minWidth: '20em' }}>
           <H2>
