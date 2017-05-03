@@ -173,8 +173,8 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     }
 
     // display Rebuy modal if state === 'waiting' and user stack is no greater than 0
-    if (nextProps.state === 'waiting' && nextProps.state !== this.props.state
-        && nextProps.myStack <= 0 && nextProps.myStack !== this.props.myStack) {
+    if (nextProps.state === 'waiting' && nextProps.myStack <= 0
+        && (nextProps.state !== this.props.state || nextProps.myStack !== this.props.myStack)) {
       const balance = parseInt(this.balance.toString(), 10);
 
       this.props.modalDismiss();
