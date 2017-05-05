@@ -195,7 +195,13 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       clearInterval(this.timeOut);
     }
     this.channel.unbind('update', this.handleUpdate);
-    this.tableEvents.stopWatching();
+
+    // Note: with wsProvider, the request made by stopWatching will throw an error
+    try {
+      this.tableEvents.stopWatching();
+    } catch (e) {
+      this.tableEvents = null;
+    }
   }
 
   handleUpdate(hand) {
