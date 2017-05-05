@@ -1,6 +1,6 @@
-import ethUtil from 'ethereumjs-util';
 import EWT from 'ethereum-web-token';
 import fetch from 'isomorphic-fetch';
+import { getWeb3 } from '../containers/AccountProvider/sagas';
 
 import {
   ABI_BET,
@@ -225,14 +225,11 @@ export function getHand(tableAddr, handId) {
   });
 }
 
-export function fetchTables(opts) {
-  const { web3, privKey } = opts;
-  const tableFactoryContract = web3.eth.contract(ABI_TABLE_FACTORY).at(tableFactoryAddress);
-  const privKeyBuffer = new Buffer(privKey.replace('0x', ''), 'hex');
-  const signer = `0x${ethUtil.privateToAddress(privKeyBuffer).toString('hex')}`;
+export function fetchTables() {
+  const tableFactoryContract = getWeb3().eth.contract(ABI_TABLE_FACTORY).at(tableFactoryAddress);
 
   return new Promise((resolve, reject) => {
-    tableFactoryContract.getTables.call(signer, (e, a) => {
+    tableFactoryContract.getTables.call((e, a) => {
       if (e) return reject(e);
       return resolve(a);
     });

@@ -4,6 +4,7 @@
 
 import React from 'react';
 import Grid from 'grid-styled';
+import { connect } from 'react-redux';
 import Button from 'components/Button';
 import Container from 'components/Container';
 import { TableStriped } from 'components/List';
@@ -12,9 +13,7 @@ import { createStructuredSelector } from 'reselect';
 import LobbyItem from '../LobbyItem';
 import { tableReceived } from '../Table/actions';
 import { makeSelectLobby } from './selectors';
-import { makeSelectPrivKey } from '../AccountProvider/selectors';
 import { fetchTables } from '../../services/tableService';
-import web3Connect from '../AccountProvider/web3Connect';
 
 
 class LobbyComponent extends React.PureComponent {  // eslint-disable-line
@@ -22,15 +21,11 @@ class LobbyComponent extends React.PureComponent {  // eslint-disable-line
   constructor(props) {
     super(props);
     this.handleGetTables = this.handleGetTables.bind(this);
-    this.web3 = props.web3Redux.web3;
     this.handleGetTables();
   }
 
   handleGetTables() {
-    fetchTables({
-      web3: this.web3,
-      privKey: this.props.privKey,
-    }).then((tables) => {
+    fetchTables().then((tables) => {
       if (tables) {
         tables.forEach((tableAddr) => this.props.tableReceived(tableAddr));
       }
@@ -82,14 +77,11 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   lobby: makeSelectLobby(),
-  privKey: makeSelectPrivKey(),
 });
 
 LobbyComponent.propTypes = {
   lobby: React.PropTypes.array,
   tableReceived: React.PropTypes.func,
-  web3Redux: React.PropTypes.any,
-  privKey: React.PropTypes.string,
 };
 
-export default web3Connect(mapStateToProps, mapDispatchToProps)(LobbyComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(LobbyComponent);
