@@ -102,7 +102,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         </FormGroup>
         <hr />
         <h2><FormattedMessage {...messages.pending} /></h2>
-        <List items={listPending} headers={['#', 'data', 'txHash']} noDataMsg="No Pending Transactions" />
+        <List items={listPending} headers={['#', 'txHash']} noDataMsg="No Pending Transactions" />
         <h2><FormattedMessage {...messages.included} /></h2>
         <List items={listTxns} headers={['txHash', 'from', 'to', 'amount']} noDataMsg="No Transactions Yet" />
 
@@ -114,7 +114,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 const pendingToList = (pending) => {
   let list = [];
   if (pending) {
-    list = Object.keys(pending).map((key) => [key, pending[key].call, pending[key].txHash]);
+    list = Object.keys(pending).map((key) => [key, pending[key].txHash]);
   }
   return list;
 };
