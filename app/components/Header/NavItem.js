@@ -10,6 +10,7 @@ import {
   navbarHeight,
   navbarPaddingHorizontal,
   navbarPaddingVertical,
+  navbarColorCurrent,
   screenXsMax,
   baseColor,
 } from '../../variables';
@@ -84,7 +85,7 @@ const StyledImage = styled.img`
 
 const StyledLink = styled.a`
   text-decoration: none;
-  cursor: pointer;
+  cursor: inherit;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Chrome/Safari/Opera */
   -khtml-user-select: none; /* Konqueror */
@@ -116,13 +117,13 @@ const StyledItem = styled.li`
 
   float: left;
   display: block;
-  background-color: ${(props) => props.currentPath ? '#333' : 'transparent'};
+  background-color: ${(props) => props.currentPath ? navbarColorCurrent : 'transparent'};
   background-image: none;
   border: none;
   outline: none;
   position: relative;
   text-decoration: none;
-  cursor: pointer;
+  cursor: ${(props) => props.currentPath ? 'default' : 'pointer'};
   &:focus, &:active {
     background: transparent;
     outline: none;
@@ -133,10 +134,10 @@ const StyledItem = styled.li`
   border-left: ${(props) => props.theme.navbarItemBorder || 'none'};
   &:hover {
     color: ${(props) => props.theme.navbarHoverColor || '#fff'};
-    background-color: ${(props) => props.theme.logoBgColor || 'transparent'};
-    border-bottom: 1px solid ${baseColor};    
+    background-color: ${(props) => props.currentPath ? navbarColorCurrent : (props.theme.logoBgColor || 'transparent')};
+    border-bottom: ${(props) => props.currentPath ? 'none' : `1px solid ${baseColor}`};
   }
-  
+
   @media (max-width: ${screenXsMax}) {
     width: 100%;
     &:hover {
