@@ -71,7 +71,7 @@ function List(props) {
         styles={{}}
       >
         {props.items && props.items.length === 0 && (
-          <div style={{ textAlign: 'center' }}>No Data</div>
+          <div style={{ textAlign: 'center' }}>{props.noDataMsg || 'No Data'}</div>
         )}
       </WithLoading>
     </div>
@@ -81,6 +81,7 @@ function List(props) {
 List.propTypes = {
   items: React.PropTypes.any,
   headers: React.PropTypes.any,
+  noDataMsg: React.PropTypes.string,
 };
 
 export default List;
