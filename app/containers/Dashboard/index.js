@@ -60,6 +60,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       listPending = pendingToList(this.props.account[tokenContractAddress].pending);
       listTxns = txnsToList(this.props.account[tokenContractAddress].transactions, this.props.account.proxy);
     }
+
     return (
       <Container>
         <h1><FormattedMessage {...messages.header} /></h1>
@@ -101,9 +102,9 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         </FormGroup>
         <hr />
         <h2><FormattedMessage {...messages.pending} /></h2>
-        <List items={listPending} headers={['#', 'data', 'txHash']} />
+        <List items={listPending} headers={['#', 'data', 'txHash']} noDataMsg="No Pending Transactions" />
         <h2><FormattedMessage {...messages.included} /></h2>
-        <List items={listTxns} headers={['txHash', 'from', 'to', 'amount']} />
+        <List items={listTxns} headers={['txHash', 'from', 'to', 'amount']} noDataMsg="No Transactions Yet" />
 
       </Container>
     );
@@ -119,9 +120,11 @@ const pendingToList = (pending) => {
 };
 
 const txnsToList = (txns, proxyAddr) => {
-  let list = [];
+  let list = null;
+
   if (txns) {
     const onlyMine = [];
+
     Object.keys(txns).forEach((key) => {
       if (key && txns[key] && txns[key].from && txns[key].to) {
         if (txns[key].from === proxyAddr || txns[key].to === proxyAddr) {
