@@ -17,6 +17,7 @@ import Container from '../../components/Container';
 import Button from '../../components/Button';
 import Blocky from '../../components/Blocky';
 import FormGroup from '../../components/Form/FormGroup';
+import WithLoading from '../../components/WithLoading';
 
 export class Dashboard extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -53,8 +54,8 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     if (balance) {
       balance = balance.toString();
     }
-    let listPending = [];
-    let listTxns = [];
+    let listPending = null;
+    let listTxns = null;
     if (this.props.account[tokenContractAddress]) {
       listPending = pendingToList(this.props.account[tokenContractAddress].pending);
       listTxns = txnsToList(this.props.account[tokenContractAddress].transactions, this.props.account.proxy);
@@ -64,9 +65,29 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         <h1><FormattedMessage {...messages.header} /></h1>
         <Blocky blocky={createBlocky(this.props.signerAddr)} />
         <h3> Your address:</h3>
-        <p> { this.props.account.proxy } </p>
-        <QRCode value={qrUrl} size={120} />
-        <p>Balance: {balance}</p>
+
+        <WithLoading
+          isLoading={!this.props.account.proxy}
+          loadingSize="40px"
+          styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
+        >
+          <p> { this.props.account.proxy } </p>
+          <QRCode value={qrUrl} size={120} />
+        </WithLoading>
+
+        <p>
+          <span>Balance: </span>
+          <WithLoading
+            isLoading={balance === undefined || balance === null}
+            loadingSize="14px"
+            type="inline"
+            styles={{ layout: { marginLeft: '15px' } }}
+          >
+            <span>{balance}</span>
+          </WithLoading>
+
+        </p>
+
         <FormGroup>
           <Button
             onClick={() => {
