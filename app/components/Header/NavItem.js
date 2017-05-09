@@ -116,7 +116,7 @@ const StyledItem = styled.li`
 
   float: left;
   display: block;
-  background-color: transparent;
+  background-color: ${(props) => props.currentPath ? '#333' : 'transparent'};
   background-image: none;
   border: none;
   outline: none;
@@ -160,8 +160,25 @@ const displayImage = (src, icon) => {
   return null;
 };
 
-const NavItem = ({ title, onClick, href, image, iconClass, collapsed }) => (
-  <StyledItem collapsed={collapsed} >
+// Compare the redux state of location.pathname with the title of the NavItem
+const isCurrentPath = (location, title) => {
+  if (!location || !title) return false;
+
+  const currentPathname = location.pathname.slice(1);
+  const currentTitle = title.toLowerCase();
+
+  if (currentPathname === currentTitle) {
+    return true;
+  }
+
+  return false;
+};
+
+const NavItem = ({ title, onClick, href, image, iconClass, collapsed, location }) => (
+  <StyledItem
+    collapsed={collapsed}
+    currentPath={isCurrentPath(location, title)}
+  >
     {onClick &&
       <StyledLink onClick={onClick} href={null}>
         {displayImage(image, iconClass)}
@@ -178,6 +195,7 @@ const NavItem = ({ title, onClick, href, image, iconClass, collapsed }) => (
 );
 
 NavItem.propTypes = {
+  location: React.PropTypes.object,
   title: React.PropTypes.string,
   collapsed: React.PropTypes.bool,
   onClick: React.PropTypes.func,
