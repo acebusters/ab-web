@@ -366,6 +366,8 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       }
 
       case 'Error': {
+        if (!result.args || result.args.addr !== this.props.proxyAddr) break;
+
         let msg = 'Ups Something went wrong';
         const errorCode = result.args.errorCode.toNumber();
         this.props.pendingToggle(this.tableAddr, this.props.params.handId);
