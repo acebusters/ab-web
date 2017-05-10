@@ -13,6 +13,7 @@ import { BoardCardWrapper } from '../../components/Table/Board';
 import Seat from '../Seat';
 import Button from '../../components/Button';
 import Slides from '../../components/Slides';
+import { nickNameByAddress } from '../../services/nicknames';
 
 // config data
 import {
@@ -365,6 +366,8 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       }
 
       case 'Error': {
+        if (!result.args || result.args.addr !== this.props.proxyAddr) break;
+
         let msg = 'Ups Something went wrong';
         const errorCode = result.args.errorCode.toNumber();
         this.props.pendingToggle(this.tableAddr, this.props.params.handId);
@@ -449,7 +452,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     if (this.props.winners && this.props.winners.length > 0) {
       winners = this.props.winners.map((winner, index) => {
         const handString = (winner.hand) ? `with ${winner.hand}` : '';
-        return (<div key={index}>`${winner.addr} won ${winner.amount} ${handString}`</div>);
+        return (<div key={index}>{nickNameByAddress(winner.addr)} won {winner.amount} {handString}</div>);
       });
     }
     const sb = (this.props.data && this.props.data.get('smallBlind')) ? this.props.data.get('smallBlind') : 0;
