@@ -40,6 +40,9 @@ import {
   isShowTurnByAction,
   hasNettingInAction,
   makeSbSelector,
+  makeLatestHandSelector,
+  makeLineupSelector,
+  makeHandSelector,
 } from './selectors';
 
 import TableService, { getHand } from '../../services/tableService';
@@ -85,8 +88,21 @@ export function* payFlow() {
     const req = yield take(pay.REQUEST);
     const action = req.payload;
     const table = new TableService(action.tableAddr, action.privKey);
+
     try {
-      // set toggle flag
+      const wholeState = yield select();
+      const tableAddr = action.tableAddr;
+      const lastHandId = makeLatestHandSelector()(wholeState, { params: { tableAddr } });
+      const fakeProps = { params: { tableAddr, handId: lastHandId } };
+      const lastHand = makeHandSelector()(wholeState, fakeProps);
+      const lineup = makeLineupSelector()(wholeState, fakeProps);
+      const sb = makeSbSelector()(wholeState, fakeProps);
+      const bb = sb * 2;
+      const dealer = lastHand.get('dealer');
+      const state = lastHand.get('state');
+      const isBettingDone = pokerHelper.isBettingDone(lineup.toJS(), dealer, state, bb);
+      debugger; //eslint-disable-line
+
       const newReceipt = (function getNewReceipt() {
         switch (action.type) {
           case BET:
@@ -112,7 +128,10 @@ export function* payFlow() {
         }
       }());
 
-      yield put(receiptSet(action.tableAddr, action.handId, action.pos, newReceipt));
+      if (!isBettingDone) {
+        yield put(receiptSet(action.tableAddr, action.handId, action.pos, newReceipt));
+      }
+
       const holeCards = yield table.pay(newReceipt);
       yield put({ type: pay.SUCCESS, payload: holeCards.cards });
     } catch (err) {
