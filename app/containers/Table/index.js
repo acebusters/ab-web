@@ -235,7 +235,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.token.approve.sendTransaction(this.tableAddr, amount);
     this.table.join.sendTransaction(amount, this.props.signerAddr, pos + 1, '');
 
-    this.props.modalDismiss();
     const slides = (
       <div>
         <JoinSlides></JoinSlides>
@@ -244,6 +243,8 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
         </Button>
       </div>
     );
+
+    this.props.modalDismiss();
     this.props.modalAdd(slides);
     this.props.pendingToggle(this.tableAddr, this.props.params.handId, pos);
   }
