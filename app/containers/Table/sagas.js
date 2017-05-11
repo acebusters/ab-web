@@ -95,14 +95,10 @@ export function* payFlow() {
       const lastHandId = makeLatestHandSelector()(wholeState, { params: { tableAddr } });
       const fakeProps = { params: { tableAddr, handId: lastHandId } };
       const lastHand = makeHandSelector()(wholeState, fakeProps);
-      const lineup = makeLineupSelector()(wholeState, fakeProps);
       const sb = makeSbSelector()(wholeState, fakeProps);
       const bb = sb * 2;
       const dealer = lastHand.get('dealer');
       const state = lastHand.get('state');
-      const isBettingDone = pokerHelper.isBettingDone(lineup.toJS(), dealer, state, bb);
-      debugger; //eslint-disable-line
-
       const newReceipt = (function getNewReceipt() {
         switch (action.type) {
           case BET:
@@ -128,7 +124,15 @@ export function* payFlow() {
         }
       }());
 
-      if (!isBettingDone) {
+      const lineup = makeLineupSelector()(wholeState, fakeProps).toJS();
+      lineup[action.pos].last = newReceipt;
+
+      const isBettingDone = pokerHelper.isBettingDone(lineup, dealer, state, bb);
+
+      // Note: the only case we want to prevent faking receipt in advance is that
+      // after preflop there could be chances that the last player in preflop hand
+      // becomes the first player in this flop hand
+      if (!(isBettingDone && state === 'preflop')) {
         yield put(receiptSet(action.tableAddr, action.handId, action.pos, newReceipt));
       }
 
