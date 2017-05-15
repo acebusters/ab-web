@@ -285,7 +285,7 @@ const makeSelectWinners = () => createSelector(
 
 const makeMySitoutSelector = () => createSelector(
   [makeLineupSelector(), makeMyPosSelector()],
-  (lineup, myPos) => (lineup && myPos !== undefined && typeof lineup.getIn([myPos, 'sitout']) === 'number')
+  (lineup, myPos) => (lineup && myPos !== undefined && lineup.getIn([myPos, 'sitout']))
 );
 
 const makeMyPosSelector = () => createSelector(
