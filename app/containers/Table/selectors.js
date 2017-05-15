@@ -169,7 +169,7 @@ const makeWhosTurnSelector = () => createSelector(
       return undefined;
     }
     try {
-      whosTurn = pokerHelper.whosTurn(hand.toJS(), sb * 2);
+      whosTurn = pokerHelper.getWhosTurn(hand.toJS(), sb * 2);
     } catch (e) {
       return undefined;
     }
