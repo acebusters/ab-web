@@ -31,8 +31,8 @@ export function preToggleSitout(payload) {
   return { type: PRE_TOGGLE_SITOUT, ...payload };
 }
 
-export function bet(tableAddr, handId, amount, privKey, pos, prevReceipt) {
-  return { type: BET, tableAddr, handId, amount, privKey, pos, prevReceipt };
+export function bet(tableAddr, handId, amount, privKey, pos, prevReceipt, extra = {}) {
+  return { type: BET, tableAddr, handId, amount, privKey, pos, prevReceipt, ...extra };
 }
 
 export function fold(tableAddr, handId, amount, privKey, pos, prevReceipt) {

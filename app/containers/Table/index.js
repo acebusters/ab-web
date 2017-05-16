@@ -33,7 +33,6 @@ import {
   updateReceived,
   pendingToggle,
   sitOutToggle,
-  preToggleSitout,
   bet,
 } from './actions';
 // selectors
@@ -299,14 +298,19 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     // otherwise it's enabled "pause", then set it to disabled "play" (0)
     const nextSitoutState = sitout > 0 ? null : 0;
     const handId = parseInt(this.props.params.handId, 10);
-    this.props.preToggleSitout({
-      tableAddr: this.props.params.tableAddr,
-      handId,
-      pos: this.props.myPos,
-      sitout: nextSitoutState,
-    });
 
-    const sitoutAction = bet(this.props.params.tableAddr, handId, this.props.sitoutAmount, this.props.privKey, this.props.myPos, this.props.lastReceipt);
+    const sitoutAction = bet(
+      this.props.params.tableAddr,
+      handId,
+      this.props.sitoutAmount,
+      this.props.privKey,
+      this.props.myPos,
+      this.props.lastReceipt,
+      {
+        originalSitout: sitout,
+        nextSitoutState,
+      }
+    );
     return sitOutToggle(sitoutAction, this.props.dispatch);
   }
 
@@ -510,7 +514,6 @@ export function mapDispatchToProps() {
     lineupReceived: (...args) => (lineupReceived(...args)),
     modalAdd: (node) => (modalAdd(node)),
     modalDismiss: () => (modalDismiss()),
-    preToggleSitout: (payload) => preToggleSitout(payload),
     pendingToggle: (tableAddr, handId, pos) => (pendingToggle(tableAddr, handId, pos)),
     updateReceived: (tableAddr, hand) => (updateReceived(tableAddr, hand)),
     blockNotify: () => (blockNotify()),
@@ -566,7 +569,6 @@ Table.propTypes = {
   dispatch: React.PropTypes.func,
   lineupReceived: React.PropTypes.func,
   updateReceived: React.PropTypes.func,
-  preToggleSitout: React.PropTypes.func,
   location: React.PropTypes.object,
   account: React.PropTypes.object,
 };
