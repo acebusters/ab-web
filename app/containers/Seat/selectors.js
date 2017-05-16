@@ -74,8 +74,8 @@ const makeCardsSelector = () => createSelector(
     //  * null stands for no card
     //  * > 0  stands for normal cards
 
-    if (pos === -1 || myPos === undefined || !hand || !hand.get('lineup')) {
-      return [-1, -1];
+    if (pos === -1 || !hand || !hand.get('lineup')) {
+      return [null, null];
     }
 
     if (pos === myPos && hand.get('holeCards')) {
