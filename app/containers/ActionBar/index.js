@@ -10,9 +10,7 @@ import 'react-rangeslider/lib/index.css';
 import Raven from 'raven-js';
 
 import SliderWrapper from '../../components/Slider';
-
-import ChatWrapper from '../../containers/Chat';
-import Chat from '../../containers/Chat/chat';
+import Chat from '../../containers/Chat';
 
 import {
   makeMinSelector,
@@ -198,15 +196,12 @@ export class ActionBar extends React.PureComponent { // eslint-disable-line reac
           </Grid>
         </ActionBarComponent>
       );
-    } else if (this.state.active
-               && !this.props.isMyTurn
+    } else if (!this.props.isMyTurn
                && this.props.state !== 'waiting'
                && this.props.state !== 'dealing'
                && this.props.state !== 'showdown') {
       return (
-        <ChatWrapper>
-          <Chat onAddMessage={this.sendMessage} messages={this.props.messages} />
-        </ChatWrapper>
+        <Chat onAddMessage={this.sendMessage} messages={this.props.messages} />
       );
     }
     return null;

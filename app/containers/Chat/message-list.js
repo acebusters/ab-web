@@ -1,4 +1,5 @@
 import React from 'react';
+import { nickNameByAddress } from '../../services/nicknames';
 
 class MessageList extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   componentDidMount() {
@@ -22,14 +23,18 @@ class MessageList extends React.PureComponent { // eslint-disable-line react/pre
     };
     return (
       <ul style={style} ref={(el) => { this.list = el; }}>
-        {this.props.children}
+        {(this.props.messages || []).map((message, i) =>
+          <li style={{ padding: '5px 5px 0 5px' }} key={i}>
+            <u>{ nickNameByAddress(message.signer) }</u> &gt; { message.message }
+          </li>
+        )}
       </ul>
     );
   }
 }
 
 MessageList.propTypes = {
-  children: React.PropTypes.node,
+  messages: React.PropTypes.object,
 };
 
 export default MessageList;
