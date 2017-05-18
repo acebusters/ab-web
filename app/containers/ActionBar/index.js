@@ -10,6 +10,7 @@ import 'react-rangeslider/lib/index.css';
 import Raven from 'raven-js';
 
 import SliderWrapper from '../../components/Slider';
+import ChatWrapper from '../../components/Chat';
 import Chat from '../../containers/Chat';
 
 import {
@@ -201,7 +202,9 @@ export class ActionBar extends React.PureComponent { // eslint-disable-line reac
                && this.props.state !== 'dealing'
                && this.props.state !== 'showdown') {
       return (
-        <Chat onAddMessage={this.sendMessage} messages={this.props.messages} />
+        <ChatWrapper>
+          <Chat onAddMessage={this.sendMessage} messages={this.props.messages} />
+        </ChatWrapper>
       );
     }
     return null;

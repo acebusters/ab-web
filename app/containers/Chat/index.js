@@ -13,15 +13,8 @@ export class Chat extends React.PureComponent { // eslint-disable-line react/pre
     this.props.onAddMessage(message);
   }
   render() {
-    const style = {
-      width: '400px',
-      position: 'fixed',
-      bottom: '0',
-      border: '10px solid green',
-      background: 'whitesmoke',
-    };
     return (
-      <div style={style}>
+      <div>
         <MessageList messages={this.props.messages} />
         <MessageBox onAddMessage={this.onAddMessage} />
       </div>
