@@ -275,7 +275,7 @@ export const TimerBar = styled.div`
 // ButtonJoin
 export const ButtonStyle = styled(SharedMiddle)`
   border-radius: ${scaleButtonJoin(4)};
-  width: ${scaleButtonJoin(64)};
+  width: ${scaleButtonJoin(44)};
 `;
 
 export const ButtonWrapper = styled.button`
@@ -300,19 +300,19 @@ export const ButtonWrapper = styled.button`
 
 export const ButtonIcon = styled.i`
   flex: auto;
-  padding-top: ${scaleButtonJoin(6)};
-  padding-right: ${scaleButtonJoin(8)};
-  padding-bottom: ${scaleButtonJoin(6)};
-  padding-left: ${scaleButtonJoin(8)};
+  padding-top: ${scaleButtonJoin(2)};
+  padding-right: ${scaleButtonJoin(6)};
+  padding-bottom: ${scaleButtonJoin(5)};
+  padding-left: ${scaleButtonJoin(6)};
   &:before {
-    font-size: ${scaleButtonJoin(16)};
+    font-size: ${scaleButtonJoin(12)};
   }
 `;
 
 export const ButtonText = styled.div`
-  font-size: ${scaleButtonJoin(14)};
+  font-size: ${scaleButtonJoin(10)};
   font-weight: 600;
   flex: auto;
-  padding-top: ${scaleButtonJoin(4)};
-  padding-bottom: ${scaleButtonJoin(6)};
+  padding-top: ${scaleButtonJoin(1)};
+  padding-bottom: ${scaleButtonJoin(3)};
 `;
