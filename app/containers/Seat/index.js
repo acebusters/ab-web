@@ -47,6 +47,7 @@ class Seat extends React.PureComponent { // eslint-disable-line react/prefer-sta
     let timeLeft = timeoutSeconds;
     // manage timer
     if (nextProps.whosTurn === nextProps.pos) {
+      // TODO: Make timeLeft count down from 100 - 0, right now is 360 - 0?
       if (!this.interval) {
         this.interval = setInterval(() => {
           if (this.props.changed) {
