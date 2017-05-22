@@ -8,7 +8,6 @@ import SeatTimer from './SeatTimer';
 import StatusAction from './StatusAction';
 import Pot from '../Pot';
 
-import { nickNameByAddress } from '../../services/nicknames';
 import {
   AvatarImage,
   AmountBox,
@@ -23,6 +22,9 @@ import {
   StatusSeat,
   StatusSeatWrapper,
 } from './styles';
+
+// temp to be replace by imported function
+const nickNameByAddress = (signerAddr) => signerAddr;
 
 // const componentSize = 'small'; // small, medium, large
 const cardSize = 48;
