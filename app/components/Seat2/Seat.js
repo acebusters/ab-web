@@ -4,8 +4,8 @@
 import React from 'react';
 
 import Card from '../Card2';
-import SeatTimer from './SeatTimer';
-import StatusAction from './StatusAction';
+import SeatTimer from '../Seat/SeatTimer';
+import StatusAction from '../Seat/StatusAction';
 import Pot from '../Pot';
 
 import {
@@ -21,7 +21,7 @@ import {
   StackBox,
   StatusSeat,
   StatusSeatWrapper,
-} from './styles';
+} from '../Seat/styles';
 
 // temp to be replace by imported function
 const nickNameByAddress = (signerAddr) => signerAddr;

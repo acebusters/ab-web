@@ -1,8 +1,8 @@
 import React from 'react';
 import H2 from '../../components/H2';
 import H3 from '../../components/H3';
-import ButtonJoinSeat from '../../components/Seat2/ButtonJoinSeat';
-import ButtonInvite from '../../components/Seat2/ButtonInvite';
+import ButtonJoinSeat from '../../components/Seat/ButtonJoinSeat';
+import ButtonInvite from '../../components/Seat/ButtonInvite';
 
 const ButtonExamples = () => (
   <div>

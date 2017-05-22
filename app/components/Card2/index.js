@@ -4,7 +4,7 @@
 import React from 'react';
 import { VectorCards } from 'ab-vector-cards';
 
-import { CardBack, CardFront, CardStyle } from '../Seat2/styles';
+import { CardBack, CardFront, CardStyle } from '../Seat/styles';
 
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k', 'a'];
 const suits = ['clubs', 'diamonds', 'hearts', 'spades'];

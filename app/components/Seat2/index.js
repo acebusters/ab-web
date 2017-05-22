@@ -4,12 +4,12 @@
 import React from 'react';
 
 import Seat from './Seat';
-import ButtonJoinSeat from './ButtonJoinSeat';
+import ButtonJoinSeat from '../Seat/ButtonJoinSeat';
 /* TODO Remove radial component?
 imoprt Radial from '../RadialProgress'
 */
 
-import { SeatWrapper } from './styles';
+import { SeatWrapper } from '../Seat/styles';
 
 // temp global vars
 const coords = [0, 0];
