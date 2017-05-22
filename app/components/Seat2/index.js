@@ -11,11 +11,9 @@ imoprt Radial from '../RadialProgress'
 
 import { SeatWrapper } from './styles';
 
-// temp global variables
-const coords = [0, 0];
-
 const SeatComponent = (props) => {
   const {
+    coords,
     isTaken,
     myPos,
     open,
@@ -67,6 +65,7 @@ const SeatComponent = (props) => {
   return seat;
 };
 SeatComponent.propTypes = {
+  coords: React.PropTypes.array,
   folded: React.PropTypes.bool,
   isTaken: React.PropTypes.func,
   myPos: React.PropTypes.number, // action bar position

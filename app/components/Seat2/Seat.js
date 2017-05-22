@@ -7,6 +7,8 @@ import Card from '../Card2';
 import SeatTimer from './SeatTimer';
 import StatusAction from './StatusAction';
 import Pot from '../Pot';
+
+import { nickNameByAddress } from '../../services/nicknames';
 import {
   AvatarImage,
   AmountBox,
@@ -29,9 +31,6 @@ const stackToString = (stackSize) => {
   if (!stackSize) return '0';
   return stackSize.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
-
-// temp to be replaced by imported function
-const nickNameByAddress = (signerAddr) => signerAddr;
 
 const showChipsButton = (pending, seatStatus) => {
   if (pending) return false;
