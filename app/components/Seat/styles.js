@@ -120,8 +120,6 @@ export const CardContainer = styled.div`
 // referenced in components/Card
 export const CardShared = styled.div`
   background-color: none;
-  ${''/* margin-left: ${(props) => props.offset[0]}%;
-  margin-top: ${(props) => props.offset[1]}%; */}
   margin-right: ${scaleSeat(2)};
   width:${scaleSeat(36)};
 `;

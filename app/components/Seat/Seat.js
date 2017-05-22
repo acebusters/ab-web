@@ -3,7 +3,7 @@
 */
 import React from 'react';
 
-import Card from '../Card2';
+import Card from '../Card';
 import SeatTimer from './SeatTimer';
 import StatusAction from './StatusAction';
 import Pot from '../Pot';
@@ -70,13 +70,11 @@ const Seat = (props) => {
             cardNumber={holeCards[0]}
             folded={folded}
             size={cardSize}
-            offset={[0, 0]}
           />
           <Card
             cardNumber={holeCards[1]}
             folded={folded}
             size={cardSize}
-            offset={[-100, -133]}
           />
         </CardContainer>
       }

@@ -3,7 +3,7 @@
 */
 import React from 'react';
 
-import Card from '../Card2';
+import Card from '../Card';
 import SeatTimer from '../Seat/SeatTimer';
 import StatusAction from '../Seat/StatusAction';
 import Pot from '../Pot';
