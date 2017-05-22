@@ -64,9 +64,13 @@ export const SeatWrapper = styled.div`
 `;
 
 export const SeatContainer = styled.div`
+  position: absolute;
+  top: ${scaleSeat(-20)};
+  left: ${scaleSeat(-64)};
   display: flex;
   flex-direction: column;
   width: ${scaleSeat(128)};
+  height: auto;
 
   color: white;
   background-color: none;
@@ -279,11 +283,16 @@ export const ButtonStyle = styled(SharedMiddle)`
 `;
 
 export const ButtonWrapper = styled.button`
+  position: absolute;
+  top: ${scaleButtonJoin(-20)};
+  left: ${scaleButtonJoin(-64)};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  width: ${scaleButtonJoin(128)};
+  height: ${scaleButtonJoin(40)};
 
   color: #D5D5D5;
   font-weight: 400;
