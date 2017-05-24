@@ -9,6 +9,25 @@ import ButtonJoinSeat from './ButtonJoinSeat';
 imoprt Radial from '../RadialProgress'
 */
 
+const activePlayer = (seatStatus) => {
+  if (seatStatus === 'pending') return false;
+  if (seatStatus === 'sitting-in') return false;
+  if (seatStatus === 'sit-out') return false;
+  return true;
+};
+
+const seatStatus = (pending, myPos, sitout) => {
+  if (pending) {
+    return 'pending';
+  } else if (myPos === undefined) {
+    return 'sitting-in';
+    // TODO add 'Standing-up' logic
+  } else if (typeof sitout === 'number') {
+    return 'sit-out';
+  }
+  return 'EMPTY'; // successfully resolves to EMPTY
+};
+
 const SeatComponent = (props) => {
   const {
     coords,
@@ -19,48 +38,24 @@ const SeatComponent = (props) => {
     pending,
     sitout,
   } = props;
-  let seatStatus = '';
-  let seat = null;
-
-  if (pending) {
-    seatStatus = 'pending';
-  } else if (myPos === undefined) {
-    seatStatus = 'sitting-in';
-    // TODO add 'Standing-up' logic
-  } else if (typeof sitout === 'number') {
-    seatStatus = 'sit-out';
-  } else {
-    seatStatus = 'EMPTY'; // successfully resolves to EMPTY
-  }
-
   if (open) {
-    seat = (
+    return (
       <ButtonJoinSeat
         coords={coords}
         onClickHandler={() => isTaken(open, myPos, pending, pos)}
       />
     );
-  } else {
-    /* TODO: remove because action is tracked by timeLeft and activePlayer?
-    let color;
-    if (['showdown'].indexOf(props.state) === -1
-          && props.pos === props.whosTurn) {
-      color = green;
-    } else if (typeof props.sitout === 'number') {
-      color = gray;
-    } else {
-      color = 'blue';
-    }
-    */
-    seat = (
-      <Seat seatStatus={seatStatus} {...props} />
-    );
   }
-  return seat;
+  return (
+    <Seat
+      activePlayer={activePlayer(seatStatus)}
+      seatStatus={seatStatus(pending, myPos, sitout)}
+      {...props}
+    />
+  );
 };
 SeatComponent.propTypes = {
   coords: React.PropTypes.array,
-  folded: React.PropTypes.bool,
   isTaken: React.PropTypes.func,
   myPos: React.PropTypes.number, // action bar position
   open: React.PropTypes.bool,
@@ -68,6 +63,5 @@ SeatComponent.propTypes = {
   pending: React.PropTypes.bool,
   sitout: React.PropTypes.number, // amount of time left in sitou
 };
-
 
 export default SeatComponent;

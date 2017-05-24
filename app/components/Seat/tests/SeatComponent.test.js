@@ -6,10 +6,12 @@ import { shallow } from 'enzyme';
 import SeatComponent from '../index';
 
 describe('components.seat.seatComponent', () => {
+  // describe('activePlayer func', () => {});
+  // describe('seatStatus func', () => {});
   describe('if seat is open', () => {
     const props = { open: true };
 
-    describe('if not joined table', () => {
+    describe('if NOT joined table', () => {
       it('should render <ButtonJoinSeat />', () => {
         const el = shallow(
           <SeatComponent
