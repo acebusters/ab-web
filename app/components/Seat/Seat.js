@@ -3,28 +3,22 @@
 */
 import React from 'react';
 
-import Card from '../Card';
+import CardContainer from './CardContainer';
 import SeatInfo from './SeatInfo';
 import SeatTimer from './SeatTimer';
 import StatusAction from './StatusAction';
 
 import {
-  CardContainer,
   SeatContainer,
   SeatWrapper,
   StatusSeat,
   StatusSeatWrapper,
 } from './styles';
 
-// const componentSize = 'small'; // small, medium, large
-const cardSize = 48;
-
 const Seat = (props) => {
   const {
     activePlayer,
     coords,
-    folded,
-    holeCards,
     lastAction,
     seatStatus,
     sitout,
@@ -38,18 +32,7 @@ const Seat = (props) => {
             <StatusSeat>{seatStatus}</StatusSeat>
           </StatusSeatWrapper>
           :
-          <CardContainer>
-            <Card
-              cardNumber={holeCards[0]}
-              folded={folded}
-              size={cardSize}
-            />
-            <Card
-              cardNumber={holeCards[1]}
-              folded={folded}
-              size={cardSize}
-            />
-          </CardContainer>
+          <CardContainer {...props} />
         }
 
         <SeatInfo {...props} />
@@ -70,8 +53,6 @@ const Seat = (props) => {
 Seat.propTypes = {
   activePlayer: React.PropTypes.bool,
   coords: React.PropTypes.array,
-  folded: React.PropTypes.bool,
-  holeCards: React.PropTypes.array, // array of cards
   lastAction: React.PropTypes.string,
   seatStatus: React.PropTypes.string,
   sitout: React.PropTypes.number,
