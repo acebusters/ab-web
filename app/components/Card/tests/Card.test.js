@@ -21,7 +21,12 @@ describe('components.seat.CardContainer', () => {
   });
 
   describe('after holeCards are dealt', () => {
-    it('should render <CardBack /> ', () => {});
+    it('should render <CardBack /> ', () => {
+      // const props = {};
+      // const el = shallow(<Card {...props} />);
+      // expect(el.find('CardBack').length).toEqual(1);
+      // expect(el.find('CardFront').length).toEqual(0);
+    });
   });
 
   describe('if user folds', () => {
@@ -29,7 +34,12 @@ describe('components.seat.CardContainer', () => {
   });
 
   describe('during showdown', () => {
-    it('should render <CardFront />', () => {});
+    it('should render <CardFront />', () => {
+      // const props = {};
+      // const el = shallow(<Card {...props} />);
+      // expect(el.find('CardBack').length).toEqual(0);
+      // expect(el.find('CardFront').length).toEqual(1);
+    });
   });
 
   describe('for logged-in user', () => {
