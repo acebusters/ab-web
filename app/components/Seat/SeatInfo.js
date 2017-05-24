@@ -52,7 +52,7 @@ const SeatInfo = ({
       : null
     }
 
-    <AvatarImage bgImg={blocky} />
+    <AvatarImage className="avatar-image" bgImg={blocky} />
 
     <DetailWrapper>
       <NameBox>{nickNameByAddress(signerAddr)}</NameBox>
