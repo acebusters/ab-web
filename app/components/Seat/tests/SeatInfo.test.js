@@ -30,24 +30,19 @@ describe('components.seat.SeatInfo', () => {
     });
   });
 
-  describe('AvatarImage component', () => {
-    it('should render AvatarImage', () => {
-      // throws error if signerAddr is not defined
-      const props = { signerAddr };
-      const el = shallow(<SeatInfo {...props} />);
+  describe('AvatarImage and DetailWrapper component', () => {
+    // throws error if signerAddr is not defined
+    const props = { signerAddr };
+    const el = shallow(<SeatInfo {...props} />);
+    it('should render <AvatarImage />', () => {
       // styled components do not have names, so we search for the class
       expect(el.find('.avatar-image').length).toEqual(1);
     });
-  });
-
-  describe('DetailWrapper component', () => {
-    // const props = {};
-    // const el = shallow(<SeatInfo {...props} />);
-    // it('should render <NameBox />', () => {
-    //   expect(el.find('NameBox').length).toEqual(1);
-    // });
-    // it('should render <StackBox />', () => {
-    //   expect(el.find('StackBox').length).toEqual(1);
-    // });
+    it('should render <NameBox />', () => {
+      expect(el.find('.name-box').length).toEqual(1);
+    });
+    it('should render <StackBox />', () => {
+      expect(el.find('.stack-box').length).toEqual(1);
+    });
   });
 });

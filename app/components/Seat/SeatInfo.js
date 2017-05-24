@@ -55,8 +55,8 @@ const SeatInfo = ({
     <AvatarImage className="avatar-image" bgImg={blocky} />
 
     <DetailWrapper>
-      <NameBox>{nickNameByAddress(signerAddr)}</NameBox>
-      <StackBox>{stackToString(stackSize)}</StackBox>
+      <NameBox className="name-box">{nickNameByAddress(signerAddr)}</NameBox>
+      <StackBox className="stack-box">{stackToString(stackSize)}</StackBox>
     </DetailWrapper>
   </InfoWrapper>
 );
