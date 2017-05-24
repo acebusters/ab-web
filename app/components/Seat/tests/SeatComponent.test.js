@@ -32,7 +32,8 @@ describe('components.seat.seatComponent', () => {
   });
 
   describe('if seat is occupied', () => {
-    // beforeEach(() => {});
+    // const props = { open: false };
+
     describe('if logged-in user seat', () => {
       it('should render <Seat /> for logged-in user', () => {
         // what to look for el = shallow();
