@@ -4,21 +4,29 @@ import SeatComponent from '../index';
 
 describe('components.seat.seatComponent', () => {
   describe('if seat is open', () => {
-    // beforeEach(() => {});
+    const props = { open: true };
+
     describe('if not joined table', () => {
       it('should render <ButtonJoinSeat />', () => {
-        // given
-        const el = shallow(<SeatComponent open />);
-        // what to look for el = shallow();
-        // expect();
+        const el = shallow(
+          <SeatComponent
+            /* TODO: prop for joined table */
+            {...props}
+          />
+        );
         expect(el.find('ButtonJoinSeat').length).toEqual(1);
       });
     });
+
     describe('if joined table', () => {
       it('should render <ButtonInvite />', () => {
-        // given
-        // what to look for el = shallow();
-        // expect();
+        // const el = shallow(
+        //   <SeatComponent
+        //     /* TODO: !prop for joined table */
+        //     {...props}
+        //   />
+        // );
+        // expect(el.find('ButtonInvite').length).toEqual(1);
       });
     });
   });
