@@ -1,3 +1,6 @@
+/**
+* Created by jzobro 20170524
+*/
 import React from 'react';
 import { shallow } from 'enzyme';
 import SeatComponent from '../index';
