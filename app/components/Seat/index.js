@@ -9,8 +9,6 @@ import ButtonJoinSeat from './ButtonJoinSeat';
 imoprt Radial from '../RadialProgress'
 */
 
-import { SeatWrapper } from './styles';
-
 const SeatComponent = (props) => {
   const {
     coords,
@@ -37,11 +35,10 @@ const SeatComponent = (props) => {
 
   if (open) {
     seat = (
-      <SeatWrapper coords={coords}>
-        <ButtonJoinSeat
-          onClickHandler={() => isTaken(open, myPos, pending, pos)}
-        />
-      </SeatWrapper>
+      <ButtonJoinSeat
+        coords={coords}
+        onClickHandler={() => isTaken(open, myPos, pending, pos)}
+      />
     );
   } else {
     /* TODO: remove because action is tracked by timeLeft and activePlayer?
@@ -56,12 +53,7 @@ const SeatComponent = (props) => {
     }
     */
     seat = (
-      <SeatWrapper coords={coords}>
-        <Seat
-          seatStatus={seatStatus}
-          {...props}
-        />
-      </SeatWrapper>
+      <Seat seatStatus={seatStatus} {...props} />
     );
   }
   return seat;
