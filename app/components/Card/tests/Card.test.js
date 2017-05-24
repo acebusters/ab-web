@@ -13,12 +13,7 @@
 
 describe('components.seat.CardContainer', () => {
   describe('before holeCards are dealt', () => {
-    it('should NOT show cardbacks', () => {
-      // given props/state
-      // what to look for el = shallow();
-      // expect();
-    });
-    it('should NOT show cards', () => {
+    it('should return null', () => {
       // given props/state
       // what to look for el = shallow();
       // expect();
@@ -26,18 +21,15 @@ describe('components.seat.CardContainer', () => {
   });
 
   describe('after holeCards are dealt', () => {
-    it('should show cardbacks', () => {});
-    it('should NOT show cards', () => {});
+    it('should render <CardBack /> ', () => {});
   });
 
   describe('if user folds', () => {
-    it('should NOT show cardbacks', () => {});
-    it('should NOT show cards', () => {});
+    it('should return null', () => {});
   });
 
   describe('during showdown', () => {
-    it('should NOT show cardbacks', () => {});
-    it('should show cards', () => {});
+    it('should render <CardFront />', () => {});
   });
 
   describe('for logged-in user', () => {
