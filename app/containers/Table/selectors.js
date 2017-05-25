@@ -156,6 +156,18 @@ const makeMessagesSelector = () => createSelector(
   (table) => (table) ? table.get('messages') : null
 );
 
+const makePlayersCountSelector = () => createSelector(
+  [makeTableDataSelector()],
+  (data) => {
+    const ADDR_EMPTY = '0x0000000000000000000000000000000000000000';
+    if (!data || !data.get('seats')) {
+      return 0;
+    }
+    return data.get('seats').reduce((prev, current) => prev + (current.get('address') === ADDR_EMPTY ? 0 : 1), 0);
+  }
+);
+
+
 const makeHandSelector = () => createSelector(
   handSelector,
   (hand) => hand
@@ -470,4 +482,5 @@ export {
     makeMyMaxBetSelector,
     makeMissingHandSelector,
     makeMessagesSelector,
+    makePlayersCountSelector,
 };
