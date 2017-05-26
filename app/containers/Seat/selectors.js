@@ -153,8 +153,8 @@ const makeShowStatusSelector = () => createSelector(
     if (lastAction && lastReceipt && hand && hand.get) {
       const amount = lastReceipt.values[1];
       const state = hand.get('state');
+      const lineup = hand.get('lineup').toJS();
       if (hand.get('state') === 'preflop') {
-        const lineup = hand.get('lineup').toJS();
         const dealer = hand.get('dealer');
         let sbPos;
         let bbPos;
@@ -177,13 +177,28 @@ const makeShowStatusSelector = () => createSelector(
         }
       }
 
-      if (lastAction === 'sitOut') { return 'sitting out'; }
+      if (lastAction === 'sitOut') {
+        return 'sitting out';
+      }
       if (lastAction === 'fold') {
         return 'folded';
       }
       if (state !== 'waiting' && state !== 'dealing') {
-        if (lastAction.indexOf('bet') > -1 && amount > lastRoundMaxBet) {
-          return 'bet';
+        if (lastAction.indexOf('bet') > -1) {
+          const prevPos = pokerHelper.prevPlayer(lineup, pos, 'active', state);
+          const prevAmount = rc.get(lineup[prevPos].last).values[1];
+          // bet: amount higher than previous player && previous player amount <= lastRoundMaxBet
+          if (amount > prevAmount && prevAmount <= lastRoundMaxBet) {
+            return 'bet';
+          }
+          // call: amount same as previous player
+          if (amount === prevAmount) {
+            return 'call';
+          }
+          // raise: amount higher than previous player
+          if (amount > prevAmount) {
+            return 'raise';
+          }
         }
         if (lastAction.toLowerCase().indexOf(state) > -1) {
           return 'check';
