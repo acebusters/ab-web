@@ -9,7 +9,7 @@ import {
   ButtonWrapper,
 } from './styles';
 
-const ButtonJoinSeat = () => (
+const ButtonInvite = () => (
   <ButtonWrapper>
     <ButtonStyle>
       <ButtonIcon className="fa fa-envelope" aria-hidden="true" />
@@ -18,4 +18,4 @@ const ButtonJoinSeat = () => (
   </ButtonWrapper>
 );
 
-export default ButtonJoinSeat;
+export default ButtonInvite;

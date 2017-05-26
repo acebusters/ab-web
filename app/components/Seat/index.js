@@ -5,6 +5,7 @@ import React from 'react';
 
 import Seat from './Seat';
 import ButtonJoinSeat from './ButtonJoinSeat';
+import ButtonInvite from './ButtonInvite';
 /* TODO Remove radial component?
 imoprt Radial from '../RadialProgress'
 */
@@ -18,10 +19,8 @@ const activePlayer = (seatStatus) => {
 
 const seatStatus = (pending, myPos, sitout) => {
   if (pending) {
-    return 'pending';
-  } else if (myPos === undefined) {
-    return 'sitting-in';
-    // TODO add 'Standing-up' logic
+    if (myPos === undefined) return 'sitting-in';
+    if (myPos !== undefined) return 'standing-up';
   } else if (typeof sitout === 'number') {
     return 'sit-out';
   }
@@ -39,12 +38,22 @@ const SeatComponent = (props) => {
     sitout,
   } = props;
   if (open) {
-    return (
-      <ButtonJoinSeat
-        coords={coords}
-        onClickHandler={() => isTaken(open, myPos, pending, pos)}
-      />
-    );
+    if (myPos === undefined) {
+      return (
+        <ButtonJoinSeat
+          coords={coords}
+          onClickHandler={() => isTaken(open, myPos, pending, pos)}
+        />
+      );
+    }
+    if (typeof myPos === 'number') {
+      return (
+        <ButtonInvite
+          coords={coords}
+          onClickHandler={() => isTaken(open, myPos, pending, pos)}
+        />
+      );
+    }
   }
   return (
     <Seat
