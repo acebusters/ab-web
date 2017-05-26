@@ -15,17 +15,12 @@ function Card(props) {
   const suit = suits[Math.floor(props.cardNumber / 13)];
   const value = values[props.cardNumber % 13];
 
-  if (props.cardNumber >= 0) {
-    link = vc.getCardData(props.size, suit, value);
-  } else {
-    link = vc.getBackData(props.size, '#32B7D3', '#217C8F');
-  }
-
   // Note: meaning of card numbers
   //  * -1 stands for back side of cards,
   //  * null stands for no card
   //  * > 0  stands for normal cards
   if (!props.folded && props.cardNumber === -1) {
+    link = vc.getBackData(props.size, '#32B7D3', '#217C8F');
     return (
       // TODO: remove offset prop and from CardShared style?
       <CardBack>
@@ -38,6 +33,7 @@ function Card(props) {
     );
   }
   if (!props.folded && props.cardNumber !== null) {
+    link = vc.getCardData(props.size, suit, value);
     return (
       // TODO: remove offset prop and from CardShared style?
       <CardFront>
@@ -57,6 +53,5 @@ Card.propTypes = {
   size: React.PropTypes.number,
   folded: React.PropTypes.bool,
 };
-
 
 export default Card;
