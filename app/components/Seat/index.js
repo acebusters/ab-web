@@ -10,9 +10,9 @@ import ButtonInvite from './ButtonInvite';
 imoprt Radial from '../RadialProgress'
 */
 
-const activePlayer = (seatStatus) => {
-  if (seatStatus === 'pending') return false;
+const isActivePlayer = (seatStatus) => {
   if (seatStatus === 'sitting-in') return false;
+  if (seatStatus === 'standing-up') return false;
   if (seatStatus === 'sit-out') return false;
   return true;
 };
@@ -37,6 +37,7 @@ const SeatComponent = (props) => {
     pending,
     sitout,
   } = props;
+  const seatStatusResult = seatStatus(pending, myPos, sitout);
   if (open) {
     if (myPos === undefined) {
       return (
@@ -57,8 +58,8 @@ const SeatComponent = (props) => {
   }
   return (
     <Seat
-      activePlayer={activePlayer(seatStatus)}
-      seatStatus={seatStatus(pending, myPos, sitout)}
+      activePlayer={isActivePlayer(seatStatusResult)}
+      seatStatus={seatStatusResult}
       {...props}
     />
   );

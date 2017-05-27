@@ -5,7 +5,6 @@ import React from 'react';
 
 import CardContainer from './CardContainer';
 import SeatInfo from './SeatInfo';
-import SeatTimer from './SeatTimer';
 import StatusAction from './StatusAction';
 
 import {
@@ -19,10 +18,7 @@ const Seat = (props) => {
   const {
     activePlayer,
     coords,
-    lastAction,
     seatStatus,
-    sitout,
-    timeLeft,
   } = props;
   return (
     <SeatWrapper coords={coords}>
@@ -37,15 +33,8 @@ const Seat = (props) => {
 
         <SeatInfo {...props} />
 
-        {lastAction ? <StatusAction {...props} /> : null }
+        <StatusAction {...props} />
 
-        {(timeLeft > 0) || (sitout) ?
-          <SeatTimer
-            timerProgress={sitout || timeLeft}
-            timerType={(sitout > 0) ? 'sitout' : 'action'}
-          />
-          : null
-        }
       </SeatContainer>
     </SeatWrapper>
   );
@@ -53,10 +42,7 @@ const Seat = (props) => {
 Seat.propTypes = {
   activePlayer: React.PropTypes.bool,
   coords: React.PropTypes.array,
-  lastAction: React.PropTypes.string,
   seatStatus: React.PropTypes.string,
-  sitout: React.PropTypes.number,
-  timeLeft: React.PropTypes.number, // progress 0 - 1
 };
 
 export default Seat;

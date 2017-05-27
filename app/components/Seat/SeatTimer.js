@@ -9,34 +9,26 @@ import {
   TimerWrapper,
 } from './styles';
 
-const timerDisplayColor = (timerType, timerProgress) => {
-  if (timerType === 'sitout') return 'sitout';
+const timerDisplayColor = (timerProgress) => {
   if (timerProgress <= 60) return 'active';
   if (timerProgress <= 30) return 'warning';
   if (timerProgress <= 0) return 'danger';
   return 'active';
 };
 
-const timerWidth = (timerType, timerProgress) => {
-  if (timerType === 'action') return `${timerProgress}%`;
-  if (timerType === 'sitout') return '100%';
-  return '0%';
-};
-
-const SeatTimer = ({ timerProgress, timerType }) => (
+const SeatTimer = ({ timeLeft }) => (
   <TimerWrapper>
     <TimerBackground>
       <TimerBar
-        type={timerDisplayColor(timerType, timerProgress)}
-        width={timerWidth(timerType, timerProgress)}
+        type={timerDisplayColor(timeLeft)}
+        width={`${timeLeft}%`}
       />
     </TimerBackground>
   </TimerWrapper>
 );
 
 SeatTimer.propTypes = {
-  timerProgress: React.PropTypes.number,
-  timerType: React.PropTypes.string, // sitout or action
+  timeLeft: React.PropTypes.number,
 };
 
 export default SeatTimer;
