@@ -7,15 +7,22 @@ import {
   ButtonStyle,
   ButtonText,
   ButtonWrapper,
+  SeatWrapper,
 } from './styles';
 
-const ButtonInvite = () => (
-  <ButtonWrapper>
-    <ButtonStyle>
-      <ButtonIcon className="fa fa-envelope" aria-hidden="true" />
-      <ButtonText>Invite</ButtonText>
-    </ButtonStyle>
-  </ButtonWrapper>
+const ButtonInvite = ({ coords, onClickHandler }) => (
+  <SeatWrapper coords={coords}>
+    <ButtonWrapper onClick={onClickHandler}>
+      <ButtonStyle>
+        <ButtonIcon className="fa fa-envelope" aria-hidden="true" />
+        <ButtonText>Invite</ButtonText>
+      </ButtonStyle>
+    </ButtonWrapper>
+  </SeatWrapper>
 );
+ButtonInvite.propTypes = {
+  onClickHandler: React.PropTypes.func,
+  coords: React.PropTypes.array,
+};
 
 export default ButtonInvite;
