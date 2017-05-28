@@ -213,7 +213,7 @@ export class ActionBar extends React.PureComponent { // eslint-disable-line reac
       );
     } else if (canSeeChat) {
       const ta = this.props.params.tableAddr.substring(2, 8);
-      const chatPlaceholder = `table <${ta}> in state ${this.props.state} has ${this.props.playerCount || 'no'} active player${this.props.playerCount === 1 ? '' : 's'}.`;
+      const chatPlaceholder = `table <${ta}> in state ${this.props.state} has ${this.props.playerCount || 'no'} player${this.props.playerCount === 1 ? '' : 's'}.`;
       return (
         <ChatWrapper>
           <Chat onAddMessage={this.sendMessage} messages={this.props.messages} readonly={!isTakePartOfAGame} placeholder={chatPlaceholder} />
@@ -252,7 +252,7 @@ const mapStateToProps = createStructuredSelector({
 ActionBar.propTypes = {
   params: React.PropTypes.object,
   privKey: React.PropTypes.string,
-  lastReceipt: React.PropTypes.string,
+  lastReceipt: React.PropTypes.object,
   myPos: React.PropTypes.number,
   myMaxBet: React.PropTypes.number,
   isMyTurn: React.PropTypes.bool,
@@ -264,7 +264,7 @@ ActionBar.propTypes = {
   dispatch: React.PropTypes.func,
   setCards: React.PropTypes.func,
   sendMessage: React.PropTypes.func,
-  messages: React.PropTypes.object,
+  messages: React.PropTypes.array,
   playerCount: React.PropTypes.number,
 };
 

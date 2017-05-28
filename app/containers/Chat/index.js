@@ -27,7 +27,7 @@ export class Chat extends React.PureComponent { // eslint-disable-line react/pre
 }
 
 Chat.propTypes = {
-  messages: PropTypes.object,
+  messages: PropTypes.array,
   onAddMessage: PropTypes.func,
   readonly: PropTypes.bool,
   placeholder: PropTypes.string,
