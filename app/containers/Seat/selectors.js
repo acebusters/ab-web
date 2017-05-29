@@ -185,7 +185,20 @@ const makeShowStatusSelector = () => createSelector(
       }
       if (state !== 'waiting' && state !== 'dealing') {
         if (lastAction.indexOf('bet') > -1) {
-          const prevPos = pokerHelper.prevPlayer(lineup, pos, 'active', state);
+          // trying to find the previous player here
+          // 1. reverse the lineup
+          const reverseLineup = hand.get('lineup').reverse().toJS();
+          // 2. calc same pos in reverse lineup
+          const reversePos = (lineup.length - 1) - pos;
+          // 3. use nexPlayer() on reverse lineup to get previous player
+          let prevPos;
+          try {
+            prevPos = pokerHelper.nextPlayer(reverseLineup, reversePos, 'active', state);
+          } catch (err) {
+            // sometimes the lineup has only one player left (fold heads up)
+            // then we try to find that guy to compare values
+            prevPos = pokerHelper.nextPlayer(reverseLineup, reversePos, 'involved', state);
+          }
           const prevAmount = rc.get(lineup[prevPos].last).values[1];
           // bet: amount higher than previous player && previous player amount <= lastRoundMaxBet
           if (amount > prevAmount && prevAmount <= lastRoundMaxBet) {
