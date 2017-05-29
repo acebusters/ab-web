@@ -21,8 +21,8 @@ const ButtonJoinSeat = ({ coords, onClickHandler }) => (
   </SeatWrapper>
 );
 ButtonJoinSeat.propTypes = {
-  onClickHandler: React.PropTypes.func,
-  coords: React.PropTypes.array,
+  onClickHandler: React.PropTypes.func.isRequired,
+  coords: React.PropTypes.array.isRequired,
 };
 
 export default ButtonJoinSeat;
