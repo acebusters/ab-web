@@ -47,11 +47,11 @@ export const STATUS_MSG = {
     style: 'success',
     msg: 'check',
   },
-  // fold: {
-  //   type: 'action',
-  //   style: 'info',
-  //   msg: 'fold',
-  // },
+  fold: {
+    type: 'action',
+    style: 'info',
+    msg: 'fold',
+  },
   raise: {
     type: 'action',
     style: 'danger',
