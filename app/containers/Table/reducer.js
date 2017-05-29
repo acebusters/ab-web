@@ -42,9 +42,6 @@ export default function tableReducer(state = initialState, action) {
         signer: action.privKey,
         created: action.created,
       };
-      // if (!state.getIn([action.tableAddr, 'messages'])) {
-      //   return state.setIn([action.tableAddr, 'messages'], List([message]));
-      // }
       const newState = state.updateIn([action.tableAddr, 'messages'], (list) => list.push(message));
       storageService.setItem(`messages${action.tableAddr}`, newState.getIn([action.tableAddr, 'messages']).toJS());
       return newState;
