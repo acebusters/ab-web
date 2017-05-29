@@ -3,7 +3,7 @@
 */
 import React from 'react';
 
-import CardContainer from './CardContainer';
+import CardsComponent from './CardsComponent';
 import SeatInfo from './SeatInfo';
 import StatusAction from './StatusAction';
 
@@ -28,7 +28,7 @@ const Seat = (props) => {
             <StatusSeat>{seatStatus}</StatusSeat>
           </StatusSeatWrapper>
           :
-          <CardContainer {...props} />
+          <CardsComponent {...props} />
         }
 
         <SeatInfo {...props} />

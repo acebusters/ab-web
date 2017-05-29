@@ -40,12 +40,12 @@ const SeatInfo = ({
 }) => (
   <InfoWrapper>
     {showChipsButton(pending, seatStatus) ?
-      <ChipButtonContainer>
+      <ChipButtonContainer className="chip-button-container">
         <DealerButton dealer={dealer} pos={pos}>D</DealerButton>
 
         <AmountBox amountCoords={amountCoords}>
           { (lastAmount > 0) &&
-            <Pot potSize={lastAmount} left="0%" top="0%" />
+            <Pot className="pot" potSize={lastAmount} left="0%" top="0%" />
           }
         </AmountBox>
       </ChipButtonContainer>

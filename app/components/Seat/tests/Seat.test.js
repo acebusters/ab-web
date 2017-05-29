@@ -6,72 +6,35 @@ import { shallow } from 'enzyme';
 import Seat from '../Seat';
 
 describe('components.seat.seat', () => {
-  describe('seat status', () => {
-    describe('if seat is NOT ready', () => {
-      it('should show seat status', () => {
-        // given props/state
-        // what to look for el = shallow();
-        // expect();
-      });
-
-      describe('if seat is ready', () => {
-        it('should show <CardContainer/>', () => {
-          // given props/state
-          // what to look for el = shallow();
-          // expect();
-        });
-      });
-    });
-  });
-
-
-  describe('Seat Info', () => {
+  describe('render default imported components', () => {
+    const el = shallow(<Seat />);
     it('should show <SeatInfo/>', () => {
-      const el = shallow(<Seat />);
       expect(el.find('SeatInfo').length).toEqual(1);
     });
-  });
-
-  describe('last action status', () => {
-    describe('if no last action is undefined', () => {
-      it('should not show <StatusAction/>', () => {
-        // given props/state
-        // what to look for el = shallow();
-        // expect();
-      });
-    });
-
-    describe('if last action is not !undefined', () => {
-      it('should show <StatusAction/>', () => {
-        // given props/state
-        // what to look for el = shallow();
-        // expect();
-      });
+    it('should show <StatusAction/>', () => {
+      expect(el.find('StatusAction').length).toEqual(1);
     });
   });
 
-  describe('timer', () => {
-    describe('when NOT players turn to act, or NOT in sitout', () => {
-      it('should NOT show <SeatTimer />', () => {
-        // given props/state
-        // what to look for el = shallow();
-        // expect();
+  describe('seat status', () => {
+    describe('if seat is NOT ready', () => {
+      const props = {
+        activePlayer: true,
+        coords: [0, 0],
+        seatStatus: 'sitting-out',
+      };
+      it('should show seat status', () => {
+        const el = shallow(<Seat {...props} />);
+        const la = el.findWhere((n) => n.text() === 'sitting-out');
+        expect(la.length).toEqual(1);
       });
     });
 
-    describe('when players turn to act', () => {
-      it('should show <SeatTimer />', () => {
-        // given props/state
-        // what to look for el = shallow();
-        // expect();
-      });
-    });
-
-    describe('if player is in sitout', () => {
-      it('should show <SeatTimer />', () => {
-        // given props/state
-        // what to look for el = shallow();
-        // expect();
+    describe('if seat is ready', () => {
+      const props = { seatStatus: 'EMPTY' };
+      it('should show <CardsComponent/>', () => {
+        const el = shallow(<Seat {...props} />);
+        expect(el.find('CardsComponent').length).toEqual(1);
       });
     });
   });

@@ -10,9 +10,9 @@ import {
 } from './styles';
 
 const timerDisplayColor = (timerProgress) => {
-  if (timerProgress <= 60) return 'active';
-  if (timerProgress <= 30) return 'warning';
-  if (timerProgress <= 0) return 'danger';
+  if (timerProgress >= 60) return 'active';
+  if (timerProgress >= 30) return 'warning';
+  if (timerProgress >= 0) return 'danger';
   return 'active';
 };
 

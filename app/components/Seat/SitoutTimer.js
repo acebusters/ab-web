@@ -9,7 +9,7 @@ import {
   TimerWrapper,
 } from './styles';
 
-const SeatTimer = () => (
+const SitoutTimer = () => (
   <TimerWrapper>
     <TimerBackground>
       <TimerBar
@@ -20,8 +20,8 @@ const SeatTimer = () => (
   </TimerWrapper>
 );
 
-SeatTimer.propTypes = {
+SitoutTimer.propTypes = {
   // sitout: React.PropTypes.number,
 };
 
-export default SeatTimer;
+export default SitoutTimer;
