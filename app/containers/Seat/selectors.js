@@ -200,7 +200,8 @@ const makeShowStatusSelector = () => createSelector(
             // then we try to find that guy to compare values
             prevPos = pokerHelper.nextPlayer(reverseLineup, reversePos, 'involved', state);
           }
-          const prevAmount = rc.get(lineup[prevPos].last).values[1];
+
+          const prevAmount = (lineup[prevPos].last) ? rc.get(lineup[prevPos].last).values[1] : 0;
           // bet: amount higher than previous player && previous player amount <= lastRoundMaxBet
           if (amount > prevAmount && prevAmount <= lastRoundMaxBet) {
             return STATUS_MSG.bet;
