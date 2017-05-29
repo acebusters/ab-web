@@ -42,7 +42,7 @@ import SeatComponent from '../../components/Seat';
 class Seat extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
-    this.state = { wasMostRecentAction: '' };
+    this.state = { wasMostRecentAction: false };
   }
   componentWillReceiveProps(nextProps) {
     // Show Action if most recent action
