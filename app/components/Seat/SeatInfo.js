@@ -38,7 +38,7 @@ const SeatInfo = ({
   seatStatus,
   stackSize,
 }) => (
-  <InfoWrapper>
+  <InfoWrapper className="info-wrapper" >
     {showChipsButton(pending, seatStatus) ?
       <ChipButtonContainer className="chip-button-container">
         <DealerButton dealer={dealer} pos={pos}>D</DealerButton>

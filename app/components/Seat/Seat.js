@@ -21,19 +21,19 @@ const Seat = (props) => {
     seatStatus,
   } = props;
   return (
-    <SeatWrapper coords={coords}>
-      <SeatContainer activePlayer={activePlayer}>
+    <SeatWrapper className="seat-wrapper" coords={coords}>
+      <SeatContainer className="seat-container" activePlayer={activePlayer}>
         {seatStatus !== 'EMPTY' ?
-          <StatusSeatWrapper>
+          <StatusSeatWrapper className="status-seat-wrapper">
             <StatusSeat>{seatStatus}</StatusSeat>
           </StatusSeatWrapper>
           :
-          <CardsComponent {...props} />
+          <CardsComponent className="cards-component" {...props} />
         }
 
-        <SeatInfo {...props} />
+        <SeatInfo className="seat-info" {...props} />
 
-        <StatusAction {...props} />
+        <StatusAction className="status-action" {...props} />
 
       </SeatContainer>
     </SeatWrapper>
