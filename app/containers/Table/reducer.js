@@ -92,6 +92,11 @@ export default function tableReducer(state = initialState, action) {
         .setIn([action.tableAddr, 'data', 'smallBlind'], sb);
     }
 
+    case TableActions.EXIT_HAND_SET: {
+      const handIdStr = action.handId.toString();
+      return state.setIn([action.tableAddr, handIdStr, 'lineup', action.pos, 'exitHand'], action.exitHand);
+    }
+
     case TableActions.PENDING_TOGGLE: {
       const handIdStr = action.handId.toString();
       const pending = state.getIn([action.tableAddr, handIdStr, 'lineup', action.pos, 'pending']);
@@ -200,13 +205,6 @@ export default function tableReducer(state = initialState, action) {
         if (action.hand.cards && action.hand.cards.length > 0) {
           hand = hand.set('cards', List(action.hand.cards));
         }
-        for (let j = 0; j < action.hand.lineup.length; j += 1) {
-          if (hand.getIn(['lineup', j, 'address']) !== action.hand.lineup[j].address ||
-            hand.getIn(['lineup', j, 'last']) !== action.hand.lineup[j].last ||
-            hand.getIn(['lineup', j, 'sitout']) !== action.hand.lineup[j].sitout) {
-            hand = hand.setIn(['lineup', j], Map(action.hand.lineup[j]));
-          }
-        }
         if (action.hand.distribution) {
           hand = hand.set('distribution', action.hand.distribution);
         }
@@ -216,7 +214,10 @@ export default function tableReducer(state = initialState, action) {
         }
       }
       for (let j = 0; j < action.hand.lineup.length; j += 1) {
-        if (hand.getIn(['lineup', j, 'address']) !== action.hand.lineup[j].address) {
+        if (hand.getIn(['lineup', j, 'address']) !== action.hand.lineup[j].address ||
+          hand.getIn(['lineup', j, 'last']) !== action.hand.lineup[j].last ||
+          hand.getIn(['lineup', j, 'sitout']) !== action.hand.lineup[j].sitout ||
+          hand.getIn(['lineup', j, 'exitHand']) !== action.hand.lineup[j].exitHand) {
           hand = hand.setIn(['lineup', j], Map(action.hand.lineup[j]));
         }
       }
