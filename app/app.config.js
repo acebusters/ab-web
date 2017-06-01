@@ -109,6 +109,11 @@ export const STATUS_MSG = {
     style: 'info',
     msg: 'sitting-in',
   },
+  sittingOut: {
+    type: 'seat',
+    style: 'info',
+    msg: 'sitting-out',
+  },
   standingUp: {
     type: 'seat',
     style: 'info',
