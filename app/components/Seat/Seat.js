@@ -19,8 +19,6 @@ const Seat = (props) => {
   const {
     coords,
     seatStatus,
-    seatStatus2,
-    lastAction,
   } = props;
   return (
     <SeatWrapper coords={coords}>
@@ -38,10 +36,6 @@ const Seat = (props) => {
         <SeatInfo {...props} />
 
         <StatusAction {...props} />
-        <div style={{ color: 'white' }}>
-          status: {seatStatus2.msg}<br />
-          lastAction: {lastAction}
-        </div>
 
       </SeatContainer>
     </SeatWrapper>
