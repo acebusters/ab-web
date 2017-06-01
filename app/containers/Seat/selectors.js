@@ -161,8 +161,7 @@ const makeSeatStatusSelector = () => createSelector(
     const exitHand = seat.get('exitHand');
     // player is joining the table
     if (pending) {
-      // return STATUS_MSG.sittingIn;
-      return { msg: 'joinig table' };
+      return STATUS_MSG.sittingIn;
     }
     // player is leaving the table
     if (exitHand !== undefined) {
@@ -177,12 +176,10 @@ const makeSeatStatusSelector = () => createSelector(
       return STATUS_MSG.sittingIn;
     }
     // player is sitting at table playing
-    if (lineup[pos] && lastAction && lastAction !== 'sitOut') {
+    if (lastReceipt && lastReceipt.values[0] >= 0) {
       return STATUS_MSG.active;
     }
-    return {
-      msg: 'waiting',
-    };
+    return STATUS_MSG.waiting;
   }
 );
 

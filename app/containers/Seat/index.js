@@ -113,7 +113,7 @@ const mapStateToProps = createStructuredSelector({
   dealer: makeDealerSelector(),
   open: makeOpenSelector(),
   seat: makeSeatSelector(),
-  seatStatus2: makeSeatStatusSelector(),
+  seatStatus: makeSeatStatusSelector(),
   pending: makePendingSelector(),
   sitout: makeSitoutSelector(),
   showStatus: makeShowStatusSelector(),

@@ -77,6 +77,11 @@ export const STATUS_MSG = {
     style: 'info',
     msg: 'standing-up',
   },
+  waiting: {
+    type: 'seat',
+    style: 'info',
+    msg: 'waiting',
+  },
   // winner: {
   //   type: 'action',
   //   style: 'warning',
