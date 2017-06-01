@@ -20,7 +20,7 @@ export const STATUS_MSG = {
   active: {
     type: 'seat',
     style: 'info',
-    msg: '',
+    msg: 'active',
   },
   // allIn: {
   //   type: 'action',
@@ -71,11 +71,6 @@ export const STATUS_MSG = {
     type: 'seat',
     style: 'info',
     msg: 'sitting-in',
-  },
-  sittingOut: {
-    type: 'seat',
-    style: 'info',
-    msg: 'sitting-out',
   },
   standingUp: {
     type: 'seat',

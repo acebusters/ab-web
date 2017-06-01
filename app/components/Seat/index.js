@@ -44,6 +44,7 @@ const SeatComponent = (props) => {
         <ButtonJoinSeat
           coords={coords}
           onClickHandler={() => isTaken(open, myPos, pending, pos)}
+          {...props}
         />
       );
     }
@@ -52,6 +53,7 @@ const SeatComponent = (props) => {
         <ButtonInvite
           coords={coords}
           onClickHandler={() => isTaken(open, myPos, pending, pos)}
+          {...props}
         />
       );
     }

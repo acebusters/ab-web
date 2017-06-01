@@ -157,34 +157,32 @@ const makeSeatStatusSelector = () => createSelector(
   [makeHandSelector(), makeLastActionSelector(), makeLastReceiptSelector(),
     posSelector, makePendingSelector(), makeSeatSelector()],
   (hand, lastAction, lastReceipt, pos, pending, seat) => {
-    if (lastAction && lastReceipt && hand && hand.get) {
-      const lineup = hand.get('lineup').toJS();
-      // player is in sitout
-      if (typeof lineup[pos].sitout === 'number') {
-        return STATUS_MSG.sitOut;
-      }
-      // player is returning from sitOut
-      if (lastAction === 'sitOut' && !lineup[pos].sitout) {
-        return STATUS_MSG.sittingIn;
-      }
-      // player is entering sitOut
-      if (seat.get('exitHand')) {
-        return STATUS_MSG.sittingOut;
-      }
-      if (pending) {
-        // player is joining the table
-        if (lineup[pos] === undefined) {
-          return STATUS_MSG.sittingIn;
-        }
-        // player is leaving the table
-        return STATUS_MSG.standingUp;
-      }
-      // player is sitting at table ready to play or is playing
-      if (lineup[pos]) {
-        return STATUS_MSG.active;
-      }
+    const lineup = hand.get('lineup').toJS();
+    const exitHand = seat.get('exitHand');
+    // player is joining the table
+    if (pending) {
+      // return STATUS_MSG.sittingIn;
+      return { msg: 'joinig table' };
     }
-    return {};
+    // player is leaving the table
+    if (exitHand !== undefined) {
+      return STATUS_MSG.standingUp;
+    }
+    // player is in sitout
+    if (typeof lineup[pos].sitout === 'number') {
+      return STATUS_MSG.sitOut;
+    }
+    // player is returning from sitOut
+    if (lastAction === 'sitOut' && !lineup[pos].sitout) {
+      return STATUS_MSG.sittingIn;
+    }
+    // player is sitting at table playing
+    if (lineup[pos] && lastAction && lastAction !== 'sitOut') {
+      return STATUS_MSG.active;
+    }
+    return {
+      msg: 'waiting',
+    };
   }
 );
 

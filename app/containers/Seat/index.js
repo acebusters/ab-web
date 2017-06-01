@@ -26,6 +26,7 @@ import {
   makeDealerSelector,
   makeBlockySelector,
   makeStackSelector,
+  makeSeatStatusSelector,
 } from './selectors';
 
 import {
@@ -112,6 +113,7 @@ const mapStateToProps = createStructuredSelector({
   dealer: makeDealerSelector(),
   open: makeOpenSelector(),
   seat: makeSeatSelector(),
+  seatStatus2: makeSeatStatusSelector(),
   pending: makePendingSelector(),
   sitout: makeSitoutSelector(),
   showStatus: makeShowStatusSelector(),

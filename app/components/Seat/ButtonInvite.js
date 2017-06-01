@@ -10,12 +10,13 @@ import {
   SeatWrapper,
 } from './styles';
 
-const ButtonInvite = ({ coords, onClickHandler }) => (
+const ButtonInvite = ({ coords, onClickHandler, seatStatus2 }) => (
   <SeatWrapper coords={coords}>
     <ButtonWrapper onClick={onClickHandler}>
       <ButtonStyle>
         <ButtonIcon className="fa fa-envelope" aria-hidden="true" />
         <ButtonText>Invite</ButtonText>
+        <div>Status: {seatStatus2.msg}</div>
       </ButtonStyle>
     </ButtonWrapper>
   </SeatWrapper>
@@ -23,6 +24,7 @@ const ButtonInvite = ({ coords, onClickHandler }) => (
 ButtonInvite.propTypes = {
   onClickHandler: React.PropTypes.func,
   coords: React.PropTypes.array,
+  seatStatus2: React.PropTypes.object,
 };
 
 export default ButtonInvite;
