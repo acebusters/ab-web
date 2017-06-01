@@ -17,6 +17,11 @@ export const timeoutSeconds = 60;
 
 // showStatus messages ***commented out means they are not implemented yet***
 export const STATUS_MSG = {
+  active: {
+    type: 'seat',
+    style: 'info',
+    msg: '',
+  },
   // allIn: {
   //   type: 'action',
   //   style: 'warning',
@@ -60,7 +65,17 @@ export const STATUS_MSG = {
   sitOut: {
     type: 'seat',
     style: 'info',
-    msg: 'sitting out',
+    msg: 'sit-out',
+  },
+  sittingIn: {
+    type: 'seat',
+    style: 'info',
+    msg: 'sitting-in',
+  },
+  standingUp: {
+    type: 'seat',
+    style: 'info',
+    msg: 'standing-up',
   },
   // winner: {
   //   type: 'action',
