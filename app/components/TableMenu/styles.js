@@ -102,9 +102,10 @@ export const Patty = styled.div`
 // menu item
 export const ItemWrapper = styled(Button)`
   display: flex;
-  margin-left: auto;
-  min-width: 128px;
   height: 48px;
+  min-width: 128px;
+  margin-left: auto;
+  padding-left: 14px;
   background-color: grey;
 `;
 
@@ -117,6 +118,7 @@ export const ItemIcon = styled.i`
 `;
 
 export const ItemTitle = styled.span`
+  padding-left: 6px;
   background-color: brown;
   font-size: 14px;
 `;
