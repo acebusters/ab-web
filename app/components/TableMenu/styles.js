@@ -8,6 +8,7 @@ export const Button = styled.button`
   margin: 0;
   &:hover {
     background: blue;
+    cursor: pointer;
   }
   &:active {
     background: green;
@@ -15,6 +16,10 @@ export const Button = styled.button`
 `;
 
 export const Container = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100000;
   display: flex;
   background-color: cornflowerblue;
   color: white;
@@ -33,23 +38,34 @@ export const Logo = styled.div`
   background-color: lightgreen;
 `;
 
+// table-menu
+export const MenuContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 128px;
+  width: inherit;
+  background-color: green;
+`;
+
 // header
 export const MenuHeader = styled(Button)`
   display: flex;
   align-items: center;
   margin-left: auto;
   min-width: 128px;
+  height: 46px;
   padding-left: 14px;
   border-bottom-left-radius: 8px;
   background: linear-gradient(0deg, #606060 0%, #808080 100%);
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.31);
 `;
 
-export const Identicon = styled.span`
-  min-width: 24px;
-  min-height: 24px;
-  border: 1px solid red;
+export const Identicon = styled.div`
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
+  background-image: url(${(props) => props.bgImg});
+  background-size: 24px 24px;
 `;
 
 export const NickName = styled.span`
@@ -81,4 +97,26 @@ export const Patty = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+`;
+
+// menu item
+export const ItemWrapper = styled(Button)`
+  display: flex;
+  margin-left: auto;
+  min-width: 128px;
+  height: 48px;
+  background-color: grey;
+`;
+
+export const ItemIcon = styled.i`
+  background-color: gray;
+  color: white;
+  &:before {
+    font-size: 16px;
+  }
+`;
+
+export const ItemTitle = styled.span`
+  background-color: brown;
+  font-size: 14px;
 `;
