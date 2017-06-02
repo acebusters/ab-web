@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Board } from './Board';
-import TableMenu from './TableMenu';
+import TableMenu from '../TableMenu';
 import ActionBar from '../../containers/ActionBar';
 import tableImage from './tableBG.svg';
 import Pot from '../Pot';

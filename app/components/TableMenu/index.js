@@ -5,7 +5,7 @@
 import React from 'react';
 
 import { ActionButton } from '../ActionBar';
-import { Wrapper } from './styles';
+import { Wrapper } from '../Table/styles';
 
 const TableMenu = ({
   onLeave,
