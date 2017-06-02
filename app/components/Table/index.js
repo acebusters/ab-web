@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Board } from './Board';
-import TableMenu from '../TableMenu';
+import TableMenu from '../TableMenu/temp';
 import ActionBar from '../../containers/ActionBar';
 import tableImage from './tableBG.svg';
 import Pot from '../Pot';
@@ -21,9 +21,7 @@ import {
 const TableComponent = (props) => (
   <div>
 
-    { (props.myPos > -1) &&
-      <TableMenu {...props} />
-    }
+    <TableMenu {...props} />
 
     <TableHeader className="table-header">
       { `state: ${props.state}` } <br />
@@ -68,7 +66,6 @@ TableComponent.propTypes = {
   board: React.PropTypes.array,
   seats: React.PropTypes.array,
   potSize: React.PropTypes.number,
-  myPos: React.PropTypes.number,
   winners: React.PropTypes.array,
   myHand: React.PropTypes.object,
   sb: React.PropTypes.number,
