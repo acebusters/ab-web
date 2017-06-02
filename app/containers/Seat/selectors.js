@@ -40,6 +40,11 @@ const makeLastReceiptSelector = () => createSelector(
     (hand, pos) => (hand && pos > -1 && hand.getIn && hand.getIn(['lineup', pos])) ? rc.get(hand.getIn(['lineup', pos, 'last'])) : undefined
 );
 
+const makeSeatSelector = () => createSelector(
+    [makeHandSelector(), posSelector],
+    (hand, pos) => (hand && pos > -1 && hand.getIn && hand.getIn(['lineup', pos])) ? hand.getIn(['lineup', pos]) : undefined
+);
+
 const makeLastRoundMaxBetSelector = () => createSelector(
   [makeHandSelector()],
   (hand) => (hand && hand.get && hand.get('lastRoundMaxBet')) ? hand.get('lastRoundMaxBet') : 0
@@ -148,6 +153,36 @@ const makeStackSelector = () => createSelector(
   selectStack
 );
 
+const makeSeatStatusSelector = () => createSelector(
+  [makeHandSelector(), makeLastActionSelector(), makeLastReceiptSelector(),
+    posSelector, makePendingSelector(), makeSeatSelector()],
+  (hand, lastAction, lastReceipt, pos, pending, seat) => {
+    const lineup = hand.get('lineup').toJS();
+    const exitHand = seat.get('exitHand');
+    // player is joining the table
+    if (pending) {
+      return STATUS_MSG.sittingIn;
+    }
+    // player is leaving the table
+    if (exitHand !== undefined) {
+      return STATUS_MSG.standingUp;
+    }
+    // player is in sitout
+    if (typeof lineup[pos].sitout === 'number') {
+      return STATUS_MSG.sitOut;
+    }
+    // player is returning from sitOut
+    if (lastAction === 'sitOut' && !lineup[pos].sitout) {
+      return STATUS_MSG.sittingIn;
+    }
+    // player is sitting at table playing
+    if (lastReceipt && lastReceipt.values[0] >= 0) {
+      return STATUS_MSG.active;
+    }
+    return STATUS_MSG.waiting;
+  }
+);
+
 const makeShowStatusSelector = () => createSelector(
   [makeHandSelector(), makeLastActionSelector(), makeLastRoundMaxBetSelector(), makeLastReceiptSelector(), makeSbSelector(), posSelector],
   (hand, lastAction, lastRoundMaxBet, lastReceipt, sb, pos) => {
@@ -176,10 +211,6 @@ const makeShowStatusSelector = () => createSelector(
         if (pos === bbPos && amount === sb * 2) {
           return STATUS_MSG.blindBig;
         }
-      }
-
-      if (lastAction === 'sitOut') {
-        return STATUS_MSG.sitOut;
       }
       if (lastAction === 'fold') {
         return STATUS_MSG.fold;
@@ -280,6 +311,7 @@ const selectStack = (table, pos) => {
 
 export {
   posSelector,
+  makeSeatSelector,
   makeLastReceiptSelector,
   makeSitoutSelector,
   makeLastAmountSelector,
@@ -298,4 +330,5 @@ export {
   makeMyStackSelector,
   makeStackSelector,
   makeLastActionSelector,
+  makeSeatStatusSelector,
 };
