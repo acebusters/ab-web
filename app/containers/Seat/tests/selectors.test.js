@@ -15,6 +15,7 @@ import {
   ABI_BET,
   ABI_DIST,
   ABI_FOLD,
+  ABI_SIT_OUT,
   STATUS_MSG,
   checkABIs,
 } from '../../../app.config';
@@ -451,41 +452,41 @@ describe('makeSeatStatusSelector', () => {
         .toEqual(STATUS_MSG.sitOut);
     });
   });
-  // describe('if player returns from sitout', () => {
-  //   it('should return sittingIn', () => {
-  //     const mockedState = fromJS({
-  //       table: {
-  //         [TBL_ADDR]: {
-  //           data: {
-  //             smallBlind: 50,
-  //           },
-  //           1: {
-  //             state: 'preflop',
-  //             dealer: 0,
-  //             lineup: [{
-  //               address: P1_ADDR,
-  //               last: new EWT(ABI_BET).bet(1, 1).sign(P1_KEY),
-  //             }, {
-  //               address: P2_ADDR,
-  //               last: new EWT(ABI_BET).bet(1, 100).sign(P2_KEY),
-  //             }],
-  //           },
-  //         },
-  //       },
-  //     });
-  //
-  //     const props = {
-  //       pos: 0,
-  //       params: {
-  //         tableAddr: TBL_ADDR,
-  //         handId: 1,
-  //       },
-  //     };
-  //     const statusSelector = makeSeatStatusSelector();
-  //     expect(statusSelector(mockedState, props))
-  //       .toEqual(STATUS_MSG.sittingIn);
-  //   });
-  // });
+  describe('if player returns from sitout', () => {
+    it('should return sittingIn', () => {
+      const mockedState = fromJS({
+        table: {
+          [TBL_ADDR]: {
+            data: {
+              smallBlind: 50,
+            },
+            1: {
+              state: 'preflop',
+              dealer: 0,
+              lineup: [{
+                address: P1_ADDR,
+                last: new EWT(ABI_SIT_OUT).sitOut(1, 0).sign(P1_KEY),
+              }, {
+                address: P2_ADDR,
+                last: new EWT(ABI_BET).bet(1, 100).sign(P2_KEY),
+              }],
+            },
+          },
+        },
+      });
+
+      const props = {
+        pos: 0,
+        params: {
+          tableAddr: TBL_ADDR,
+          handId: 1,
+        },
+      };
+      const statusSelector = makeSeatStatusSelector();
+      expect(statusSelector(mockedState, props))
+        .toEqual(STATUS_MSG.sittingIn);
+    });
+  });
   describe('if player is sitting at table playing', () => {
     it('should return sittingIn', () => {
       const mockedState = fromJS({
