@@ -3,15 +3,23 @@
 */
 import styled from 'styled-components';
 
+const menuColor = '#ebe8e8';
+const menuClose = 'linear-gradient(0deg, #606060 0%, #808080 100%)';
+const menuOpen = 'linear-gradient(0deg, #383838 0%, #717171 100%)';
+const menuActiveBoxShadow = 'inset 2px 1px 5px 2px rgba(0,0,0,0.50)';
+
 export const Button = styled.button`
   padding: 0;
   margin: 0;
+  &:focus {
+    outline: none;
+  }
   &:hover {
-    background: blue;
     cursor: pointer;
+    box-shadow: ${menuActiveBoxShadow};
   }
   &:active {
-    background: green;
+    box-shadow: ${menuActiveBoxShadow};
   }
 `;
 
@@ -21,7 +29,6 @@ export const Container = styled.div`
   left: 0;
   z-index: 100000;
   display: flex;
-  background-color: cornflowerblue;
   color: white;
   width: 100%;
 `;
@@ -31,33 +38,30 @@ export const LogoWrapper = styled.div`
   display: flex;
   width: 128px;
   height: 46px;
-  background-color: lightgreen;
+  border: 1px dashed red;
 `;
 
 export const Logo = styled.div`
-  background-color: lightgreen;
+  color: inherit;
 `;
 
 // table-menu
 export const MenuContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 128px;
-  width: inherit;
-  background-color: green;
+  min-width: 148px;
+  margin-left: auto;
+  background: ${(props) => props.open ? menuOpen : menuClose};
+  border-bottom-left-radius: 8px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.31);
 `;
 
-// header
+// header-item
 export const MenuHeader = styled(Button)`
   display: flex;
   align-items: center;
-  margin-left: auto;
-  min-width: 128px;
   height: 46px;
   padding-left: 14px;
-  border-bottom-left-radius: 8px;
-  background: linear-gradient(0deg, #606060 0%, #808080 100%);
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.31);
 `;
 
 export const Identicon = styled.div`
@@ -71,20 +75,18 @@ export const Identicon = styled.div`
 export const NickName = styled.span`
   min-width: 40px;
   padding-left: 6px;
-  border: 1px solid red;
   font-size: 14px;
   font-weight: normal;
-  color: #EBE8E8;
+  color: ${menuColor};
 `;
 
 export const Hamburger = styled.span`
-  margin-left: auto;
-  padding-right: 8px;
   display: flex;
   flex-direction: column;
+  margin-left: auto;
+  padding-right: 8px;
   min-width: 20px;
   min-height: 20px;
-  border: 1px solid red;
 `;
 
 export const Patty = styled.div`
@@ -102,23 +104,25 @@ export const Patty = styled.div`
 // menu item
 export const ItemWrapper = styled(Button)`
   display: flex;
-  height: 48px;
-  min-width: 128px;
-  margin-left: auto;
-  padding-left: 14px;
-  background-color: grey;
+  height: 40px;
+  margin-left: 8px;
+  padding-left: 12px;
+  color: ${menuColor};
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  &:last-child {
+    height: 40px;
+    margin-bottom: 10px;
+  }
 `;
 
 export const ItemIcon = styled.i`
-  background-color: gray;
-  color: white;
   &:before {
     font-size: 16px;
   }
 `;
 
 export const ItemTitle = styled.span`
-  padding-left: 6px;
-  background-color: brown;
+  padding-left: 10px;
   font-size: 14px;
 `;
