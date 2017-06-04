@@ -1,20 +1,14 @@
 import React from 'react';
+import MenuHeader from './MenuHeader';
 
-import { createBlocky } from '../../services/blockies';
-import { nickNameByAddress } from '../../services/nicknames';
 import {
  Container,
- Hamburger,
- Identicon,
  ItemWrapper,
  ItemIcon,
  ItemTitle,
  Logo,
  LogoWrapper,
  MenuContainer,
- MenuHeader,
- NickName,
- Patty,
 } from './styles';
 
 const menuItems = [
@@ -49,10 +43,19 @@ class Temp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      active: false,
       open: true,
       myPos: 1, // myPos === -1, then not at table
     };
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.toggleActiveOn = this.toggleActiveOn.bind(this);
+    this.toggleActiveOff = this.toggleActiveOff.bind(this);
+  }
+  toggleActiveOn() {
+    this.setState({ active: true });
+  }
+  toggleActiveOff() {
+    this.setState({ active: false });
   }
   toggleMenu() {
     this.setState({ open: !this.state.open });
@@ -60,8 +63,6 @@ class Temp extends React.Component {
   render() {
     const { myPos, open } = this.state;
     const { signerAddr } = this.props;
-    const name = nickNameByAddress(signerAddr);
-    const blocky = createBlocky(signerAddr);
     if (myPos > -1) {
       return (
         <Container>
@@ -70,27 +71,23 @@ class Temp extends React.Component {
           </LogoWrapper>
           {!open ?
             <MenuContainer open={open} className="menu-container">
-              <MenuHeader onClick={() => this.toggleMenu()}>
-                <Identicon bgImg={blocky} />
-                <NickName>{name}</NickName>
-                <Hamburger>
-                  <Patty />
-                  <Patty />
-                  <Patty />
-                </Hamburger>
-              </MenuHeader>
+              <MenuHeader
+                btnActive={this.state.active}
+                signerAddr={signerAddr}
+                onMouseDown={() => this.toggleActiveOn()}
+                onMouseUp={() => this.toggleActiveOff()}
+                onToggleMenu={() => this.toggleMenu()}
+              />
             </MenuContainer>
             :
             <MenuContainer open={open} className="menu-container">
-              <MenuHeader onClick={() => this.toggleMenu()}>
-                <Identicon bgImg={blocky} />
-                <NickName>{name}</NickName>
-                <Hamburger>
-                  <Patty />
-                  <Patty />
-                  <Patty />
-                </Hamburger>
-              </MenuHeader>
+              <MenuHeader
+                btnActive={this.state.active}
+                signerAddr={signerAddr}
+                onMouseDown={() => this.toggleActiveOn()}
+                onMouseUp={() => this.toggleActiveOff()}
+                onToggleMenu={() => this.toggleMenu()}
+              />
               {menuItems.map((item, index) => (
                 <ItemWrapper key={index} onClick={item.onClick}>
                   <ItemIcon className={item.icon} aria-hidden />
