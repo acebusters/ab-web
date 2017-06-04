@@ -3,7 +3,8 @@
 */
 import styled from 'styled-components';
 
-const menuColor = '#ebe8e8';
+const menuActiveBG = '#35c5e3'; // electric blue
+const menuColor = '#ebe8e8'; // light gray
 const menuClose = 'linear-gradient(0deg, #606060 0%, #808080 100%)';
 const menuOpen = 'linear-gradient(0deg, #383838 0%, #717171 100%)';
 const menuActiveBoxShadow = 'inset 2px 1px 5px 2px rgba(0,0,0,0.50)';
@@ -11,6 +12,7 @@ const menuActiveBoxShadow = 'inset 2px 1px 5px 2px rgba(0,0,0,0.50)';
 export const Button = styled.button`
   padding: 0;
   margin: 0;
+  color: ${menuColor};
   &:focus {
     outline: none;
   }
@@ -20,6 +22,7 @@ export const Button = styled.button`
   }
   &:active {
     box-shadow: ${menuActiveBoxShadow};
+    color: ${menuActiveBG};
   }
 `;
 
@@ -29,7 +32,6 @@ export const Container = styled.div`
   left: 0;
   z-index: 100000;
   display: flex;
-  color: white;
   width: 100%;
 `;
 
@@ -42,7 +44,7 @@ export const LogoWrapper = styled.div`
 `;
 
 export const Logo = styled.div`
-  color: inherit;
+  color: grey;
 `;
 
 // table-menu
@@ -77,14 +79,13 @@ export const NickName = styled.span`
   padding-left: 6px;
   font-size: 14px;
   font-weight: normal;
-  color: ${menuColor};
 `;
 
 export const Hamburger = styled.span`
   display: flex;
   flex-direction: column;
   margin-left: auto;
-  padding-right: 8px;
+  padding-right: 12px;
   min-width: 20px;
   min-height: 20px;
 `;
@@ -93,7 +94,7 @@ export const Patty = styled.div`
   width: 20px;
   height: 4px;
   margin-bottom: 3px;
-  background-color: #5b5a5a;
+  background-color: ${(props) => props.active ? menuActiveBG : '#5b5a5a'};
   box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.41);
   border-radius: 1px;
   &:last-child {
@@ -107,7 +108,6 @@ export const ItemWrapper = styled(Button)`
   height: 40px;
   margin-left: 8px;
   padding-left: 12px;
-  color: ${menuColor};
   border-bottom-left-radius: 6px;
   border-top-left-radius: 6px;
   &:last-child {
