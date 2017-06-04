@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { createBlocky } from '../../services/blockies';
-// import { nickNameByAddress } from '../../services/nicknames';
+import { nickNameByAddress } from '../../services/nicknames';
 import {
  Container,
  Hamburger,
@@ -56,12 +56,11 @@ class Temp extends React.Component {
   }
   toggleMenu() {
     this.setState({ open: !this.state.open });
-    // console.log('hello');
   }
   render() {
     const { myPos, open } = this.state;
     const { signerAddr } = this.props;
-    // const name = nickNameByAddress(signerAddr);
+    const name = nickNameByAddress(signerAddr);
     const blocky = createBlocky(signerAddr);
     if (myPos > -1) {
       return (
@@ -70,10 +69,10 @@ class Temp extends React.Component {
             <Logo>AceBusters Logo</Logo>
           </LogoWrapper>
           {!open ?
-            <MenuContainer>
+            <MenuContainer open={open} className="menu-container">
               <MenuHeader onClick={() => this.toggleMenu()}>
                 <Identicon bgImg={blocky} />
-                <NickName>dklasjdklfjasldkjfalsdk</NickName>
+                <NickName>{name}</NickName>
                 <Hamburger>
                   <Patty />
                   <Patty />
@@ -82,10 +81,10 @@ class Temp extends React.Component {
               </MenuHeader>
             </MenuContainer>
             :
-            <MenuContainer>
+            <MenuContainer open={open} className="menu-container">
               <MenuHeader onClick={() => this.toggleMenu()}>
                 <Identicon bgImg={blocky} />
-                <NickName>dklasjdklfjasldkjfalsdk</NickName>
+                <NickName>{name}</NickName>
                 <Hamburger>
                   <Patty />
                   <Patty />
