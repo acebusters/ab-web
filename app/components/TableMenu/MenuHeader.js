@@ -16,11 +16,13 @@ const MenuHeader = ({
   onToggleMenu,
   onMouseDown,
   onMouseUp,
+  open,
 }) => {
   const name = nickNameByAddress(signerAddr);
   const blocky = createBlocky(signerAddr);
   return (
     <HeaderStyle
+      open={open}
       onClick={onToggleMenu}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
@@ -41,6 +43,7 @@ MenuHeader.propTypes = {
   onMouseUp: React.PropTypes.func,
   onMouseDown: React.PropTypes.func,
   onToggleMenu: React.PropTypes.func,
+  open: React.PropTypes.bool,
 };
 
 export default MenuHeader;

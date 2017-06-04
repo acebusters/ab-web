@@ -4,6 +4,7 @@
 import styled from 'styled-components';
 
 const menuActiveBG = '#35c5e3'; // electric blue
+const menuBoxShadow = '0 2px 4px 0 rgba(0,0,0,0.31)';
 const menuColor = '#ebe8e8'; // light gray
 const menuClose = 'linear-gradient(0deg, #606060 0%, #808080 100%)';
 const menuOpen = 'linear-gradient(0deg, #383838 0%, #717171 100%)';
@@ -53,9 +54,9 @@ export const MenuContainer = styled.div`
   flex-direction: column;
   min-width: 148px;
   margin-left: auto;
-  background: ${(props) => props.open ? menuOpen : menuClose};
+  background: ${(props) => props.open ? menuOpen : 'none'};
   border-bottom-left-radius: 8px;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.31);
+  box-shadow: ${(props) => props.open ? menuBoxShadow : 'none'};
 `;
 
 // header-item
@@ -64,6 +65,9 @@ export const MenuHeader = styled(Button)`
   align-items: center;
   height: 46px;
   padding-left: 14px;
+  border-bottom-left-radius: 8px;
+  background: ${(props) => props.open ? 'none' : menuClose};
+  box-shadow: ${(props) => props.open ? 'none' : menuBoxShadow} !important;
 `;
 
 export const Identicon = styled.div`
@@ -103,6 +107,11 @@ export const Patty = styled.div`
 `;
 
 // menu item
+export const MenuItemsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const ItemWrapper = styled(Button)`
   display: flex;
   height: 40px;
