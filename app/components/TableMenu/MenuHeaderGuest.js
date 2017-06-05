@@ -16,6 +16,7 @@ const MenuHeader = ({
   open,
 }) => (
   <HeaderStyle
+    name="register"
     open={open}
     onClick={handleClick}
     onMouseDown={onMouseDown}

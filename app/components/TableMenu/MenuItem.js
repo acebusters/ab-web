@@ -10,6 +10,7 @@ const MenuItems = (props) => {
   const { item } = props;
   return (
     <ItemWrapper
+      name={item.name}
       disabled={item.disabled}
       onClick={item.onClick}
     >
