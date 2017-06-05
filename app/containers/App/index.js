@@ -25,6 +25,10 @@ import {
   backgroundTable,
 } from '../../variables';
 
+const StyledModal = styled.div`
+  z-index: 1000;
+`;
+
 const StyledDashboard = styled.div`
   /* clearfix */
   &:before, &:after {
@@ -48,7 +52,6 @@ const StyledDashboard = styled.div`
     position: relative;
   `)}
 `;
-
 
 export function App(props) {
   const modalContent = props.modalStack[props.modalStack.length - 1];
@@ -76,15 +79,17 @@ export function App(props) {
         <Footer />
       }
       { modalContent &&
-        <ModalContainer>
-          <ModalDialog
-            onClose={props.modalDismiss}
-            dismissOnBackgroundClick={false}
-            closeButtonParam={{ margin: 5 }}
-          >
-            { modalContent }
-          </ModalDialog>
-        </ModalContainer>
+        <StyledModal>
+          <ModalContainer>
+            <ModalDialog
+              onClose={props.modalDismiss}
+              dismissOnBackgroundClick={false}
+              closeButtonParam={{ margin: 5 }}
+            >
+              { modalContent }
+            </ModalDialog>
+          </ModalContainer>
+        </StyledModal>
       }
     </div>
   );
