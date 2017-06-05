@@ -103,7 +103,6 @@ App.defaultProps = {
   logoHref: landingPageUrl,
 };
 
-
 App.propTypes = {
   children: React.PropTypes.node,
   account: React.PropTypes.object,

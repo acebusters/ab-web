@@ -2,6 +2,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 
 import MenuHeader from './MenuHeader';
+import MenuHeaderGuest from './MenuHeaderGuest';
 import MenuItems from './MenuItems';
 
 import {
@@ -33,6 +34,7 @@ class TableMenu extends React.Component {
   }
   render() {
     const { myPos, signerAddr, sitout, handleClickLogout, onLeave, onSitout } = this.props;
+    const loggedIn = this.props.account.loggedIn;
     const menuClose = [
       // Note: sitout value possibilities
       // sitout > 0, for enabled "play"
@@ -84,6 +86,20 @@ class TableMenu extends React.Component {
         disabled: false,
       },
     ];
+    const menuGuest = [
+      {
+        icon: 'fa fa-search',
+        title: 'Lobby',
+        onClick: () => browserHistory.push('/lobby'),
+        disabled: false,
+      },
+      {
+        icon: 'fa fa-sign-in',
+        title: 'Log-In',
+        onClick: () => browserHistory.push('/login'),
+        disabled: false,
+      },
+    ];
 
     const { open } = this.state;
     return (
@@ -91,7 +107,23 @@ class TableMenu extends React.Component {
         <LogoWrapper>
           <Logo>AceBusters Logo</Logo>
         </LogoWrapper>
-        {!open ?
+        {/* render Guest Menu */}
+        {!loggedIn &&
+          <MenuContainer name="menu-container-guest">
+            <MenuHeaderGuest
+              btnActive={this.state.active}
+              onMouseDown={() => this.toggleActiveOn()}
+              onMouseUp={() => this.toggleActiveOff()}
+              handleClick={() => browserHistory.push('/register')}
+            />
+            {menuGuest.map((item, index) => (
+              <MenuItems key={index} item={item} />
+            ))}
+          </MenuContainer>
+        }
+
+        {/* render LoggedIn user menus */}
+        {loggedIn && !open &&
           <MenuContainer open={open} name="menu-container-close">
             <MenuHeader
               open={open}
@@ -101,9 +133,12 @@ class TableMenu extends React.Component {
               onMouseUp={() => this.toggleActiveOff()}
               onToggleMenu={() => this.toggleMenu()}
             />
-            <MenuItems items={menuClose} />
+            {menuClose.map((item, index) => (
+              <MenuItems key={index} item={item} />
+            ))}
           </MenuContainer>
-          :
+        }
+        {loggedIn && open &&
           <MenuContainer open={open} name="menu-container-open">
             <MenuHeader
               open={open}
@@ -113,7 +148,9 @@ class TableMenu extends React.Component {
               onMouseUp={() => this.toggleActiveOff()}
               onToggleMenu={() => this.toggleMenu()}
             />
-            <MenuItems items={menuOpen} />
+            {menuOpen.map((item, index) => (
+              <MenuItems key={index} item={item} />
+            ))}
           </MenuContainer>
         }
       </Container>
@@ -121,11 +158,12 @@ class TableMenu extends React.Component {
   }
 }
 TableMenu.propTypes = {
+  account: React.PropTypes.object,
   myPos: React.PropTypes.number,
   signerAddr: React.PropTypes.string,
   handleClickLogout: React.PropTypes.func,
   onLeave: React.PropTypes.func,
-  sitout: React.PropTypes.number,
+  sitout: React.PropTypes.any, // TODO change to only number
   onSitout: React.PropTypes.func,
 };
 

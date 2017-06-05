@@ -1,33 +1,27 @@
 import React from 'react';
 
 import {
- MenuItemsWrapper,
  ItemWrapper,
  ItemIcon,
  ItemTitle,
 } from './styles';
 
 const MenuItems = (props) => {
-  const { items } = props;
+  const { item } = props;
   return (
-    <MenuItemsWrapper className="menu-items">
-      {items.map((item, index) => (
-        <ItemWrapper
-          disabled={item.disabled}
-          key={index}
-          onClick={item.onClick}
-        >
-          <ItemIcon className={item.icon} aria-hidden />
-          <ItemTitle>
-            {item.title}
-          </ItemTitle>
-        </ItemWrapper>
-      ))}
-    </MenuItemsWrapper>
+    <ItemWrapper
+      disabled={item.disabled}
+      onClick={item.onClick}
+    >
+      <ItemIcon className={item.icon} aria-hidden />
+      <ItemTitle>
+        {item.title}
+      </ItemTitle>
+    </ItemWrapper>
   );
 };
 MenuItems.propTypes = {
-  items: React.PropTypes.array,
+  item: React.PropTypes.object,
 };
 
 export default MenuItems;
