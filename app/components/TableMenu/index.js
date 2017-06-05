@@ -73,12 +73,12 @@ class Temp extends React.Component {
     const { myPos, open } = this.state;
     if (myPos > -1) {
       return (
-        <Container>
+        <Container name="container">
           <LogoWrapper>
             <Logo>AceBusters Logo</Logo>
           </LogoWrapper>
           {!open ?
-            <MenuContainer open={open} className="menu-container">
+            <MenuContainer open={open} name="menu-container-open">
               <MenuHeader
                 open={open}
                 btnActive={this.state.active}
@@ -90,7 +90,7 @@ class Temp extends React.Component {
               <MenuItems items={menuClose} />
             </MenuContainer>
             :
-            <MenuContainer open={open} className="menu-container">
+            <MenuContainer open={open} name="menu-container-closed">
               <MenuHeader
                 open={open}
                 btnActive={this.state.active}
