@@ -100,7 +100,6 @@ App.defaultProps = {
   initialCollapse: true,
 };
 
-
 App.propTypes = {
   children: React.PropTypes.node,
   account: React.PropTypes.object,
