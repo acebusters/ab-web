@@ -21,8 +21,6 @@ import {
 const TableComponent = (props) => (
   <div name="table-component">
 
-    <TableMenu {...props} />
-
     <TableHeader className="table-header">
       { `state: ${props.state}` } <br />
     </TableHeader>
@@ -31,7 +29,7 @@ const TableComponent = (props) => (
 
       <TableAndChairs id="table-and-chairs" >
 
-        <PokerTable id="poker-table">
+        <PokerTable name="poker-table">
 
           <img src={tableImage} alt="" />
 
@@ -53,6 +51,8 @@ const TableComponent = (props) => (
       { props.myHand &&
         <HandBox className="hand-box"> { props.myHand.descr }</HandBox>
       }
+
+      <TableMenu {...props} />
 
       <ActionBar className="action-bar" {...props} sb={props.sb}></ActionBar>
 

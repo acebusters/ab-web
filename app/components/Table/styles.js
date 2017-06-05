@@ -67,4 +67,5 @@ export const PokerTable = styled.div`
   left: 50%;
   width: 50%;
   height: 40%;
+  z-index: 100;
 `;

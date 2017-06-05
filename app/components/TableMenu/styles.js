@@ -28,10 +28,10 @@ export const Button = styled.button`
 `;
 
 export const Container = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  z-index: 100000;
+  z-index: 1;
   display: flex;
   width: 100%;
 `;
