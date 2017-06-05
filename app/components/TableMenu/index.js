@@ -43,12 +43,14 @@ class TableMenu extends React.Component {
       // sitout === null, for disabled
       // myPos === -1, then not at table"pause"
       {
+        name: 'sitout',
         icon: (typeof sitout === 'number') ? 'fa fa-play' : 'fa fa-pause',
         title: (typeof sitout === 'number') ? 'Sit-In' : 'Sit-Out',
         onClick: onSitout,
         disabled: myPos === undefined || sitout === 0 || sitout === null,
       },
       {
+        name: 'standup',
         icon: 'fa fa-external-link',
         title: 'Stand-Up',
         onClick: onLeave,
@@ -62,24 +64,28 @@ class TableMenu extends React.Component {
     ];
     const menuOpen = [
       {
+        name: 'lobby',
         icon: 'fa fa-search',
         title: 'Lobby',
         onClick: () => browserHistory.push('/lobby'),
         disabled: false,
       },
       {
+        name: 'dashboard',
         icon: 'fa fa-tachometer',
         title: 'Dashboard',
         onClick: () => browserHistory.push('/dashboard'),
         disabled: false,
       },
       {
+        name: 'preferences',
         icon: 'fa fa-cog',
         title: 'Preferences',
         onClick: () => {},
         disabled: true,
       },
       {
+        name: 'logout',
         icon: 'fa fa-sign-out',
         title: 'Log-Out',
         onClick: () => handleClickLogout(),
@@ -88,12 +94,14 @@ class TableMenu extends React.Component {
     ];
     const menuGuest = [
       {
+        name: 'lobby',
         icon: 'fa fa-search',
         title: 'Lobby',
         onClick: () => browserHistory.push('/lobby'),
         disabled: false,
       },
       {
+        name: 'signin',
         icon: 'fa fa-sign-in',
         title: 'Log-In',
         onClick: () => browserHistory.push('/login'),
@@ -104,7 +112,7 @@ class TableMenu extends React.Component {
     const { open } = this.state;
     return (
       <Container name="container">
-        <LogoWrapper>
+        <LogoWrapper name="logo-wrapper">
           <Logo>AceBusters Logo</Logo>
         </LogoWrapper>
         {/* render Guest Menu */}
@@ -126,6 +134,7 @@ class TableMenu extends React.Component {
         {loggedIn && !open &&
           <MenuContainer open={open} name="menu-container-close">
             <MenuHeader
+              name="toggle-menu-button"
               open={open}
               btnActive={this.state.active}
               signerAddr={signerAddr}
