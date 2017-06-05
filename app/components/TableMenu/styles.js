@@ -25,6 +25,12 @@ export const Button = styled.button`
     box-shadow: ${menuActiveBoxShadow};
     color: ${menuActiveBG};
   }
+  &:disabled{
+    color: #8e8e8e;
+    cursor: default;
+    ${''/* box-shadow: ${menuActiveBoxShadow}; */}
+    box-shadow: none;
+  }
 `;
 
 export const Container = styled.div`

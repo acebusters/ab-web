@@ -25,7 +25,7 @@ export const TableHeader = styled.div`
 export const Wrapper = styled.div`
   position: absolute;
   left: 2em;
-  z-index: 10;
+  z-index: 1;
   height: 10%
   width: 20%;
   bottom: 2em;
@@ -67,5 +67,5 @@ export const PokerTable = styled.div`
   left: 50%;
   width: 50%;
   height: 40%;
-  z-index: 100;
+  z-index: 5;
 `;
