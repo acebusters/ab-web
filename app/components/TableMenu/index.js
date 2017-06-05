@@ -32,7 +32,7 @@ class TableMenu extends React.Component {
     this.setState({ open: !this.state.open });
   }
   render() {
-    const { myPos, signerAddr, sitout, onLeave, onSitout } = this.props;
+    const { myPos, signerAddr, sitout, handleClickLogout, onLeave, onSitout } = this.props;
     const menuClose = [
       // Note: sitout value possibilities
       // sitout > 0, for enabled "play"
@@ -80,8 +80,8 @@ class TableMenu extends React.Component {
       {
         icon: 'fa fa-sign-out',
         title: 'Log-Out',
-        onClick: () => {},
-        disabled: true,
+        onClick: () => handleClickLogout(),
+        disabled: false,
       },
     ];
 
@@ -123,6 +123,7 @@ class TableMenu extends React.Component {
 TableMenu.propTypes = {
   myPos: React.PropTypes.number,
   signerAddr: React.PropTypes.string,
+  handleClickLogout: React.PropTypes.func,
   onLeave: React.PropTypes.func,
   sitout: React.PropTypes.number,
   onSitout: React.PropTypes.func,
