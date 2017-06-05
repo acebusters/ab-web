@@ -52,7 +52,7 @@ class TableMenu extends React.Component {
         onClick: onLeave,
         disabled: myPos === undefined,
         /* TODO add seatStatus to UI redux state and
-          mapStateToProps in Table container to be used here */
+          mapStateToProps in TableMenu container to be used here */
         // disabled: myPos === undefined ||
         //   seatStatus === STATUS_MSG.sittingIn ||
         //   seatStatus === STATUS_MSG.standingUp,
