@@ -11,6 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
     return dispatch(setAuthState({ loggedIn: false }));
   },
 });
+
 const mapStateToProps = createStructuredSelector({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(TableMenu);
