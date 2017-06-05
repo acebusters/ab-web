@@ -3,7 +3,7 @@ import { browserHistory } from 'react-router';
 
 import MenuHeader from './MenuHeader';
 import MenuHeaderGuest from './MenuHeaderGuest';
-import MenuItems from './MenuItems';
+import MenuItem from './MenuItem';
 
 import {
  Container,
@@ -117,7 +117,7 @@ class TableMenu extends React.Component {
               handleClick={() => browserHistory.push('/register')}
             />
             {menuGuest.map((item, index) => (
-              <MenuItems key={index} item={item} />
+              <MenuItem key={index} item={item} />
             ))}
           </MenuContainer>
         }
@@ -134,7 +134,7 @@ class TableMenu extends React.Component {
               onToggleMenu={() => this.toggleMenu()}
             />
             {menuClose.map((item, index) => (
-              <MenuItems key={index} item={item} />
+              <MenuItem key={index} item={item} />
             ))}
           </MenuContainer>
         }
@@ -149,7 +149,7 @@ class TableMenu extends React.Component {
               onToggleMenu={() => this.toggleMenu()}
             />
             {menuOpen.map((item, index) => (
-              <MenuItems key={index} item={item} />
+              <MenuItem key={index} item={item} />
             ))}
           </MenuContainer>
         }
