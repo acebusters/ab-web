@@ -47,7 +47,7 @@ class TableMenu extends React.Component {
         disabled: myPos === undefined || sitout === 0 || sitout === null,
       },
       {
-        icon: 'fa fa-sign-out',
+        icon: 'fa fa-external-link',
         title: 'Stand-Up',
         onClick: onLeave,
         disabled: myPos === undefined,
@@ -77,6 +77,12 @@ class TableMenu extends React.Component {
         onClick: () => {},
         disabled: true,
       },
+      {
+        icon: 'fa fa-sign-out',
+        title: 'Log-Out',
+        onClick: () => {},
+        disabled: true,
+      },
     ];
 
     const { open } = this.state;
@@ -86,7 +92,7 @@ class TableMenu extends React.Component {
           <Logo>AceBusters Logo</Logo>
         </LogoWrapper>
         {!open ?
-          <MenuContainer open={open} name="menu-container-open">
+          <MenuContainer open={open} name="menu-container-close">
             <MenuHeader
               open={open}
               btnActive={this.state.active}
@@ -98,7 +104,7 @@ class TableMenu extends React.Component {
             <MenuItems items={menuClose} />
           </MenuContainer>
           :
-          <MenuContainer open={open} name="menu-container-closed">
+          <MenuContainer open={open} name="menu-container-open">
             <MenuHeader
               open={open}
               btnActive={this.state.active}

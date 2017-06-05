@@ -37,7 +37,6 @@ export const Container = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
   display: flex;
   width: 100%;
 `;
@@ -63,6 +62,7 @@ export const MenuContainer = styled.div`
   background: ${(props) => props.open ? menuOpen : 'none'};
   border-bottom-left-radius: 8px;
   box-shadow: ${(props) => props.open ? menuBoxShadow : 'none'};
+  z-index: ${(props) => props.open ? 100 : 0};
 `;
 
 // header-item
