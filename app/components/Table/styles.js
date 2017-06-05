@@ -10,6 +10,7 @@ import {
 } from 'variables';
 
 export const TableContainer = styled.div`
+  margin-top: 18px;
   margin-right: auto;
   margin-left: auto;
 `;

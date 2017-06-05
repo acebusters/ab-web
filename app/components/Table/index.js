@@ -19,7 +19,7 @@ import {
 } from './styles';
 
 const TableComponent = (props) => (
-  <div>
+  <div name="table-component">
 
     <TableMenu {...props} />
 
@@ -27,7 +27,7 @@ const TableComponent = (props) => (
       { `state: ${props.state}` } <br />
     </TableHeader>
 
-    <TableContainer>
+    <TableContainer name="table-container">
 
       <TableAndChairs id="table-and-chairs" >
 
