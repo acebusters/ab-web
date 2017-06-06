@@ -8,6 +8,7 @@ const menuBoxShadow = '0 2px 4px 0 rgba(0,0,0,0.31)';
 const menuColor = '#ebe8e8'; // light gray
 const menuClose = 'linear-gradient(0deg, #606060 0%, #808080 100%)';
 const menuOpen = 'linear-gradient(0deg, #383838 0%, #717171 100%)';
+const menuHoverBoxShadow = 'inset 1px 1px 5px 1px rgba(0,0,0,0.3)';
 const menuActiveBoxShadow = 'inset 2px 1px 5px 2px rgba(0,0,0,0.50)';
 
 export const Button = styled.button`
@@ -19,7 +20,7 @@ export const Button = styled.button`
   }
   &:hover {
     cursor: pointer;
-    box-shadow: ${menuActiveBoxShadow};
+    box-shadow: ${menuHoverBoxShadow};
   }
   &:active {
     box-shadow: ${menuActiveBoxShadow};
@@ -69,11 +70,15 @@ export const MenuContainer = styled.div`
 export const MenuHeader = styled(Button)`
   display: flex;
   align-items: center;
-  height: 46px;
+  height: 42px;
+  margin-bottom: 4px;
   padding-left: 14px;
   border-bottom-left-radius: 8px;
   background: ${(props) => props.open ? 'none' : menuClose};
   box-shadow: ${(props) => props.open ? 'none' : menuBoxShadow} !important;
+  &:hover {
+    transform: scale(1.1, 1.1);
+  }
 `;
 
 export const Identicon = styled.div`
