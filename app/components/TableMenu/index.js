@@ -17,9 +17,7 @@ class TableMenu extends React.Component {
     super(props);
     this.state = {
       active: false,
-      open: false,
     };
-    this.toggleMenu = this.toggleMenu.bind(this);
     this.toggleActiveOn = this.toggleActiveOn.bind(this);
     this.toggleActiveOff = this.toggleActiveOff.bind(this);
   }
@@ -29,11 +27,11 @@ class TableMenu extends React.Component {
   toggleActiveOff() {
     this.setState({ active: false });
   }
-  toggleMenu() {
-    this.setState({ open: !this.state.open });
-  }
   render() {
-    const { loggedIn, myPos, signerAddr, sitout, handleClickLogout, onLeave, onSitout } = this.props;
+    const {
+      loggedIn, open, myPos, signerAddr, sitout, handleClickLogout,
+      onLeave, onSitout, toggleMenu,
+    } = this.props;
     const menuClose = [
       // Note: sitout value possibilities
       // sitout > 0, for enabled "play"
@@ -108,7 +106,6 @@ class TableMenu extends React.Component {
       },
     ];
 
-    const { open } = this.state;
     return (
       <Container name="container">
         <LogoWrapper name="logo-wrapper">
@@ -139,7 +136,7 @@ class TableMenu extends React.Component {
               signerAddr={signerAddr}
               onMouseDown={() => this.toggleActiveOn()}
               onMouseUp={() => this.toggleActiveOff()}
-              onToggleMenu={() => this.toggleMenu()}
+              onToggleMenu={() => toggleMenu()}
             />
             {menuClose.map((item, index) => (
               <MenuItem key={index} item={item} />
@@ -154,7 +151,7 @@ class TableMenu extends React.Component {
               signerAddr={signerAddr}
               onMouseDown={() => this.toggleActiveOn()}
               onMouseUp={() => this.toggleActiveOff()}
-              onToggleMenu={() => this.toggleMenu()}
+              onToggleMenu={() => toggleMenu()}
             />
             {menuOpen.map((item, index) => (
               <MenuItem key={index} item={item} />
@@ -173,6 +170,8 @@ TableMenu.propTypes = {
   onLeave: React.PropTypes.func,
   sitout: React.PropTypes.any, // TODO change to only number
   onSitout: React.PropTypes.func,
+  open: React.PropTypes.bool,
+  toggleMenu: React.PropTypes.func,
 };
 
 export default TableMenu;
