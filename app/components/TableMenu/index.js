@@ -33,8 +33,7 @@ class TableMenu extends React.Component {
     this.setState({ open: !this.state.open });
   }
   render() {
-    const { myPos, signerAddr, sitout, handleClickLogout, onLeave, onSitout } = this.props;
-    const loggedIn = this.props.account.loggedIn;
+    const { loggedIn, myPos, signerAddr, sitout, handleClickLogout, onLeave, onSitout } = this.props;
     const menuClose = [
       // Note: sitout value possibilities
       // sitout > 0, for enabled "play"
@@ -167,7 +166,7 @@ class TableMenu extends React.Component {
   }
 }
 TableMenu.propTypes = {
-  account: React.PropTypes.object,
+  loggedIn: React.PropTypes.bool,
   myPos: React.PropTypes.number,
   signerAddr: React.PropTypes.string,
   handleClickLogout: React.PropTypes.func,
