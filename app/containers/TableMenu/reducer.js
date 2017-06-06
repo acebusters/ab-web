@@ -12,13 +12,14 @@ export const initialState = fromJS({
 export default function tableMenuReducer(state = initialState, action) {
   switch (action.type) {
 
-    case types.TABLE_MENU_TOGGLE: {
+    case types.MENU_TOGGLE_OPEN: {
       return state.set('open', !state.get('open'));
     }
 
-    // case types.TABLE_MENU_TOGGLE: {
-    //   return state.set('open', !state.get('open'));
-    // }
+    case types.MENU_TOGGLE_ACTIVE: {
+      return state.set('active', !state.get('active'));
+    }
+
     default: {
       return state;
     }

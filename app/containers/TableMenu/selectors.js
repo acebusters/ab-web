@@ -12,3 +12,8 @@ export const makeSelectOpen = () => createSelector(
   selectTableMenu,
   (tableMenu) => tableMenu.get('open'),
 );
+
+export const makeSelectActive = () => createSelector(
+  selectTableMenu,
+  (tableMenu) => tableMenu.get('active'),
+);
