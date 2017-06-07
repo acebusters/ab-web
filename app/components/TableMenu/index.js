@@ -1,8 +1,10 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
+import { createBlocky } from '../../services/blockies';
+import { nickNameByAddress } from '../../services/nicknames';
+
 import MenuHeader from './MenuHeader';
-import MenuHeaderGuest from './MenuHeaderGuest';
 import MenuItem from './MenuItem';
 
 import {
@@ -14,7 +16,7 @@ import {
 
 const TableMenu = (props) => {
   const {
-    active, loggedIn, open, myPos, signerAddr, sitout, handleClickLogout,
+    loggedIn, open, myPos, signerAddr, sitout, handleClickLogout,
     onLeave, onSitout, toggleMenuOpen, toggleMenuActive,
   } = props;
   const menuClose = [
@@ -90,59 +92,45 @@ const TableMenu = (props) => {
       disabled: false,
     },
   ];
-
+  const name = signerAddr ? nickNameByAddress(signerAddr) : null;
+  const blocky = signerAddr ? createBlocky(signerAddr) : null;
+  // render if guest
+  if (!loggedIn) {
+    return (
+      <Container name="container">
+        <LogoWrapper name="logo-wrapper">
+          <Logo>AceBusters Logo</Logo>
+        </LogoWrapper>
+        <MenuContainer name="menu-container-guest">
+          <MenuHeader
+            handleMouseUpDown={() => toggleMenuActive()}
+            handleClick={() => browserHistory.push('/register')}
+          />
+          {menuGuest.map((item, index) => <MenuItem key={index} item={item} />)}
+        </MenuContainer>
+      </Container>
+    );
+  }
+  // render if user
   return (
     <Container name="container">
       <LogoWrapper name="logo-wrapper">
         <Logo>AceBusters Logo</Logo>
       </LogoWrapper>
-      {/* render Guest Menu */}
-      {!loggedIn &&
-        <MenuContainer name="menu-container-guest">
-          <MenuHeaderGuest
-            btnActive={active}
-            onMouseDown={() => toggleMenuActive()}
-            onMouseUp={() => toggleMenuActive()}
-            handleClick={() => browserHistory.push('/register')}
-          />
-          {menuGuest.map((item, index) => (
-            <MenuItem key={index} item={item} />
-          ))}
-        </MenuContainer>
-      }
-
-      {/* render LoggedIn user menus */}
-      {loggedIn && !open &&
-        <MenuContainer open={open} name="menu-container-close">
-          <MenuHeader
-            name="toggle-menu-button"
-            open={open}
-            btnActive={active}
-            signerAddr={signerAddr}
-            onMouseDown={() => toggleMenuActive()}
-            onMouseUp={() => toggleMenuActive()}
-            onToggleMenu={() => toggleMenuOpen()}
-          />
-          {menuClose.map((item, index) => (
-            <MenuItem key={index} item={item} />
-          ))}
-        </MenuContainer>
-      }
-      {loggedIn && open &&
-        <MenuContainer open={open} name="menu-container-open">
-          <MenuHeader
-            open={open}
-            btnActive={active}
-            signerAddr={signerAddr}
-            onMouseDown={() => toggleMenuActive()}
-            onMouseUp={() => toggleMenuActive()}
-            onToggleMenu={() => toggleMenuOpen()}
-          />
-          {menuOpen.map((item, index) => (
-            <MenuItem key={index} item={item} />
-          ))}
-        </MenuContainer>
-      }
+      <MenuContainer open={open} name="menu-container-close">
+        <MenuHeader
+          name={name}
+          blocky={blocky}
+          handleMouseUpDown={() => toggleMenuActive()}
+          handleClick={() => toggleMenuOpen()}
+          {...props}
+        />
+        {open ?
+          menuOpen.map((item, index) => <MenuItem key={index} item={item} />)
+          :
+          menuClose.map((item, index) => <MenuItem key={index} item={item} />)
+        }
+      </MenuContainer>
     </Container>
   );
 };
@@ -158,7 +146,6 @@ TableMenu.propTypes = {
   open: React.PropTypes.bool,
   toggleMenuActive: React.PropTypes.func,
   toggleMenuOpen: React.PropTypes.func,
-  active: React.PropTypes.bool,
 };
 
 export default TableMenu;

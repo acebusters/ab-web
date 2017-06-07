@@ -1,48 +1,56 @@
 import React from 'react';
-import { createBlocky } from '../../services/blockies';
-import { nickNameByAddress } from '../../services/nicknames';
 
 import {
   Hamburger,
   Identicon,
+  ItemTitle,
+  ItemIcon,
   MenuHeader as HeaderStyle,
-  NickName,
   Patty,
 } from './styles';
 
 const MenuHeader = ({
-  btnActive,
-  signerAddr,
-  onToggleMenu,
-  onMouseDown,
-  onMouseUp,
+  active,
+  blocky,
+  name,
+  handleClick,
+  handleMouseUpDown,
   open,
-}) => {
-  const name = nickNameByAddress(signerAddr);
-  const blocky = createBlocky(signerAddr);
-  return (
-    <HeaderStyle
-      open={open}
-      onClick={onToggleMenu}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-    >
-      <Identicon bgImg={blocky} />
-      <NickName>{name}</NickName>
-      <Hamburger>
-        <Patty active={btnActive} />
-        <Patty active={btnActive} />
-        <Patty active={btnActive} />
-      </Hamburger>
-    </HeaderStyle>
-  );
-};
+}) => (
+  <HeaderStyle
+    open={open}
+    onClick={handleClick}
+    onMouseDown={handleMouseUpDown}
+    onMouseUp={handleMouseUpDown}
+  >
+
+    {/* if loggedIn render blocky&name, else show 'register'  */}
+    {blocky && name ?
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Identicon bgImg={blocky} />
+        <ItemTitle>{name}</ItemTitle>
+      </div>
+      :
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <ItemIcon className="fa fa-user-plus" />
+        <ItemTitle>Register</ItemTitle>
+      </div>
+    }
+
+    <Hamburger>
+      <Patty active={active} />
+      <Patty active={active} />
+      <Patty active={active} />
+    </Hamburger>
+  </HeaderStyle>
+);
+
 MenuHeader.propTypes = {
-  btnActive: React.PropTypes.bool,
-  signerAddr: React.PropTypes.string,
-  onMouseUp: React.PropTypes.func,
-  onMouseDown: React.PropTypes.func,
-  onToggleMenu: React.PropTypes.func,
+  active: React.PropTypes.bool,
+  blocky: React.PropTypes.string,
+  name: React.PropTypes.string,
+  handleMouseUpDown: React.PropTypes.func,
+  handleClick: React.PropTypes.func,
   open: React.PropTypes.bool,
 };
 
