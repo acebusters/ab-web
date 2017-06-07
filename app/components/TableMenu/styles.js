@@ -85,6 +85,7 @@ export const Identicon = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
+  background-color: #33bcd9;
   background-image: url(${(props) => props.bgImg});
   background-size: 24px 24px;
 `;
