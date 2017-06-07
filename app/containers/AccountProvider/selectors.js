@@ -55,6 +55,12 @@ const makeSelectEmail = () => createSelector(
   (account) => account.get('email')
 );
 
+// return if current user is loggedIn or not
+const makeSelectLoggedIn = () => createSelector(
+  selectAccount,
+  (account) => account.get('loggedIn')
+);
+
 const makeSelectContract = () => createSelector(
   selectAccount,
   () => {
@@ -91,6 +97,7 @@ export {
   makeSelectPrivKey,
   makeSelectProxyAddr,
   makeSelectEmail,
+  makeSelectLoggedIn,
   makeSelectIsWeb3Connected,
   makeSelectWeb3ErrMsg,
 };

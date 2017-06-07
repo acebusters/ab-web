@@ -22,33 +22,27 @@ import { modalDismiss } from './actions';
 
 import {
   boxedLayoutMaxWidth,
-  background,
+  backgroundBoxed,
+  backgroundTable,
 } from '../../variables';
+
+const StyledModal = styled.div`
+  z-index: 1000;
+`;
 
 const StyledDashboard = styled.div`
   /* clearfix */
   &:before, &:after {
     display: table;
     content: " ";
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
   }
   &:after {
     clear: both;
   }
   /* theme */
-  ${(props) => {
-    if (props.params.tableAddr) {
-      return `
-              background: #000000; /* Old browsers */
-              background: -moz-linear-gradient(-45deg,  #000000 0%, #1a2d3d 93%); /* FF3.6-15 */
-              background: -webkit-linear-gradient(-45deg,  #000000 0%,#1a2d3d 93%); /* Chrome10-25,Safari5.1-6 */
-              background: linear-gradient(135deg,  #000000 0%,#1a2d3d 93%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-              filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#1a2d3d',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */`;
-    }
-    return background;
-  }};
+  background: #444;
+  background-image: ${(props) => props.params.tableAddr ? backgroundTable : backgroundBoxed};
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -60,22 +54,21 @@ const StyledDashboard = styled.div`
   `)}
 `;
 
-
 export function App(props) {
   const modalContent = props.modalStack[props.modalStack.length - 1];
   return (
-    <div>
-      <StyledDashboard
-        params={props.params}
-      >
-        <Header
-          location={props.location}
-          loggedIn={props.account.loggedIn}
-          onClickLogout={props.handleClickLogout}
-          logoHref={props.logoHref}
-          signerAddr={props.signerAddr}
-          params={props.params}
-        />
+    <div name="app-container">
+      <StyledDashboard params={props.params} name="styled-dashboard">
+        { props.location.pathname.indexOf('table') === -1 &&
+          <Header
+            location={props.location}
+            loggedIn={props.account.loggedIn}
+            onClickLogout={props.handleClickLogout}
+            logoHref={props.logoHref}
+            signerAddr={props.signerAddr}
+            params={props.params}
+          />
+        }
         <Content
           fixed={props.fixed}
           name="content-wrapper"
@@ -88,15 +81,17 @@ export function App(props) {
         <Footer />
       }
       { modalContent &&
-        <ModalContainer>
-          <ModalDialog
-            onClose={props.modalDismiss}
-            dismissOnBackgroundClick={false}
-            closeButtonParam={{ margin: 5 }}
-          >
-            { modalContent }
-          </ModalDialog>
-        </ModalContainer>
+        <StyledModal>
+          <ModalContainer>
+            <ModalDialog
+              onClose={props.modalDismiss}
+              dismissOnBackgroundClick={false}
+              closeButtonParam={{ margin: 5 }}
+            >
+              { modalContent }
+            </ModalDialog>
+          </ModalContainer>
+        </StyledModal>
       }
     </div>
   );
@@ -107,7 +102,6 @@ App.defaultProps = {
   initialCollapse: true,
   logoHref: landingPageUrl,
 };
-
 
 App.propTypes = {
   children: React.PropTypes.node,
