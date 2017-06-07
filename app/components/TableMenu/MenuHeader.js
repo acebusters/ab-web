@@ -15,22 +15,26 @@ const MenuHeader = ({
   toggleMenuActive,
   nickName,
   open,
-}) => (
-  <HeaderStyle
-    open={open}
-    onClick={toggleMenuOpen}
-    onMouseDown={toggleMenuActive}
-    onMouseUp={toggleMenuActive}
-  >
-    <Identicon name="identicon" bgImg={blocky} />
-    <ItemTitle name="item-title">{nickName !== null ? nickName : 'Guest'}</ItemTitle>
-    <Hamburger>
-      <Patty active={active} />
-      <Patty active={active} />
-      <Patty active={active} />
-    </Hamburger>
-  </HeaderStyle>
-);
+}) => {
+  const handleOnLeave = () => active ? toggleMenuActive() : null;
+  return (
+    <HeaderStyle
+      open={open}
+      onClick={toggleMenuOpen}
+      onMouseDown={toggleMenuActive}
+      onMouseUp={toggleMenuActive}
+      onMouseLeave={handleOnLeave}
+    >
+      <Identicon name="identicon" bgImg={blocky} />
+      <ItemTitle name="item-title">{nickName !== null ? nickName : 'Guest'}</ItemTitle>
+      <Hamburger>
+        <Patty active={active} />
+        <Patty active={active} />
+        <Patty active={active} />
+      </Hamburger>
+    </HeaderStyle>
+  );
+};
 
 MenuHeader.propTypes = {
   active: React.PropTypes.bool,
