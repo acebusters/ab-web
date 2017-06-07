@@ -9,9 +9,12 @@ import {
   Patty,
 } from './styles';
 
+const divStyle = { display: 'flex', alignItems: 'center' };
+
 const MenuHeader = ({
   active,
   blocky,
+  loggedIn,
   name,
   handleClick,
   handleMouseUpDown,
@@ -24,16 +27,15 @@ const MenuHeader = ({
     onMouseUp={handleMouseUpDown}
   >
 
-    {/* if loggedIn render blocky&name, else show 'register'  */}
-    {blocky && name ?
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+    {loggedIn ?
+      <div style={divStyle}>
         <Identicon bgImg={blocky} />
-        <ItemTitle>{name}</ItemTitle>
+        <ItemTitle name="item-title">{name}</ItemTitle>
       </div>
       :
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={divStyle}>
         <ItemIcon className="fa fa-user-plus" />
-        <ItemTitle>Register</ItemTitle>
+        <ItemTitle name="item-title">Register</ItemTitle>
       </div>
     }
 
@@ -48,6 +50,7 @@ const MenuHeader = ({
 MenuHeader.propTypes = {
   active: React.PropTypes.bool,
   blocky: React.PropTypes.string,
+  loggedIn: React.PropTypes.bool,
   name: React.PropTypes.string,
   handleMouseUpDown: React.PropTypes.func,
   handleClick: React.PropTypes.func,

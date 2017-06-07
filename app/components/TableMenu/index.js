@@ -105,6 +105,7 @@ const TableMenu = (props) => {
           <MenuHeader
             handleMouseUpDown={() => toggleMenuActive()}
             handleClick={() => browserHistory.push('/register')}
+            {...props}
           />
           {menuGuest.map((item, index) => <MenuItem key={index} item={item} />)}
         </MenuContainer>
