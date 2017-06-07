@@ -20,14 +20,15 @@ describe('components.TableMenu.TableMenu', () => {
     });
 
     it('should display guest menu', () => {
-      expect(el.find({ name: 'register' }).length).toEqual(1);
+      expect(el.find({ name: 'item-title' }).text()).toEqual('Register');
       expect(el.find({ name: 'lobby' }).length).toEqual(1);
       expect(el.find({ name: 'signin' }).length).toEqual(1);
     });
   });
 
-/* // These tests are blocked by the blockies service.
-   // Need to simulate it outside of the test somehow?
+  /*
+  // These tests are blocked by the blockies service.
+  // Need to simulate with Nock?
   describe('if user', () => {
     const props = {
       account: { loggedIn: true },
