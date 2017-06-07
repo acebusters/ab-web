@@ -43,7 +43,7 @@ const TableMenu = (props) => {
       //   seatStatus === STATUS_MSG.standingUp,
     },
   ];
-  const menuOpen = [
+  const menuUserOpen = [
     {
       name: 'lobby',
       icon: 'fa fa-search',
@@ -73,12 +73,19 @@ const TableMenu = (props) => {
       disabled: false,
     },
   ];
-  const menuGuest = [
+  const menuGuestOpen = [
     {
       name: 'lobby',
       icon: 'fa fa-search',
       title: 'Lobby',
       onClick: () => browserHistory.push('/lobby'),
+      disabled: false,
+    },
+    {
+      name: 'register',
+      icon: 'fa fa-user-plus',
+      title: 'Register',
+      onClick: () => browserHistory.push('/register'),
       disabled: false,
     },
     {
@@ -89,48 +96,29 @@ const TableMenu = (props) => {
       disabled: false,
     },
   ];
-  // render if guest
-  if (!loggedIn) {
-    return (
-      <Container name="container">
-        <LogoWrapper name="logo-wrapper">
-          <Logo>AceBusters Logo</Logo>
-        </LogoWrapper>
-        <MenuContainer name="menu-container-guest">
-          <MenuHeader
-            handleMouseUpDown={() => toggleMenuActive()}
-            handleClick={() => {
-              toggleMenuOpen();
-              browserHistory.push('/register');
-            }}
-            {...props}
-          />
-          {menuGuest.map((item, index) => <MenuItem key={index} item={item} />)}
-        </MenuContainer>
-      </Container>
-    );
-  }
-  // render if user
+  const renderMenu = () => {
+    if (loggedIn && open) {
+      return menuUserOpen;
+    }
+    if (!loggedIn && open) {
+      return menuGuestOpen;
+    }
+    return menuClose;
+  };
   return (
     <Container name="container">
       <LogoWrapper name="logo-wrapper">
         <Logo>AceBusters Logo</Logo>
       </LogoWrapper>
-      <MenuContainer open={open} name="menu-container-close">
+      <MenuContainer open={open} name="menu-container-guest">
         <MenuHeader
           handleMouseUpDown={() => toggleMenuActive()}
           handleClick={() => toggleMenuOpen()}
           {...props}
         />
-        {open ?
-          menuOpen.map((item, index) => (
-            <MenuItem key={index} item={item} {...props} />
-          ))
-          :
-          menuClose.map((item, index) => (
-            <MenuItem key={index} item={item} {...props} />
-          ))
-        }
+        {renderMenu().map((item, index) => (
+          <MenuItem key={index} item={item} {...props} />
+        ))}
       </MenuContainer>
     </Container>
   );

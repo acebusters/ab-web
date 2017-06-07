@@ -32,7 +32,7 @@ const mapStateToProps = createStructuredSelector({
   open: makeSelectOpen(),
   active: makeSelectActive(),
   blocky: makeBlockySelector(),
-  name: makeNickNameSelector(),
+  nickName: makeNickNameSelector(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TableMenu);

@@ -4,20 +4,16 @@ import {
   Hamburger,
   Identicon,
   ItemTitle,
-  ItemIcon,
   MenuHeader as HeaderStyle,
   Patty,
 } from './styles';
-
-const divStyle = { display: 'flex', alignItems: 'center' };
 
 const MenuHeader = ({
   active,
   blocky,
   handleClick,
   handleMouseUpDown,
-  loggedIn,
-  name,
+  nickName,
   open,
 }) => (
   <HeaderStyle
@@ -26,19 +22,8 @@ const MenuHeader = ({
     onMouseDown={handleMouseUpDown}
     onMouseUp={handleMouseUpDown}
   >
-
-    {loggedIn ?
-      <div style={divStyle}>
-        <Identicon bgImg={blocky} />
-        <ItemTitle name="item-title">{name}</ItemTitle>
-      </div>
-      :
-      <div style={divStyle}>
-        <ItemIcon className="fa fa-user-plus" />
-        <ItemTitle name="item-title">Register</ItemTitle>
-      </div>
-    }
-
+    <Identicon bgImg={blocky} />
+    <ItemTitle name="item-title">{nickName !== null ? nickName : 'Guest'}</ItemTitle>
     <Hamburger>
       <Patty active={active} />
       <Patty active={active} />
@@ -50,8 +35,7 @@ const MenuHeader = ({
 MenuHeader.propTypes = {
   active: React.PropTypes.bool,
   blocky: React.PropTypes.string,
-  loggedIn: React.PropTypes.bool,
-  name: React.PropTypes.string,
+  nickName: React.PropTypes.string,
   handleMouseUpDown: React.PropTypes.func,
   handleClick: React.PropTypes.func,
   open: React.PropTypes.bool,
