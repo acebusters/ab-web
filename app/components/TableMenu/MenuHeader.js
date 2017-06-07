@@ -14,10 +14,10 @@ const divStyle = { display: 'flex', alignItems: 'center' };
 const MenuHeader = ({
   active,
   blocky,
-  loggedIn,
-  name,
   handleClick,
   handleMouseUpDown,
+  loggedIn,
+  name,
   open,
 }) => (
   <HeaderStyle

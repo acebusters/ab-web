@@ -1,9 +1,6 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
-import { createBlocky } from '../../services/blockies';
-import { nickNameByAddress } from '../../services/nicknames';
-
 import MenuHeader from './MenuHeader';
 import MenuItem from './MenuItem';
 
@@ -16,7 +13,7 @@ import {
 
 const TableMenu = (props) => {
   const {
-    loggedIn, open, myPos, signerAddr, sitout, handleClickLogout,
+    loggedIn, open, myPos, sitout, handleClickLogout,
     onLeave, onSitout, toggleMenuOpen, toggleMenuActive,
   } = props;
   const menuClose = [
@@ -92,8 +89,6 @@ const TableMenu = (props) => {
       disabled: false,
     },
   ];
-  const name = signerAddr ? nickNameByAddress(signerAddr) : null;
-  const blocky = signerAddr ? createBlocky(signerAddr) : null;
   // render if guest
   if (!loggedIn) {
     return (
@@ -104,7 +99,10 @@ const TableMenu = (props) => {
         <MenuContainer name="menu-container-guest">
           <MenuHeader
             handleMouseUpDown={() => toggleMenuActive()}
-            handleClick={() => browserHistory.push('/register')}
+            handleClick={() => {
+              toggleMenuOpen();
+              browserHistory.push('/register');
+            }}
             {...props}
           />
           {menuGuest.map((item, index) => <MenuItem key={index} item={item} />)}
@@ -120,16 +118,18 @@ const TableMenu = (props) => {
       </LogoWrapper>
       <MenuContainer open={open} name="menu-container-close">
         <MenuHeader
-          name={name}
-          blocky={blocky}
           handleMouseUpDown={() => toggleMenuActive()}
           handleClick={() => toggleMenuOpen()}
           {...props}
         />
         {open ?
-          menuOpen.map((item, index) => <MenuItem key={index} item={item} />)
+          menuOpen.map((item, index) => (
+            <MenuItem key={index} item={item} {...props} />
+          ))
           :
-          menuClose.map((item, index) => <MenuItem key={index} item={item} />)
+          menuClose.map((item, index) => (
+            <MenuItem key={index} item={item} {...props} />
+          ))
         }
       </MenuContainer>
     </Container>
@@ -139,7 +139,6 @@ const TableMenu = (props) => {
 TableMenu.propTypes = {
   loggedIn: React.PropTypes.bool,
   myPos: React.PropTypes.number,
-  signerAddr: React.PropTypes.string,
   handleClickLogout: React.PropTypes.func,
   onLeave: React.PropTypes.func,
   sitout: React.PropTypes.any, // TODO change to only number
