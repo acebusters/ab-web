@@ -8,11 +8,18 @@ import {
 
 const MenuItems = (props) => {
   const { item } = props;
+  // if the menu is open, close it
+  const handleClick = () => {
+    if (props.open) {
+      props.toggleMenuOpen();
+    }
+    item.onClick();
+  };
   return (
     <ItemWrapper
       name={item.name}
       disabled={item.disabled}
-      onClick={item.onClick}
+      onClick={handleClick}
     >
       <ItemIcon className={item.icon} aria-hidden />
       <ItemTitle>
@@ -23,6 +30,8 @@ const MenuItems = (props) => {
 };
 MenuItems.propTypes = {
   item: React.PropTypes.object,
+  open: React.PropTypes.bool,
+  toggleMenuOpen: React.PropTypes.func,
 };
 
 export default MenuItems;

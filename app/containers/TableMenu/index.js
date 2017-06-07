@@ -2,11 +2,15 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
 import { setAuthState } from '../AccountProvider/actions';
-import { makeSelectLoggedIn } from '../AccountProvider/selectors';
 import {
   makeSelectOpen,
   makeSelectActive,
 } from './selectors';
+import {
+  makeBlockySelector,
+  makeNickNameSelector,
+  makeSelectLoggedIn,
+} from '../AccountProvider/selectors';
 import {
   toggleMenuOpen,
   toggleMenuActive,
@@ -27,6 +31,8 @@ const mapStateToProps = createStructuredSelector({
   loggedIn: makeSelectLoggedIn(),
   open: makeSelectOpen(),
   active: makeSelectActive(),
+  blocky: makeBlockySelector(),
+  name: makeNickNameSelector(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TableMenu);
