@@ -22,7 +22,7 @@ const MenuHeader = ({
     onMouseDown={handleMouseUpDown}
     onMouseUp={handleMouseUpDown}
   >
-    <Identicon bgImg={blocky} />
+    <Identicon name="identicon" bgImg={blocky} />
     <ItemTitle name="item-title">{nickName !== null ? nickName : 'Guest'}</ItemTitle>
     <Hamburger>
       <Patty active={active} />
