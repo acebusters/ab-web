@@ -3,7 +3,6 @@
 */
 import React from 'react';
 import { mount } from 'enzyme';
-import sinon from 'sinon';
 import TableMenu from '../index';
 import { blocky } from '../../../app.config';
 
@@ -101,38 +100,6 @@ describe('components.TableMenu.TableMenu', () => {
         expect(el.find({ name: 'dashboard' }).length).toEqual(1);
         expect(el.find({ name: 'preferences' }).length).toEqual(1);
         expect(el.find({ name: 'logout' }).length).toEqual(1);
-      });
-    });
-  });
-
-  describe('mouse actions on header', () => {
-    const props = {
-      loggedIn: true,
-      active: false,
-      nickName: 'DAWN',
-      blocky,
-      toggleMenuOpen: sinon.spy(),
-      toggleMenuActive: sinon.spy(),
-    };
-    const el = mount(<TableMenu {...props} />);
-    describe('if user clicks header', () => {
-      it('should call toggleMenuOpen func', () => {
-        el.find('MenuHeader').simulate('click');
-        sinon.assert.calledOnce(props.toggleMenuOpen);
-      });
-    });
-    describe('if user mouseDown header', () => {
-      it('should call toggleMenuActive func', () => {
-        el.find('MenuHeader').simulate('mouseDown');
-        sinon.assert.calledOnce(props.toggleMenuActive);
-        props.toggleMenuActive.reset();
-      });
-    });
-    describe('if user mouseUp header', () => {
-      it('should call toggleMenuActive func', () => {
-        el.find('MenuHeader').simulate('mouseUp');
-        sinon.assert.calledOnce(props.toggleMenuActive);
-        props.toggleMenuActive.reset();
       });
     });
   });

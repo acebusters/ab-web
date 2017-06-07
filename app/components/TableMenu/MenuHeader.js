@@ -11,16 +11,16 @@ import {
 const MenuHeader = ({
   active,
   blocky,
-  handleClick,
-  handleMouseUpDown,
+  toggleMenuOpen,
+  toggleMenuActive,
   nickName,
   open,
 }) => (
   <HeaderStyle
     open={open}
-    onClick={handleClick}
-    onMouseDown={handleMouseUpDown}
-    onMouseUp={handleMouseUpDown}
+    onClick={toggleMenuOpen}
+    onMouseDown={toggleMenuActive}
+    onMouseUp={toggleMenuActive}
   >
     <Identicon name="identicon" bgImg={blocky} />
     <ItemTitle name="item-title">{nickName !== null ? nickName : 'Guest'}</ItemTitle>
@@ -36,8 +36,8 @@ MenuHeader.propTypes = {
   active: React.PropTypes.bool,
   blocky: React.PropTypes.string,
   nickName: React.PropTypes.string,
-  handleMouseUpDown: React.PropTypes.func,
-  handleClick: React.PropTypes.func,
+  toggleMenuActive: React.PropTypes.func,
+  toggleMenuOpen: React.PropTypes.func,
   open: React.PropTypes.bool,
 };
 

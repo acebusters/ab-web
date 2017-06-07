@@ -13,8 +13,7 @@ import {
 
 const TableMenu = (props) => {
   const {
-    loggedIn, open, myPos, sitout, handleClickLogout,
-    onLeave, onSitout, toggleMenuOpen, toggleMenuActive,
+    loggedIn, open, myPos, sitout, handleClickLogout, onLeave, onSitout,
   } = props;
   const menuClose = [
     // Note: sitout value possibilities
@@ -111,11 +110,7 @@ const TableMenu = (props) => {
         <Logo>AceBusters Logo</Logo>
       </LogoWrapper>
       <MenuContainer open={open} name="menu-container-guest">
-        <MenuHeader
-          handleMouseUpDown={() => toggleMenuActive()}
-          handleClick={() => toggleMenuOpen()}
-          {...props}
-        />
+        <MenuHeader {...props} />
         {renderMenu().map((item, index) => (
           <MenuItem key={index} item={item} {...props} />
         ))}
@@ -132,8 +127,6 @@ TableMenu.propTypes = {
   sitout: React.PropTypes.any, // TODO change to only number
   onSitout: React.PropTypes.func,
   open: React.PropTypes.bool,
-  toggleMenuActive: React.PropTypes.func,
-  toggleMenuOpen: React.PropTypes.func,
 };
 
 export default TableMenu;
