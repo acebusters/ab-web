@@ -16,9 +16,17 @@ import {
   makeMyStackSelector,
 } from '../Seat/selectors';
 
+const selectActionBar = (state) => state.get('actionBar');
 const rc = new ReceiptCache();
 const pokerHelper = new PokerHelper(rc);
 
+// ActionBar related selectors
+export const makeSelectActionBarVisible = () => createSelector(
+  selectActionBar,
+  (actionBar) => actionBar.get('visible'),
+);
+
+// Other selectors
 const makeAmountToCallSelector = () => createSelector(
   [makeMaxBetSelector(), makeMyMaxBetSelector()],
   (maxBet, myMaxbet) => {
