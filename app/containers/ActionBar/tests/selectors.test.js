@@ -8,6 +8,8 @@ import EWT from 'ethereum-web-token';
 import {
   makeMinSelector,
   makeAmountToCallSelector,
+  makeSelectActionBarActive,
+  makeSelectActionBarVisible,
 } from '../selectors';
 
 import { checkABIs } from '../../../app.config';
@@ -283,3 +285,27 @@ describe('amountToCall Selector', () => {
   });
 });
 
+// action specific tests
+describe('makeSelectActionBarActive', () => {
+  it('should select the tableMenu active state', () => {
+    const mockedState = fromJS({
+      actionBar: {
+        active: false,
+      },
+    });
+    const statusSelector = makeSelectActionBarActive();
+    expect(statusSelector(mockedState)).toEqual(false);
+  });
+});
+
+describe('makeSelectActionBarVisible', () => {
+  it('should select the tableMenu active state', () => {
+    const mockedState = fromJS({
+      actionBar: {
+        visible: false,
+      },
+    });
+    const statusSelector = makeSelectActionBarVisible();
+    expect(statusSelector(mockedState)).toEqual(false);
+  });
+});
