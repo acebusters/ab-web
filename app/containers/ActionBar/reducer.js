@@ -5,11 +5,16 @@ import { fromJS } from 'immutable';
 import * as types from './actions';
 
 export const initialState = fromJS({
+  active: true,
   visible: false,
 });
 
 export default function actionBarReducer(state = initialState, action) {
   switch (action.type) {
+
+    case types.ACTIONBAR_SET_ACTIVE: {
+      return state.set('active', action.active);
+    }
 
     case types.ACTIONBAR_TOGGLE_VISIBLE: {
       return state.set('visible', !state.get('visible'));

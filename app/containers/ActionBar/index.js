@@ -8,7 +8,10 @@ import { connect } from 'react-redux';
 
 import TableService from '../../services/tableService';
 
+import { setActionBarActive } from './actions';
 import {
+  makeSelectActionBarActive,
+  makeSelectActionBarVisible,
   makeMinSelector,
   makeCallAmountSelector,
   makeAmountToCallSelector,
@@ -202,10 +205,13 @@ export function mapDispatchToProps(dispatch) {
       ) => check(
         tableAddr, handId, amount, privKey, myPos, lastReceipt, checkType
     ),
+    setActionBarActive: (active) => dispatch(setActionBarActive(active)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
+  actionBarActive: makeSelectActionBarActive(),
+  actionBarVisible: makeSelectActionBarVisible(),
   privKey: makeSelectPrivKey(),
   myMaxBet: makeMyMaxBetSelector(),
   isMyTurn: makeIsMyTurnSelector(),

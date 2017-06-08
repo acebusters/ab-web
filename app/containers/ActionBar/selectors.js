@@ -21,6 +21,11 @@ const rc = new ReceiptCache();
 const pokerHelper = new PokerHelper(rc);
 
 // ActionBar related selectors
+export const makeSelectActionBarActive = () => createSelector(
+  selectActionBar,
+  (actionBar) => actionBar.get('active'),
+);
+
 export const makeSelectActionBarVisible = () => createSelector(
   selectActionBar,
   (actionBar) => actionBar.get('visible'),
