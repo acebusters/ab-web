@@ -10,7 +10,6 @@ import TableService from '../../services/tableService';
 
 import { setActionBarActive } from './actions';
 import {
-  makeSelectActionBarActive,
   makeSelectActionBarVisible,
   makeMinSelector,
   makeCallAmountSelector,
@@ -48,10 +47,6 @@ class ActionBarContainer extends React.Component {
     this.updateAmount = this.updateAmount.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.table = new TableService(props.params.tableAddr, this.props.privKey);
-    this.state = {
-      active: true,
-      amount: null,
-    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,12 +54,8 @@ class ActionBarContainer extends React.Component {
     const amount = (min && nextProps.myStack < min) ? nextProps.myStack : min;
     this.setState({ amount });
     if (nextProps.isMyTurn === true) {
-      this.setActive(true);
+      this.props.setActionBarActive(true);
     }
-  }
-
-  setActive(active) {
-    this.setState({ active });
   }
 
   updateAmount(value) {
@@ -81,12 +72,12 @@ class ActionBarContainer extends React.Component {
         tableAddr: self.props.params.tableAddr,
         handId,
       } });
-      self.setActive(true);
+      this.props.setActionBarActive(true);
     };
   }
 
   handleBet() {
-    this.setActive(false);
+    this.props.setActionBarActive(false);
     const amount = this.state.amount + this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
 
@@ -106,7 +97,7 @@ class ActionBarContainer extends React.Component {
   }
 
   handleCheck() {
-    this.setActive(false);
+    this.props.setActionBarActive(false);
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const checkStates = ['preflop', 'turn', 'river', 'flop'];
@@ -130,7 +121,7 @@ class ActionBarContainer extends React.Component {
   }
 
   handleFold() {
-    this.setActive(false);
+    this.props.setActionBarActive(false);
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const action = this.props.fold(
@@ -186,6 +177,7 @@ ActionBarContainer.propTypes = {
   setCards: React.PropTypes.func,
   sendMessage: React.PropTypes.func,
   state: React.PropTypes.string,
+  setActionBarActive: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -210,7 +202,6 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  actionBarActive: makeSelectActionBarActive(),
   actionBarVisible: makeSelectActionBarVisible(),
   privKey: makeSelectPrivKey(),
   myMaxBet: makeMyMaxBetSelector(),

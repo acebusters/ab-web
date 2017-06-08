@@ -10,6 +10,8 @@ import {
   makeMyMaxBetSelector,
   makeSbSelector,
   makeHandSelector,
+  makeHandStateSelector,
+  makeIsMyTurnSelector,
 } from '../Table/selectors';
 
 import {
@@ -27,8 +29,16 @@ export const makeSelectActionBarActive = () => createSelector(
 );
 
 export const makeSelectActionBarVisible = () => createSelector(
-  selectActionBar,
-  (actionBar) => actionBar.get('visible'),
+  [makeSelectActionBarActive(), makeHandStateSelector(), makeIsMyTurnSelector()],
+  (active, state, isMyTurn) => {
+    const isAppropriateState = (
+      state !== 'waiting' && state !== 'dealing' && state !== 'showdown'
+    );
+    if (active && isMyTurn && isAppropriateState) {
+      return true;
+    }
+    return false;
+  }
 );
 
 // Other selectors
