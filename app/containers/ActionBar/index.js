@@ -37,7 +37,8 @@ import {
 } from '../Seat/selectors';
 
 import { bet, pay, fold, check, setCards, sendMessage } from '../Table/actions';
-import { ActionBarComponent, ActionButton } from '../../components/ActionBar';
+import { ActionBarComponent } from '../../components/ActionBar';
+import ActionButton from '../../components/ActionBar/ActionButton';
 import TableService from '../../services/tableService';
 
 export class ActionBar extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -224,31 +225,6 @@ export class ActionBar extends React.PureComponent { // eslint-disable-line reac
   }
 }
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-    setCards: (tableAddr, handId, cards) => setCards(tableAddr, handId, cards),
-    sendMessage: (message, tableAddr, privKey) => dispatch(sendMessage(message, tableAddr, privKey)),
-  };
-}
-
-
-const mapStateToProps = createStructuredSelector({
-  privKey: makeSelectPrivKey(),
-  myMaxBet: makeMyMaxBetSelector(),
-  isMyTurn: makeIsMyTurnSelector(),
-  amountToCall: makeAmountToCallSelector(),
-  callAmount: makeCallAmountSelector(),
-  minRaise: makeMinSelector(),
-  myStack: makeMyStackSelector(),
-  myPos: makeMyPosSelector(),
-  lastReceipt: makeLastReceiptSelector(),
-  cards: makeMyCardsSelector(),
-  state: makeHandStateSelector(),
-  messages: makeMessagesSelector(),
-  playerCount: makePlayersCountSelector(),
-});
-
 ActionBar.propTypes = {
   params: React.PropTypes.object,
   privKey: React.PropTypes.string,
@@ -267,5 +243,29 @@ ActionBar.propTypes = {
   messages: React.PropTypes.array,
   playerCount: React.PropTypes.number,
 };
+
+export function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+    setCards: (tableAddr, handId, cards) => setCards(tableAddr, handId, cards),
+    sendMessage: (message, tableAddr, privKey) => dispatch(sendMessage(message, tableAddr, privKey)),
+  };
+}
+
+const mapStateToProps = createStructuredSelector({
+  privKey: makeSelectPrivKey(),
+  myMaxBet: makeMyMaxBetSelector(),
+  isMyTurn: makeIsMyTurnSelector(),
+  amountToCall: makeAmountToCallSelector(),
+  callAmount: makeCallAmountSelector(),
+  minRaise: makeMinSelector(),
+  myStack: makeMyStackSelector(),
+  myPos: makeMyPosSelector(),
+  lastReceipt: makeLastReceiptSelector(),
+  cards: makeMyCardsSelector(),
+  state: makeHandStateSelector(),
+  messages: makeMessagesSelector(),
+  playerCount: makePlayersCountSelector(),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionBar);
