@@ -5,7 +5,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { ActionBar } from '../index';
-import ActionButton from '../../../components/ActionBar/ActionButton';
+import ActionButton from '../ActionButton';
 
 describe('ActionBar', () => {
   it('should not render in waiting or dealing', () => {
@@ -38,7 +38,7 @@ describe('ActionBar', () => {
     const actionBar = shallow(
       <ActionBar {...props} />
     );
-    expect(actionBar.find('ActionBarComponent').length).toBeGreaterThan(0);
+    expect(actionBar.find({ name: 'action-bar-wrapper' }).length).toEqual(1);
   });
 
   it('should not render in flop when its not my turn', () => {
