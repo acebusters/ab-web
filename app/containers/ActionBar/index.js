@@ -21,8 +21,6 @@ import {
   makeMyMaxBetSelector,
   makeIsMyTurnSelector,
   makeMyPosSelector,
-  makeMessagesSelector,
-  makePlayersCountSelector,
 } from '../Table/selectors';
 
 import {
@@ -43,7 +41,6 @@ class ActionBarContainer extends React.Component {
     this.handleCall = this.handleCall.bind(this);
     this.handleFold = this.handleFold.bind(this);
     this.updateAmount = this.updateAmount.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
     this.table = new TableService(props.params.tableAddr, this.props.privKey);
     this.state = {
       active: true,
@@ -146,10 +143,6 @@ class ActionBarContainer extends React.Component {
       .catch(this.captureError(handId));
   }
 
-  sendMessage(message) {
-    this.props.sendMessage(message, this.props.params.tableAddr, this.props.privKey);
-  }
-
   render() {
     return (
       <ActionBar
@@ -217,8 +210,6 @@ const mapStateToProps = createStructuredSelector({
   lastReceipt: makeLastReceiptSelector(),
   cards: makeMyCardsSelector(),
   state: makeHandStateSelector(),
-  messages: makeMessagesSelector(),
-  playerCount: makePlayersCountSelector(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionBarContainer);
