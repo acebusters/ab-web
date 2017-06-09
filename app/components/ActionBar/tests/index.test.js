@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { shallow } from 'enzyme';
-import { ActionBar } from '../index';
+import ActionBar from '../index';
 import ActionButton from '../ActionButton';
 
 describe('ActionBar', () => {
@@ -29,6 +29,7 @@ describe('ActionBar', () => {
 
   it('should render in flop', () => {
     const props = {
+      active: true,
       state: 'flop',
       params: {
         tableAddr: '0x123',
@@ -43,6 +44,7 @@ describe('ActionBar', () => {
 
   it('should not render in flop when its not my turn', () => {
     const props = {
+      active: false,
       state: 'flop',
       params: {
         tableAddr: '0x123',
@@ -57,6 +59,7 @@ describe('ActionBar', () => {
 
   it('should render fold button when amountToCall is greater than 0', () => {
     const props = {
+      active: true,
       state: 'flop',
       params: {
         tableAddr: '0x123',
@@ -72,6 +75,7 @@ describe('ActionBar', () => {
 
   it('should not render fold button when amountToCall is 0', () => {
     const props = {
+      active: true,
       state: 'flop',
       params: {
         tableAddr: '0x123',
@@ -87,6 +91,8 @@ describe('ActionBar', () => {
 
   it('should render the BET Button with correct betting amount', () => {
     const props = {
+      active: true,
+      amount: 2000,
       state: 'flop',
       params: {
         tableAddr: '0x123',
@@ -99,12 +105,14 @@ describe('ActionBar', () => {
     const actionBar = shallow(
       <ActionBar {...props} />
     );
-    actionBar.instance().componentWillReceiveProps(props);
+    // actionBar.instance().componentWillReceiveProps(props);
     expect(actionBar.find(ActionButton).first().props().text).toEqual('BET 2000');
   });
 
   it('should render the RAISE Button with correct min amount', () => {
     const props = {
+      active: true,
+      amount: 5000,
       state: 'flop',
       params: {
         tableAddr: '0x123',
@@ -117,12 +125,14 @@ describe('ActionBar', () => {
     const actionBar = shallow(
       <ActionBar {...props} />
     );
-    actionBar.instance().componentWillReceiveProps(props);
+    // actionBar.instance().componentWillReceiveProps(props);
     expect(actionBar.find(ActionButton).first().props().text).toEqual('RAISE 5000');
   });
 
   it('should set Bet to all in amount', () => {
     const props = {
+      active: true,
+      amount: 1750,
       state: 'flop',
       params: {
         tableAddr: '0x123',
@@ -134,12 +144,13 @@ describe('ActionBar', () => {
     const actionBar = shallow(
       <ActionBar {...props} />
     );
-    actionBar.instance().updateAmount(2000);
+    // actionBar.instance().updateamount(2000);
     expect(actionBar.find(ActionButton).first().props().text).toEqual('BET 1750');
   });
 
   it('should render the Check Button when amount to call is 0', () => {
     const props = {
+      active: true,
       state: 'flop',
       params: {
         tableAddr: '0x123',
@@ -155,6 +166,8 @@ describe('ActionBar', () => {
 
   it('should render the Call Button when amount to call is greater 0', () => {
     const props = {
+      active: true,
+      amount: 1000,
       state: 'preflop',
       params: {
         tableAddr: '0x123',
@@ -172,6 +185,8 @@ describe('ActionBar', () => {
 
   it('should not render the Raise Button if amount to call is bigger than my stack', () => {
     const props = {
+      active: true,
+      amount: 800,
       state: 'preflop',
       params: {
         tableAddr: '0x123',
@@ -190,6 +205,7 @@ describe('ActionBar', () => {
 
   it('should disappear after action was taken', () => {
     const props = {
+      active: false,
       state: 'flop',
       params: {
         tableAddr: '0x123',
@@ -201,7 +217,7 @@ describe('ActionBar', () => {
     const actionBar = shallow(
       <ActionBar {...props} />
     );
-    actionBar.instance().setActive(false);
+    // actionBar.instance().setActive(false);
     expect(actionBar.find('ActionBarComponent').length).toBe(0);
   });
 });

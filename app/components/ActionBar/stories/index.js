@@ -23,21 +23,3 @@ stories.add('action bar', () => {
   };
   return <ActionBar {...props} />;
 });
-  // const guestClose = {
-  //   blocky: null,
-  //   loggedIn: false,
-  //   nickName: 'Guest',
-  //   open: boolean('open', false),
-  // };
-  // return <ActionBar />;
-// );
-
-// stories.add('user menu', () => {
-//   const guestClose = {
-//     blocky,
-//     loggedIn: true,
-//     nickName: text('nickName', 'DAWN'),
-//     open: boolean('open', false),
-//   };
-//   return <TableMenu {...guestClose} />;
-// });
