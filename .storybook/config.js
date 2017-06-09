@@ -1,7 +1,7 @@
+/* eslint no-ignore: "off", global-require: "off" */
 import { configure } from '@storybook/react';
 
 function loadStories() {
-  require('../stories');
   require('../app/components/TableMenu/stories');
 }
 
