@@ -4,6 +4,7 @@
 import React from 'react';
 import Grid from 'grid-styled';
 import Slider from 'react-rangeslider';
+// Storybook: comment-out CSS file
 import 'react-rangeslider/lib/index.css';
 import Raven from 'raven-js';
 
@@ -11,8 +12,10 @@ import SliderWrapper from '../Slider';
 import ChatWrapper from '../Chat';
 import Chat from '../../containers/Chat';
 
+// Storybook: comment-out actions
 import { bet, pay, fold, check } from '../../containers/Table/actions';
 import ActionButton from './ActionButton';
+// Storybook: comment-out TableService
 import TableService from '../../services/tableService';
 
 import {
@@ -20,7 +23,7 @@ import {
   ControlPanel,
 } from './styles';
 
-export class ActionBar extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class ActionBar extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props) {
     super(props);
@@ -30,6 +33,7 @@ export class ActionBar extends React.PureComponent { // eslint-disable-line reac
     this.handleFold = this.handleFold.bind(this);
     this.updateAmount = this.updateAmount.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
+    // Storybook: comment-out this.tabel
     this.table = new TableService(props.params.tableAddr, this.props.privKey);
     this.state = {
       active: true,
