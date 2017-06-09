@@ -265,6 +265,8 @@
     "whatwg-fetch": "2.0.1"
   },
   "devDependencies": {
+    "@storybook/addon-knobs": "^3.0.1",
+    "@storybook/react": "^3.0.1",
     "babel-cli": "6.18.0",
     "babel-core": "6.21.0",
     "babel-eslint": "7.1.1",
@@ -319,7 +321,6 @@
     "url-loader": "0.5.7",
     "webpack": "2.2.0-rc.3",
     "webpack-dev-middleware": "1.9.0",
-    "webpack-hot-middleware": "2.15.0",
-    "@storybook/react": "^3.0.1"
+    "webpack-hot-middleware": "2.15.0"
   }
 }

@@ -1,31 +1,31 @@
-
 import React from 'react';
-import { fromJS } from 'immutable';
-
 import { storiesOf } from '@storybook/react';
+import { withKnobs, text, boolean/* number */ } from '@storybook/addon-knobs';
 
 import TableMenu from '../index';
 
 import { blocky } from '../../../app.config';
 
-const guestClose = fromJS({
-  blocky: null,
-  loggedIn: false,
-  nickName: 'Guest',
-  open: false,
-});
-const guestOpen = guestClose.set('open', true);
+const stories = storiesOf('TableMenu', module);
 
-const userClose = fromJS({
-  blocky,
-  loggedIn: true,
-  nickName: 'DAWN',
-  open: false,
-});
-const userOpen = userClose.set('open', true);
+stories.addDecorator(withKnobs);
 
-storiesOf('TableMenu', module)
-  .add('guest menu closed', () => <TableMenu {...guestClose.toJS()} />)
-  .add('guest menu open', () => <TableMenu {...guestOpen.toJS()} />)
-  .add('user menu closed', () => <TableMenu {...userClose.toJS()} />)
-  .add('user menu open', () => <TableMenu {...userOpen.toJS()} />);
+stories.add('guest menu', () => {
+  const guestClose = {
+    blocky: null,
+    loggedIn: false,
+    nickName: 'Guest',
+    open: boolean('open', false),
+  };
+  return <TableMenu {...guestClose} />;
+});
+
+stories.add('user menu', () => {
+  const guestClose = {
+    blocky,
+    loggedIn: true,
+    nickName: text('nickName', 'DAWN'),
+    open: boolean('open', false),
+  };
+  return <TableMenu {...guestClose} />;
+});
