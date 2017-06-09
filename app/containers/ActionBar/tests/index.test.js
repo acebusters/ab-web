@@ -5,7 +5,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { ActionBar } from '../index';
-import { ActionButton } from '../../../components/ActionBar';
+import ActionButton from '../../../components/ActionBar/ActionButton';
 
 describe('ActionBar', () => {
   it('should not render in waiting or dealing', () => {
@@ -205,4 +205,3 @@ describe('ActionBar', () => {
     expect(actionBar.find('ActionBarComponent').length).toBe(0);
   });
 });
-
