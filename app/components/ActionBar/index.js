@@ -12,8 +12,6 @@ import SliderWrapper from '../Slider';
 import ChatWrapper from '../Chat';
 import Chat from '../../containers/Chat';
 
-// Storybook: comment-out actions
-import { bet, pay, fold, check } from '../../containers/Table/actions';
 import ActionButton from './ActionButton';
 // Storybook: comment-out TableService
 import TableService from '../../services/tableService';
@@ -76,8 +74,8 @@ export class ActionBar extends React.Component { // eslint-disable-line react/pr
     const amount = this.state.amount + this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
 
-    const betAction = bet(this.props.params.tableAddr, handId, amount, this.props.privKey, this.props.myPos, this.props.lastReceipt);
-    return pay(betAction, this.props.dispatch)
+    const betAction = this.props.bet(this.props.params.tableAddr, handId, amount, this.props.privKey, this.props.myPos, this.props.lastReceipt);
+    return this.props.pay(betAction, this.props.dispatch)
     .then((cards) => {
       this.props.setCards(this.props.params.tableAddr, handId, cards);
     })
@@ -98,7 +96,7 @@ export class ActionBar extends React.Component { // eslint-disable-line react/pr
     const checkStates = ['preflop', 'turn', 'river', 'flop'];
     const state = this.props.state;
     const checkType = checkStates.indexOf(state) !== -1 ? state : 'flop';
-    const action = check(
+    const action = this.props.check(
       this.props.params.tableAddr,
       handId,
       amount,
@@ -108,7 +106,7 @@ export class ActionBar extends React.Component { // eslint-disable-line react/pr
       checkType,
     );
 
-    return pay(action, this.props.dispatch)
+    return this.props.pay(action, this.props.dispatch)
       .then((cards) => {
         this.props.setCards(this.props.params.tableAddr, handId, cards);
       })
@@ -119,7 +117,7 @@ export class ActionBar extends React.Component { // eslint-disable-line react/pr
     this.setActive(false);
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
-    const action = fold(
+    const action = this.props.fold(
       this.props.params.tableAddr,
       handId,
       amount,
@@ -128,7 +126,7 @@ export class ActionBar extends React.Component { // eslint-disable-line react/pr
       this.props.lastReceipt
     );
 
-    return pay(action, this.props.dispatch)
+    return this.props.pay(action, this.props.dispatch)
       .then((cards) => {
         this.props.setCards(this.props.params.tableAddr, handId, cards);
       })
@@ -227,6 +225,10 @@ ActionBar.propTypes = {
   sendMessage: React.PropTypes.func,
   messages: React.PropTypes.array,
   playerCount: React.PropTypes.number,
+  bet: React.PropTypes.func,
+  pay: React.PropTypes.func,
+  fold: React.PropTypes.func,
+  check: React.PropTypes.func,
 };
 
 export default ActionBar;
