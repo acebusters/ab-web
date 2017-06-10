@@ -7,108 +7,75 @@ import { shallow } from 'enzyme';
 import ActionBar from '../index';
 import ActionButton from '../ActionButton';
 
-describe('ActionBar', () => {
-  it('should not render in waiting or dealing', () => {
-    const props = {
-      state: 'waiting',
-      params: {
-        tableAddr: '0x123',
-      },
-      isMyTurn: true,
-    };
-    let actionBar = shallow(
-      <ActionBar {...props} />
-    );
-    expect(actionBar.find('ActionBarComponent').length).toBe(0);
-    props.state = 'dealing';
-    actionBar = shallow(
-      <ActionBar {...props} />
+import {
+  test1, test2, test3, test4, test5, test6, test7,
+} from './tests';
+
+describe(test1.describe, () => {
+  it(test1.it, () => {
+    const actionBar = shallow(
+      <ActionBar {...test1.props} />
     );
     expect(actionBar.find('ActionBarComponent').length).toBe(0);
   });
+});
 
-  it('should render in flop', () => {
-    const props = {
-      active: true,
-      state: 'flop',
-      params: {
-        tableAddr: '0x123',
-      },
-      isMyTurn: true,
-    };
+describe(test2.describe, () => {
+  it(test2.it, () => {
     const actionBar = shallow(
-      <ActionBar {...props} />
+      <ActionBar {...test2.props} />
+    );
+    expect(actionBar.find('ActionBarComponent').length).toBe(0);
+  });
+});
+
+describe(test3.describe, () => {
+  it(test3.it, () => {
+    const actionBar = shallow(
+      <ActionBar {...test3.props} />
     );
     expect(actionBar.find({ name: 'action-bar-wrapper' }).length).toEqual(1);
   });
+});
 
-  it('should not render in flop when its not my turn', () => {
-    const props = {
-      active: false,
-      state: 'flop',
-      params: {
-        tableAddr: '0x123',
-      },
-      isMyTurn: false,
-    };
+describe(test4.describe, () => {
+  it(test4.it, () => {
     const actionBar = shallow(
-      <ActionBar {...props} />
+      <ActionBar {...test4.props} />
     );
     expect(actionBar.find('ActionBarComponent').length).toBe(0);
   });
+});
 
-  it('should render fold button when amountToCall is greater than 0', () => {
-    const props = {
-      active: true,
-      state: 'flop',
-      params: {
-        tableAddr: '0x123',
-      },
-      isMyTurn: true,
-      amountToCall: 1000,
-    };
+describe(test5.describe, () => {
+  it(test5.it, () => {
     const actionBar = shallow(
-      <ActionBar {...props} />
+      <ActionBar {...test5.props} />
     );
     expect(actionBar.find(ActionButton).last().props().text).toBe('FOLD');
   });
+});
 
-  it('should not render fold button when amountToCall is 0', () => {
-    const props = {
-      active: true,
-      state: 'flop',
-      params: {
-        tableAddr: '0x123',
-      },
-      isMyTurn: true,
-      amountToCall: 0,
-    };
+describe(test6.describe, () => {
+  it(test6.it, () => {
     const actionBar = shallow(
-      <ActionBar {...props} />
+      <ActionBar {...test6.props} />
     );
     expect(actionBar.find(ActionButton).length).toBe(2);
   });
+});
 
-  it('should render the BET Button with correct betting amount', () => {
-    const props = {
-      active: true,
-      amount: 2000,
-      state: 'flop',
-      params: {
-        tableAddr: '0x123',
-      },
-      isMyTurn: true,
-      minRaise: 2000,
-      amountToCall: 0,
-      myStack: 10000,
-    };
+describe(test7.describe, () => {
+  it(test7.it, () => {
     const actionBar = shallow(
-      <ActionBar {...props} />
+      <ActionBar {...test7.props} />
     );
     // actionBar.instance().componentWillReceiveProps(props);
     expect(actionBar.find(ActionButton).first().props().text).toEqual('BET 2000');
   });
+});
 
+describe('ActionBar', () => {
   it('should render the RAISE Button with correct min amount', () => {
     const props = {
       active: true,
