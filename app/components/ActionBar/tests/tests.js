@@ -1,8 +1,7 @@
 export const combine = (describe, it) => `${describe}, ${it}`;
 
 export default [{
-  /* tests[0] */
-  describe: 'during table "waiting"',
+  describe: 'tests[0] during table "waiting"',
   props: {
     state: 'waiting',
     params: {
@@ -12,8 +11,7 @@ export default [{
   },
   it: 'actionBar should not render',
 }, {
-  /* tests[1] */
-  describe: 'during table "dealing"',
+  describe: 'tests[1] during table "dealing"',
   props: {
     state: 'dealing',
     params: {
@@ -23,8 +21,7 @@ export default [{
   },
   it: 'actionBar should not render',
 }, {
-  /* tests[2] */
-  describe: 'during table "flop"',
+  describe: 'tests[2] during table "flop"',
   props: {
     active: true,
     state: 'flop',
@@ -35,8 +32,7 @@ export default [{
   },
   it: 'actionBar should render',
 }, {
-  /* tests[3] */
-  describe: 'during table "flop" if isMyTurn is false',
+  describe: 'tests[3] during table "flop" if isMyTurn is false',
   props: {
     active: false,
     state: 'flop',
@@ -47,8 +43,7 @@ export default [{
   },
   it: 'actionBar should not render',
 }, {
-  /* tests[4] */
-  describe: 'when amountToCall is greater than 0',
+  describe: 'tests[4] when amountToCall > 0',
   props: {
     active: true,
     state: 'flop',
@@ -60,8 +55,7 @@ export default [{
   },
   it: 'should render fold button',
 }, {
-  /* tests[5] */
-  describe: 'when amountToCall is 0',
+  describe: 'tests[5] amountToCall is 0',
   props: {
     active: true,
     state: 'flop',
@@ -73,8 +67,7 @@ export default [{
   },
   it: 'should not render fold button',
 }, {
-  /* tests[6] */
-  describe: 'with the correct betting amount',
+  describe: 'tests[6] the correct betting amount',
   props: {
     active: true,
     amount: 2000,
@@ -89,8 +82,7 @@ export default [{
   },
   it: 'should render BET button',
 }, {
-  /* tests[7] */
-  describe: 'RAISE button min amount',
+  describe: 'tests[7] RAISE button min amount',
   props: {
     active: true,
     amount: 5000,
@@ -105,8 +97,7 @@ export default [{
   },
   it: 'should render with correct min amount',
 }, {
-  /* tests[8] */
-  describe: 'if all-in amount',
+  describe: 'tests[8] if all-in amount',
   props: {
     active: true,
     amount: 1750,
@@ -120,8 +111,7 @@ export default [{
   },
   it: 'should set BET to all-in amount',
 }, {
-  /* tests[9] */
-  describe: 'when amount to call is 0',
+  describe: 'tests[9] when amount to call === 0',
   props: {
     active: true,
     state: 'flop',
@@ -133,8 +123,7 @@ export default [{
   },
   it: 'should render the CHECK button',
 }, {
-  /* tests[10] */
-  describe: 'when amount to call is greater than 0',
+  describe: 'ttests[10] when amount to call > 0',
   props: {
     active: true,
     amount: 1000,
@@ -149,8 +138,7 @@ export default [{
   },
   it: 'should render the CALL button',
 }, {
-  /* tests[11] */
-  describe: 'if amount to call is bigger than myStack',
+  describe: 'tests[11] if amount to call > myStack',
   props: {
     active: true,
     amount: 800,
@@ -165,8 +153,7 @@ export default [{
   },
   it: 'should not render the RAISE button',
 }, {
-  /* tests[12] */
-  describe: 'after action was taken',
+  describe: 'tests[12] after action was taken',
   props: {
     active: false,
     state: 'flop',

@@ -21,6 +21,98 @@ const ActionBar = (props) => {
     handleCheck, handleFold, messages, minRaise, myPos, myStack, params,
     playerCount, state, sendMessage, updateAmount,
   } = props;
+  const buttonState1 = [
+    {
+      nodeName: 'raise',
+      text: `RAISE ${amount}`,
+      size: 'medium',
+      onClick: () => handleBet(),
+    },
+    {
+      nodeName: 'call',
+      text: `CALL ${amount}`,
+      size: 'medium',
+      onClick: () => handleCall(),
+    },
+    {
+      nodeName: 'fold',
+      text: 'FOLD',
+      size: 'medium',
+      onClick: () => handleFold(),
+    },
+  ];
+  const buttonState2 = [
+    {
+      nodeName: 'null',
+      text: '',
+      size: 'medium',
+      onClick: null,
+    },
+    {
+      nodeName: 'call',
+      text: `CALL ${callAmount}`,
+      size: 'medium',
+      onClick: () => handleCall(),
+    },
+    {
+      nodeName: 'fold',
+      text: 'FOLD',
+      size: 'medium',
+      onClick: () => handleFold(),
+    },
+  ];
+  const buttonState3 = [
+    {
+      nodeName: 'bet',
+      text: `BET ${amount}`,
+      size: 'medium',
+      onClick: () => handleBet(),
+    },
+    {
+      nodeName: 'check',
+      text: 'CHECK',
+      size: 'medium',
+      onClick: () => handleCheck(),
+    },
+    {
+      nodeName: 'null',
+      text: '',
+      size: 'medium',
+      onClick: null,
+    },
+  ];
+  const buttonStateNull = [
+    {
+      nodeName: 'null',
+      text: '',
+      size: 'medium',
+      onClick: null,
+    },
+    {
+      nodeName: 'null',
+      text: '',
+      size: 'medium',
+      onClick: null,
+    },
+    {
+      nodeName: 'null',
+      text: '',
+      size: 'medium',
+      onClick: null,
+    },
+  ];
+  const renderButtonGroup = () => {
+    if (amountToCall > 0) {
+      if (myStack > amountToCall) {
+        return buttonState1;
+      }
+      return buttonState2;
+    }
+    if (amountToCall === 0) {
+      return buttonState3;
+    }
+    return buttonStateNull;
+  };
   const isTakePartOfAGame = myPos != null;
   const isAppropriateState = (
     state !== 'waiting' && state !== 'dealing' && state !== 'showdown'
@@ -40,42 +132,17 @@ const ActionBar = (props) => {
               onChange={updateAmount}
             />
           }
-          {amountToCall > 0 &&
-            <ButtonGroup>
-              {(myStack > amountToCall) ? // raiseButton
-                <ActionButton
-                  size="medium"
-                  onClick={handleBet}
-                  text={`RAISE ${amount}`}
-                />
-                : null
-              }
+          <ButtonGroup>
+            {renderButtonGroup().map((item, index) => (
               <ActionButton
-                size="medium"
-                onClick={handleCall}
-                text={`CALL ${callAmount}`}
+                name={item.nodeName}
+                key={index}
+                size={item.size}
+                onClick={item.onClick}
+                text={item.text}
               />
-              <ActionButton
-                size="medium"
-                onClick={handleFold}
-                text="FOLD"
-              />
-            </ButtonGroup>
-          }
-          {amountToCall === 0 &&
-            <ButtonGroup>
-              <ActionButton
-                size="medium"
-                onClick={handleBet}
-                text={`BET ${amount}`}
-              />
-              <ActionButton
-                size="medium"
-                onClick={handleCheck}
-                text="CHECK"
-              />
-            </ButtonGroup>
-          }
+            ))}
+          </ButtonGroup>
         </ControlPanel>
       </ActionBarWrapper>
     );
