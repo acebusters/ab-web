@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import ActionBar from '../index';
 import ActionButton from '../ActionButton';
 
@@ -59,7 +59,9 @@ describe(tests[5].describe, () => {
     const actionBar = shallow(
       <ActionBar {...tests[5].props} />
     );
-    expect(actionBar.find(ActionButton).length).toBe(2);
+    expect(actionBar.find({ name: 'bet' }).length).toBe(1);
+    expect(actionBar.find({ name: 'check' }).length).toBe(1);
+    expect(actionBar.find({ name: 'fold' }).length).toBe(0);
   });
 });
 
@@ -113,11 +115,13 @@ describe(tests[10].describe, () => {
 
 describe(tests[11].describe, () => {
   it(tests[11].it, () => {
-    const actionBar = shallow(
+    const actionBar = mount(
       <ActionBar {...tests[11].props} />
     );
-    expect(actionBar.find(ActionButton).nodes[0].props.text).toEqual('CALL 800');
-    expect(actionBar.find(ActionButton).nodes.length).toEqual(2);
+    expect(actionBar.find({ name: 'call' }).text()).toEqual('CALL 800');
+    expect(actionBar.find({ name: 'fold' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'null' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'raise' }).length).toEqual(0);
   });
 });
 

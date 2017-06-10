@@ -11,7 +11,12 @@ const ActionButton = (props) => {
     props.onClick(e);
   };
   return (
-    <ActionButtonWrapper onClick={onClick} size={props.size} disabled={props.disabled} >
+    <ActionButtonWrapper
+      name={props.name}
+      onClick={onClick}
+      size={props.size}
+      disabled={props.disabled}
+    >
       { !props.text &&
         <Icon className={props.icon} disabled={props.disabled} />
       }
@@ -24,6 +29,7 @@ ActionButton.propTypes = {
   text: React.PropTypes.string,
   size: React.PropTypes.string,
   icon: React.PropTypes.string,
+  name: React.PropTypes.string,
   onClick: React.PropTypes.func,
   disabled: React.PropTypes.bool,
 };
