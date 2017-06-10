@@ -1,6 +1,7 @@
 export const combine = (describe, it) => `${describe}, ${it}`;
 
 export default [{
+  /* tests[0] */
   describe: 'during table "waiting"',
   props: {
     state: 'waiting',
@@ -11,6 +12,7 @@ export default [{
   },
   it: 'actionBar should not render',
 }, {
+  /* tests[1] */
   describe: 'during table "dealing"',
   props: {
     state: 'dealing',
@@ -21,6 +23,7 @@ export default [{
   },
   it: 'actionBar should not render',
 }, {
+  /* tests[2] */
   describe: 'during table "flop"',
   props: {
     active: true,
@@ -32,6 +35,7 @@ export default [{
   },
   it: 'actionBar should render',
 }, {
+  /* tests[3] */
   describe: 'during table "flop" if isMyTurn is false',
   props: {
     active: false,
@@ -43,6 +47,7 @@ export default [{
   },
   it: 'actionBar should not render',
 }, {
+  /* tests[4] */
   describe: 'when amountToCall is greater than 0',
   props: {
     active: true,
@@ -55,6 +60,7 @@ export default [{
   },
   it: 'should render fold button',
 }, {
+  /* tests[5] */
   describe: 'when amountToCall is 0',
   props: {
     active: true,
@@ -67,6 +73,7 @@ export default [{
   },
   it: 'should not render fold button',
 }, {
+  /* tests[6] */
   describe: 'with the correct betting amount',
   props: {
     active: true,
