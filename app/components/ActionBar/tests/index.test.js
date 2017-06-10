@@ -50,7 +50,9 @@ describe(tests[4].describe, () => {
     const actionBar = shallow(
       <ActionBar {...tests[4].props} />
     );
-    expect(actionBar.find(ActionButton).last().props().text).toBe('FOLD');
+    expect(actionBar.find({ name: 'fold' }).length).toBe(1);
+    expect(actionBar.find({ name: 'call' }).length).toBe(1);
+    expect(actionBar.find({ name: 'null' }).length).toBe(1);
   });
 });
 
@@ -67,31 +69,40 @@ describe(tests[5].describe, () => {
 
 describe(tests[6].describe, () => {
   it(tests[6].it, () => {
-    const actionBar = shallow(
+    const actionBar = mount(
       <ActionBar {...tests[6].props} />
     );
     // actionBar.instance().componentWillReceiveProps(props);
-    expect(actionBar.find(ActionButton).first().props().text).toEqual('BET 2000');
+    expect(actionBar.find({ name: 'null' }).length).toBe(1);
+    expect(actionBar.find({ name: 'check' }).length).toBe(1);
+    expect(actionBar.find({ name: 'bet' }).length).toBe(1);
+    expect(actionBar.find({ name: 'bet' }).text()).toEqual('BET 2000');
   });
 });
 
 describe(tests[7].describe, () => {
   it(tests[7].it, () => {
-    const actionBar = shallow(
+    const actionBar = mount(
       <ActionBar {...tests[7].props} />
     );
     // actionBar.instance().componentWillReceiveProps(props);
-    expect(actionBar.find(ActionButton).first().props().text).toEqual('RAISE 5000');
+    expect(actionBar.find({ name: 'fold' }).length).toBe(1);
+    expect(actionBar.find({ name: 'call' }).length).toBe(1);
+    expect(actionBar.find({ name: 'raise' }).length).toBe(1);
+    expect(actionBar.find({ name: 'raise' }).text()).toEqual('RAISE 5000');
   });
 });
 
 describe(tests[8].describe, () => {
   it(tests[8].it, () => {
-    const actionBar = shallow(
+    const actionBar = mount(
       <ActionBar {...tests[8].props} />
     );
     // actionBar.instance().updateamount(2000);
-    expect(actionBar.find(ActionButton).first().props().text).toEqual('BET 1750');
+    expect(actionBar.find({ name: 'null' }).length).toBe(1);
+    expect(actionBar.find({ name: 'check' }).length).toBe(1);
+    expect(actionBar.find({ name: 'bet' }).length).toBe(1);
+    expect(actionBar.find({ name: 'bet' }).text()).toEqual('BET 1750');
   });
 });
 
