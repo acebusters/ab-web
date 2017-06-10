@@ -19,10 +19,7 @@ import {
 import { makeSelectPrivKey } from '../AccountProvider/selectors';
 
 import {
-  makeHandStateSelector,
   makeMyMaxBetSelector,
-  makeIsMyTurnSelector,
-  makeMyPosSelector,
   makeMessagesSelector,
   makePlayersCountSelector,
 } from '../Table/selectors';
@@ -30,7 +27,6 @@ import {
 import {
   makeMyCardsSelector,
   makeMyStackSelector,
-  makeLastReceiptSelector,
 } from '../Seat/selectors';
 
 import { setCards, sendMessage, bet, pay, fold, check } from '../Table/actions';
@@ -202,20 +198,16 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  visible: makeSelectActionBarVisible(),
-  privKey: makeSelectPrivKey(),
-  myMaxBet: makeMyMaxBetSelector(),
-  isMyTurn: makeIsMyTurnSelector(),
   amountToCall: makeAmountToCallSelector(),
   callAmount: makeCallAmountSelector(),
-  minRaise: makeMinSelector(),
-  myStack: makeMyStackSelector(),
-  myPos: makeMyPosSelector(),
-  lastReceipt: makeLastReceiptSelector(),
   cards: makeMyCardsSelector(),
-  state: makeHandStateSelector(),
-  messages: makeMessagesSelector(),
   playerCount: makePlayersCountSelector(),
+  privKey: makeSelectPrivKey(),
+  messages: makeMessagesSelector(),
+  minRaise: makeMinSelector(),
+  myMaxBet: makeMyMaxBetSelector(),
+  myStack: makeMyStackSelector(),
+  visible: makeSelectActionBarVisible(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionBarContainer);
