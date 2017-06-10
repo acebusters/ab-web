@@ -22,10 +22,10 @@ const ActionBar = (props) => {
   } = props;
   const buttonState1 = [
     {
-      nodeName: 'raise',
-      text: `RAISE ${amount}`,
+      nodeName: 'fold',
+      text: 'FOLD',
       size: 'medium',
-      onClick: () => handleBet(),
+      onClick: () => handleFold(),
     },
     {
       nodeName: 'call',
@@ -34,38 +34,38 @@ const ActionBar = (props) => {
       onClick: () => handleCall(),
     },
     {
+      nodeName: 'raise',
+      text: `RAISE ${amount}`,
+      size: 'medium',
+      onClick: () => handleBet(),
+    },
+  ];
+  const buttonState2 = [
+    {
       nodeName: 'fold',
       text: 'FOLD',
       size: 'medium',
       onClick: () => handleFold(),
     },
-  ];
-  const buttonState2 = [
+    {
+      nodeName: 'call',
+      text: `CALL ${callAmount}`,
+      size: 'medium',
+      onClick: () => handleCall(),
+    },
     {
       nodeName: 'null',
       text: '',
       size: 'medium',
       onClick: null,
     },
-    {
-      nodeName: 'call',
-      text: `CALL ${callAmount}`,
-      size: 'medium',
-      onClick: () => handleCall(),
-    },
-    {
-      nodeName: 'fold',
-      text: 'FOLD',
-      size: 'medium',
-      onClick: () => handleFold(),
-    },
   ];
   const buttonState3 = [
     {
-      nodeName: 'bet',
-      text: `BET ${amount}`,
+      nodeName: 'null',
+      text: '',
       size: 'medium',
-      onClick: () => handleBet(),
+      onClick: null,
     },
     {
       nodeName: 'check',
@@ -74,10 +74,10 @@ const ActionBar = (props) => {
       onClick: () => handleCheck(),
     },
     {
-      nodeName: 'null',
-      text: '',
+      nodeName: 'bet',
+      text: `BET ${amount}`,
       size: 'medium',
-      onClick: null,
+      onClick: () => handleBet(),
     },
   ];
   const buttonStateNull = [
