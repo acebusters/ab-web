@@ -9,11 +9,6 @@ import {
   gray,
 } from '../../variables';
 
-export const ControlPanel = styled.div`
-  width: 100%;
-  margin-top: 5em;
-`;
-
 export const ActionBarWrapper = styled.div`
   position: absolute;
   left: 0;
@@ -21,6 +16,15 @@ export const ActionBarWrapper = styled.div`
   height: 10%
   width: 15%;
   bottom: 0px;
+`;
+
+export const ControlPanel = styled.div`
+  width: 100%;
+  margin-top: 5em;
+`;
+
+export const ButtonGroup = styled.div`
+  background-color: lightgreen;
 `;
 
 export const Icon = styled.i`
