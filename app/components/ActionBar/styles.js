@@ -10,21 +10,20 @@ import {
 } from '../../variables';
 
 export const ActionBarWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 10%
-  width: 15%;
+  display: flex;
+  background-color: none;
+  position: fixed;
+  bottom: 0;
+  height: 122px;
+  width: 100%;
   bottom: 0px;
 `;
 
 export const ControlPanel = styled.div`
+  display: flex;
+  justify-content: center;
   width: 100%;
-  margin-top: 5em;
-`;
-
-export const ButtonGroup = styled.div`
-  background-color: lightgreen;
+  background-color: none;
 `;
 
 export const Icon = styled.i`
@@ -37,9 +36,10 @@ export const Icon = styled.i`
 `;
 
 export const ActionButtonWrapper = styled.button`
-  border-radius: 50%;
   margin-left: 0.5em;
+  margin-bottom: 2em;
   color: ${(props) => props.disabled ? gray : white};
+  border-radius: 50%;
   border: 2px solid ${(props) => props.disabled ? gray : white};
   ${(props) => {
     if (props.size === 'medium') {
@@ -52,7 +52,6 @@ export const ActionButtonWrapper = styled.button`
     return `width: 6em;
             height: 6em;`;
   }};
-  margin-bottom: 2em;
   cursor: pointer;
 
   &:hover {

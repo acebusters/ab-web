@@ -11,7 +11,6 @@ import Slider from '../Slider';
 
 import {
   ActionBarWrapper,
-  ButtonGroup,
   ControlPanel,
 } from './styles';
 
@@ -121,28 +120,26 @@ const ActionBar = (props) => {
   if (active && isMyTurn && isAppropriateState) {
     return (
       <ActionBarWrapper name="action-bar-wrapper">
-        <ControlPanel>
-          {myStack > amountToCall &&
-            <Slider
-              data-orientation="vertical"
-              value={amount}
-              min={minRaise}
-              max={myStack}
-              step={1}
-              onChange={updateAmount}
+        {myStack > amountToCall &&
+          <Slider
+            data-orientation="vertical"
+            value={amount}
+            min={minRaise}
+            max={myStack}
+            step={1}
+            onChange={updateAmount}
+          />
+        }
+        <ControlPanel name="control-panel">
+          {renderButtonGroup().map((item, index) => (
+            <ActionButton
+              name={item.nodeName}
+              key={index}
+              size={item.size}
+              onClick={item.onClick}
+              text={item.text}
             />
-          }
-          <ButtonGroup>
-            {renderButtonGroup().map((item, index) => (
-              <ActionButton
-                name={item.nodeName}
-                key={index}
-                size={item.size}
-                onClick={item.onClick}
-                text={item.text}
-              />
-            ))}
-          </ButtonGroup>
+          ))}
         </ControlPanel>
       </ActionBarWrapper>
     );
