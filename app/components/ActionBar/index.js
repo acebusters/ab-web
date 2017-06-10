@@ -2,7 +2,6 @@
  * Created by helge on 24.08.16.
  */
 import React from 'react';
-import Grid from 'grid-styled';
 
 import ChatWrapper from '../Chat';
 import Chat from '../../containers/Chat';
@@ -12,6 +11,7 @@ import Slider from '../Slider';
 
 import {
   ActionBarWrapper,
+  ButtonGroup,
   ControlPanel,
 } from './styles';
 
@@ -30,7 +30,7 @@ const ActionBar = (props) => {
     return (
       <ActionBarWrapper name="action-bar-wrapper">
         <ControlPanel>
-          { myStack > amountToCall &&
+          {myStack > amountToCall &&
             <Slider
               data-orientation="vertical"
               value={amount}
@@ -40,44 +40,42 @@ const ActionBar = (props) => {
               onChange={updateAmount}
             />
           }
-          <Grid xs={1 / 3}>
-            {amountToCall > 0 &&
-              <div>
-                {(myStack > amountToCall) ? // raiseButton
-                  <ActionButton
-                    size="medium"
-                    onClick={handleBet}
-                    text={`RAISE ${amount}`}
-                  />
-                  : null
-                }
-                <ActionButton
-                  size="medium"
-                  onClick={handleCall}
-                  text={`CALL ${callAmount}`}
-                />
-                <ActionButton
-                  size="medium"
-                  onClick={handleFold}
-                  text="FOLD"
-                />
-              </div>
-            }
-            { amountToCall === 0 &&
-              <div>
+          {amountToCall > 0 &&
+            <ButtonGroup>
+              {(myStack > amountToCall) ? // raiseButton
                 <ActionButton
                   size="medium"
                   onClick={handleBet}
-                  text={`BET ${amount}`}
+                  text={`RAISE ${amount}`}
                 />
-                <ActionButton
-                  size="medium"
-                  onClick={handleCheck}
-                  text="CHECK"
-                />
-              </div>
-            }
-          </Grid>
+                : null
+              }
+              <ActionButton
+                size="medium"
+                onClick={handleCall}
+                text={`CALL ${callAmount}`}
+              />
+              <ActionButton
+                size="medium"
+                onClick={handleFold}
+                text="FOLD"
+              />
+            </ButtonGroup>
+          }
+          {amountToCall === 0 &&
+            <ButtonGroup>
+              <ActionButton
+                size="medium"
+                onClick={handleBet}
+                text={`BET ${amount}`}
+              />
+              <ActionButton
+                size="medium"
+                onClick={handleCheck}
+                text="CHECK"
+              />
+            </ButtonGroup>
+          }
         </ControlPanel>
       </ActionBarWrapper>
     );
