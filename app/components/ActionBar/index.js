@@ -16,9 +16,24 @@ import {
 
 const ActionBar = (props) => {
   const {
-    active, amount, amountToCall, callAmount, isMyTurn, handleBet, handleCall,
-    handleCheck, handleFold, messages, minRaise, myPos, myStack, params,
-    playerCount, state, sendMessage, updateAmount,
+    amount,
+    amountToCall,
+    callAmount,
+    isMyTurn,
+    handleBet,
+    handleCall,
+    handleCheck,
+    handleFold,
+    messages,
+    minRaise,
+    myPos,
+    myStack,
+    params,
+    playerCount,
+    state,
+    sendMessage,
+    visible,
+    updateAmount,
   } = props;
   const buttonState1 = [
     {
@@ -117,7 +132,7 @@ const ActionBar = (props) => {
     state !== 'waiting' && state !== 'dealing' && state !== 'showdown'
   );
   const canSeeChat = (isTakePartOfAGame && !isMyTurn && isAppropriateState) || !isTakePartOfAGame;
-  if (active && isMyTurn && isAppropriateState) {
+  if (visible) {
     return (
       <ActionBarWrapper name="action-bar-wrapper">
         {myStack > amountToCall &&
@@ -156,7 +171,7 @@ const ActionBar = (props) => {
 };
 
 ActionBar.propTypes = {
-  active: React.PropTypes.bool,
+  visible: React.PropTypes.bool,
   amount: React.PropTypes.number,
   amountToCall: React.PropTypes.number,
   callAmount: React.PropTypes.number,

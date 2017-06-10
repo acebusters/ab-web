@@ -47,6 +47,7 @@ class ActionBarContainer extends React.Component {
     this.updateAmount = this.updateAmount.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.table = new TableService(props.params.tableAddr, this.props.privKey);
+    this.state = { amount: 0 };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -147,7 +148,6 @@ class ActionBarContainer extends React.Component {
   render() {
     return (
       <ActionBar
-        active={this.state.active}
         amount={this.state.amount}
         handleBet={this.handleBet}
         handleCheck={this.handleCheck}
@@ -202,7 +202,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  actionBarVisible: makeSelectActionBarVisible(),
+  visible: makeSelectActionBarVisible(),
   privKey: makeSelectPrivKey(),
   myMaxBet: makeMyMaxBetSelector(),
   isMyTurn: makeIsMyTurnSelector(),
