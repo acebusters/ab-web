@@ -3,15 +3,12 @@
  */
 import React from 'react';
 import Grid from 'grid-styled';
-import Slider from 'react-rangeslider';
-// Storybook: comment-out CSS file
-import 'react-rangeslider/lib/index.css';
 
-import SliderWrapper from '../Slider';
 import ChatWrapper from '../Chat';
 import Chat from '../../containers/Chat';
 
 import ActionButton from './ActionButton';
+import Slider from '../Slider';
 
 import {
   ActionBarWrapper,
@@ -33,20 +30,16 @@ const ActionBar = (props) => {
     return (
       <ActionBarWrapper name="action-bar-wrapper">
         <ControlPanel>
-          <SliderWrapper>
-            { myStack > amountToCall &&
-              <Slider
-                key="betting-slider"
-                data-orientation="vertical"
-                value={amount}
-                min={minRaise}
-                max={myStack}
-                step={1}
-                onChange={updateAmount}
-              >
-              </Slider>
-            }
-          </SliderWrapper>
+          { myStack > amountToCall &&
+            <Slider
+              data-orientation="vertical"
+              value={amount}
+              min={minRaise}
+              max={myStack}
+              step={1}
+              onChange={updateAmount}
+            />
+          }
           <Grid xs={1 / 3}>
             {amountToCall > 0 &&
               <div>
