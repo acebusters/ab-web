@@ -11,7 +11,6 @@ import {
   makeSbSelector,
   makeHandSelector,
   makeHandStateSelector,
-  makeIsMyTurnSelector,
 } from '../Table/selectors';
 
 import {
@@ -28,11 +27,13 @@ export const makeSelectActionBarActive = () => createSelector(
   (actionBar) => actionBar.get('active'),
 );
 
+const getIsMyTurn = (_, props) => props.isMyTurn;
+
 export const makeSelectActionBarVisible = () => createSelector(
-  [makeSelectActionBarActive(), makeHandStateSelector(), makeIsMyTurnSelector()],
-  (active, state, isMyTurn) => {
+  [makeSelectActionBarActive(), makeHandStateSelector(), getIsMyTurn],
+  (active, handState, isMyTurn) => {
     const isAppropriateState = (
-      state !== 'waiting' && state !== 'dealing' && state !== 'showdown'
+      handState !== 'waiting' && handState !== 'dealing' && handState !== 'showdown'
     );
     if (active && isMyTurn && isAppropriateState) {
       return true;
