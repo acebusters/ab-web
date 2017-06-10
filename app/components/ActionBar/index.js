@@ -30,7 +30,7 @@ const ActionBar = (props) => {
     },
     {
       nodeName: 'call',
-      text: `CALL ${amount}`,
+      text: `CALL ${callAmount}`,
       size: 'medium',
       onClick: () => handleCall(),
     },
