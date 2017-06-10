@@ -3,6 +3,7 @@ export const combine = (describe, it) => `${describe}, ${it}`;
 export default [{
   describe: 'tests[0] during table "waiting"',
   props: {
+    visible: false,
     state: 'waiting',
     params: {
       tableAddr: '0x123',
@@ -13,6 +14,7 @@ export default [{
 }, {
   describe: 'tests[1] during table "dealing"',
   props: {
+    visible: false,
     state: 'dealing',
     params: {
       tableAddr: '0x123',
@@ -23,7 +25,7 @@ export default [{
 }, {
   describe: 'tests[2] during table "flop"',
   props: {
-    active: true,
+    visible: true,
     state: 'flop',
     params: {
       tableAddr: '0x123',
@@ -34,7 +36,7 @@ export default [{
 }, {
   describe: 'tests[3] during table "flop" if isMyTurn is false',
   props: {
-    active: false,
+    visible: false,
     state: 'flop',
     params: {
       tableAddr: '0x123',
@@ -45,7 +47,7 @@ export default [{
 }, {
   describe: 'tests[4] when amountToCall > 0',
   props: {
-    active: true,
+    visible: true,
     state: 'flop',
     params: {
       tableAddr: '0x123',
@@ -57,7 +59,7 @@ export default [{
 }, {
   describe: 'tests[5] amountToCall is 0',
   props: {
-    active: true,
+    visible: true,
     state: 'flop',
     params: {
       tableAddr: '0x123',
@@ -69,7 +71,7 @@ export default [{
 }, {
   describe: 'tests[6] the correct betting amount',
   props: {
-    active: true,
+    visible: true,
     amount: 2000,
     state: 'flop',
     params: {
@@ -84,7 +86,7 @@ export default [{
 }, {
   describe: 'tests[7] RAISE button min amount',
   props: {
-    active: true,
+    visible: true,
     amount: 5000,
     state: 'flop',
     params: {
@@ -99,7 +101,7 @@ export default [{
 }, {
   describe: 'tests[8] if all-in amount',
   props: {
-    active: true,
+    visible: true,
     amount: 1750,
     state: 'flop',
     params: {
@@ -113,7 +115,7 @@ export default [{
 }, {
   describe: 'tests[9] when amount to call === 0',
   props: {
-    active: true,
+    visible: true,
     state: 'flop',
     params: {
       tableAddr: '0x123',
@@ -125,7 +127,7 @@ export default [{
 }, {
   describe: 'ttests[10] when amount to call > 0',
   props: {
-    active: true,
+    visible: true,
     amount: 1000,
     state: 'preflop',
     params: {
@@ -140,7 +142,7 @@ export default [{
 }, {
   describe: 'tests[11] if amount to call > myStack',
   props: {
-    active: true,
+    visible: true,
     amount: 800,
     state: 'preflop',
     params: {
@@ -155,7 +157,7 @@ export default [{
 }, {
   describe: 'tests[12] after action was taken',
   props: {
-    active: false,
+    visible: false,
     state: 'flop',
     params: {
       tableAddr: '0x123',
