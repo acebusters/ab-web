@@ -12,7 +12,7 @@ const ButtonCheckCall = (props) => {
   if (amountToCall > 0) {
     return (
       <ActionButton
-        name="call"
+        name="button-call"
         text={`CALL ${callAmount}`}
         size="medium"
         onClick={() => handleCall()}
@@ -22,7 +22,7 @@ const ButtonCheckCall = (props) => {
   // if amountToCall === 0, or undefined, or null
   return (
     <ActionButton
-      name="check"
+      name="button-check"
       text="CHECK"
       size="medium"
       onClick={() => handleCheck()}

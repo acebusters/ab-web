@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ActionButton from './ActionButton';
-import ButtonNull from './ButtonNull';
+import ButtonBlank from './ButtonBlank';
 
 const ButtonFold = (props) => {
   const {
@@ -18,7 +18,7 @@ const ButtonFold = (props) => {
       />
     );
   }
-  return <ButtonNull />;
+  return <ButtonBlank />;
 };
 ButtonFold.propTypes = {
   amountToCall: React.PropTypes.number,

@@ -2,12 +2,12 @@ import React from 'react';
 
 import ActionButton from './ActionButton';
 
-const ButtonNull = () => (
+const ButtonBlank = () => (
   <ActionButton
     name="button-null"
-    text="NULL"
+    text="blank"
     size="medium"
   />
 );
 
-export default ButtonNull;
+export default ButtonBlank;

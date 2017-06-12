@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ButtonBet from './ButtonBet';
-import ButtonNull from './ButtonNull';
+import ButtonBlank from './ButtonBlank';
 import ButtonRaise from './ButtonRaise';
 
 const ButtonBetRaise = (props) => {
@@ -13,7 +13,7 @@ const ButtonBetRaise = (props) => {
     if (myStack > amountToCall) {
       return <ButtonRaise {...props} />;
     }
-    return <ButtonNull />;
+    return <ButtonBlank />;
   }
   return <ButtonBet {...props} />;
 };

@@ -5,7 +5,7 @@ import React from 'react';
 
 import ButtonBetRaise from './ButtonBetRaise';
 import ButtonCheckCall from './ButtonCheckCall';
-import ButtonNull from './ButtonNull';
+import ButtonBlank from './ButtonBlank';
 import ButtonFold from './ButtonFold';
 
 import {
@@ -23,9 +23,9 @@ const ActionBar = (props) => (
       </ControlPanel>
       :
       <ControlPanel name="control-panel-null">
-        <ButtonNull />
-        <ButtonNull />
-        <ButtonNull />
+        <ButtonBlank />
+        <ButtonBlank />
+        <ButtonBlank />
       </ControlPanel>
     }
   </ActionBarWrapper>
