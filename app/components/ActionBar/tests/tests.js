@@ -25,6 +25,7 @@ export default [{
 }, {
   describe: 'tests[2] during table "flop"',
   props: {
+    amount: 100,
     visible: true,
     state: 'flop',
     params: {
@@ -54,6 +55,9 @@ export default [{
     },
     isMyTurn: true,
     amountToCall: 1000,
+    callAmount: 1000,
+    amount: 200,
+    myStack: 2000,
   },
   it: 'should render fold button',
 }, {
@@ -64,6 +68,8 @@ export default [{
     params: {
       tableAddr: '0x123',
     },
+    amount: 200,
+    myStack: 2000,
     isMyTurn: true,
     amountToCall: 0,
   },
@@ -95,6 +101,7 @@ export default [{
     isMyTurn: true,
     minRaise: 5000,
     amountToCall: 1000,
+    callAmount: 1000,
     myStack: 10000,
   },
   it: 'should render with correct min amount',
@@ -115,6 +122,7 @@ export default [{
 }, {
   describe: 'tests[9] when amount to call === 0',
   props: {
+    amount: 100,
     visible: true,
     state: 'flop',
     params: {
