@@ -1,17 +1,17 @@
 import React from 'react';
 
 import ActionButton from './ActionButton';
-import Slider from '../Slider';
+import Slider from './Slider';
 
 const ButtonBet = ({
-  amount, handleBet, minRaise, myStack, updateAmount,
+  amount, handleBet, minRaise, myStack, text, updateAmount,
 }) => (
   <div>
     <ActionButton
       name="bet-button"
       size="medium"
+      text={text}
       onClick={() => handleBet()}
-      text={`BET ${amount}`}
     />
     <Slider
       data-orientation="vertical"
@@ -28,6 +28,7 @@ ButtonBet.propTypes = {
   handleBet: React.PropTypes.func,
   minRaise: React.PropTypes.number,
   myStack: React.PropTypes.number,
+  text: React.PropTypes.string,
   updateAmount: React.PropTypes.func,
 };
 

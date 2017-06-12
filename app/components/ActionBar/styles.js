@@ -59,3 +59,11 @@ export const ActionButtonWrapper = styled.button`
     cursor: ${(props) => props.disabled ? 'not-allowed' : 'pointer'};
   }
 `;
+
+export const SliderWrapper = styled.div`
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  padding-left: 15%;
+  padding-right: 15%;
+`;
