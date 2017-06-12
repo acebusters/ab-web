@@ -1,36 +1,38 @@
 import React from 'react';
+import RCSlider from 'rc-slider/lib/Slider';
+import 'rc-slider/assets/index.css';
 
-import Slider from 'react-rangeslider';
-import 'react-rangeslider/lib/index.css';
-
-import {
-  SliderWrapper,
-} from './styles';
-
-const SliderContainer = ({
-  value,
-  min,
-  max,
-  onChange,
-}) => (
-  <SliderWrapper name="slider-wrapper">
-    <Slider
-      data-orientation="vertical"
-      value={value}
-      min={min}
-      max={max}
-      step={1}
-      onChange={onChange}
-    >
-    </Slider>
-  </SliderWrapper>
-);
-
-SliderContainer.propTypes = {
-  value: React.PropTypes.number,
-  min: React.PropTypes.number,
-  max: React.PropTypes.number,
-  onChange: React.PropTypes.func,
+class Slider extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 0,
+    };
+    this.onSliderChange = this.onSliderChange.bind(this);
+    this.onSliderUpdate = this.onSliderUpdate.bind(this);
+  }
+  onSliderChange(value) {
+    this.setState({ value });
+  }
+  onSliderUpdate(value) {
+    this.props.updateAmount(value);
+  }
+  render() {
+    return (
+      <RCSlider
+        min={this.props.minRaise}
+        max={this.props.myStack}
+        value={this.state.value}
+        onChange={this.onSliderChange}
+        onAfterChange={this.onSliderUpdate}
+      />
+    );
+  }
+}
+Slider.propTypes = {
+  updateAmount: React.PropTypes.func,
+  minRaise: React.PropTypes.number,
+  myStack: React.PropTypes.number,
 };
 
-export default SliderContainer;
+export default Slider;

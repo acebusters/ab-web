@@ -36,6 +36,7 @@ export const Icon = styled.i`
 `;
 
 export const ActionButtonWrapper = styled.button`
+
   margin-left: 0.5em;
   margin-bottom: 2em;
   color: ${(props) => props.disabled ? gray : white};
@@ -60,10 +61,11 @@ export const ActionButtonWrapper = styled.button`
   }
 `;
 
+export const BetWrapper = styled.div`
+  display: flex;
+`;
+
 export const SliderWrapper = styled.div`
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  padding-left: 15%;
-  padding-right: 15%;
+  width: 200px;
+  height: 20px;
 `;
