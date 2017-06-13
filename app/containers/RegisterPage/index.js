@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Form, Field, reduxForm, propTypes } from 'redux-form/immutable';
-// import { browserHistory } from 'react-router';
 
 // components
 import Container from '../../components/Container';
