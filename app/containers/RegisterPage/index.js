@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Form, Field, reduxForm, SubmissionError, propTypes, stopAsyncValidation, startAsyncValidation, change } from 'redux-form/immutable';
 import { browserHistory } from 'react-router';
+
 // components
 import Container from '../../components/Container';
 import FormGroup from '../../components/Form/FormGroup';
@@ -14,8 +15,10 @@ import { ErrorMessage, WarningMessage } from '../../components/FormMessages';
 
 import { setProgress } from '../App/actions';
 import account from '../../services/account';
+import { conf } from '../../app.config';
 
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+const refRegex = /^[0-9a-f]{8}$/i;
 
 const validate = (values) => {
   const errors = {};
@@ -29,7 +32,7 @@ const validate = (values) => {
   }
 
   const referral = values.get('referral') || '';
-  if (referral.length !== 8) {
+  if (!refRegex.test(referral)) {
     if (!values.has('defaultRef') && referral.length === 0) {
       errors.referral = 'Referral code is required';
     } else if (referral.length > 0) {
@@ -72,9 +75,10 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReferralChange = this.handleReferralChange.bind(this);
 
-    account.checkReferral('00000000').then((response) => {
+    const defaultRefCode = conf().defaultRefCode;
+    account.checkReferral(defaultRefCode).then((response) => {
       if (response.defaultRef) {
-        this.props.dispatch(change('register', 'defaultRef', '00000000'));
+        this.props.dispatch(change('register', 'defaultRef', defaultRefCode));
       }
     });
   }
