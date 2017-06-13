@@ -30,6 +30,31 @@ const validate = (values) => {
   return errors;
 };
 
+const asyncValidate = (values, dispatch, props) => {
+  const value = values.get('referral') || '';
+  return account
+    .checkReferral(value)
+    .then((response) => {
+      if (response.defaultRef && value.length === 0) {
+        dispatch(props.change('referral', response.defaultRef));
+      }
+      return {};
+    })
+    .catch((err) => {
+      switch (err) {
+        case 400:
+        case 404:
+          return { referral: 'Invalid referral code' };
+        case 418:
+          return { referral: 'Referral code is no longer available' };
+        case 420:
+          return { referral: 'Sorry, signup limit reached, try to signup later' };
+        default:
+          return {};
+      }
+    });
+};
+
 const warn = (values) => {
   const warnings = {};
   values.get('email');
@@ -121,4 +146,12 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = () => ({});
 
 // Wrap the component to inject dispatch and state into it
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'register', validate, warn })(RegisterPage));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({
+    form: 'register',
+    validate,
+    asyncValidate,
+    asyncBlurFields: [],
+    warn,
+  })(RegisterPage)
+);
