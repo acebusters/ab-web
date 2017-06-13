@@ -1,9 +1,10 @@
 import { take, put, call } from 'redux-saga/effects';
-import { startSubmit, stopSubmit, startAsyncValidation, stopAsyncValidation } from 'redux-form/immutable';
+import { startSubmit, stopSubmit, startAsyncValidation, stopAsyncValidation, change } from 'redux-form/immutable';
 import { CHANGE } from 'redux-form/lib/actionTypes';
 import { push } from 'react-router-redux';
 import account from '../../services/account';
 import { setProgress } from '../App/actions';
+import { conf } from '../../app.config';
 
 import { REGISTER } from './constants';
 
@@ -48,13 +49,14 @@ export function* refCodeValidationSaga() {
 
       try {
         yield call(account.checkReferral, value);
+        yield put(stopAsyncValidation('register'));
       } catch (err) {
         const message = yield call(refCodeErrorByCode, err);
 
         yield put(
           stopAsyncValidation(
             'register',
-            message ? { referral: message } : {},
+            { referral: message },
           )
         );
       }
@@ -62,21 +64,31 @@ export function* refCodeValidationSaga() {
   }
 }
 
+export function* defaultRefCodeChecking() {
+  const { defaultRefCode } = yield call(conf);
+  try {
+    const response = yield call(account.checkReferral, defaultRefCode);
+    if (response.defaultRef) {
+      yield put(change('register', 'defaultRef', defaultRefCode));
+    }
+  } catch (err) {} // eslint-disable-line no-empty
+}
+
 function refCodeErrorByCode(err) {
   switch (err) {
-    case 400:
-    case 404:
-      return 'Invalid referral code';
     case 418:
       return 'Referral code is no longer available';
     case 420:
       return 'Sorry, signup limit reached, try to signup later';
+    case 400:
+    case 404:
     default:
-      return null;
+      return 'Invalid referral code';
   }
 }
 
 export default [
   registerSaga,
   refCodeValidationSaga,
+  defaultRefCodeChecking,
 ];

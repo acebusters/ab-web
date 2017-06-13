@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { Form, Field, reduxForm, propTypes, change } from 'redux-form/immutable';
+import { Form, Field, reduxForm, propTypes } from 'redux-form/immutable';
 // import { browserHistory } from 'react-router';
 
 // components
@@ -12,10 +12,6 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import H1 from '../../components/H1';
 import { ErrorMessage, WarningMessage } from '../../components/FormMessages';
-
-import { setProgress } from '../App/actions';
-import account from '../../services/account';
-import { conf } from '../../app.config';
 
 import { register } from './actions';
 
@@ -75,13 +71,6 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-
-    const defaultRefCode = conf().defaultRefCode;
-    account.checkReferral(defaultRefCode).then((response) => {
-      if (response.defaultRef) {
-        this.props.dispatch(change('register', 'defaultRef', defaultRefCode));
-      }
-    });
   }
 
   handleSubmit(values) {
@@ -130,7 +119,6 @@ RegisterPage.propTypes = {
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    setProgress: (percent) => dispatch(setProgress(percent)),
     register: (payload) => dispatch(register(payload)),
   };
 }
