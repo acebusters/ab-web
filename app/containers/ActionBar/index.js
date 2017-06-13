@@ -29,7 +29,7 @@ import {
   makeLastReceiptSelector,
 } from '../Seat/selectors';
 
-import { setCards, sendMessage, bet, pay, fold, check } from '../Table/actions';
+import { setCards, bet, pay, fold, check } from '../Table/actions';
 
 import ActionBar from '../../components/ActionBar';
 
@@ -153,7 +153,6 @@ class ActionBarContainer extends React.Component {
         handleCall={this.handleCall}
         handleFold={this.handleFold}
         updateAmount={this.updateAmount}
-        sendMessage={this.sendMessage}
         {...this.props}
       />
     );
@@ -174,7 +173,6 @@ ActionBarContainer.propTypes = {
   params: React.PropTypes.object,
   privKey: React.PropTypes.string,
   setCards: React.PropTypes.func,
-  sendMessage: React.PropTypes.func,
   state: React.PropTypes.string,
 };
 
@@ -182,9 +180,6 @@ export function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     setCards: (tableAddr, handId, cards) => setCards(tableAddr, handId, cards),
-    sendMessage: (message, tableAddr, privKey) => dispatch(
-      sendMessage(message, tableAddr, privKey)
-    ),
     bet: (tableAddr, handId, amount, privKey, myPos, lastReceipt) => bet(
       tableAddr, handId, amount, privKey, myPos, lastReceipt,
     ),

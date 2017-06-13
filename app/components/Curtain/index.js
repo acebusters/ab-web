@@ -14,7 +14,7 @@ export const CurtainWrapper = styled.div`
   width: ${curtainWidth};
   background-color: #5D5D5D;
   position: absolute;
-  top: 50px;
+  top: 0px;
   bottom: 0;
   left: ${(props) => props.isOpen ? '0' : `-${curtainWidth}`};
   z-index: 11;
