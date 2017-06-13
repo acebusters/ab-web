@@ -266,6 +266,7 @@
     "whatwg-fetch": "2.0.1"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^3.1.2",
     "@storybook/addon-knobs": "^3.0.1",
     "@storybook/react": "^3.0.1",
     "babel-cli": "6.18.0",
