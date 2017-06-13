@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { Form, Field, reduxForm, SubmissionError, propTypes, stopAsyncValidation, startAsyncValidation, change } from 'redux-form/immutable';
-import { browserHistory } from 'react-router';
+import { Form, Field, reduxForm, propTypes, stopAsyncValidation, startAsyncValidation, change } from 'redux-form/immutable';
+// import { browserHistory } from 'react-router';
 
 // components
 import Container from '../../components/Container';
@@ -16,6 +16,8 @@ import { ErrorMessage, WarningMessage } from '../../components/FormMessages';
 import { setProgress } from '../App/actions';
 import account from '../../services/account';
 import { conf } from '../../app.config';
+
+import { register } from './actions';
 
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 const refRegex = /^[0-9a-f]{8}$/i;
@@ -84,26 +86,11 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
   }
 
   handleSubmit(values) {
-    // Note: auto increase progress for 3 seconds;
-    this.props.setProgress(-3000);
-
-    return account.register(
-      values.get('email'),
-      values.get('captchaResponse'),
-      window.location.origin,
-      values.get('referral') || values.get('defaultRef')
-    ).catch((err) => {
-      // If store account failed, ...
-      const errMsg = 'Registration failed!';
-      if (err === 409) {
-        throw new SubmissionError({ email: 'Email taken.', _error: errMsg });
-      } else {
-        throw new SubmissionError({ _error: `Registration failed with error code ${err}` });
-      }
-    }).then(() => {
-      this.props.setProgress(100);
-      // If store account success, ...
-      browserHistory.push('/confirm');
+    this.props.register({
+      email: values.get('email'),
+      captchaResponse: values.get('captchaResponse'),
+      origin: window.location.origin,
+      referral: values.get('referral') || values.get('defaultRef'),
     });
   }
 
@@ -144,7 +131,7 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
   }
 
   render() {
-    const { error, handleSubmit, invalid, submitting, asyncValidating } = this.props;
+    const { error, invalid, submitting, handleSubmit, asyncValidating } = this.props;
 
     return (
       <Container>
@@ -182,6 +169,7 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     setProgress: (percent) => dispatch(setProgress(percent)),
+    register: (payload) => dispatch(register(payload)),
   };
 }
 
