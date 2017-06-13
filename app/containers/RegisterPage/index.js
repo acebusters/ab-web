@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { Form, Field, reduxForm, SubmissionError, propTypes, stopAsyncValidation, startAsyncValidation } from 'redux-form/immutable';
+import { Form, Field, reduxForm, SubmissionError, propTypes, stopAsyncValidation, startAsyncValidation, change } from 'redux-form/immutable';
 import { browserHistory } from 'react-router';
 // components
 import Container from '../../components/Container';
@@ -29,8 +29,12 @@ const validate = (values) => {
   }
 
   const referral = values.get('referral') || '';
-  if (referral.length > 0 && referral.length !== 8) {
-    errors.referral = 'Referral code must have 8 letters';
+  if (referral.length !== 8) {
+    if (!values.has('defaultRef') && referral.length === 0) {
+      errors.referral = 'Referral code is required';
+    } else if (referral.length > 0) {
+      errors.referral = 'Referral code must have 8 letters';
+    }
   }
 
   return errors;
@@ -67,7 +71,12 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReferralChange = this.handleReferralChange.bind(this);
-    this.defaultRef = undefined;
+
+    account.checkReferral('00000000').then((response) => {
+      if (response.defaultRef) {
+        this.props.dispatch(change('register', 'defaultRef', '00000000'));
+      }
+    });
   }
 
   handleSubmit(values) {
@@ -78,7 +87,7 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
       values.get('email'),
       values.get('captchaResponse'),
       window.location.origin,
-      values.get('referral') || this.defaultRef
+      values.get('referral') || values.get('defaultRef')
     ).catch((err) => {
       // If store account failed, ...
       const errMsg = 'Registration failed!';
