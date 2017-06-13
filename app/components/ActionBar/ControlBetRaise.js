@@ -3,7 +3,9 @@ import React from 'react';
 import ButtonBet from './ButtonBet';
 import ButtonBlank from './ButtonBlank';
 
-const ButtonBetRaise = (props) => {
+import { ControlWrapper } from './styles';
+
+const ControlBetRaise = (props) => {
   const {
     amountToCall,
     amount,
@@ -11,26 +13,30 @@ const ButtonBetRaise = (props) => {
   } = props;
   if (amountToCall === 0) {
     return (
-      <ButtonBet
-        text={`BET ${amount}`}
-        {...props}
-      />
+      <ControlWrapper>
+        <ButtonBet
+          text={`BET ${amount}`}
+          {...props}
+        />
+      </ControlWrapper>
     );
   }
   if (myStack > amountToCall) {
     return (
-      <ButtonBet
-        text={`RAISE ${amount}`}
-        {...props}
-      />
+      <ControlWrapper>
+        <ButtonBet
+          text={`RAISE ${amount}`}
+          {...props}
+        />
+      </ControlWrapper>
     );
   }
   return <ButtonBlank />;
 };
-ButtonBetRaise.propTypes = {
+ControlBetRaise.propTypes = {
   amountToCall: React.PropTypes.number,
   amount: React.PropTypes.number,
   myStack: React.PropTypes.number,
 };
 
-export default ButtonBetRaise;
+export default ControlBetRaise;

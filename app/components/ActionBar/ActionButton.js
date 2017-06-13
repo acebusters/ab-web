@@ -19,9 +19,7 @@ const ActionButton = (props) => {
       disabled={props.disabled}
     >
       <ActionIndicator />
-      <ActionText>
-        {props.text}
-      </ActionText>
+      <ActionText>{props.text}</ActionText>
     </ActionButtonWrapper>
   );
 };

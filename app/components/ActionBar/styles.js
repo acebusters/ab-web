@@ -42,11 +42,24 @@ export const ControlPanel = styled.div`
   background-color: #999;
 `;
 
+export const ControlWrapper = styled.div`
+  display: flex;
+  background-color: pink;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding-top: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  margin-left: 8px;
+  &:first-child {
+    margin-left: 0;
+  }
+`;
+
 export const ActionButtonWrapper = styled(Button)`
   display: flex;
   height: 50px;
   min-width: 100px;
-  margin-left: 10px;
   background-color: #AAA;
   color: white;
   font-weight: 400;

@@ -3,10 +3,10 @@
  */
 import React from 'react';
 
-import ButtonBetRaise from './ButtonBetRaise';
-import ButtonCheckCall from './ButtonCheckCall';
+import ControlBetRaise from './ControlBetRaise';
+import ControlCheckCall from './ControlCheckCall';
 import ButtonBlank from './ButtonBlank';
-import ButtonFold from './ButtonFold';
+import ControlFold from './ControlFold';
 
 import {
   ActionBarWrapper,
@@ -17,9 +17,9 @@ const ActionBar = (props) => (
   <ActionBarWrapper name="action-bar-wrapper">
     {props.visible ?
       <ControlPanel name="control-panel-visible">
-        <ButtonFold {...props} />
-        <ButtonCheckCall {...props} />
-        <ButtonBetRaise {...props} />
+        <ControlFold {...props} />
+        <ControlCheckCall {...props} />
+        <ControlBetRaise {...props} />
       </ControlPanel>
       :
       <ControlPanel name="control-panel-null">
