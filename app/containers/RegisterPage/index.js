@@ -141,7 +141,6 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
 
   render() {
     const { error, handleSubmit, invalid, submitting, asyncValidating } = this.props;
-    console.log(this.props);
 
     return (
       <Container>
