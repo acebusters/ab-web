@@ -28,7 +28,6 @@ export const ActionBarWrapper = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
-  background-color: lightblue;
 `;
 
 export const ControlPanel = styled.div`
@@ -44,13 +43,13 @@ export const ControlPanel = styled.div`
 
 export const ControlWrapper = styled.div`
   display: flex;
-  background-color: pink;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding-top: 4px;
   padding-left: 4px;
   padding-right: 4px;
   margin-left: 8px;
+  background-color: #666;
   &:first-child {
     margin-left: 0;
   }
@@ -60,7 +59,7 @@ export const ActionButtonWrapper = styled(Button)`
   display: flex;
   height: 50px;
   min-width: 100px;
-  background-color: #AAA;
+  background-color: #999;
   color: white;
   font-weight: 400;
   border-top-left-radius: 8px;
@@ -74,11 +73,10 @@ export const ActionIndicator = styled.div`
   width: 8px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background-color: green;
+  background-color: #444;
 `;
 
 export const ActionText = styled.div`
-  background-color: blue;
   align-self: center;
   margin-left: 8px;
 `;
@@ -88,6 +86,9 @@ export const BetWrapper = styled.div`
 `;
 
 export const SliderWrapper = styled.div`
+  align-self: center;
   width: 200px;
   height: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 `;

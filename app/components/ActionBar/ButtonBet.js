@@ -22,7 +22,8 @@ const ButtonBet = (props) => {
       <ActionButton
         name="bet-button"
         text={text}
-        onClick={() => handleBet()}
+        onClick={handleBet}
+        {...props}
       />
       <SliderWrapper name="slider-wrapper">
         <Slider {...props} />

@@ -4,14 +4,14 @@ import ActionButton from './ActionButton';
 
 import { ControlWrapper } from './styles';
 
-const ButtonBlank = () => (
+const ControlBlank = () => (
   <ControlWrapper>
     <ActionButton
-      name="button-null"
-      text="blank"
+      name="button-blank"
+      text=""
       size="medium"
     />
   </ControlWrapper>
 );
 
-export default ButtonBlank;
+export default ControlBlank;

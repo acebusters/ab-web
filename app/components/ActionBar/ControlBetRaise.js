@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ButtonBet from './ButtonBet';
-import ButtonBlank from './ButtonBlank';
+import ControlBlank from './ControlBlank';
 
 import { ControlWrapper } from './styles';
 
@@ -31,7 +31,7 @@ const ControlBetRaise = (props) => {
       </ControlWrapper>
     );
   }
-  return <ButtonBlank />;
+  return <ControlBlank />;
 };
 ControlBetRaise.propTypes = {
   amountToCall: React.PropTypes.number,

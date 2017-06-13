@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ActionButton from './ActionButton';
-import ButtonBlank from './ButtonBlank';
+import ControlBlank from './ControlBlank';
 
 import {
   ControlWrapper,
@@ -24,7 +24,7 @@ const ControlFold = (props) => {
       </ControlWrapper>
     );
   }
-  return <ButtonBlank />;
+  return <ControlBlank />;
 };
 ControlFold.propTypes = {
   amountToCall: React.PropTypes.number,

@@ -18,7 +18,7 @@ const ControlCheckCall = (props) => {
           name="button-call"
           text={`CALL ${callAmount}`}
           size="medium"
-          onClick={() => handleCall()}
+          onClick={handleCall}
         />
       </ControlWrapper>
     );
@@ -30,7 +30,7 @@ const ControlCheckCall = (props) => {
         name="button-check"
         text="CHECK"
         size="medium"
-        onClick={() => handleCheck()}
+        onClick={handleCheck}
       />
     </ControlWrapper>
   );
