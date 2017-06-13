@@ -3,62 +3,71 @@
 */
 import styled from 'styled-components';
 
-import {
-  baseColor,
-  white,
-  gray,
-} from '../../variables';
+export const Button = styled.button`
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  &:active {
+    color: green;
+  }
+  &:disabled{
+    cursor: default;
+  }
+`;
 
 export const ActionBarWrapper = styled.div`
-  display: flex;
-  background-color: none;
   position: fixed;
   bottom: 0;
-  height: 122px;
+  display: flex;
   width: 100%;
-  bottom: 0px;
+  justify-content: center;
+  background-color: lightblue;
 `;
 
 export const ControlPanel = styled.div`
   display: flex;
   justify-content: center;
-  width: 100%;
-  background-color: none;
+  padding-top: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  background-color: #999;
 `;
 
-export const Icon = styled.i`
-  color: ${(props) => props.disabled ? gray : white};
-  &:hover {
-    color: ${(props) => props.disabled ? gray : baseColor};
-    cursor: ${(props) => props.disabled ? 'not-allowed' : 'pointer'};
-  }
-  font-size: 2em !important;
+export const ActionButtonWrapper = styled(Button)`
+  display: flex;
+  height: 50px;
+  min-width: 100px;
+  margin-left: 10px;
+  background-color: #AAA;
+  color: white;
+  font-weight: 400;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 `;
 
-export const ActionButtonWrapper = styled.button`
+export const ActionIndicator = styled.div`
+  margin-left: 10px;
+  margin-top: 10px;
+  height: 40px;
+  width: 8px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background-color: green;
+`;
 
-  margin-left: 0.5em;
-  margin-bottom: 2em;
-  color: ${(props) => props.disabled ? gray : white};
-  border-radius: 50%;
-  border: 2px solid ${(props) => props.disabled ? gray : white};
-  ${(props) => {
-    if (props.size === 'medium') {
-      return `width: 5em;
-              height: 5em;`;
-    } else if (props.size === 'small') {
-      return `width: 3.5em;
-              height: 3.5em;`;
-    }
-    return `width: 6em;
-            height: 6em;`;
-  }};
-  cursor: pointer;
-
-  &:hover {
-    color: ${(props) => props.disabled ? gray : baseColor};
-    cursor: ${(props) => props.disabled ? 'not-allowed' : 'pointer'};
-  }
+export const ActionText = styled.div`
+  background-color: blue;
+  align-self: center;
+  margin-left: 8px;
 `;
 
 export const BetWrapper = styled.div`

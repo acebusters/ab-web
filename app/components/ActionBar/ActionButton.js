@@ -2,7 +2,8 @@ import React from 'react';
 
 import {
   ActionButtonWrapper,
-  Icon,
+  ActionIndicator,
+  ActionText,
 } from './styles';
 
 const ActionButton = (props) => {
@@ -17,10 +18,10 @@ const ActionButton = (props) => {
       size={props.size}
       disabled={props.disabled}
     >
-      { !props.text &&
-        <Icon className={props.icon} disabled={props.disabled} />
-      }
-      { props.text }
+      <ActionIndicator />
+      <ActionText>
+        {props.text}
+      </ActionText>
     </ActionButtonWrapper>
   );
 };
@@ -28,7 +29,6 @@ const ActionButton = (props) => {
 ActionButton.propTypes = {
   text: React.PropTypes.string,
   size: React.PropTypes.string,
-  icon: React.PropTypes.string,
   name: React.PropTypes.string,
   onClick: React.PropTypes.func,
   disabled: React.PropTypes.bool,

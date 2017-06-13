@@ -21,7 +21,6 @@ const ButtonBet = (props) => {
     <BetWrapper>
       <ActionButton
         name="bet-button"
-        size="medium"
         text={text}
         onClick={() => handleBet()}
       />
