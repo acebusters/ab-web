@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { Form, Field, reduxForm, propTypes, stopAsyncValidation, startAsyncValidation, change } from 'redux-form/immutable';
+import { Form, Field, reduxForm, propTypes, change } from 'redux-form/immutable';
 // import { browserHistory } from 'react-router';
 
 // components
@@ -75,7 +75,6 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleReferralChange = this.handleReferralChange.bind(this);
 
     const defaultRefCode = conf().defaultRefCode;
     account.checkReferral(defaultRefCode).then((response) => {
@@ -94,42 +93,6 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
     });
   }
 
-  handleReferralChange(e, value/* , prevValue*/) {
-    if (value.length === 8) {
-      this.defaultRef = undefined;
-      this.props.dispatch(startAsyncValidation('register'));
-      account
-        .checkReferral(value)
-        .then((response) => {
-          if (response.defaultRef) {
-            this.defaultRef = response.defaultRef;
-          }
-          return null;
-        })
-        .catch((err) => {
-          switch (err) {
-            case 400:
-            case 404:
-              return 'Invalid referral code';
-            case 418:
-              return 'Referral code is no longer available';
-            case 420:
-              return 'Sorry, signup limit reached, try to signup later';
-            default:
-              return null;
-          }
-        })
-        .then((error) => {
-          this.props.dispatch(
-            stopAsyncValidation(
-              'register',
-              error ? { referral: error } : {},
-            )
-          );
-        });
-    }
-  }
-
   render() {
     const { error, invalid, submitting, handleSubmit, asyncValidating } = this.props;
 
@@ -146,7 +109,6 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
               type="text"
               component={renderField}
               label="referral code"
-              onChange={this.handleReferralChange}
             />
             <Field name="captchaResponse" component={Captcha} />
             {error && <ErrorMessage error={error} />}
@@ -181,8 +143,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
     form: 'register',
     validate,
-    // asyncValidate,
-    // asyncBlurFields: [],
     warn,
   })(RegisterPage)
 );

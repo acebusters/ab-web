@@ -1,12 +1,12 @@
 import { take, put, call } from 'redux-saga/effects';
-import { stopSubmit, startSubmit } from 'redux-form/immutable';
+import { startSubmit, stopSubmit, startAsyncValidation, stopAsyncValidation } from 'redux-form/immutable';
+import { CHANGE } from 'redux-form/lib/actionTypes';
 import { push } from 'react-router-redux';
 import account from '../../services/account';
 import { setProgress } from '../App/actions';
 
 import { REGISTER } from './constants';
 
-// The root saga is what is sent to Redux's middleware.
 export function* registerSaga() {
   while (true) { // eslint-disable-line no-constant-condition
     const { payload } = yield take(REGISTER);
@@ -39,6 +39,44 @@ export function* registerSaga() {
   }
 }
 
+export function* refCodeValidationSaga() {
+  while (true) { // eslint-disable-line no-constant-condition
+    const { meta, payload: value = '' } = yield take(CHANGE);
+
+    if (meta.form === 'register' && meta.field === 'referral' && value.length === 8) {
+      yield put(startAsyncValidation('register'));
+
+      try {
+        yield call(account.checkReferral, value);
+      } catch (err) {
+        const message = yield call(refCodeErrorByCode, err);
+
+        yield put(
+          stopAsyncValidation(
+            'register',
+            message ? { referral: message } : {},
+          )
+        );
+      }
+    }
+  }
+}
+
+function refCodeErrorByCode(err) {
+  switch (err) {
+    case 400:
+    case 404:
+      return 'Invalid referral code';
+    case 418:
+      return 'Referral code is no longer available';
+    case 420:
+      return 'Sorry, signup limit reached, try to signup later';
+    default:
+      return null;
+  }
+}
+
 export default [
   registerSaga,
+  refCodeValidationSaga,
 ];
