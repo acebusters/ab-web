@@ -8,6 +8,7 @@ export const atTable0 = {
       tableAddr: '0x123',
     },
     visible: false,
+    sliderOpen: false,
   },
 };
 
@@ -20,6 +21,7 @@ export const atTable1 = {
     },
     active: false,
     visible: true,
+    sliderOpen: false,
   },
 };
 
@@ -32,6 +34,7 @@ export const atTable2 = {
     },
     active: true,
     visible: true,
+    sliderOpen: false,
   },
 };
 
@@ -41,7 +44,6 @@ export const amountToCall1 = {
   props: {
     active: true,
     visible: true,
-    isMyTurn: true,
     state: 'flop',
     params: {
       tableAddr: '0x123',
@@ -50,6 +52,7 @@ export const amountToCall1 = {
     callAmount: 0,
     amount: 0,
     myStack: 2000,
+    sliderOpen: false,
   },
 };
 
@@ -59,7 +62,43 @@ export const amountToCall2 = {
   props: {
     active: true,
     visible: true,
-    isMyTurn: true,
+    state: 'flop',
+    params: {
+      tableAddr: '0x123',
+    },
+    amountToCall: 1000,
+    callAmount: 1000,
+    amount: 1000,
+    myStack: 2000,
+    sliderOpen: false,
+  },
+};
+
+export const amountToCall3 = {
+  describe: 'when amountToCall > myStack',
+  it: 'should render fold, !call, all-in button',
+  props: {
+    active: true,
+    visible: true,
+    state: 'flop',
+    params: {
+      tableAddr: '0x123',
+    },
+    amountToCall: 10000,
+    callAmount: 10000,
+    amount: 2000,
+    myStack: 2000,
+    sliderOpen: false,
+  },
+};
+
+export const buttonBet0 = {
+  describe: 'ButtonBet state is closed',
+  it: 'should not show slider',
+  props: {
+    active: true,
+    visible: true,
+    sliderOpen: false,
     state: 'flop',
     params: {
       tableAddr: '0x123',
@@ -71,20 +110,20 @@ export const amountToCall2 = {
   },
 };
 
-export const amountToCall3 = {
-  describe: 'when amountToCall > myStack',
-  it: 'should render fold, !call, all-in button',
+export const buttonBet1 = {
+  describe: 'ButtonBet state is open',
+  it: 'should show slider',
   props: {
     active: true,
     visible: true,
-    isMyTurn: true,
+    sliderOpen: true,
     state: 'flop',
     params: {
       tableAddr: '0x123',
     },
-    amountToCall: 10000,
-    callAmount: 10000,
-    amount: 2000,
+    amountToCall: 1000,
+    callAmount: 1000,
+    amount: 1000,
     myStack: 2000,
   },
 };

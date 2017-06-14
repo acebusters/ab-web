@@ -20,8 +20,11 @@ const ActionBar = (props) => {
     if (props.active) {
       return (
         <ActionBarWrapper name="action-bar-wrapper">
-          <FlagBetAmount {...props} />
-          <FlagCallAmount {...props} />
+          {props.sliderOpen ?
+            <FlagBetAmount {...props} />
+          :
+            <FlagCallAmount {...props} />
+          }
           <ControlPanel name="control-panel-visible">
             <ControlFold {...props} />
             <ControlCheckCall {...props} />
@@ -44,8 +47,9 @@ const ActionBar = (props) => {
 };
 
 ActionBar.propTypes = {
-  visible: React.PropTypes.bool,
-  active: React.PropTypes.bool,
+  visible: React.PropTypes.bool.isRequired,
+  active: React.PropTypes.bool.isRequired,
+  sliderOpen: React.PropTypes.bool.isRequired,
 };
 
 export default ActionBar;

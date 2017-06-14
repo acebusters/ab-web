@@ -15,6 +15,8 @@ import {
   amountToCall1,
   amountToCall2,
   amountToCall3,
+  buttonBet0,
+  buttonBet1,
 } from '../tests2';
 
 import ActionBar from '../../index';
@@ -41,6 +43,7 @@ stories.add('Kitchen Sink', () => (
     state={text('state', 'flop')}
     params={{ tableAddr: '0x33' }}
     visible={boolean('visible', true)}
+    sliderOpen={boolean('sliderOpen', false)}
   />
 ));
 
@@ -50,6 +53,8 @@ createStory(atTable2);
 createStory(amountToCall1);
 createStory(amountToCall2);
 createStory(amountToCall3);
+createStory(buttonBet0);
+createStory(buttonBet1);
 
 // iterate over tests and add a story for each
 tests.forEach((test) => {

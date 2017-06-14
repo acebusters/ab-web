@@ -10,34 +10,46 @@ import {
 
 const ButtonBet = (props) => {
   const {
-    // amount,
     handleBet,
-    // minRaise,
-    // myStack,
     text,
-    // updateAmount,
+    sliderOpen,
+    setActionBarBetSlider,
   } = props;
+  const handleBetClick = () => {
+    setActionBarBetSlider(false);
+    handleBet();
+  };
+  if (sliderOpen) {
+    return (
+      <BetWrapper>
+        <ActionButton
+          name="bet-button"
+          text={text}
+          onClick={handleBetClick}
+          {...props}
+        />
+        <SliderWrapper name="slider-wrapper">
+          <Slider {...props} />
+        </SliderWrapper>
+      </BetWrapper>
+    );
+  }
   return (
     <BetWrapper>
       <ActionButton
         name="bet-button"
-        text={text}
-        onClick={handleBet}
+        text="CONFIRM"
+        onClick={() => setActionBarBetSlider(true)}
         {...props}
       />
-      <SliderWrapper name="slider-wrapper">
-        <Slider {...props} />
-      </SliderWrapper>
     </BetWrapper>
   );
 };
 ButtonBet.propTypes = {
-  // amount: React.PropTypes.number,
-  handleBet: React.PropTypes.func,
-  // minRaise: React.PropTypes.number,
-  // myStack: React.PropTypes.number,
-  text: React.PropTypes.string,
-  // updateAmount: React.PropTypes.func,
+  handleBet: React.PropTypes.func.isRequired,
+  setActionBarBetSlider: React.PropTypes.func.isRequired,
+  sliderOpen: React.PropTypes.bool.isRequired,
+  text: React.PropTypes.string.isRequired,
 };
 
 export default ButtonBet;

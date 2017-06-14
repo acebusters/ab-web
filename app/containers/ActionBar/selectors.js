@@ -19,6 +19,7 @@ import {
 } from '../Seat/selectors';
 
 const getIsMyTurn = (_, props) => props.isMyTurn;
+const getActionBarState = (state) => state.get('actionBar');
 const rc = new ReceiptCache();
 const pokerHelper = new PokerHelper(rc);
 
@@ -46,6 +47,11 @@ export const makeSelectActionBarVisible = () => createSelector(
     if (typeof myPos === 'number') return true;
     return false;
   }
+);
+
+export const getActionBarSliderOpen = () => createSelector(
+  getActionBarState,
+  (actionBar) => actionBar.get('sliderOpen'),
 );
 
 // Other selectors

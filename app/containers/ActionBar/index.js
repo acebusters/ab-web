@@ -8,8 +8,12 @@ import { connect } from 'react-redux';
 
 import TableService from '../../services/tableService';
 
-import { setActionBarActive } from './actions';
 import {
+  setActionBarActive,
+  setActionBarBetSlider,
+} from './actions';
+import {
+  getActionBarSliderOpen,
   makeSelectActionBarActive,
   makeSelectActionBarVisible,
   makeMinSelector,
@@ -186,6 +190,7 @@ export function mapDispatchToProps(dispatch) {
         tableAddr, handId, amount, privKey, myPos, lastReceipt, checkType
     ),
     setActionBarActive: (active) => dispatch(setActionBarActive(active)),
+    setActionBarBetSlider: (open) => dispatch(setActionBarBetSlider(open)),
   };
 }
 
@@ -201,6 +206,7 @@ const mapStateToProps = createStructuredSelector({
   minRaise: makeMinSelector(),
   myMaxBet: makeMyMaxBetSelector(),
   myStack: makeMyStackSelector(),
+  sliderOpen: getActionBarSliderOpen(),
   visible: makeSelectActionBarVisible(),
 });
 
