@@ -5,13 +5,11 @@ import Slider from './Slider';
 
 import {
   BetWrapper,
-  SliderWrapper,
 } from './styles';
 
 const ButtonBet = (props) => {
   const {
     handleBet,
-    text,
     sliderOpen,
     setActionBarBetSlider,
   } = props;
@@ -28,9 +26,7 @@ const ButtonBet = (props) => {
           onClick={handleBetClick}
           {...props}
         />
-        <SliderWrapper name="slider-wrapper">
-          <Slider {...props} />
-        </SliderWrapper>
+        <Slider {...props} />
       </BetWrapper>
     );
   }
@@ -38,7 +34,7 @@ const ButtonBet = (props) => {
     <BetWrapper>
       <ActionButton
         name="bet-button"
-        text={text}
+        text="RAISE"
         onClick={() => setActionBarBetSlider(true)}
         {...props}
       />
@@ -49,7 +45,6 @@ ButtonBet.propTypes = {
   handleBet: React.PropTypes.func.isRequired,
   setActionBarBetSlider: React.PropTypes.func.isRequired,
   sliderOpen: React.PropTypes.bool.isRequired,
-  text: React.PropTypes.string.isRequired,
 };
 
 export default ButtonBet;

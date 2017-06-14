@@ -26,10 +26,7 @@ const ControlBetRaise = (props) => {
   if (myStack > amountToCall) {
     return (
       <ControlWrapper>
-        <ButtonBet
-          text="RAISE"
-          {...props}
-        />
+        <ButtonBet {...props} />
       </ControlWrapper>
     );
   }

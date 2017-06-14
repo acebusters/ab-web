@@ -2,10 +2,11 @@ import React from 'react';
 import RCSlider from 'rc-slider/lib/Slider';
 import 'rc-slider/assets/index.css';
 
+import { SliderWrapper } from './styles';
+
 const styles = {
   handle: {
     position: 'absolute',
-    // transform: 'translate(-12px, -15px)',
     width: '24px',
     height: '50px',
     marginLeft: '-12px',
@@ -38,22 +39,25 @@ class Slider extends React.Component {
   }
   onSliderChange(value) {
     this.setState({ value });
+    this.props.updateAmount(value);
   }
   onSliderUpdate(value) {
     this.props.updateAmount(value);
   }
   render() {
     return (
-      <RCSlider
-        min={this.props.minRaise}
-        max={this.props.myStack}
-        value={this.state.value}
-        onChange={this.onSliderChange}
-        onAfterChange={this.onSliderUpdate}
-        handleStyle={styles.handle}
-        railStyle={styles.rail}
-        trackStyle={styles.track}
-      />
+      <SliderWrapper name="slider-wrapper">
+        <RCSlider
+          min={this.props.minRaise}
+          max={this.props.myStack}
+          value={this.state.value}
+          onChange={this.onSliderChange}
+          onAfterChange={this.onSliderUpdate}
+          handleStyle={styles.handle}
+          railStyle={styles.rail}
+          trackStyle={styles.track}
+        />
+      </SliderWrapper>
     );
   }
 }
