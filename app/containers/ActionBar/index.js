@@ -10,6 +10,7 @@ import TableService from '../../services/tableService';
 
 import { setActionBarActive } from './actions';
 import {
+  makeSelectActionBarActive,
   makeSelectActionBarVisible,
   makeMinSelector,
   makeCallAmountSelector,
@@ -19,6 +20,7 @@ import {
 import { makeSelectPrivKey } from '../AccountProvider/selectors';
 
 import {
+  makeIsMyTurnSelector,
   makeMyMaxBetSelector,
   makeMessagesSelector,
   makePlayersCountSelector,
@@ -188,9 +190,11 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
+  active: makeSelectActionBarActive(),
   amountToCall: makeAmountToCallSelector(),
   callAmount: makeCallAmountSelector(),
   cards: makeMyCardsSelector(),
+  isMyTurn: makeIsMyTurnSelector(),
   playerCount: makePlayersCountSelector(),
   privKey: makeSelectPrivKey(),
   messages: makeMessagesSelector(),

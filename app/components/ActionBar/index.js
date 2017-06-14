@@ -7,6 +7,7 @@ import AmountFlag from './AmountFlag';
 import ControlBetRaise from './ControlBetRaise';
 import ControlCheckCall from './ControlCheckCall';
 import ControlFold from './ControlFold';
+import ControlBlank from './ControlBlank';
 
 import {
   ActionBarWrapper,
@@ -15,13 +16,24 @@ import {
 
 const ActionBar = (props) => {
   if (props.visible) {
+    if (props.active) {
+      return (
+        <ActionBarWrapper name="action-bar-wrapper">
+          <AmountFlag {...props} />
+          <ControlPanel name="control-panel-visible">
+            <ControlFold {...props} />
+            <ControlCheckCall {...props} />
+            <ControlBetRaise {...props} />
+          </ControlPanel>
+        </ActionBarWrapper>
+      );
+    }
     return (
-      <ActionBarWrapper name="action-bar-wrapper">
-        <AmountFlag {...props} />
-        <ControlPanel name="control-panel-visible">
-          <ControlFold {...props} />
-          <ControlCheckCall {...props} />
-          <ControlBetRaise {...props} />
+      <ActionBarWrapper style={{ opacity: 0.5 }}>
+        <ControlPanel>
+          <ControlBlank />
+          <ControlBlank />
+          <ControlBlank />
         </ControlPanel>
       </ActionBarWrapper>
     );
@@ -31,6 +43,7 @@ const ActionBar = (props) => {
 
 ActionBar.propTypes = {
   visible: React.PropTypes.bool,
+  active: React.PropTypes.bool,
 };
 
 export default ActionBar;

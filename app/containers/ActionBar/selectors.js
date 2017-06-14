@@ -10,7 +10,7 @@ import {
   makeMyMaxBetSelector,
   makeSbSelector,
   makeHandSelector,
-  // makeHandStateSelector,
+  makeHandStateSelector,
   makeMyPosSelector,
 } from '../Table/selectors';
 
@@ -18,7 +18,7 @@ import {
   makeMyStackSelector,
 } from '../Seat/selectors';
 
-const selectActionBar = (state) => state.get('actionBar');
+const getIsMyTurn = (_, props) => props.isMyTurn;
 const rc = new ReceiptCache();
 const pokerHelper = new PokerHelper(rc);
 
@@ -26,8 +26,16 @@ const pokerHelper = new PokerHelper(rc);
  * ActionBar related selectors
  */
 export const makeSelectActionBarActive = () => createSelector(
-  selectActionBar,
-  (actionBar) => actionBar.get('active'),
+  [makeSelectActionBarVisible(), makeHandStateSelector(), getIsMyTurn],
+  (visible, handState, isMyTurn) => {
+    const isAppropriateState = (
+      handState !== 'waiting' && handState !== 'dealing' && handState !== 'showdown'
+    );
+    if (visible && isMyTurn && isAppropriateState) {
+      return true;
+    }
+    return false;
+  }
 );
 
 // show the ActionBar if the player is sitting at the table
