@@ -92,10 +92,23 @@ export const SliderWrapper = styled.div`
   margin-right: 18px;
 `;
 
-export const AmountFlagWrapper = styled.div`
+export const FlagBetAmountWrapper = styled.div`
   display: inline-block;
   min-width: 60px;
   margin-left: 138px;
+  padding: 5px;
+  padding-left: 16px;
+  padding-right: 20px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #333;
+  color: white;
+`;
+
+export const FlagCallAmountWrapper = styled.div`
+  display: inline-block;
+  min-width: 60px;
+  margin-left: 20px;
   padding: 5px;
   padding-left: 16px;
   padding-right: 20px;

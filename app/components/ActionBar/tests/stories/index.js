@@ -9,8 +9,9 @@ import {
 
 import tests, { combine } from '../tests';
 import {
-  notAtTable,
-  atTable,
+  atTable0,
+  atTable1,
+  atTable2,
   amountToCall1,
   amountToCall2,
   amountToCall3,
@@ -43,8 +44,9 @@ stories.add('Kitchen Sink', () => (
   />
 ));
 
-createStory(notAtTable);
-createStory(atTable);
+createStory(atTable0);
+createStory(atTable1);
+createStory(atTable2);
 createStory(amountToCall1);
 createStory(amountToCall2);
 createStory(amountToCall3);

@@ -3,7 +3,8 @@
  */
 import React from 'react';
 
-import AmountFlag from './AmountFlag';
+import FlagBetAmount from './FlagBetAmount';
+import FlagCallAmount from './FlagCallAmount';
 import ControlBetRaise from './ControlBetRaise';
 import ControlCheckCall from './ControlCheckCall';
 import ControlFold from './ControlFold';
@@ -19,7 +20,8 @@ const ActionBar = (props) => {
     if (props.active) {
       return (
         <ActionBarWrapper name="action-bar-wrapper">
-          <AmountFlag {...props} />
+          <FlagBetAmount {...props} />
+          <FlagCallAmount {...props} />
           <ControlPanel name="control-panel-visible">
             <ControlFold {...props} />
             <ControlCheckCall {...props} />

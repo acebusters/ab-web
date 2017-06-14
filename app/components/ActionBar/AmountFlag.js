@@ -2,16 +2,16 @@ import React from 'react';
 
 import { AmountFlagWrapper } from './styles';
 
-const AmountFlag = ({ amount }) => {
-  if (!amount) return null;
+const AmountFlag = ({ amountToCall }) => {
+  if (!amountToCall) return null;
   return (
     <AmountFlagWrapper>
-      {amount}
+      {amountToCall}
     </AmountFlagWrapper>
   );
 };
 AmountFlag.propTypes = {
-  amount: React.PropTypes.number,
+  amountToCall: React.PropTypes.number.isRequired,
 };
 
 export default AmountFlag;
