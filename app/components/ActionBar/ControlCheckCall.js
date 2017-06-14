@@ -8,7 +8,6 @@ import { ControlWrapper } from './styles';
 const ControlCheckCall = (props) => {
   const {
     amountToCall,
-    callAmount,
     handleCall,
     handleCheck,
     myStack,
@@ -21,7 +20,7 @@ const ControlCheckCall = (props) => {
       <ControlWrapper>
         <ActionButton
           name="button-call"
-          text={`CALL ${callAmount}`}
+          text="CALL"
           size="medium"
           onClick={handleCall}
         />
@@ -42,7 +41,6 @@ const ControlCheckCall = (props) => {
 };
 ControlCheckCall.propTypes = {
   amountToCall: React.PropTypes.number,
-  callAmount: React.PropTypes.number,
   handleCall: React.PropTypes.func,
   handleCheck: React.PropTypes.func,
   myStack: React.PropTypes.number,

@@ -25,14 +25,13 @@ export const Button = styled.button`
 export const ActionBarWrapper = styled.div`
   position: fixed;
   bottom: 0;
-  display: flex;
-  width: 100%;
-  justify-content: center;
+  left: 50%;
+  transform: translate(-50%, 0);
 `;
 
+  // margin: 0 auto;
 export const ControlPanel = styled.div`
   display: flex;
-  justify-content: center;
   padding-top: 4px;
   padding-left: 4px;
   padding-right: 4px;
@@ -91,4 +90,17 @@ export const SliderWrapper = styled.div`
   height: 20px;
   margin-left: 18px;
   margin-right: 18px;
+`;
+
+export const AmountFlagWrapper = styled.div`
+  display: inline-block;
+  min-width: 60px;
+  margin-left: 138px;
+  padding: 5px;
+  padding-left: 16px;
+  padding-right: 20px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #333;
+  color: white;
 `;

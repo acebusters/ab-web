@@ -10,7 +10,6 @@ import { ControlWrapper } from './styles';
 const ControlBetRaise = (props) => {
   const {
     amountToCall,
-    amount,
     handleBet,
     myStack,
   } = props;
@@ -18,7 +17,7 @@ const ControlBetRaise = (props) => {
     return (
       <ControlWrapper>
         <ButtonBet
-          text={`BET ${amount}`}
+          text="BET"
           {...props}
         />
       </ControlWrapper>
@@ -28,7 +27,7 @@ const ControlBetRaise = (props) => {
     return (
       <ControlWrapper>
         <ButtonBet
-          text={`RAISE ${amount}`}
+          text="RAISE"
           {...props}
         />
       </ControlWrapper>
@@ -50,7 +49,6 @@ const ControlBetRaise = (props) => {
 };
 ControlBetRaise.propTypes = {
   amountToCall: React.PropTypes.number,
-  amount: React.PropTypes.number,
   handleBet: React.PropTypes.func,
   myStack: React.PropTypes.number,
 };

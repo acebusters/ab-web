@@ -32,7 +32,7 @@ export const makeSelectActionBarActive = () => createSelector(
 
 // show the ActionBar if the player is sitting at the table
 export const makeSelectActionBarVisible = () => createSelector(
-  [makeMyPosSelector],
+  [makeMyPosSelector()],
   (myPos) => {
     if (myPos === undefined) return false;
     if (typeof myPos === 'number') return true;

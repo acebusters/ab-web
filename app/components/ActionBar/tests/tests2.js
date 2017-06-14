@@ -34,7 +34,7 @@ export const amountToCall1 = {
     },
     amountToCall: 0,
     callAmount: 0,
-    amount: 200,
+    amount: 0,
     myStack: 2000,
   },
 };
