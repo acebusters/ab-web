@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { FlagCallAmountWrapper } from './styles';
+import {
+  FlagCallAmountWrapper,
+} from './styles';
 
 const FlagCallAmount = ({ amountToCall }) => {
   if (!amountToCall) return null;

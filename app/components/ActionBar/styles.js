@@ -27,6 +27,8 @@ export const ActionBarWrapper = styled.div`
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 0);
+  display: flex;
+  flex-direction: column;
 `;
 
   // margin: 0 auto;
@@ -92,10 +94,26 @@ export const SliderWrapper = styled.div`
   margin-right: 18px;
 `;
 
+export const FlagContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 12px;
+`;
+
+export const FlagButtonWrapper = styled(Button)`
+  margin-left: 4px;
+  padding: 5px;
+  padding-left: 18px;
+  padding-right: 18px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom: solid 2px #666;
+  background-color: #999;
+`;
+
 export const FlagBetAmountWrapper = styled.div`
-  display: inline-block;
-  min-width: 60px;
-  margin-left: 138px;
+  min-width: 80px;
+  margin-right: 36px;
   padding: 5px;
   padding-left: 16px;
   padding-right: 20px;
@@ -106,12 +124,12 @@ export const FlagBetAmountWrapper = styled.div`
 `;
 
 export const FlagCallAmountWrapper = styled.div`
-  display: inline-block;
-  min-width: 60px;
-  margin-left: 20px;
+  margin: 0 auto;
+  min-width: 80px;
   padding: 5px;
-  padding-left: 16px;
-  padding-right: 20px;
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: center;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   background-color: #333;

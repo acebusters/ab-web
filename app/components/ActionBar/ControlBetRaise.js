@@ -38,7 +38,7 @@ const ControlBetRaise = (props) => {
       <ControlWrapper>
         <ActionButton
           name="button-all-in"
-          text="All-In"
+          text="ALL-IN"
           onClick={handleBet}
           {...props}
         />

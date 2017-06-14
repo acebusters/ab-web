@@ -5,6 +5,7 @@ import React from 'react';
 
 import FlagBetAmount from './FlagBetAmount';
 import FlagCallAmount from './FlagCallAmount';
+import FlagButton from './FlagButton';
 import ControlBetRaise from './ControlBetRaise';
 import ControlCheckCall from './ControlCheckCall';
 import ControlFold from './ControlFold';
@@ -13,6 +14,7 @@ import ControlBlank from './ControlBlank';
 import {
   ActionBarWrapper,
   ControlPanel,
+  FlagContainer,
 } from './styles';
 
 const ActionBar = (props) => {
@@ -21,7 +23,12 @@ const ActionBar = (props) => {
       return (
         <ActionBarWrapper name="action-bar-wrapper">
           {props.sliderOpen ?
-            <FlagBetAmount {...props} />
+            <FlagContainer>
+              <FlagBetAmount {...props} />
+              <FlagButton type="quarter" {...props} />
+              <FlagButton type="half" {...props} />
+              <FlagButton type="pot" {...props} />
+            </FlagContainer>
           :
             <FlagCallAmount {...props} />
           }
