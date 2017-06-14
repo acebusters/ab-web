@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { Form, Field, reduxForm, SubmissionError, propTypes } from 'redux-form/immutable';
-import { browserHistory } from 'react-router';
+import { Form, Field, reduxForm, propTypes } from 'redux-form/immutable';
+
 // components
 import Container from '../../components/Container';
 import FormGroup from '../../components/Form/FormGroup';
@@ -12,10 +12,10 @@ import Button from '../../components/Button';
 import H1 from '../../components/H1';
 import { ErrorMessage, WarningMessage } from '../../components/FormMessages';
 
-import { setProgress } from '../App/actions';
-import account from '../../services/account';
+import { register } from './actions';
 
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+const refRegex = /^[0-9a-f]{8}$/i;
 
 const validate = (values) => {
   const errors = {};
@@ -27,6 +27,16 @@ const validate = (values) => {
   if (!values.get('captchaResponse')) {
     errors.captchaResponse = 'Required';
   }
+
+  const referral = values.get('referral') || '';
+  if (!refRegex.test(referral)) {
+    if (!values.has('defaultRef') && referral.length === 0) {
+      errors.referral = 'Referral code is required';
+    } else if (referral.length > 0) {
+      errors.referral = 'Referral code must have 8 letters';
+    }
+  }
+
   return errors;
 };
 
@@ -63,39 +73,34 @@ export class RegisterPage extends React.Component { // eslint-disable-line react
   }
 
   handleSubmit(values) {
-    // Note: auto increase progress for 3 seconds;
-    this.props.setProgress(-3000);
-
-    return account.register(values.get('email'), values.get('captchaResponse'), window.location.origin, values.get('referral')).catch((err) => {
-      // If store account failed, ...
-      const errMsg = 'Registration failed!';
-      if (err === 409) {
-        throw new SubmissionError({ email: 'Email taken.', _error: errMsg });
-      } else {
-        throw new SubmissionError({ _error: `Registration failed with error code ${err}` });
-      }
-    }).then(() => {
-      this.props.setProgress(100);
-      // If store account success, ...
-      browserHistory.push('/confirm');
+    this.props.register({
+      email: values.get('email'),
+      captchaResponse: values.get('captchaResponse'),
+      origin: window.location.origin,
+      referral: values.get('referral') || values.get('defaultRef'),
     });
   }
 
   render() {
-    const { error, handleSubmit, invalid, submitting } = this.props;
+    const { error, invalid, submitting, handleSubmit, asyncValidating } = this.props;
 
     return (
       <Container>
         <div>
-          <H1> Register a new account!</H1>
+          <H1>Register a new account!</H1>
           <Form
             onSubmit={handleSubmit(this.handleSubmit)}
           >
             <Field name="email" type="text" component={renderField} label="e-mail" />
-            <Field name="referral" type="text" component={renderField} label="referral code" />
+            <Field
+              name="referral"
+              type="text"
+              component={renderField}
+              label="referral code"
+            />
             <Field name="captchaResponse" component={Captcha} />
             {error && <ErrorMessage error={error} />}
-            <Button type="submit" disabled={submitting || invalid} size="large">
+            <Button type="submit" disabled={submitting || invalid || asyncValidating} size="large">
               { (!submitting) ? 'Register' : 'Please wait ...' }
             </Button>
           </Form>
@@ -113,7 +118,7 @@ RegisterPage.propTypes = {
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    setProgress: (percent) => dispatch(setProgress(percent)),
+    register: (payload) => dispatch(register(payload)),
   };
 }
 
@@ -121,4 +126,10 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = () => ({});
 
 // Wrap the component to inject dispatch and state into it
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'register', validate, warn })(RegisterPage));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({
+    form: 'register',
+    validate,
+    warn,
+  })(RegisterPage)
+);
