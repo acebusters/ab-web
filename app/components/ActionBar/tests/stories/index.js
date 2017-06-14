@@ -8,10 +8,23 @@ import {
 } from '@storybook/addon-knobs';
 
 import tests, { combine } from '../tests';
+import {
+  notAtTable,
+  atTable,
+  amountToCall1,
+  amountToCall2,
+  amountToCall3,
+} from '../tests2';
 
 import ActionBar from '../../index';
 
 const stories = storiesOf('ActionBar', module);
+
+const createStory = (test) => {
+  stories.add(combine(test.describe, test.it), () => (
+    <ActionBar {...test.props} />
+  ));
+};
 
 stories.addDecorator(withKnobs);
 
@@ -26,8 +39,16 @@ stories.add('Kitchen Sink', () => (
     myStack={number('myStack', 10000)}
     state={text('state', 'flop')}
     params={{ tableAddr: '0x33' }}
+    visible={boolean('visible', true)}
   />
 ));
+
+createStory(notAtTable);
+createStory(atTable);
+createStory(amountToCall1);
+createStory(amountToCall2);
+createStory(amountToCall3);
+
 // iterate over tests and add a story for each
 tests.forEach((test) => {
   stories.add(combine(test.describe, test.it), () => (

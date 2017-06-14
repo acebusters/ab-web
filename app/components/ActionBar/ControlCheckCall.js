@@ -1,6 +1,7 @@
 import React from 'react';
 
 import ActionButton from './ActionButton';
+import ControlBlank from './ControlBlank';
 
 import { ControlWrapper } from './styles';
 
@@ -10,7 +11,11 @@ const ControlCheckCall = (props) => {
     callAmount,
     handleCall,
     handleCheck,
+    myStack,
   } = props;
+  if (amountToCall > myStack) {
+    return <ControlBlank />;
+  }
   if (amountToCall > 0) {
     return (
       <ControlWrapper>
@@ -40,6 +45,7 @@ ControlCheckCall.propTypes = {
   callAmount: React.PropTypes.number,
   handleCall: React.PropTypes.func,
   handleCheck: React.PropTypes.func,
+  myStack: React.PropTypes.number,
 };
 
 export default ControlCheckCall;
