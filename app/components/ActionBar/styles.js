@@ -89,6 +89,6 @@ export const SliderWrapper = styled.div`
   align-self: center;
   width: 200px;
   height: 20px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 18px;
+  margin-right: 18px;
 `;
