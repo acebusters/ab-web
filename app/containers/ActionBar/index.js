@@ -45,6 +45,7 @@ import ActionBar from '../../components/ActionBar';
 class ActionBarContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.handleAllIn = this.handleAllIn.bind(this);
     this.handleBet = this.handleBet.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
     this.handleCall = this.handleCall.bind(this);
@@ -84,7 +85,6 @@ class ActionBarContainer extends React.Component {
     // if player wants to raise and their stack is smaller than the minRaise amount, then bet their stack
     const { minRaise, myStack } = this.props;
     const amount = (myStack < minRaise) ? myStack : minRaise;
-    parseInt(amount, 10);
     this.setState({ amount }, () => this.handleBet());
   }
 
