@@ -78,10 +78,7 @@ const warn = () => {
 const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
   <FormGroup>
     <Label htmlFor={input.name}>{label}</Label>
-    <Input
-      {...input}
-      type={type}
-    />
+    <Input {...input} type={type} />
     {touched && ((error && <ErrorMessage error={error}></ErrorMessage>) || (warning && <ErrorMessage error={warning}></ErrorMessage>))}
   </FormGroup>
 );
