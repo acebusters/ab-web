@@ -161,7 +161,10 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             align="left"
             onClick={() => {
               this.props.modalAdd(
-                <TransferDialog handleTransfer={this.handleNTZTransfer} />
+                <TransferDialog
+                  handleTransfer={this.handleNTZTransfer}
+                  amountUnit="NTZ"
+                />
               );
             }}
             size="medium"
@@ -188,7 +191,10 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             align="left"
             onClick={() => {
               this.props.modalAdd(
-                <TransferDialog handleTransfer={this.handleETHTransfer} />
+                <TransferDialog
+                  handleTransfer={this.handleETHTransfer}
+                  amountUnit="ETH"
+                />
               );
             }}
             size="medium"

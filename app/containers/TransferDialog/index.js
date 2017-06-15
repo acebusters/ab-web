@@ -75,7 +75,7 @@ const warn = () => {
 const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
   <FormGroup>
     <Label htmlFor={input.name}>{label}</Label>
-    <Input {...input} placeholder={label} type={type} />
+    <Input {...input} type={type} />
     {touched && ((error && <ErrorMessage error={error}></ErrorMessage>) || (warning && <ErrorMessage error={warning}></ErrorMessage>))}
   </FormGroup>
 );
@@ -93,14 +93,23 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   render() {
-    const { error, handleSubmit, submitting } = this.props;
+    const { error, handleSubmit, submitting, amountUnit } = this.props;
     return (
       <div>
-        <H2>Send Funds:</H2>
-        <FormattedMessage {...messages.header} />
+        <H2><FormattedMessage {...messages.header} /></H2>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          <Field name="amount" component={renderField} type="number" label="Amount" />
-          <Field name="address" component={renderField} type="text" label="Address" />
+          <Field
+            name="amount"
+            component={renderField}
+            type="number"
+            label={`Amount (${amountUnit})`}
+          />
+          <Field
+            name="address"
+            component={renderField}
+            type="text"
+            label="Ethereum address"
+          />
           {error && <strong>{error}</strong>}
           <div>
             <Button type="submit" disabled={submitting}>Submit</Button>
@@ -113,6 +122,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
 
 TransferDialog.propTypes = {
   submitting: PropTypes.bool,
+  amountUnit: PropTypes.string,
   handleSubmit: PropTypes.func,
   handleTransfer: PropTypes.func,
   error: PropTypes.any,
