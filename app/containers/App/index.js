@@ -21,12 +21,8 @@ import { modalDismiss } from './actions';
 import {
   boxedLayoutMaxWidth,
   backgroundBoxed,
-  backgroundTable,
+  backgroundTableColor,
 } from '../../variables';
-
-const StyledModal = styled.div`
-  z-index: 1000;
-`;
 
 const StyledDashboard = styled.div`
   /* clearfix */
@@ -40,7 +36,7 @@ const StyledDashboard = styled.div`
   }
   /* theme */
   background: #444;
-  background-image: ${(props) => props.params.tableAddr ? backgroundTable : backgroundBoxed};
+  background-color: ${(props) => props.params.tableAddr ? backgroundTableColor : backgroundBoxed}
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -75,17 +71,15 @@ export function App(props) {
         <Footer />
       }
       { modalContent &&
-        <StyledModal>
-          <ModalContainer>
-            <ModalDialog
-              onClose={props.modalDismiss}
-              dismissOnBackgroundClick={false}
-              closeButtonParam={{ margin: 5 }}
-            >
-              { modalContent }
-            </ModalDialog>
-          </ModalContainer>
-        </StyledModal>
+        <ModalContainer zIndex="7">
+          <ModalDialog
+            onClose={props.modalDismiss}
+            dismissOnBackgroundClick={false}
+            closeButtonParam={{ margin: 5 }}
+          >
+            { modalContent }
+          </ModalDialog>
+        </ModalContainer>
       }
     </div>
   );
