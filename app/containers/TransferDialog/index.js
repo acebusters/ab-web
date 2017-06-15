@@ -88,7 +88,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   handleSubmit(values) {
-    const amount = parseInt(values.get('amount'), 10);
+    const amount = Number(values.get('amount', '').replace(',', '.'));
     this.props.handleTransfer(values.get('address'), amount);
   }
 
