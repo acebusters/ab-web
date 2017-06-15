@@ -195,10 +195,10 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   handleUpdate(event) {
-    if (event.type === 'handUpdate') {
+    if (event.type === 'chatMessage') {
       const msg = Receipt.parse(event.payload);
       this.props.addMessage(msg.message, msg.tableAddr, msg.signer, msg.created);
-    } else if (event.type === 'chatMessage') {
+    } else if (event.type === 'handUpdate') {
       this.props.updateReceived(this.tableAddr, event.payload);
     } else if (event.type === 'joinRequest') {
       // not yet implemented
