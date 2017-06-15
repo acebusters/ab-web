@@ -18,6 +18,8 @@ export const CONTRACT_TX_SEND = 'acebusters/AccountProvider/CONTRACT_TX_SEND';
 export const CONTRACT_TX_SUCCESS = 'acebusters/AccountProvider/CONTRACT_TX_SUCCESS';
 export const CONTRACT_TX_ERROR = 'acebusters/AccountProvider/CONTRACT_TX_ERROR';
 
+export const ETH_TRANSFER = 'acebusters/AccountProvider/ETH_TRANSFER';
+
 export const CONTRACT_EVENT = 'acebusters/AccountProvider/CONTRACT_EVENT';
 export const BLOCK_NOTIFY = 'acebusters/AccountProvider/BLOCK_NOTIFY';
 
@@ -133,6 +135,10 @@ export function contractMethodSuccess({ address, key, payload }) {
 
 export function contractMethodError({ address, key, payload }) {
   return { type: CONTRACT_METHOD_ERROR, address, key, payload };
+}
+
+export function transferETH(payload) {
+  return { type: ETH_TRANSFER, payload };
 }
 
 export function contractTxSend(payload) {

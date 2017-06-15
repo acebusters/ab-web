@@ -24,6 +24,7 @@ import {
   SET_AUTH,
   WEB3_CONNECTED,
   BLOCK_NOTIFY,
+  ETH_TRANSFER,
   web3Error,
   web3Connected,
   web3Disconnected,
@@ -210,7 +211,6 @@ function* accountLoginSaga() {
   }
 }
 
-
 function sendTx(forwardReceipt) {
   return new Promise((resolve, reject) => {
     fetch(`${confParams.txUrl}/forward`, {
@@ -283,6 +283,24 @@ function* contractTransactionSendSaga() {
   }
 }
 
+function* transferETHSaga({ payload: { dest, amount } }) {
+  const state = yield select();
+  const nonce = state.get('account').get('lastNonce') + 1;
+  const controller = state.get('account').get('controller');
+  const privKey = state.get('account').get('privKey');
+  const receipt = new Receipt(controller).forward(nonce, dest, amount, 'data').sign(privKey);
+
+  try {
+    const value = yield sendTx(receipt);
+    console.log('SUCCESS', value);
+    // yield put(contractTxSuccess({ address: dest, nonce, txHash: value.txHash, key }));
+  } catch (err) {
+    const error = (err.message) ? err.message : err;
+    console.log(error);
+    // yield put(contractTxError({ address: dest, nonce, error }));
+  }
+}
+
 
 const ethEvent = (contract) => eventChannel((emitter) => {
   const contractEvents = contract.allEvents({ fromBlock: 'latest' });
@@ -317,6 +335,7 @@ export function* accountSaga() {
   yield takeLatest(BLOCK_NOTIFY, notifyBlock);
   yield takeEvery(WEB3_METHOD_CALL, web3MethodCallSaga);
   yield takeEvery(CONTRACT_METHOD_CALL, contractMethodCallSaga);
+  yield takeEvery(ETH_TRANSFER, transferETHSaga);
   yield fork(websocketSaga);
   yield fork(accountLoginSaga);
   yield fork(contractTransactionSendSaga);
