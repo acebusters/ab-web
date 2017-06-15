@@ -3,7 +3,8 @@
  */
 import React from 'react';
 
-import FlagAmount from './FlagAmount';
+import FlagAmountBet from './FlagAmountBet';
+import FlagAmountCall from './FlagAmountCall';
 import FlagButton from './FlagButton';
 import ControlBetRaise from './ControlBetRaise';
 import ControlCheckCall from './ControlCheckCall';
@@ -27,12 +28,19 @@ const ActionBar = (props) => {
     return (
       <ActionBarWrapper active={active} name="action-bar-wrapper">
 
-        <FlagContainer active={active} name="flag-container">
-          <FlagAmount {...props} />
-          <FlagButton type="quarter" {...props} />
-          <FlagButton type="half" {...props} />
-          <FlagButton type="pot" {...props} />
-        </FlagContainer>
+        {sliderOpen ?
+          <FlagContainer active={active} name="flag-container">
+            <FlagAmountCall {...props} />
+            <FlagAmountBet {...props} />
+            <FlagButton type="quarter" {...props} />
+            <FlagButton type="half" {...props} />
+            <FlagButton type="pot" {...props} />
+          </FlagContainer>
+          :
+          <FlagContainer active={active} name="flag-container">
+            <FlagAmountCall {...props} />
+          </FlagContainer>
+        }
 
         <ControlPanel name="control-panel-visible">
           <ControlWrapper>

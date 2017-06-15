@@ -113,22 +113,32 @@ export const FlagButtonWrapper = styled(Button)`
   background-color: #999;
 `;
 
-export const FlagAmountWrapper = styled.div`
+export const FlagBet = styled.div`
+  margin-right: 10px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 20px;
+  width: 124px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #DDD;
+  color: #333;
+`;
+
+export const FlagCall = styled.div`
   ${(props) => {
     if (props.sliderOpen) {
       return `
-        margin-right: 36px;
-        padding-left: 16px;
-        padding-right: 20px;
+        margin-right: 18px;
       `;
     }
     return `
       margin: 0 auto;
-      padding-left: 6px;
-      padding-right: 6px;
-      text-align: center;
     `;
   }};
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: center;
   min-width: 80px;
   padding: 5px;
   border-top-left-radius: 8px;
