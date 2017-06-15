@@ -23,8 +23,8 @@ const FlagButton = ({
   return null;
 };
 FlagButton.propTypes = {
-  type: React.PropTypes.string.isRequired,
-  sliderOpen: React.PropTypes.bool.isRequired,
+  type: React.PropTypes.string,
+  sliderOpen: React.PropTypes.bool,
 };
 
 export default FlagButton;

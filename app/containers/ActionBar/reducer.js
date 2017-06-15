@@ -19,6 +19,10 @@ export default function actionBarReducer(state = initialState, action) {
     }
 
     case types.ACTIONBAR_SET_MODE: {
+      // on CONFIRM button press
+      // if (action.mode === null) {
+      //   return state;
+      // }
       return state.set('mode', action.mode);
     }
 

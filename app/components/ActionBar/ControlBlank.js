@@ -2,11 +2,12 @@ import React from 'react';
 
 import ActionButton from './ActionButton';
 
-const ControlBlank = () => (
+const ControlBlank = (props) => (
   <ActionButton
     name="button-blank"
     text=""
-    size="medium"
+    disabled
+    {...props}
   />
 );
 

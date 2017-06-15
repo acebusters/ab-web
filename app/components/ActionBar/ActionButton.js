@@ -7,14 +7,16 @@ import {
 } from './styles';
 
 const ActionButton = (props) => {
-  const onClick = (e) => {
+  const handleThisClick = () => {
     if (props.disabled) return;
-    props.onClick(e);
+    props.setActionBarBetSlider(false);
+    props.setActionBarMode(props.newMode);
+    props.handleClick();
   };
   return (
     <ActionButtonWrapper
       name={props.name}
-      onClick={onClick}
+      onClick={handleThisClick}
       size={props.size}
       disabled={props.disabled}
     >
@@ -25,11 +27,14 @@ const ActionButton = (props) => {
 };
 
 ActionButton.propTypes = {
-  text: React.PropTypes.string,
-  size: React.PropTypes.string,
-  name: React.PropTypes.string,
-  onClick: React.PropTypes.func,
   disabled: React.PropTypes.bool,
+  name: React.PropTypes.string,
+  newMode: React.PropTypes.string,
+  handleClick: React.PropTypes.func,
+  setActionBarMode: React.PropTypes.func,
+  setActionBarBetSlider: React.PropTypes.func,
+  size: React.PropTypes.string,
+  text: React.PropTypes.string,
 };
 
 export default ActionButton;

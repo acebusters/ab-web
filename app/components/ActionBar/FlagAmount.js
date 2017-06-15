@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FlagAmountWrapper } from './styles';
 
-const FlagBetAmount = ({
+const FlagAmount = ({
   amount,
   amountToCall,
   sliderOpen,
@@ -26,10 +26,10 @@ const FlagBetAmount = ({
     </FlagAmountWrapper>
   );
 };
-FlagBetAmount.propTypes = {
-  amount: React.PropTypes.number.isRequired,
-  amountToCall: React.PropTypes.number.isRequired,
-  sliderOpen: React.PropTypes.bool.isRequired,
+FlagAmount.propTypes = {
+  amount: React.PropTypes.number,
+  amountToCall: React.PropTypes.number,
+  sliderOpen: React.PropTypes.bool,
 };
 
-export default FlagBetAmount;
+export default FlagAmount;

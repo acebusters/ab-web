@@ -60,6 +60,7 @@ class ActionBarContainer extends React.Component {
     this.setState({ amount });
     if (nextProps.isMyTurn === true) {
       this.props.setActionBarActive(true);
+      this.props.setActionBarMode(null);
     }
   }
 
@@ -78,6 +79,7 @@ class ActionBarContainer extends React.Component {
         handId,
       } });
       this.props.setActionBarActive(true);
+      this.props.setActionBarMode(null);
     };
   }
 
@@ -176,6 +178,7 @@ ActionBarContainer.propTypes = {
   setCards: React.PropTypes.func,
   state: React.PropTypes.string,
   setActionBarActive: React.PropTypes.func,
+  setActionBarMode: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {

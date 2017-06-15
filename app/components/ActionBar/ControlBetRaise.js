@@ -11,16 +11,13 @@ const ControlBetRaise = (props) => {
     sliderOpen,
     setActionBarBetSlider,
   } = props;
-  const handleConfirmClick = () => {
-    setActionBarBetSlider(false);
-    handleBet();
-  };
   if (sliderOpen) {
     return (
       <ActionButton
         name="bet-button"
         text="CONFIRM"
-        onClick={handleConfirmClick}
+        newMode={null}
+        handleClick={() => handleBet()}
         {...props}
       />
     );
@@ -30,7 +27,8 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-bet"
         text="BET"
-        onClick={() => setActionBarBetSlider(true)}
+        newMode="BET"
+        handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
     );
@@ -40,7 +38,8 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-raise"
         text="RAISE"
-        onClick={() => setActionBarBetSlider(true)}
+        newMode="RAISE"
+        handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
     );
@@ -50,19 +49,20 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-all-in"
         text="ALL-IN"
-        onClick={handleBet}
+        newMode="ALL-IN"
+        handleClick={() => handleBet()}
         {...props}
       />
     );
   }
-  return <ControlBlank />;
+  return <ControlBlank {...props} />;
 };
 ControlBetRaise.propTypes = {
-  amountToCall: React.PropTypes.number.isRequired,
-  handleBet: React.PropTypes.func.isRequired,
-  myStack: React.PropTypes.number.isRequired,
-  sliderOpen: React.PropTypes.bool.isRequired,
-  setActionBarBetSlider: React.PropTypes.func.isRequired,
+  amountToCall: React.PropTypes.number,
+  handleBet: React.PropTypes.func,
+  myStack: React.PropTypes.number,
+  sliderOpen: React.PropTypes.bool,
+  setActionBarBetSlider: React.PropTypes.func,
 };
 
 export default ControlBetRaise;

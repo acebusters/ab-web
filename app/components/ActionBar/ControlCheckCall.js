@@ -4,22 +4,24 @@ import ActionButton from './ActionButton';
 import ControlBlank from './ControlBlank';
 
 
-const ControlCheckCall = ({
-  amountToCall,
-  handleCall,
-  handleCheck,
-  myStack,
-}) => {
+const ControlCheckCall = (props) => {
+  const {
+    amountToCall,
+    handleCall,
+    handleCheck,
+    myStack,
+  } = props;
   if (amountToCall > myStack) {
-    return <ControlBlank />;
+    return <ControlBlank {...props} />;
   }
   if (amountToCall > 0) {
     return (
       <ActionButton
         name="button-call"
         text="CALL"
-        size="medium"
-        onClick={handleCall}
+        newMode="CALL"
+        handleClick={() => handleCall()}
+        {...props}
       />
     );
   }
@@ -28,18 +30,19 @@ const ControlCheckCall = ({
       <ActionButton
         name="button-check"
         text="CHECK"
-        size="medium"
-        onClick={handleCheck}
+        newMode="CHECK"
+        handleClick={() => handleCheck()}
+        {...props}
       />
     );
   }
-  return <ControlBlank />;
+  return <ControlBlank {...props} />;
 };
 ControlCheckCall.propTypes = {
-  amountToCall: React.PropTypes.number.isRequired,
-  handleCall: React.PropTypes.func.isRequired,
-  handleCheck: React.PropTypes.func.isRequired,
-  myStack: React.PropTypes.number.isRequired,
+  amountToCall: React.PropTypes.number,
+  handleCall: React.PropTypes.func,
+  handleCheck: React.PropTypes.func,
+  myStack: React.PropTypes.number,
 };
 
 export default ControlCheckCall;
