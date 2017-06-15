@@ -36,6 +36,8 @@ import {
   contractTxSuccess,
   contractTxError,
   contractEvent,
+  transferETHSuccess,
+  transferETHError,
 } from './actions';
 
 let web3Instance;
@@ -288,16 +290,14 @@ function* transferETHSaga({ payload: { dest, amount } }) {
   const nonce = state.get('account').get('lastNonce') + 1;
   const controller = state.get('account').get('controller');
   const privKey = state.get('account').get('privKey');
-  const receipt = new Receipt(controller).forward(nonce, dest, amount, 'data').sign(privKey);
+  const receipt = new Receipt(controller).forward(nonce, dest, amount, '').sign(privKey);
 
   try {
     const value = yield sendTx(receipt);
-    console.log('SUCCESS', value);
-    // yield put(contractTxSuccess({ address: dest, nonce, txHash: value.txHash, key }));
+    yield put(transferETHSuccess({ address: dest, nonce, amount, txHash: value.txHash }));
   } catch (err) {
     const error = (err.message) ? err.message : err;
-    console.log(error);
-    // yield put(contractTxError({ address: dest, nonce, error }));
+    yield put(transferETHError({ address: dest, amount, nonce, error }));
   }
 }
 

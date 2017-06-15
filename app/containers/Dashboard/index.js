@@ -90,7 +90,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   handleETHTransfer(dest, amount) {
-    // console.log(new BigNumber(amount).mul(ethDecimals).toString());
     this.props.transferETH({
       dest,
       amount: `0x${new BigNumber(amount).mul(ethDecimals).toString(16)}`,
