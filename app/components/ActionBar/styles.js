@@ -118,7 +118,7 @@ export const FlagBet = styled.div`
   padding: 5px;
   padding-left: 10px;
   padding-right: 20px;
-  width: 124px;
+  width: 142px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   background-color: #DDD;
