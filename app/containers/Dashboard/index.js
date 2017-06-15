@@ -29,7 +29,8 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
   constructor(props) {
     super(props);
-    this.handleTransfer = this.handleTransfer.bind(this);
+    this.handleNTZTransfer = this.handleNTZTransfer.bind(this);
+    this.handleETHTransfer = this.handleETHTransfer.bind(this);
     this.web3 = props.web3Redux.web3;
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
     this.web3.eth.getBlockNumber((err, blockNumber) => {
@@ -70,8 +71,13 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     }
   }
 
-  handleTransfer(to, amount) {
+  handleNTZTransfer(to, amount) {
     this.token.transfer.sendTransaction(to, amount);
+    this.props.modalDismiss();
+  }
+
+  handleETHTransfer(to, amount) {
+    console.log(to, amount);
     this.props.modalDismiss();
   }
 
@@ -143,7 +149,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             align="left"
             onClick={() => {
               this.props.modalAdd(
-                <TransferDialog handleTransfer={this.handleTransfer} />
+                <TransferDialog handleTransfer={this.handleNTZTransfer} />
               );
             }}
             size="medium"
@@ -166,6 +172,18 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               <span>{ethBalance && ethBalance.toString()} ETH</span>
             </WithLoading>
           </p>
+          <Button
+            align="left"
+            onClick={() => {
+              this.props.modalAdd(
+                <TransferDialog handleTransfer={this.handleETHTransfer} />
+              );
+            }}
+            size="medium"
+            icon="fa fa-money"
+          >
+            TRANSFER
+          </Button>
         </Section>
 
         <Section>
