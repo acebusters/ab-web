@@ -76,12 +76,12 @@ function accountProviderReducer(state = initialState, action) {
       return state.set('lastNonce', action.payload.nonce)
         .setIn(['pending', action.payload.nonce, 'txHash'], action.payload.txHash);
     case CONTRACT_TX_ERROR:
-      return state.setIn([action.payload.address, 'pending', action.payload.nonce, 'error'], action.payload.error);
+      return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
     case CONTRACT_EVENT:
-      if (newState.getIn([action.event.address, 'pending'])) {
-        newState.getIn([action.event.address, 'pending']).forEach((value, key) => {
+      if (newState.getIn(['pending'])) {
+        newState.getIn(['pending']).forEach((value, key) => {
           if (value.get('txHash') === action.event.transactionHash) {
-            newState = newState.deleteIn([action.event.address, 'pending', key]);
+            newState = newState.deleteIn(['pending', key]);
           }
         });
       }
