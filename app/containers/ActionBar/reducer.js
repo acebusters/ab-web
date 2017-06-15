@@ -8,6 +8,7 @@ export const initialState = fromJS({
   active: true,
   visible: false,
   sliderOpen: false,
+  mode: null,
 });
 
 export default function actionBarReducer(state = initialState, action) {
@@ -15,6 +16,10 @@ export default function actionBarReducer(state = initialState, action) {
 
     case types.ACTIONBAR_SET_ACTIVE: {
       return state.set('active', action.active);
+    }
+
+    case types.ACTIONBAR_SET_MODE: {
+      return state.set('mode', action.mode);
     }
 
     case types.ACTIONBAR_SET_BET_SLIDER: {

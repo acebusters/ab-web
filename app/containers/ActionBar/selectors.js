@@ -49,6 +49,11 @@ export const makeSelectActionBarVisible = () => createSelector(
   }
 );
 
+export const getActionBarMode = () => createSelector(
+  getActionBarState,
+  (actionBar) => actionBar.get('mode'),
+);
+
 export const getActionBarSliderOpen = () => createSelector(
   getActionBarState,
   (actionBar) => actionBar.get('sliderOpen'),

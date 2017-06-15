@@ -10,10 +10,13 @@ import TableService from '../../services/tableService';
 
 import {
   setActionBarActive,
+  setActionBarMode,
   setActionBarBetSlider,
 } from './actions';
+
 import {
   getActionBarSliderOpen,
+  getActionBarMode,
   makeSelectActionBarActive,
   makeSelectActionBarVisible,
   makeMinSelector,
@@ -191,6 +194,7 @@ export function mapDispatchToProps(dispatch) {
     ),
     setActionBarActive: (active) => dispatch(setActionBarActive(active)),
     setActionBarBetSlider: (open) => dispatch(setActionBarBetSlider(open)),
+    setActionBarMode: (mode) => dispatch(setActionBarMode(mode)),
   };
 }
 
@@ -203,6 +207,7 @@ const mapStateToProps = createStructuredSelector({
   playerCount: makePlayersCountSelector(),
   privKey: makeSelectPrivKey(),
   messages: makeMessagesSelector(),
+  mode: getActionBarMode(),
   minRaise: makeMinSelector(),
   myMaxBet: makeMyMaxBetSelector(),
   myStack: makeMyStackSelector(),
