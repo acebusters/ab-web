@@ -1,53 +1,68 @@
 import React from 'react';
 
 import ActionButton from './ActionButton';
-import ButtonBet from './ButtonBet';
 import ControlBlank from './ControlBlank';
-
-import { ControlWrapper } from './styles';
-
 
 const ControlBetRaise = (props) => {
   const {
     amountToCall,
     handleBet,
     myStack,
+    sliderOpen,
+    setActionBarBetSlider,
   } = props;
+  const handleConfirmClick = () => {
+    setActionBarBetSlider(false);
+    handleBet();
+  };
+  if (sliderOpen) {
+    return (
+      <ActionButton
+        name="bet-button"
+        text="CONFIRM"
+        onClick={handleConfirmClick}
+        {...props}
+      />
+    );
+  }
   if (amountToCall === 0) {
     return (
-      <ControlWrapper>
-        <ButtonBet
-          text="BET"
-          {...props}
-        />
-      </ControlWrapper>
+      <ActionButton
+        name="button-bet"
+        text="BET"
+        onClick={() => setActionBarBetSlider(true)}
+        {...props}
+      />
     );
   }
   if (myStack > amountToCall) {
     return (
-      <ControlWrapper>
-        <ButtonBet {...props} />
-      </ControlWrapper>
+      <ActionButton
+        name="button-raise"
+        text="RAISE"
+        onClick={() => setActionBarBetSlider(true)}
+        {...props}
+      />
     );
   }
   if (myStack < amountToCall) {
     return (
-      <ControlWrapper>
-        <ActionButton
-          name="button-all-in"
-          text="ALL-IN"
-          onClick={handleBet}
-          {...props}
-        />
-      </ControlWrapper>
+      <ActionButton
+        name="button-all-in"
+        text="ALL-IN"
+        onClick={handleBet}
+        {...props}
+      />
     );
   }
   return <ControlBlank />;
 };
 ControlBetRaise.propTypes = {
-  amountToCall: React.PropTypes.number,
-  handleBet: React.PropTypes.func,
-  myStack: React.PropTypes.number,
+  amountToCall: React.PropTypes.number.isRequired,
+  handleBet: React.PropTypes.func.isRequired,
+  myStack: React.PropTypes.number.isRequired,
+  sliderOpen: React.PropTypes.bool.isRequired,
+  setActionBarBetSlider: React.PropTypes.func.isRequired,
 };
 
 export default ControlBetRaise;

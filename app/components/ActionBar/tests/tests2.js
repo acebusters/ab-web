@@ -8,7 +8,14 @@ export const atTable0 = {
       tableAddr: '0x123',
     },
     visible: false,
+    active: false,
     sliderOpen: false,
+    setActionBarBetSlider: () => {},
+    handleFold: () => {},
+    handleCheck: () => {},
+    handleCall: () => {},
+    handleBet: () => {},
+    updateAmount: () => {},
   },
 };
 
@@ -22,6 +29,16 @@ export const atTable1 = {
     active: false,
     visible: true,
     sliderOpen: false,
+    amountToCall: 0,
+    callAmount: 0,
+    amount: 0,
+    myStack: 2000,
+    setActionBarBetSlider: () => {},
+    handleFold: () => {},
+    handleCheck: () => {},
+    handleCall: () => {},
+    handleBet: () => {},
+    updateAmount: () => {},
   },
 };
 
@@ -35,6 +52,16 @@ export const atTable2 = {
     active: true,
     visible: true,
     sliderOpen: false,
+    amountToCall: 0,
+    callAmount: 0,
+    amount: 0,
+    myStack: 2000,
+    setActionBarBetSlider: () => {},
+    handleFold: () => {},
+    handleCheck: () => {},
+    handleCall: () => {},
+    handleBet: () => {},
+    updateAmount: () => {},
   },
 };
 
@@ -53,6 +80,12 @@ export const amountToCall1 = {
     amount: 0,
     myStack: 2000,
     sliderOpen: false,
+    setActionBarBetSlider: () => {},
+    handleFold: () => {},
+    handleCheck: () => {},
+    handleCall: () => {},
+    handleBet: () => {},
+    updateAmount: () => {},
   },
 };
 
@@ -71,6 +104,12 @@ export const amountToCall2 = {
     amount: 1000,
     myStack: 2000,
     sliderOpen: false,
+    setActionBarBetSlider: () => {},
+    handleFold: () => {},
+    handleCheck: () => {},
+    handleCall: () => {},
+    handleBet: () => {},
+    updateAmount: () => {},
   },
 };
 
@@ -89,6 +128,12 @@ export const amountToCall3 = {
     amount: 2000,
     myStack: 2000,
     sliderOpen: false,
+    setActionBarBetSlider: () => {},
+    handleFold: () => {},
+    handleCheck: () => {},
+    handleCall: () => {},
+    handleBet: () => {},
+    updateAmount: () => {},
   },
 };
 
@@ -107,6 +152,12 @@ export const buttonBet0 = {
     callAmount: 1000,
     amount: 1000,
     myStack: 2000,
+    setActionBarBetSlider: () => {},
+    handleFold: () => {},
+    handleCheck: () => {},
+    handleCall: () => {},
+    handleBet: () => {},
+    updateAmount: () => {},
   },
 };
 
@@ -125,5 +176,11 @@ export const buttonBet1 = {
     callAmount: 1000,
     amount: 1000,
     myStack: 2000,
+    setActionBarBetSlider: () => {},
+    handleFold: () => {},
+    handleCheck: () => {},
+    handleCall: () => {},
+    handleBet: () => {},
+    updateAmount: () => {},
   },
 };

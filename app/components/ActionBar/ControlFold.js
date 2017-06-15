@@ -3,32 +3,25 @@ import React from 'react';
 import ActionButton from './ActionButton';
 import ControlBlank from './ControlBlank';
 
-import {
-  ControlWrapper,
-} from './styles';
-
-const ControlFold = (props) => {
-  const {
-    amountToCall,
-    handleFold,
-  } = props;
+const ControlFold = ({
+  amountToCall,
+  handleFold,
+}) => {
   if (amountToCall > 0) {
     return (
-      <ControlWrapper>
-        <ActionButton
-          name="button-fold"
-          text="FOLD"
-          size="medium"
-          onClick={() => handleFold()}
-        />
-      </ControlWrapper>
+      <ActionButton
+        name="button-fold"
+        text="FOLD"
+        size="medium"
+        onClick={() => handleFold()}
+      />
     );
   }
   return <ControlBlank />;
 };
 ControlFold.propTypes = {
-  amountToCall: React.PropTypes.number,
-  handleFold: React.PropTypes.func,
+  amountToCall: React.PropTypes.number.isRequired,
+  handleFold: React.PropTypes.func.isRequired,
 };
 
 export default ControlFold;

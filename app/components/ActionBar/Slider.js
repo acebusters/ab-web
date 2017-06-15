@@ -7,7 +7,7 @@ import { SliderWrapper } from './styles';
 const styles = {
   handle: {
     position: 'absolute',
-    width: '24px',
+    width: '34px',
     height: '50px',
     marginLeft: '-12px',
     marginTop: '-20px',
@@ -21,6 +21,7 @@ const styles = {
   },
   rail: {
     backgroundColor: '#333',
+    height: '6px',
   },
   track: {
     backgroundColor: '#333',
@@ -39,7 +40,6 @@ class Slider extends React.Component {
   }
   onSliderChange(value) {
     this.setState({ value });
-    this.props.updateAmount(value);
   }
   onSliderUpdate(value) {
     this.props.updateAmount(value);
@@ -62,9 +62,9 @@ class Slider extends React.Component {
   }
 }
 Slider.propTypes = {
-  updateAmount: React.PropTypes.func,
-  minRaise: React.PropTypes.number,
-  myStack: React.PropTypes.number,
+  updateAmount: React.PropTypes.func.isRequired,
+  minRaise: React.PropTypes.number.isRequired,
+  myStack: React.PropTypes.number.isRequired,
 };
 
 export default Slider;

@@ -29,6 +29,7 @@ export const ActionBarWrapper = styled.div`
   transform: translate(-50%, 0);
   display: flex;
   flex-direction: column;
+  opacity: ${(props) => props.active ? 1 : 0.5};
 `;
 
   // margin: 0 auto;
@@ -49,22 +50,26 @@ export const ControlWrapper = styled.div`
   padding-top: 4px;
   padding-left: 4px;
   padding-right: 4px;
-  margin-left: 8px;
   background-color: #666;
-  &:first-child {
-    margin-left: 0;
-  }
 `;
 
 export const ActionButtonWrapper = styled(Button)`
   display: flex;
   height: 50px;
   min-width: 100px;
+  margin-left: 6px;
   background-color: #999;
   color: white;
   font-weight: 400;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  &:first-child {
+    margin-left: 0;
+    border-top-left-radius: 8px;
+  }
+  &:nth-child(3) {
+    border-top-right-radius: 8px;
+  }
 `;
 
 export const ActionIndicator = styled.div`
@@ -82,22 +87,19 @@ export const ActionText = styled.div`
   margin-left: 8px;
 `;
 
-export const BetWrapper = styled.div`
-  display: flex;
-`;
-
 export const SliderWrapper = styled.div`
   align-self: center;
   width: 200px;
   height: 20px;
-  margin-left: 18px;
-  margin-right: 18px;
+  margin-left: 24px;
+  margin-right: 24px;
 `;
 
 export const FlagContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-right: 12px;
+  opacity: ${(props) => props.active ? 1 : 0};
 `;
 
 export const FlagButtonWrapper = styled(Button)`
@@ -111,25 +113,24 @@ export const FlagButtonWrapper = styled(Button)`
   background-color: #999;
 `;
 
-export const FlagBetAmountWrapper = styled.div`
+export const FlagAmountWrapper = styled.div`
+  ${(props) => {
+    if (props.sliderOpen) {
+      return `
+        margin-right: 36px;
+        padding-left: 16px;
+        padding-right: 20px;
+      `;
+    }
+    return `
+      margin: 0 auto;
+      padding-left: 6px;
+      padding-right: 6px;
+      text-align: center;
+    `;
+  }};
   min-width: 80px;
-  margin-right: 36px;
   padding: 5px;
-  padding-left: 16px;
-  padding-right: 20px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  background-color: #333;
-  color: white;
-`;
-
-export const FlagCallAmountWrapper = styled.div`
-  margin: 0 auto;
-  min-width: 80px;
-  padding: 5px;
-  padding-left: 6px;
-  padding-right: 6px;
-  text-align: center;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   background-color: #333;

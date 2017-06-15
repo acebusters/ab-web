@@ -37,13 +37,19 @@ stories.add('Kitchen Sink', () => (
     amount={number('amount', 100)}
     amountToCall={number('amountToCall', 100)}
     callAmount={number('callAmount', 0)}
+    handleFold={() => {}}
+    handleCall={() => {}}
+    handleCheck={() => {}}
+    handleBet={() => {}}
     isMyTurn={boolean('isMyTurn', true)}
     minRaise={number('minRaise', 0)}
     myStack={number('myStack', 10000)}
+    setActionBarBetSlider={() => {}}
+    sliderOpen={boolean('sliderOpen', false)}
     state={text('state', 'flop')}
     params={{ tableAddr: '0x33' }}
+    updateAmount={() => {}}
     visible={boolean('visible', true)}
-    sliderOpen={boolean('sliderOpen', false)}
   />
 ));
 

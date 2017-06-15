@@ -3,47 +3,43 @@ import React from 'react';
 import ActionButton from './ActionButton';
 import ControlBlank from './ControlBlank';
 
-import { ControlWrapper } from './styles';
 
-const ControlCheckCall = (props) => {
-  const {
-    amountToCall,
-    handleCall,
-    handleCheck,
-    myStack,
-  } = props;
+const ControlCheckCall = ({
+  amountToCall,
+  handleCall,
+  handleCheck,
+  myStack,
+}) => {
   if (amountToCall > myStack) {
     return <ControlBlank />;
   }
   if (amountToCall > 0) {
     return (
-      <ControlWrapper>
-        <ActionButton
-          name="button-call"
-          text="CALL"
-          size="medium"
-          onClick={handleCall}
-        />
-      </ControlWrapper>
+      <ActionButton
+        name="button-call"
+        text="CALL"
+        size="medium"
+        onClick={handleCall}
+      />
     );
   }
-  // if amountToCall === 0, or undefined, or null
-  return (
-    <ControlWrapper>
+  if (amountToCall === 0) {
+    return (
       <ActionButton
         name="button-check"
         text="CHECK"
         size="medium"
         onClick={handleCheck}
       />
-    </ControlWrapper>
-  );
+    );
+  }
+  return <ControlBlank />;
 };
 ControlCheckCall.propTypes = {
-  amountToCall: React.PropTypes.number,
-  handleCall: React.PropTypes.func,
-  handleCheck: React.PropTypes.func,
-  myStack: React.PropTypes.number,
+  amountToCall: React.PropTypes.number.isRequired,
+  handleCall: React.PropTypes.func.isRequired,
+  handleCheck: React.PropTypes.func.isRequired,
+  myStack: React.PropTypes.number.isRequired,
 };
 
 export default ControlCheckCall;

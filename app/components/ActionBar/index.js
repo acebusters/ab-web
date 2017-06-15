@@ -3,50 +3,46 @@
  */
 import React from 'react';
 
-import FlagBetAmount from './FlagBetAmount';
-import FlagCallAmount from './FlagCallAmount';
+import FlagAmount from './FlagAmount';
 import FlagButton from './FlagButton';
 import ControlBetRaise from './ControlBetRaise';
 import ControlCheckCall from './ControlCheckCall';
 import ControlFold from './ControlFold';
-import ControlBlank from './ControlBlank';
+import Slider from './Slider';
 
 import {
   ActionBarWrapper,
   ControlPanel,
+  ControlWrapper,
   FlagContainer,
 } from './styles';
 
 const ActionBar = (props) => {
-  if (props.visible) {
-    if (props.active) {
-      return (
-        <ActionBarWrapper name="action-bar-wrapper">
-          {props.sliderOpen ?
-            <FlagContainer>
-              <FlagBetAmount {...props} />
-              <FlagButton type="quarter" {...props} />
-              <FlagButton type="half" {...props} />
-              <FlagButton type="pot" {...props} />
-            </FlagContainer>
-          :
-            <FlagCallAmount {...props} />
-          }
-          <ControlPanel name="control-panel-visible">
+  const {
+    active,
+    sliderOpen,
+    visible,
+  } = props;
+  if (visible) {
+    return (
+      <ActionBarWrapper active={active} name="action-bar-wrapper">
+
+        <FlagContainer active={active} name="flag-container">
+          <FlagAmount {...props} />
+          <FlagButton type="quarter" {...props} />
+          <FlagButton type="half" {...props} />
+          <FlagButton type="pot" {...props} />
+        </FlagContainer>
+
+        <ControlPanel name="control-panel-visible">
+          <ControlWrapper>
             <ControlFold {...props} />
             <ControlCheckCall {...props} />
             <ControlBetRaise {...props} />
-          </ControlPanel>
-        </ActionBarWrapper>
-      );
-    }
-    return (
-      <ActionBarWrapper style={{ opacity: 0.5 }}>
-        <ControlPanel>
-          <ControlBlank />
-          <ControlBlank />
-          <ControlBlank />
+            {sliderOpen ? <Slider {...props} /> : null }
+          </ControlWrapper>
         </ControlPanel>
+
       </ActionBarWrapper>
     );
   }

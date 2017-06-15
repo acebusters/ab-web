@@ -1,26 +1,30 @@
 import React from 'react';
 
-import {
-  FlagButtonWrapper,
-} from './styles';
+import { FlagButtonWrapper } from './styles';
 
-const FlagButton = (props) => {
-  const {
-    type,
-  } = props;
+const FlagButton = ({
+  type,
+  sliderOpen,
+}) => {
   const textType = () => {
     if (type === 'quarter') return '1/4';
     if (type === 'half') return '1/2';
-    return 'Pot';
+    if (type === 'pot') return 'POT';
+    return null;
   };
-  return (
-    <FlagButtonWrapper name="flag-button">
-      {textType()}
-    </FlagButtonWrapper>
-  );
+  // only display if slider is Open
+  if (sliderOpen) {
+    return (
+      <FlagButtonWrapper name="flag-button">
+        {textType()}
+      </FlagButtonWrapper>
+    );
+  }
+  return null;
 };
 FlagButton.propTypes = {
   type: React.PropTypes.string.isRequired,
+  sliderOpen: React.PropTypes.bool.isRequired,
 };
 
 export default FlagButton;
