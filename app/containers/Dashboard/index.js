@@ -84,15 +84,16 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   handleNTZTransfer(to, amount) {
     this.token.transfer.sendTransaction(
       to,
-      new BigNumber(amount).mul(ntzDecimals).toString()
+      `0x${new BigNumber(amount).mul(ntzDecimals).toString(16)}`
     );
     this.props.modalDismiss();
   }
 
   handleETHTransfer(dest, amount) {
+    // console.log(new BigNumber(amount).mul(ethDecimals).toString());
     this.props.transferETH({
       dest,
-      amount: new BigNumber(amount).mul(ethDecimals).toString(),
+      amount: `0x${new BigNumber(amount).mul(ethDecimals).toString(16)}`,
     });
     this.props.modalDismiss();
   }
