@@ -125,10 +125,10 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const babBalance = this.token.balanceOf(this.props.account.proxy);
     const ntzBalance = (babBalance) ? babBalance.div(ntzDecimals) : babBalance;
 
-    let listPending = null;
+    const listPending = pendingToList(this.props.account.pending);
+
     let listTxns = null;
     if (this.props.account[confParams.ntzAddr]) {
-      listPending = pendingToList(this.props.account[confParams.ntzAddr].pending);
       listTxns = txnsToList(this.props.account[confParams.ntzAddr].transactions, this.props.account.proxy);
     }
 
@@ -231,27 +231,23 @@ const pendingToList = (pending) => {
 };
 
 const txnsToList = (txns, proxyAddr) => {
-  let list = null;
-
   if (txns) {
-    const onlyMine = [];
-
-    Object.keys(txns).forEach((key) => {
-      if (key && txns[key] && txns[key].from && txns[key].to) {
-        if (txns[key].from === proxyAddr || txns[key].to === proxyAddr) {
-          onlyMine.push({
-            txHash: key,
-            blockNumber: txns[key].blockNumber,
-            from: txns[key].from,
-            to: txns[key].to,
-            value: (txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1,
-          });
-        }
-      }
-    });
-    list = onlyMine.map((entry) => [entry.txHash.substring(2, 8), entry.from.substring(2, 8), entry.to.substring(2, 8), entry.value]);
+    return Object.keys(txns)
+      .filter((key) => (
+        (key && txns[key] && txns[key].from && txns[key].to) &&
+        (txns[key].from === proxyAddr || txns[key].to === proxyAddr)
+      ))
+      .map((key) => ({
+        txHash: key,
+        blockNumber: txns[key].blockNumber,
+        from: txns[key].from,
+        to: txns[key].to,
+        value: (txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1,
+      }))
+      .map((entry) => [entry.txHash.substring(2, 8), entry.from.substring(2, 8), entry.to.substring(2, 8), entry.value]);
   }
-  return list;
+
+  return null;
 };
 
 Dashboard.propTypes = {

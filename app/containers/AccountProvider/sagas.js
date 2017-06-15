@@ -285,19 +285,23 @@ function* contractTransactionSendSaga() {
   }
 }
 
-function* transferETHSaga({ payload: { dest, amount } }) {
-  const state = yield select();
-  const nonce = state.get('account').get('lastNonce') + 1;
-  const controller = state.get('account').get('controller');
-  const privKey = state.get('account').get('privKey');
-  const receipt = new Receipt(controller).forward(nonce, dest, amount, '').sign(privKey);
+function* transferETHSaga() {
+  const transferChan = yield actionChannel(ETH_TRANSFER);
+  while (true) { // eslint-disable-line no-constant-condition
+    const { payload: { dest, amount } } = yield take(transferChan);
+    const state = yield select();
+    const nonce = state.get('account').get('lastNonce') + 1;
+    const controller = state.get('account').get('controller');
+    const privKey = state.get('account').get('privKey');
+    const receipt = new Receipt(controller).forward(nonce, dest, amount, '').sign(privKey);
 
-  try {
-    const value = yield sendTx(receipt);
-    yield put(transferETHSuccess({ address: dest, nonce, amount, txHash: value.txHash }));
-  } catch (err) {
-    const error = (err.message) ? err.message : err;
-    yield put(transferETHError({ address: dest, amount, nonce, error }));
+    try {
+      const value = yield sendTx(receipt);
+      yield put(transferETHSuccess({ address: dest, nonce, amount, txHash: value.txHash }));
+    } catch (err) {
+      const error = (err.message) ? err.message : err;
+      yield put(transferETHError({ address: dest, amount, nonce, error }));
+    }
   }
 }
 
@@ -335,8 +339,8 @@ export function* accountSaga() {
   yield takeLatest(BLOCK_NOTIFY, notifyBlock);
   yield takeEvery(WEB3_METHOD_CALL, web3MethodCallSaga);
   yield takeEvery(CONTRACT_METHOD_CALL, contractMethodCallSaga);
-  yield takeEvery(ETH_TRANSFER, transferETHSaga);
   yield fork(websocketSaga);
+  yield fork(transferETHSaga);
   yield fork(accountLoginSaga);
   yield fork(contractTransactionSendSaga);
 }

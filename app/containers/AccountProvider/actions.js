@@ -156,11 +156,11 @@ export function contractTxSend(payload) {
 }
 
 export function contractTxSuccess({ key, address, nonce, txHash }) {
-  return { type: CONTRACT_TX_SUCCESS, key, address, nonce, txHash };
+  return { type: CONTRACT_TX_SUCCESS, payload: { key, address, nonce, txHash } };
 }
 
 export function contractTxError({ address, nonce, error }) {
-  return { type: CONTRACT_TX_ERROR, address, nonce, error };
+  return { type: CONTRACT_TX_ERROR, payload: { address, nonce, error } };
 }
 
 export function contractEvent({ event }) {
