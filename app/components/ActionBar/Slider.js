@@ -38,8 +38,13 @@ class Slider extends React.Component {
     this.onSliderChange = this.onSliderChange.bind(this);
     this.onSliderUpdate = this.onSliderUpdate.bind(this);
   }
+  componentWillMount() {
+    this.setState({ value: this.props.minRaise });
+    this.props.updateAmount(this.props.minRaise);
+  }
   onSliderChange(value) {
     this.setState({ value });
+    this.props.updateAmount(value);
   }
   onSliderUpdate(value) {
     this.props.updateAmount(value);

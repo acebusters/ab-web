@@ -6,6 +6,7 @@ import ControlBlank from './ControlBlank';
 const ControlBetRaise = (props) => {
   const {
     amountToCall,
+    handleAllIn,
     handleBet,
     minRaise,
     myStack,
@@ -40,7 +41,7 @@ const ControlBetRaise = (props) => {
         name="button-all-in"
         text="ALL-IN"
         newMode="ALL-IN"
-        handleClick={() => handleBet()}
+        handleClick={() => handleAllIn()}
         {...props}
       />
     );
@@ -61,7 +62,8 @@ const ControlBetRaise = (props) => {
 ControlBetRaise.propTypes = {
   amountToCall: React.PropTypes.number,
   handleBet: React.PropTypes.func,
-  minRaise: React.PropTypes.func,
+  handleAllIn: React.PropTypes.func,
+  minRaise: React.PropTypes.number,
   myStack: React.PropTypes.number,
   sliderOpen: React.PropTypes.bool,
   setActionBarBetSlider: React.PropTypes.func,

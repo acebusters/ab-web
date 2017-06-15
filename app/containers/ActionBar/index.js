@@ -55,9 +55,6 @@ class ActionBarContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const min = nextProps.minRaise;
-    const amount = (min && nextProps.myStack < min) ? nextProps.myStack : min;
-    this.setState({ amount });
     if (nextProps.isMyTurn === true) {
       this.props.setActionBarActive(true);
       this.props.setActionBarMode(null);
@@ -81,6 +78,14 @@ class ActionBarContainer extends React.Component {
       this.props.setActionBarActive(true);
       this.props.setActionBarMode(null);
     };
+  }
+
+  handleAllIn() {
+    // if player wants to raise and their stack is smaller than the minRaise amount, then bet their stack
+    const { minRaise, myStack } = this.props;
+    const amount = (myStack < minRaise) ? myStack : minRaise;
+    parseInt(amount, 10);
+    this.setState({ amount }, () => this.handleBet());
   }
 
   handleBet() {
@@ -151,6 +156,7 @@ class ActionBarContainer extends React.Component {
     return (
       <ActionBar
         amount={this.state.amount}
+        handleAllIn={this.handleAllIn}
         handleBet={this.handleBet}
         handleCheck={this.handleCheck}
         handleCall={this.handleCall}
@@ -169,6 +175,7 @@ ActionBarContainer.propTypes = {
   dispatch: React.PropTypes.func,
   fold: React.PropTypes.func,
   lastReceipt: React.PropTypes.object,
+  minRaise: React.PropTypes.number,
   myMaxBet: React.PropTypes.number,
   myPos: React.PropTypes.number,
   myStack: React.PropTypes.number,

@@ -17,6 +17,7 @@ export const atTable0 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -41,6 +42,7 @@ export const atTable1 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -65,6 +67,7 @@ export const atTable2 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -90,6 +93,7 @@ export const amountToCall1 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -115,6 +119,7 @@ export const amountToCall2 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -140,6 +145,7 @@ export const amountToCall3 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -165,6 +171,7 @@ export const minRaise0 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -190,6 +197,7 @@ export const buttonBet0 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -215,6 +223,7 @@ export const buttonBet1 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -240,6 +249,7 @@ export const buttonRaise0 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
 
@@ -265,5 +275,6 @@ export const buttonRaise1 = {
     handleCall: () => {},
     handleBet: () => {},
     updateAmount: () => {},
+    handleAllIn: () => {},
   },
 };
