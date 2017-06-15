@@ -73,6 +73,7 @@ const makeAmountToCallSelector = () => createSelector(
 const makeMinSelector = () => createSelector(
   [makeSbSelector(), makeHandSelector(), makeMyStackSelector(), makeAmountToCallSelector(), makeMaxBetSelector()],
   (sb, hand, stack, amountToCall, maxBet) => {
+    console.log('minsel', stack, maxBet, amountToCall);
     if (!sb || !hand || hand.get('state') === 'waiting') {
       return undefined;
     }

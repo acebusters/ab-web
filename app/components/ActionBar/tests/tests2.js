@@ -143,6 +143,31 @@ export const amountToCall3 = {
   },
 };
 
+export const minRaise0 = {
+  describe: 'when amountToCall < myStack, but minRaise > myStack',
+  it: 'should render fold, call, all-in button',
+  props: {
+    active: true,
+    visible: true,
+    state: 'flop',
+    params: {
+      tableAddr: '0x123',
+    },
+    amountToCall: 2000,
+    callAmount: 2000,
+    amount: 2000,
+    minRaise: 4000,
+    myStack: 3000,
+    sliderOpen: false,
+    setActionBarBetSlider: () => {},
+    handleFold: () => {},
+    handleCheck: () => {},
+    handleCall: () => {},
+    handleBet: () => {},
+    updateAmount: () => {},
+  },
+};
+
 export const buttonBet0 = {
   describe: 'ButtonBet state is closed',
   it: 'should not show slider',
@@ -194,8 +219,8 @@ export const buttonBet1 = {
 };
 
 export const buttonRaise0 = {
-  describe: 'ButtonRaise state is open',
-  it: 'should show slider',
+  describe: 'ButtonRaise state is close',
+  it: 'should not show slider',
   props: {
     active: true,
     visible: true,
@@ -219,8 +244,8 @@ export const buttonRaise0 = {
 };
 
 export const buttonRaise1 = {
-  describe: 'ButtonRaise state is close',
-  it: 'should not show slider',
+  describe: 'ButtonRaise state is open',
+  it: 'should show slider',
   props: {
     active: true,
     visible: true,

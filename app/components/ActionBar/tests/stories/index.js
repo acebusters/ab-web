@@ -15,6 +15,7 @@ import {
   amountToCall1,
   amountToCall2,
   amountToCall3,
+  minRaise0,
   buttonBet0,
   buttonBet1,
   buttonRaise0,
@@ -61,6 +62,7 @@ createStory(atTable2);
 createStory(amountToCall1);
 createStory(amountToCall2);
 createStory(amountToCall3);
+createStory(minRaise0);
 createStory(buttonBet0);
 createStory(buttonBet1);
 createStory(buttonRaise0);

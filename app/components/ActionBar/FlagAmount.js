@@ -6,10 +6,13 @@ const FlagAmount = ({
   amount,
   amountToCall,
   sliderOpen,
+  myStack,
 }) => {
-  // hide flag if only option is to 'check'
+  // hide flag if only option is to 'check' or 'all-in'
   if (!sliderOpen) {
-    if (amountToCall === 0) return null;
+    if (amountToCall === 0 || amountToCall > myStack) {
+      return null;
+    }
     return (
       <FlagAmountWrapper sliderOpen={sliderOpen}>
         {amountToCall}
@@ -29,6 +32,7 @@ const FlagAmount = ({
 FlagAmount.propTypes = {
   amount: React.PropTypes.number,
   amountToCall: React.PropTypes.number,
+  myStack: React.PropTypes.number,
   sliderOpen: React.PropTypes.bool,
 };
 

@@ -7,6 +7,7 @@ const ControlBetRaise = (props) => {
   const {
     amountToCall,
     handleBet,
+    minRaise,
     myStack,
     sliderOpen,
     setActionBarBetSlider,
@@ -33,6 +34,17 @@ const ControlBetRaise = (props) => {
       />
     );
   }
+  if (myStack < amountToCall || myStack < minRaise) {
+    return (
+      <ActionButton
+        name="button-all-in"
+        text="ALL-IN"
+        newMode="ALL-IN"
+        handleClick={() => handleBet()}
+        {...props}
+      />
+    );
+  }
   if (myStack > amountToCall) {
     return (
       <ActionButton
@@ -44,22 +56,12 @@ const ControlBetRaise = (props) => {
       />
     );
   }
-  if (myStack < amountToCall) {
-    return (
-      <ActionButton
-        name="button-all-in"
-        text="ALL-IN"
-        newMode="ALL-IN"
-        handleClick={() => handleBet()}
-        {...props}
-      />
-    );
-  }
   return <ControlBlank {...props} />;
 };
 ControlBetRaise.propTypes = {
   amountToCall: React.PropTypes.number,
   handleBet: React.PropTypes.func,
+  minRaise: React.PropTypes.func,
   myStack: React.PropTypes.number,
   sliderOpen: React.PropTypes.bool,
   setActionBarBetSlider: React.PropTypes.func,
