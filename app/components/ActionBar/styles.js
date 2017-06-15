@@ -29,7 +29,7 @@ export const ActionBarWrapper = styled.div`
   transform: translate(-50%, 0);
   display: flex;
   flex-direction: column;
-  opacity: ${(props) => props.active ? 1 : 0.5};
+  opacity: ${(props) => props.active ? 1 : 0.3};
 `;
 
   // margin: 0 auto;
@@ -133,6 +133,6 @@ export const FlagAmountWrapper = styled.div`
   padding: 5px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  background-color: #333;
-  color: white;
+  background-color: #DDD;
+  color: #333;
 `;

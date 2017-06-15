@@ -17,6 +17,8 @@ import {
   amountToCall3,
   buttonBet0,
   buttonBet1,
+  buttonRaise0,
+  buttonRaise1,
 } from '../tests2';
 
 import ActionBar from '../../index';
@@ -61,6 +63,8 @@ createStory(amountToCall2);
 createStory(amountToCall3);
 createStory(buttonBet0);
 createStory(buttonBet1);
+createStory(buttonRaise0);
+createStory(buttonRaise1);
 
 // iterate over tests and add a story for each
 tests.forEach((test) => {

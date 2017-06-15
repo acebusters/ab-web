@@ -8,11 +8,21 @@ const FlagBetAmount = ({
   sliderOpen,
 }) => {
   // hide flag if only option is to 'check'
-  if (amountToCall === 0) return null;
-  const text = sliderOpen ? `RAISE ${amount}` : amountToCall;
+  if (!sliderOpen) {
+    if (amountToCall === 0) return null;
+    return (
+      <FlagAmountWrapper sliderOpen={sliderOpen}>
+        {amountToCall}
+      </FlagAmountWrapper>
+    );
+  }
   return (
     <FlagAmountWrapper sliderOpen={sliderOpen}>
-      {text}
+      {amountToCall !== 0 ?
+          `RAISE ${amount}`
+        :
+          `BET ${amount}`
+        }
     </FlagAmountWrapper>
   );
 };
