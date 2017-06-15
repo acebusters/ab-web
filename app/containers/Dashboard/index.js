@@ -155,7 +155,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           <p>
             <span>Balance: </span>
             <WithLoading
-              isLoading={ntzBalance === undefined || ntzBalance === null}
+              isLoading={!ntzBalance}
               loadingSize="14px"
               type="inline"
               styles={{ layout: { marginLeft: '15px' } }}
@@ -169,6 +169,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               this.props.modalAdd(
                 <TransferDialog
                   handleTransfer={this.handleNTZTransfer}
+                  maxAmount={ntzBalance}
                   amountUnit="NTZ"
                 />
               );
@@ -185,7 +186,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           <p>
             <span>Balance: </span>
             <WithLoading
-              isLoading={ethBalance === undefined}
+              isLoading={!ethBalance}
               loadingSize="14px"
               type="inline"
               styles={{ layout: { marginLeft: '15px' } }}
@@ -199,6 +200,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               this.props.modalAdd(
                 <TransferDialog
                   handleTransfer={this.handleETHTransfer}
+                  maxAmount={ethBalance}
                   amountUnit="ETH"
                 />
               );
