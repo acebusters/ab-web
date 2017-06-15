@@ -3,6 +3,8 @@ import Raven from 'raven-js';
 
 import styled from 'styled-components';
 
+import { conf } from '../../app.config';
+
 const Link = styled.a`
   cursor: pointer; 
   padding: 5px 10px;
@@ -10,8 +12,8 @@ const Link = styled.a`
   transform: rotate(90deg);
   display: inline-block;
   position: fixed;
-  right: -23px;
-  top: 150px;
+  right: -36px;
+  bottom: 150px;
   color: white;
   border-radius: 0 0 3px 3px;
 `;
@@ -22,13 +24,13 @@ export class FeedbackButton extends React.PureComponent { // eslint-disable-line
     Raven.captureMessage(`Feedback Button ${Date.now()}`);
     Raven.showReportDialog({
       eventId: Raven.lastEventId(),
-      dsn: 'https://8c3e021848b247ddaf627c8040f94e07@sentry.io/153017',
+      dsn: conf().sentryDSN,
     });
   }
 
   render() {
     return (
-      <Link onClick={this.showReport}>feedback</Link>
+      <Link onClick={this.showReport}>Report Crash</Link>
     );
   }
 }
