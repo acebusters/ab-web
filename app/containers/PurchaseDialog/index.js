@@ -45,8 +45,7 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   handleSubmit(values) {
-    const amount = Number(values.get('amount', '').replace(',', '.'));
-    this.props.handleTransfer(values.get('address'), amount);
+    this.props.handlePurchase(Number(values.get('amount', '').replace(',', '.')));
   }
 
   render() {
@@ -77,7 +76,7 @@ PurchaseDialog.propTypes = {
   maxAmount: PropTypes.object, // BigNumber
   amountUnit: PropTypes.string,
   handleSubmit: PropTypes.func,
-  handleTransfer: PropTypes.func,
+  handlePurchase: PropTypes.func,
   error: PropTypes.any,
 };
 

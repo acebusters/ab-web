@@ -22,6 +22,10 @@ export const ETH_TRANSFER = 'acebusters/AccountProvider/ETH_TRANSFER';
 export const ETH_TRANSFER_SUCCESS = 'acebusters/AccountProvider/ETH_TRANSFER_SUCCESS';
 export const ETH_TRANSFER_ERROR = 'acebusters/AccountProvider/ETH_TRANSFER_ERROR';
 
+export const NTZ_PURCHASE = 'acebusters/AccountProvider/NTZ_PURCHASE';
+export const NTZ_PURCHASE_SUCCESS = 'acebusters/AccountProvider/NTZ_PURCHASE_SUCCESS';
+export const NTZ_PURCHASE_ERROR = 'acebusters/AccountProvider/NTZ_PURCHASE_ERROR';
+
 export const CONTRACT_EVENT = 'acebusters/AccountProvider/CONTRACT_EVENT';
 export const BLOCK_NOTIFY = 'acebusters/AccountProvider/BLOCK_NOTIFY';
 
@@ -149,6 +153,18 @@ export function transferETHSuccess(payload) {
 
 export function transferETHError(payload) {
   return { type: ETH_TRANSFER_ERROR, payload };
+}
+
+export function purchaseNTZ(payload) {
+  return { type: NTZ_PURCHASE, payload };
+}
+
+export function purchaseNTZSuccess(payload) {
+  return { type: NTZ_PURCHASE_SUCCESS, payload };
+}
+
+export function purchaseNTZError(payload) {
+  return { type: NTZ_PURCHASE_ERROR, payload };
 }
 
 export function contractTxSend(payload) {
