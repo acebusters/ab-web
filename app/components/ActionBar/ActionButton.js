@@ -7,8 +7,10 @@ import {
 } from './styles';
 
 const ActionButton = (props) => {
+  // disable button if actioBar is not active or if mode matches
+  const disabled = !props.active || (props.mode === props.newMode);
   const handleThisClick = () => {
-    if (props.disabled) return;
+    if (disabled) return;
     props.setActionBarBetSlider(false);
     props.setActionBarMode(props.newMode);
     props.handleClick();
@@ -17,8 +19,7 @@ const ActionButton = (props) => {
     <ActionButtonWrapper
       name={props.name}
       onClick={handleThisClick}
-      size={props.size}
-      disabled={props.disabled}
+      disabled={disabled}
     >
       <ActionIndicator />
       <ActionText>{props.text}</ActionText>
@@ -27,13 +28,13 @@ const ActionButton = (props) => {
 };
 
 ActionButton.propTypes = {
-  disabled: React.PropTypes.bool,
+  active: React.PropTypes.bool,
+  mode: React.PropTypes.string,
   name: React.PropTypes.string,
   newMode: React.PropTypes.string,
   handleClick: React.PropTypes.func,
   setActionBarMode: React.PropTypes.func,
   setActionBarBetSlider: React.PropTypes.func,
-  size: React.PropTypes.string,
   text: React.PropTypes.string,
 };
 

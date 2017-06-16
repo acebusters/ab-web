@@ -1,14 +1,12 @@
 import React from 'react';
 
-import ActionButton from './ActionButton';
+import {
+  ActionButtonWrapper,
+  ActionIndicator,
+} from './styles';
 
-const ControlBlank = (props) => (
-  <ActionButton
-    name="button-blank"
-    text=""
-    disabled
-    {...props}
-  />
+export default () => (
+  <ActionButtonWrapper name="button-blank" disabled>
+    <ActionIndicator />
+  </ActionButtonWrapper>
 );
-
-export default ControlBlank;

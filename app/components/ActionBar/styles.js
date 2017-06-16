@@ -3,7 +3,7 @@
 */
 import styled from 'styled-components';
 
-export const Button = styled.button`
+const Button = styled.button`
   padding: 0;
   margin: 0;
   border: none;
@@ -13,9 +13,6 @@ export const Button = styled.button`
   }
   &:hover {
     cursor: pointer;
-  }
-  &:active {
-    color: green;
   }
   &:disabled{
     cursor: default;
@@ -32,7 +29,6 @@ export const ActionBarWrapper = styled.div`
   opacity: ${(props) => props.active ? 1 : 0.3};
 `;
 
-  // margin: 0 auto;
 export const ControlPanel = styled.div`
   display: flex;
   padding-top: 4px;
@@ -69,6 +65,14 @@ export const ActionButtonWrapper = styled(Button)`
   }
   &:nth-child(3) {
     border-top-right-radius: 8px;
+  }
+  &:active {
+    background-color: #666;
+    color: #DDD;
+  }
+  &:disabled {
+    background-color: #777;
+    color: #DDD;
   }
 `;
 

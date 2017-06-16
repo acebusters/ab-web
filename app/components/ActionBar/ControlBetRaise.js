@@ -18,7 +18,7 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="bet-button"
         text="CONFIRM"
-        newMode={null}
+        newMode="CONFIRM"
         handleClick={() => handleBet()}
         {...props}
       />

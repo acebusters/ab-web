@@ -23,7 +23,7 @@ export const atTable0 = {
 
 export const atTable1 = {
   describe: 'when at table, and not Turn',
-  it: 'actionBar should render as disabled',
+  it: 'actionBar should render as disabled, buttons should not be clickable',
   props: {
     params: {
       tableAddr: '0x123',
