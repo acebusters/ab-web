@@ -201,7 +201,11 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     } else if (event.type === 'handUpdate') {
       this.props.updateReceived(this.tableAddr, event.payload);
     } else if (event.type === 'joinRequest') {
-      // not yet implemented
+      if (event.payload.signer === this.props.signerAddr) {
+        const posString = event.payload.data.slice(201);
+        const pos = parseInt(posString, 16);
+        this.props.pendingToggle(this.tableAddr, this.props.params.handId, pos);
+      }
     }
   }
 
