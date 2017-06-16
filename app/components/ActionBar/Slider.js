@@ -67,9 +67,9 @@ class Slider extends React.Component {
   }
 }
 Slider.propTypes = {
-  updateAmount: React.PropTypes.func.isRequired,
-  minRaise: React.PropTypes.number.isRequired,
-  myStack: React.PropTypes.number.isRequired,
+  updateAmount: React.PropTypes.func,
+  minRaise: React.PropTypes.number,
+  myStack: React.PropTypes.number,
 };
 
 export default Slider;
