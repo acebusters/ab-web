@@ -3,6 +3,11 @@
 */
 import styled from 'styled-components';
 
+import {
+  curtainStickyWidth,
+  curtainHalfWidth,
+} from '../../variables';
+
 const Button = styled.button`
   padding: 0;
   margin: 0;
@@ -20,13 +25,17 @@ const Button = styled.button`
 `;
 
 export const ActionBarWrapper = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 0);
   display: flex;
   flex-direction: column;
   opacity: ${(props) => props.active ? 1 : 0.3};
+
+  @media (min-width: ${curtainStickyWidth}) {
+    left: calc(50% + ${curtainHalfWidth});
+  }
 `;
 
 export const ControlPanel = styled.div`
