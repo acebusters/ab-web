@@ -49,7 +49,7 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   render() {
-    const { error, handleSubmit, submitting, amountUnit, maxAmount } = this.props;
+    const { error, handleSubmit, submitting, maxAmount } = this.props;
 
     return (
       <div>
@@ -58,7 +58,7 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
           <AmountField
             name="amount"
             component={renderField}
-            label={`NTZ amount for purchase (${amountUnit})`}
+            label="NTZ amount for purchase"
             maxAmount={maxAmount}
           />
           {error && <strong>{error}</strong>}
@@ -74,7 +74,6 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
 PurchaseDialog.propTypes = {
   submitting: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
-  amountUnit: PropTypes.string,
   handleSubmit: PropTypes.func,
   handlePurchase: PropTypes.func,
   error: PropTypes.any,

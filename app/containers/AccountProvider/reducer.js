@@ -16,7 +16,7 @@ import {
   ACCOUNT_LOADED,
   READY_STATE,
   ETH_TRANSFER_SUCCESS,
-  NZT_PURCHASE_SUCCESS,
+  NTZ_PURCHASE_SUCCESS,
 } from './actions';
 import * as storageService from '../../services/localStorage';
 
@@ -71,7 +71,7 @@ function accountProviderReducer(state = initialState, action) {
 
     case CONTRACT_TX_SUCCESS:
     case ETH_TRANSFER_SUCCESS:
-    case NZT_PURCHASE_SUCCESS:
+    case NTZ_PURCHASE_SUCCESS:
       // the nonce is only increased after the call was successfull.
       // in the account saga we use a channel, so no 2 requests are submitted
       // at the same time and no nonce can be reused by accident.

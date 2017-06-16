@@ -41,6 +41,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   constructor(props) {
     super(props);
     this.handleNTZTransfer = this.handleNTZTransfer.bind(this);
+    this.handleNTZPurchase = this.handleNTZPurchase.bind(this);
     this.handleETHTransfer = this.handleETHTransfer.bind(this);
     this.web3 = props.web3Redux.web3;
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
@@ -90,8 +91,8 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.props.modalDismiss();
   }
 
-  handleNTZPurchase(to, amount) {
-    this.props.purchaseNTZ(`0x${new BigNumber(amount).mul(ethDecimals).toString(16)}`);
+  handleNTZPurchase(amount) {
+    this.props.purchaseNTZ(`0x${new BigNumber(amount).mul(ntzDecimals).toString(16)}`);
     this.props.modalDismiss();
   }
 
@@ -227,8 +228,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                 this.props.modalAdd(
                   <PurchaseDialog
                     handlePurchase={this.handleNTZPurchase}
-                    maxAmount={ethBalance}
-                    amountUnit="ETH"
                   />
                 );
               }}
