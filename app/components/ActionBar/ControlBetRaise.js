@@ -18,7 +18,7 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="bet-button"
         text="CONFIRM"
-        newMode="CONFIRM"
+        type="CONFIRM"
         handleClick={() => handleBet()}
         {...props}
       />
@@ -29,7 +29,7 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-bet"
         text="BET"
-        newMode="BET"
+        type="BET"
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
@@ -40,7 +40,7 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-all-in"
         text="ALL-IN"
-        newMode="ALL-IN"
+        type="ALL-IN"
         handleClick={() => handleAllIn()}
         {...props}
       />
@@ -51,7 +51,7 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-raise"
         text="RAISE"
-        newMode="RAISE"
+        type="RAISE"
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />

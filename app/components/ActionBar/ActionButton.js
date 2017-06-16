@@ -8,11 +8,11 @@ import {
 
 const ActionButton = (props) => {
   // disable button if actioBar is not active or if mode matches
-  const disabled = !props.active || (props.mode === props.newMode);
+  const disabled = !props.active || (props.mode === props.type);
   const handleThisClick = () => {
     if (disabled) return;
     props.setActionBarBetSlider(false);
-    props.setActionBarMode(props.newMode);
+    props.setActionBarMode(props.type);
     props.handleClick();
   };
   return (
@@ -21,8 +21,10 @@ const ActionButton = (props) => {
       onClick={handleThisClick}
       disabled={disabled}
     >
-      <ActionIndicator />
-      <ActionText>{props.text}</ActionText>
+      {props.type === 'BET' || props.type === 'RAISE' ? null
+        : <ActionIndicator />
+      }
+      <ActionText type={props.type}>{props.text}</ActionText>
     </ActionButtonWrapper>
   );
 };
@@ -31,7 +33,7 @@ ActionButton.propTypes = {
   active: React.PropTypes.bool,
   mode: React.PropTypes.string,
   name: React.PropTypes.string,
-  newMode: React.PropTypes.string,
+  type: React.PropTypes.string,
   handleClick: React.PropTypes.func,
   setActionBarMode: React.PropTypes.func,
   setActionBarBetSlider: React.PropTypes.func,

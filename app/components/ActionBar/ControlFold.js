@@ -13,7 +13,7 @@ const ControlFold = (props) => {
       <ActionButton
         name="button-fold"
         text="FOLD"
-        newMode="FOLD"
+        type="FOLD"
         handleClick={() => handleFold()}
         {...props}
       />

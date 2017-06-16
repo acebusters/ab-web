@@ -19,7 +19,7 @@ const ControlCheckCall = (props) => {
       <ActionButton
         name="button-call"
         text="CALL"
-        newMode="CALL"
+        type="CALL"
         handleClick={() => handleCall()}
         {...props}
       />
@@ -30,7 +30,7 @@ const ControlCheckCall = (props) => {
       <ActionButton
         name="button-check"
         text="CHECK"
-        newMode="CHECK"
+        type="CHECK"
         handleClick={() => handleCheck()}
         {...props}
       />

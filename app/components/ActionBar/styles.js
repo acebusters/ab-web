@@ -96,8 +96,11 @@ export const ActionIndicator = styled.div`
 `;
 
 export const ActionText = styled.div`
+  width: 100%;
+  height: 100%;
   align-self: center;
-  margin-left: 8px;
+  margin-left: ${(props) => props.type === 'BET' || props.type === 'RAISE' ? 0 : '8px'};
+  text-align: ${(props) => props.type === 'BET' || props.type === 'RAISE' ? 'center' : 'left'};
 `;
 
 export const SliderWrapper = styled.div`
