@@ -10,7 +10,7 @@ import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from
 import messages from './messages';
 import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
-import { contractEvent, accountLoaded, transferETH, purchaseNTZ } from '../AccountProvider/actions';
+import { contractEvent, accountLoaded, transferETH } from '../AccountProvider/actions';
 import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, conf } from '../../app.config';
 
@@ -92,7 +92,10 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   handleNTZPurchase(amount) {
-    this.props.purchaseNTZ(`0x${new BigNumber(amount).mul(ntzDecimals).toString(16)}`);
+    this.props.transferETH({
+      dest: confParams.ntzAddr,
+      amount: `0x${new BigNumber(amount).mul(ethDecimals).toString(16)}`,
+    });
     this.props.modalDismiss();
   }
 
@@ -282,7 +285,6 @@ const txnsToList = (txns, proxyAddr) => {
 Dashboard.propTypes = {
   modalAdd: PropTypes.func,
   transferETH: PropTypes.func,
-  purchaseNTZ: PropTypes.func,
   modalDismiss: PropTypes.func,
   contractEvent: PropTypes.func,
   accountLoaded: PropTypes.func,
@@ -304,7 +306,6 @@ function mapDispatchToProps() {
     modalAdd,
     modalDismiss,
     transferETH,
-    purchaseNTZ,
     contractEvent: (event) => contractEvent({ event }),
     accountLoaded,
   };

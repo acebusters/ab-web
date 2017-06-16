@@ -25,7 +25,6 @@ import {
   WEB3_CONNECTED,
   BLOCK_NOTIFY,
   ETH_TRANSFER,
-  NTZ_PURCHASE,
   web3Error,
   web3Connected,
   web3Disconnected,
@@ -39,8 +38,6 @@ import {
   contractEvent,
   transferETHSuccess,
   transferETHError,
-  purchaseNTZSuccess,
-  purchaseNTZError,
 } from './actions';
 
 let web3Instance;
@@ -308,27 +305,6 @@ function* transferETHSaga() {
   }
 }
 
-function* purchaseNTZSaga() {
-  const purchaseChan = yield actionChannel(NTZ_PURCHASE);
-  while (true) { // eslint-disable-line no-constant-condition
-    const { payload: { amount } } = yield take(purchaseChan);
-    const dest = confParams.ntzAddr;
-    const state = yield select();
-    const nonce = state.get('account').get('lastNonce') + 1;
-    const controller = state.get('account').get('controller');
-    const privKey = state.get('account').get('privKey');
-    const receipt = new Receipt(controller).forward(nonce, dest, amount, '').sign(privKey);
-
-    try {
-      const value = yield sendTx(receipt);
-      yield put(purchaseNTZSuccess({ address: dest, nonce, amount, txHash: value.txHash }));
-    } catch (err) {
-      const error = (err.message) ? err.message : err;
-      yield put(purchaseNTZError({ address: dest, amount, nonce, error }));
-    }
-  }
-}
-
 const ethEvent = (contract) => eventChannel((emitter) => {
   const contractEvents = contract.allEvents({ fromBlock: 'latest' });
   contractEvents.watch((error, results) => {
@@ -364,7 +340,6 @@ export function* accountSaga() {
   yield takeEvery(CONTRACT_METHOD_CALL, contractMethodCallSaga);
   yield fork(websocketSaga);
   yield fork(transferETHSaga);
-  yield fork(purchaseNTZSaga);
   yield fork(accountLoginSaga);
   yield fork(contractTransactionSendSaga);
 }

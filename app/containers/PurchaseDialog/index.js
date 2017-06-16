@@ -45,7 +45,7 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   handleSubmit(values) {
-    this.props.handlePurchase(Number(values.get('amount', '').replace(',', '.')));
+    this.props.handlePurchase(values.get('amount'));
   }
 
   render() {
@@ -58,7 +58,7 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
           <AmountField
             name="amount"
             component={renderField}
-            label="NTZ amount for purchase"
+            label="Amount (ETH)"
             maxAmount={maxAmount}
           />
           {error && <strong>{error}</strong>}
