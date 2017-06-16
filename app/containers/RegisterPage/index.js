@@ -73,7 +73,7 @@ const renderCheckBox = ({ input, label, type, meta: { touched, error, warning } 
 const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
   <FormGroup>
     <Label htmlFor={input.name}>{label}</Label>
-    <Input {...input} placeholder={label} type={type} className="fa fa-check-square" />
+    <Input {...input} placeholder={label} type={type} />
     {touched && ((error && <ErrorMessage error={error} />) || (warning && <WarningMessage warning={warning} />))}
   </FormGroup>
 );
