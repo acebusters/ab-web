@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import TableService from '../../services/tableService';
 
 import {
-  setActionBarActive,
+  setActionBarTurnComplete,
   setActionBarMode,
   setActionBarBetSlider,
 } from './actions';
@@ -17,6 +17,7 @@ import {
 import {
   getActionBarSliderOpen,
   getActionBarMode,
+  getActionBarTurnComplete,
   makeSelectActionBarActive,
   makeSelectActionBarVisible,
   makeMinSelector,
@@ -52,13 +53,15 @@ class ActionBarContainer extends React.Component {
     this.handleFold = this.handleFold.bind(this);
     this.updateAmount = this.updateAmount.bind(this);
     this.table = new TableService(props.params.tableAddr, this.props.privKey);
-    this.state = { amount: 0 };
+    this.state = {
+      amount: 0,
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.isMyTurn === true) {
-      this.props.setActionBarActive(true);
-      this.props.setActionBarMode(null);
+    if (nextProps.turnComplete === true) {
+      this.props.setActionBarTurnComplete(false);
+      this.props.setActionBarMode('');
     }
   }
 
@@ -76,8 +79,8 @@ class ActionBarContainer extends React.Component {
         tableAddr: self.props.params.tableAddr,
         handId,
       } });
-      this.props.setActionBarActive(true);
-      this.props.setActionBarMode(null);
+      this.props.setActionBarTurnComplete(true);
+      this.props.setActionBarMode('');
     };
   }
 
@@ -89,7 +92,7 @@ class ActionBarContainer extends React.Component {
   }
 
   handleBet() {
-    this.props.setActionBarActive(false);
+    this.props.setActionBarTurnComplete(true);
     const amount = this.state.amount + this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
 
@@ -109,7 +112,7 @@ class ActionBarContainer extends React.Component {
   }
 
   handleCheck() {
-    this.props.setActionBarActive(false);
+    this.props.setActionBarTurnComplete(true);
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const checkStates = ['preflop', 'turn', 'river', 'flop'];
@@ -133,7 +136,7 @@ class ActionBarContainer extends React.Component {
   }
 
   handleFold() {
-    this.props.setActionBarActive(false);
+    this.props.setActionBarTurnComplete(true);
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const action = this.props.fold(
@@ -184,7 +187,7 @@ ActionBarContainer.propTypes = {
   privKey: React.PropTypes.string,
   setCards: React.PropTypes.func,
   state: React.PropTypes.string,
-  setActionBarActive: React.PropTypes.func,
+  setActionBarTurnComplete: React.PropTypes.func,
   setActionBarMode: React.PropTypes.func,
 };
 
@@ -202,7 +205,7 @@ export function mapDispatchToProps(dispatch) {
       ) => check(
         tableAddr, handId, amount, privKey, myPos, lastReceipt, checkType
     ),
-    setActionBarActive: (active) => dispatch(setActionBarActive(active)),
+    setActionBarTurnComplete: (complete) => dispatch(setActionBarTurnComplete(complete)),
     setActionBarBetSlider: (open) => dispatch(setActionBarBetSlider(open)),
     setActionBarMode: (mode) => dispatch(setActionBarMode(mode)),
   };
@@ -222,6 +225,7 @@ const mapStateToProps = createStructuredSelector({
   myMaxBet: makeMyMaxBetSelector(),
   myStack: makeMyStackSelector(),
   sliderOpen: getActionBarSliderOpen(),
+  turnComplete: getActionBarTurnComplete(),
   visible: makeSelectActionBarVisible(),
 });
 

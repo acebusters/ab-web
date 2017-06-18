@@ -92,7 +92,7 @@ export const ActionIndicator = styled.div`
   width: 8px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background-color: #444;
+  background-color: ${(props) => props.active ? 'yellow' : '#444'};
 `;
 
 export const ActionText = styled.div`

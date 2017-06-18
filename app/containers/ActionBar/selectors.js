@@ -59,6 +59,11 @@ export const getActionBarSliderOpen = () => createSelector(
   (actionBar) => actionBar.get('sliderOpen'),
 );
 
+export const getActionBarTurnComplete = () => createSelector(
+  getActionBarState,
+  (actionBar) => actionBar.get('turnComplete'),
+);
+
 // Other selectors
 const makeAmountToCallSelector = () => createSelector(
   [makeMaxBetSelector(), makeMyMaxBetSelector()],

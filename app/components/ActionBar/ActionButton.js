@@ -7,24 +7,35 @@ import {
 } from './styles';
 
 const ActionButton = (props) => {
+  const {
+    active,
+    handleClick,
+    mode,
+    name,
+    setActionBarMode,
+    setActionBarBetSlider,
+    type,
+    text,
+  } = props;
   // disable button if actioBar is not active or if mode matches
-  const disabled = !props.active || (props.mode === props.type);
+  const disabled = !active || (mode === type);
   const handleThisClick = () => {
     if (disabled) return;
-    props.setActionBarBetSlider(false);
-    props.setActionBarMode(props.type);
-    props.handleClick();
+    setActionBarBetSlider(false);
+    setActionBarMode(type);
+    handleClick();
   };
+  const isActive = mode === type;
   return (
     <ActionButtonWrapper
-      name={props.name}
+      name={name}
       onClick={handleThisClick}
       disabled={disabled}
     >
-      {props.type === 'BET' || props.type === 'RAISE' ? null
-        : <ActionIndicator />
+      {type === 'BET' || type === 'RAISE' ? null
+        : <ActionIndicator active={isActive} />
       }
-      <ActionText type={props.type}>{props.text}</ActionText>
+      <ActionText type={type}>{text}</ActionText>
     </ActionButtonWrapper>
   );
 };
