@@ -17,6 +17,7 @@ import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, conf } from '../../app.config'
 import List from '../../components/List';
 import Alert from '../../components/Alert';
 import TransferDialog from '../TransferDialog';
+import PurchaseDialog from '../PurchaseDialog';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import Blocky from '../../components/Blocky';
@@ -41,15 +42,17 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   constructor(props) {
     super(props);
     this.handleNTZTransfer = this.handleNTZTransfer.bind(this);
+    this.handleNTZPurchase = this.handleNTZPurchase.bind(this);
     this.handleETHTransfer = this.handleETHTransfer.bind(this);
     this.web3 = props.web3Redux.web3;
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
     this.web3.eth.getBlockNumber((err, blockNumber) => {
       const events = this.token.allEvents({ fromBlock: blockNumber - (4 * 60 * 24), toBlock: 'latest' });
       events.get((error, eventList) => {
-        eventList.forEach((event) => {
-          props.contractEvent(event);
-        });
+        const { proxy } = this.props.account;
+        eventList
+          .filter(({ args = {} }) => args.from === proxy || args.to === proxy)
+          .forEach(props.contractEvent);
       });
     });
 
@@ -87,6 +90,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       to,
       `0x${new BigNumber(amount).mul(ntzDecimals).toString(16)}`
     );
+    this.props.modalDismiss();
+  }
+
+  handleNTZPurchase(amount) {
+    this.props.transferETH({
+      dest: confParams.ntzAddr,
+      amount: `0x${new BigNumber(amount).mul(ethDecimals).toString(16)}`,
+    });
     this.props.modalDismiss();
   }
 
@@ -220,6 +231,22 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               TRANSFER
             </Button>
           }
+          {ethBalance &&
+            <Button
+              align="left"
+              onClick={() => {
+                this.props.modalAdd(
+                  <PurchaseDialog
+                    handlePurchase={this.handleNTZPurchase}
+                  />
+                );
+              }}
+              size="medium"
+              icon="fa fa-money"
+            >
+              PURCHASE
+            </Button>
+          }
         </Section>
 
         <Section>
@@ -228,35 +255,23 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           <h2><FormattedMessage {...messages.included} /></h2>
           <List items={listTxns} headers={['txHash', 'from', 'to', 'amount']} noDataMsg="No Transactions Yet" />
         </Section>
-
       </Container>
     );
   }
 }
 
-const pendingToList = (pending) => {
-  let list = [];
-  if (pending) {
-    list = Object.keys(pending).map((key) => [key, pending[key].txHash]);
-  }
-  return list;
-};
+const pendingToList = (pending = {}) => (
+  Object.keys(pending).map((key) => [key, pending[key].txHash])
+);
 
 const txnsToList = (txns, proxyAddr) => {
   if (txns) {
-    return Object.keys(txns)
-      .filter((key) => (
-        (key && txns[key] && txns[key].from && txns[key].to) &&
-        (txns[key].from === proxyAddr || txns[key].to === proxyAddr)
-      ))
-      .map((key) => ({
-        txHash: key,
-        blockNumber: txns[key].blockNumber,
-        from: txns[key].from,
-        to: txns[key].to,
-        value: (txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1,
-      }))
-      .map((entry) => [entry.txHash.substring(2, 8), entry.from.substring(2, 8), entry.to.substring(2, 8), entry.value]);
+    return Object.keys(txns).map((key) => [
+      key.substring(2, 8), // txHash
+      txns[key].from.substring(2, 8), // from
+      txns[key].to.substring(2, 8), // to
+      (txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1, // value
+    ]);
   }
 
   return null;
