@@ -1,22 +1,22 @@
-/**
- * Created by helge on 10.03.17.
- */
-
-
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Form, Field, reduxForm } from 'redux-form/immutable';
+
+import { Form, reduxForm } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
+
 import Button from '../../components/Button';
 import FormField from '../../components/Form/FormField';
+import AmountField from '../../components/AmountField';
+import H2 from '../../components/H2';
 
 import messages from './messages';
 
 const validate = (values) => {
   const errors = {};
-  if (!values.get('email')) {
+  if (!values.get('amount')) {
     errors.amount = 'Required';
   }
+
   return errors;
 };
 
@@ -25,23 +25,29 @@ const warn = () => {
   return warnings;
 };
 
-class InviteDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class PurchaseDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(values) {
-    values.get('email');
+    this.props.handlePurchase(values.get('amount'));
   }
 
   render() {
-    const { error, handleSubmit, submitting } = this.props;
+    const { error, handleSubmit, submitting, maxAmount } = this.props;
+
     return (
       <div>
-        <FormattedMessage {...messages.header} />
+        <H2><FormattedMessage {...messages.header} /></H2>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          <Field name="email" component={FormField} type="text" placeholder="e-mail" />
+          <AmountField
+            name="amount"
+            component={FormField}
+            label="Amount (ETH)"
+            maxAmount={maxAmount}
+          />
           {error && <strong>{error}</strong>}
           <div>
             <Button type="submit" disabled={submitting}>Submit</Button>
@@ -52,9 +58,11 @@ class InviteDialog extends React.Component { // eslint-disable-line react/prefer
   }
 }
 
-InviteDialog.propTypes = {
+PurchaseDialog.propTypes = {
   submitting: PropTypes.bool,
+  maxAmount: PropTypes.object, // BigNumber
   handleSubmit: PropTypes.func,
+  handlePurchase: PropTypes.func,
   error: PropTypes.any,
 };
 
@@ -68,4 +76,10 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = () => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'join', validate, warn })(InviteDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({
+    form: 'purchase',
+    validate,
+    warn,
+  })(PurchaseDialog)
+);
