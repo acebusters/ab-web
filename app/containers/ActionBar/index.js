@@ -55,6 +55,7 @@ class ActionBarContainer extends React.Component {
     this.table = new TableService(props.params.tableAddr, this.props.privKey);
     this.state = {
       amount: 0,
+      disabled: false,
     };
   }
 
@@ -63,6 +64,14 @@ class ActionBarContainer extends React.Component {
       this.props.setActionBarTurnComplete(false);
       this.props.setActionBarMode('');
     }
+  }
+
+  // call this after each player action
+  disableTemporarilyAfterAction() {
+    this.setState({ disabled: true });
+    setTimeout(() => {
+      this.setState({ disabled: false });
+    }, 3000);
   }
 
   updateAmount(value) {
@@ -93,6 +102,7 @@ class ActionBarContainer extends React.Component {
 
   handleBet() {
     this.props.setActionBarTurnComplete(true);
+    this.disableTemporarilyAfterAction();
     const amount = this.state.amount + this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
 
@@ -113,6 +123,7 @@ class ActionBarContainer extends React.Component {
 
   handleCheck() {
     this.props.setActionBarTurnComplete(true);
+    this.disableTemporarilyAfterAction();
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const checkStates = ['preflop', 'turn', 'river', 'flop'];
@@ -137,6 +148,7 @@ class ActionBarContainer extends React.Component {
 
   handleFold() {
     this.props.setActionBarTurnComplete(true);
+    this.disableTemporarilyAfterAction();
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const action = this.props.fold(
@@ -159,6 +171,7 @@ class ActionBarContainer extends React.Component {
     return (
       <ActionBar
         amount={this.state.amount}
+        disabled={this.state.disabled}
         handleAllIn={this.handleAllIn}
         handleBet={this.handleBet}
         handleCheck={this.handleCheck}

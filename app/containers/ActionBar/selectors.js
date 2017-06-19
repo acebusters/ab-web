@@ -27,12 +27,13 @@ const pokerHelper = new PokerHelper(rc);
  * ActionBar related selectors
  */
 export const makeSelectActionBarActive = () => createSelector(
-  [makeSelectActionBarVisible(), makeHandStateSelector(), getIsMyTurn],
-  (visible, handState, isMyTurn) => {
+  [makeHandStateSelector(), getIsMyTurn, getActionBarTurnComplete()],
+  (handState, isMyTurn, turnComplete) => {
+    if (turnComplete) return false;
     const isAppropriateState = (
       handState !== 'waiting' && handState !== 'dealing' && handState !== 'showdown'
     );
-    if (visible && isMyTurn && isAppropriateState) {
+    if (isMyTurn && isAppropriateState) {
       return true;
     }
     return false;

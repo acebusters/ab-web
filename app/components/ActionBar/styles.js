@@ -31,7 +31,7 @@ export const ActionBarWrapper = styled.div`
   transform: translate(-50%, 0);
   display: flex;
   flex-direction: column;
-  opacity: ${(props) => props.active ? 1 : 0.3};
+  opacity: ${(props) => props.active && !props.disabled ? 1 : 0.3};
 
   transition: opacity 0.5s ease;
 

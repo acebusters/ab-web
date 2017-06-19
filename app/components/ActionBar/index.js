@@ -21,12 +21,17 @@ import {
 const ActionBar = (props) => {
   const {
     active,
+    disabled,
     sliderOpen,
     visible,
   } = props;
   if (visible) {
     return (
-      <ActionBarWrapper active={active} name="action-bar-wrapper">
+      <ActionBarWrapper
+        active={active}
+        disabled={disabled}
+        name="action-bar-wrapper"
+      >
 
         {sliderOpen ?
           <FlagContainer active={active} name="flag-container">
@@ -60,6 +65,7 @@ const ActionBar = (props) => {
 ActionBar.propTypes = {
   visible: React.PropTypes.bool.isRequired,
   active: React.PropTypes.bool.isRequired,
+  disabled: React.PropTypes.bool.isRequired,
   sliderOpen: React.PropTypes.bool.isRequired,
 };
 
