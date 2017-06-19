@@ -5,12 +5,9 @@ import { Form, reduxForm } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
 
 import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Label from '../../components/Label';
+import FormField from '../../components/Form/FormField';
 import AmountField from '../../components/AmountField';
 import H2 from '../../components/H2';
-import FormGroup from '../../components/Form/FormGroup';
-import { ErrorMessage } from '../../components/FormMessages';
 
 import messages from './messages';
 
@@ -27,16 +24,6 @@ const warn = () => {
   const warnings = {};
   return warnings;
 };
-
-/* eslint-disable react/prop-types */
-const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
-  <FormGroup>
-    <Label htmlFor={input.name}>{label}</Label>
-    <Input {...input} type={type} />
-    {touched && ((error && <ErrorMessage error={error}></ErrorMessage>) || (warning && <ErrorMessage error={warning}></ErrorMessage>))}
-  </FormGroup>
-);
-/* eslint-enable react/prop-types */
 
 class PurchaseDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -57,7 +44,7 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <AmountField
             name="amount"
-            component={renderField}
+            component={FormField}
             label="Amount (ETH)"
             maxAmount={maxAmount}
           />
