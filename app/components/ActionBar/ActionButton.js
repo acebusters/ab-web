@@ -17,23 +17,24 @@ const ActionButton = (props) => {
     type,
     text,
   } = props;
+  // highlight button if selected
+  const selected = (mode === type);
   // disable button if actioBar is not active or if mode matches
-  const disabled = !active || (mode === type);
+  const disabled = !active || props.disabled || selected;
   const handleThisClick = () => {
     if (disabled) return;
     setActionBarBetSlider(false);
     setActionBarMode(type);
     handleClick();
   };
-  const isActive = mode === type;
   return (
     <ActionButtonWrapper
       name={name}
       onClick={handleThisClick}
       disabled={disabled}
     >
-      {type === 'BET' || type === 'RAISE' ? null
-        : <ActionIndicator active={isActive} />
+      {type === 'BET-SET' || type === 'RAISE-SET' ? null
+        : <ActionIndicator active={selected} />
       }
       <ActionText type={type}>{text}</ActionText>
     </ActionButtonWrapper>
@@ -42,6 +43,7 @@ const ActionButton = (props) => {
 
 ActionButton.propTypes = {
   active: React.PropTypes.bool,
+  disabled: React.PropTypes.bool,
   mode: React.PropTypes.string,
   name: React.PropTypes.string,
   type: React.PropTypes.string,

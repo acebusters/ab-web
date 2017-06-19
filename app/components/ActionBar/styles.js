@@ -101,8 +101,8 @@ export const ActionText = styled.div`
   width: 100%;
   height: 100%;
   align-self: center;
-  margin-left: ${(props) => props.type === 'BET' || props.type === 'RAISE' ? 0 : '8px'};
-  text-align: ${(props) => props.type === 'BET' || props.type === 'RAISE' ? 'center' : 'left'};
+  margin-left: ${(props) => props.type === 'BET-SET' || props.type === 'RAISE-SET' ? 0 : '8px'};
+  text-align: ${(props) => props.type === 'BET-SET' || props.type === 'RAISE-SET' ? 'center' : 'left'};
 `;
 
 export const SliderWrapper = styled.div`
@@ -132,11 +132,12 @@ export const FlagButtonWrapper = styled(Button)`
 `;
 
 export const FlagBet = styled.div`
-  margin-right: 10px;
+  text-align: center;
+  margin-right: 60px;
   padding: 5px;
   padding-left: 10px;
-  padding-right: 20px;
-  width: 142px;
+  padding-right: 10px;
+  width: 92px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   background-color: #DDD;

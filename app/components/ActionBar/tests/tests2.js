@@ -120,6 +120,7 @@ export const buttonBet1 = {
     callAmount: 0,
     myStack: 2000,
     minRaise: 100,
+    mode: 'BET-SET',
     sliderOpen: true,
     visible: true,
   }).toJS(),
@@ -150,6 +151,7 @@ export const buttonRaise1 = {
     callAmount: 1000,
     visible: true,
     sliderOpen: true,
+    mode: 'RAISE-SET',
     minRaise: 1900,
     myStack: 2000,
   }).toJS(),
@@ -171,7 +173,7 @@ export const actionDispatchBet = {
   it: 'should highlight BET button',
   props: baseProps.merge({
     active: true,
-    mode: 'BET',
+    mode: 'BET-CONFIRM',
     sliderOpen: false,
     visible: true,
   }).toJS(),
@@ -215,7 +217,7 @@ export const actionDispatchRaise = {
   it: 'should highlight RAISE button',
   props: baseProps.merge({
     active: true,
-    mode: 'RAISE',
+    mode: 'RAISE-CONFIRM',
     sliderOpen: false,
     visible: true,
   }).toJS(),
