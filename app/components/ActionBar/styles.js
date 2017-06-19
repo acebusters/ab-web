@@ -33,6 +33,8 @@ export const ActionBarWrapper = styled.div`
   flex-direction: column;
   opacity: ${(props) => props.active ? 1 : 0.3};
 
+  transition: opacity 0.5s ease;
+
   @media (min-width: ${curtainStickyWidth}) {
     left: calc(50% + ${curtainHalfWidth});
   }
