@@ -49,6 +49,13 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         eventList.forEach((event) => {
           props.contractEvent(event);
         });
+
+        events.watch((watchErr) => {
+          if (!watchErr && this.props.account.proxy) {
+            this.token.balanceOf.call(this.props.account.proxy);
+            this.web3.eth.getBalance(this.props.account.proxy);
+          }
+        });
       });
     });
 
@@ -119,6 +126,10 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   render() {
+    // if (this.props.account.proxy) {
+    //   this.token.balanceOf.call(this.props.account.proxy);
+    // }
+
     const qrUrl = `ether:${this.props.account.proxy}`;
     const weiBalance = this.web3.eth.balance(this.props.account.proxy);
     const ethBalance = weiBalance && weiBalance.div(ethDecimals);
