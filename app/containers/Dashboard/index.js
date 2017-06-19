@@ -15,6 +15,7 @@ import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, conf } from '../../app.config';
 
 import List from '../../components/List';
+import Alert from '../../components/Alert';
 import TransferDialog from '../TransferDialog';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
@@ -147,7 +148,12 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           >
             <p> { this.props.account.proxy } </p>
             <QRCode value={qrUrl} size={120} />
+
+            <Alert theme="danger">
+              Never send real ether to this address. It is a Rinkeby Testnet Address. Only send Rinkaby TestEther to&nbsp;this&nbsp;Address. Otherwise your Ether will be lost
+            </Alert>
           </WithLoading>
+
         </Section>
 
         <Section>
