@@ -21,20 +21,20 @@ const Handle = RCSlider.Handle;
 const handle = (props) => {
   const {
     value,
-    // dragging,
+    dragging,
     // index,
     ...restProps } = props;
   return (
     <Handle value={value} {...restProps}>
       <SliderHandle>
-        <SliderDot />
+        <SliderDot active={dragging} />
       </SliderHandle>
     </Handle>
   );
 };
 handle.propTypes = {
   value: React.PropTypes.number,
-  // dragging: React.PropTypes.bool,
+  dragging: React.PropTypes.bool,
   // index: React.PropTypes.number,
 };
 

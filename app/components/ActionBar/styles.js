@@ -8,6 +8,7 @@ import {
   curtainHalfWidth,
 } from '../../variables';
 
+const active = '#35c5e3'; // electric blue
 const largeBoxShadow = '0 2px 4px 1px rgba(0,0,0,0.50)';
 const medBoxShadow = '0 2px 4px 0px rgba(0,0,0,0.50)';
 const Button = styled.button`
@@ -73,7 +74,6 @@ export const ActionButtonBase = `
   background-color: #7C7C7C;
   background-image: linear-gradient(0deg, #383838 0%, #7C7C7C 100%);
   box-shadow: 0 1px 2px 0 rgba(0,0,0,0.50);
-  color: white;
   font-weight: 400;
 `;
 
@@ -82,6 +82,7 @@ export const ActionButtonBlank = styled.div`
 `;
 
 export const ActionButtonWrapper = styled(Button)`
+  display: flex;
   ${ActionButtonBase};
   ${(props) =>
     props.type === 'BET-SET' ||
@@ -91,7 +92,7 @@ export const ActionButtonWrapper = styled(Button)`
   :
     'min-width: 94px;'
   };
-  display: flex;
+  color: #CACACA;
   &:first-child {
     margin-left: 0;
     border-top-left-radius: 9px;
@@ -99,13 +100,14 @@ export const ActionButtonWrapper = styled(Button)`
   &:nth-child(3) {
     border-top-right-radius: 9px;
   }
-  &:active {
-    background-color: #666;
-    color: #DDD;
-  }
   &:hover {
     background-color: #383838;
     background-image: linear-gradient(0deg, #666 0%, #585858 72%, #7C7C7C 100%);
+  }
+  &:active {
+    background-color: #7C7C7C;
+    background-image: linear-gradient(0deg, #7C7C7C 0%, #585858 72%, #666 100%);
+    color: ${active};
   }
   &:disabled {
     background-color: #777;
@@ -139,7 +141,6 @@ export const ActionText = styled.div`
   }
   margin-bottom: 2px;
   align-self: center;
-  color: #CACACA;
   font-weight: 600;
   font-size: 15px;
 `;
@@ -174,13 +175,17 @@ export const SliderHandle = styled.div`
     background-color: #383838;
     background-image: linear-gradient(0deg, #666 0%, #585858 72%, #7C7C7C 100%);
   }
+  &:active {
+    background-color: #7C7C7C;
+    background-image: linear-gradient(0deg, #7C7C7C 0%, #585858 72%, #666 100%);
+  }
 `;
 
 export const SliderDot = styled.div`
   height: 10px;
   width: 10px;
   border-radius: 50%;
-  background-color: ${(props) => props.active ? 'blue' : 'none'};
+  background-color: ${(props) => props.active ? active : 'none'};
   box-shadow: inset 0 1px 3px 1px rgba(0,0,0,0.50);
 `;
 
