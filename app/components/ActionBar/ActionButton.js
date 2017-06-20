@@ -29,6 +29,7 @@ const ActionButton = (props) => {
   };
   return (
     <ActionButtonWrapper
+      type={type}
       name={name}
       onClick={handleThisClick}
       disabled={disabled}

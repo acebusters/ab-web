@@ -8,6 +8,8 @@ import {
   curtainHalfWidth,
 } from '../../variables';
 
+const largeBoxShadow = '0 2px 4px 1px rgba(0,0,0,0.50)';
+const medBoxShadow = '0 2px 4px 0px rgba(0,0,0,0.50)';
 const Button = styled.button`
   padding: 0;
   margin: 0;
@@ -42,40 +44,52 @@ export const ActionBarWrapper = styled.div`
 
 export const ControlPanel = styled.div`
   display: flex;
-  padding-top: 4px;
-  padding-left: 4px;
-  padding-right: 4px;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  background-color: #999;
+  padding-top: 6px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background-color: #7A7A7A;
+  background-image: linear-gradient(0deg, #383838 0%, #7A7A7A 100%);
+  box-shadow: ${largeBoxShadow};
 `;
 
 export const ControlWrapper = styled.div`
   display: flex;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  padding-top: 4px;
-  padding-left: 4px;
-  padding-right: 4px;
-  background-color: #666;
+  border-top-left-radius: 11px;
+  border-top-right-radius: 11px;
+  padding-top: 3px;
+  padding-left: 3px;
+  padding-right: 3px;
+  background-color: none;
+  box-shadow: inset 0 1px 3px 1px rgba(0,0,0,0.50);
 `;
 
 export const ActionButtonWrapper = styled(Button)`
   display: flex;
-  height: 50px;
-  min-width: 100px;
-  margin-left: 6px;
-  background-color: #999;
-  color: white;
-  font-weight: 400;
+  height: 40px;
+  ${(props) =>
+    props.type === 'BET-SET' ||
+    props.type === 'RAISE-SET' ||
+    props.type === 'BLANK' ?
+    'min-width: 88px;'
+  :
+    'min-width: 94px;'
+  };
+  margin-left: 4px;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
+  background-color: #7C7C7C;
+  background-image: linear-gradient(0deg, #383838 0%, #7C7C7C 100%);
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.50);
+  color: white;
+  font-weight: 400;
   &:first-child {
     margin-left: 0;
-    border-top-left-radius: 8px;
+    border-top-left-radius: 9px;
   }
   &:nth-child(3) {
-    border-top-right-radius: 8px;
+    border-top-right-radius: 9px;
   }
   &:active {
     background-color: #666;
@@ -88,21 +102,34 @@ export const ActionButtonWrapper = styled(Button)`
 `;
 
 export const ActionIndicator = styled.div`
-  margin-left: 10px;
-  margin-top: 10px;
-  height: 40px;
-  width: 8px;
+  margin-left: 8px;
+  margin-top: 6px;
+  height: 34px;
+  width: 10px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background-color: ${(props) => props.active ? 'yellow' : '#444'};
+  background-color: ${(props) => props.active ? 'yellow' : 'none'};
+  box-shadow: inset 0 1px 3px 0px rgba(0,0,0,0.50);
 `;
 
 export const ActionText = styled.div`
-  width: 100%;
   height: 100%;
+  ${(props) =>
+    props.type === 'BET-SET' ||
+    props.type === 'RAISE-SET' ||
+    props.type === 'BLANK' ?
+    `width: 100%;
+     margin-left: 0;
+     text-align: center;`
+  :
+    `margin-left: 12px;
+     text-align: left;`
+  }
+  margin-bottom: 2px;
   align-self: center;
-  margin-left: ${(props) => props.type === 'BET-SET' || props.type === 'RAISE-SET' ? 0 : '8px'};
-  text-align: ${(props) => props.type === 'BET-SET' || props.type === 'RAISE-SET' ? 'center' : 'left'};
+  color: #CACACA;
+  font-weight: 600;
+  font-size: 12px;
 `;
 
 export const SliderWrapper = styled.div`
@@ -125,26 +152,35 @@ export const FlagButtonWrapper = styled(Button)`
   padding: 5px;
   padding-left: 18px;
   padding-right: 18px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border-bottom: solid 2px #666;
-  background-color: #999;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom: solid 2px #515151;
+  background-color: #7B7B7B;
+  color: #C1BFBF;
+  font-weight: 600;
+  font-size: 12px;
+  box-shadow: ${largeBoxShadow};
 `;
 
-export const FlagBet = styled.div`
+const FlagShared = styled.div`
+  padding: 6px 10px;
+  padding-bottom: 4px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background-color: #BCBCBC;
+  box-shadow: ${medBoxShadow};
+  color: #555;
+  font-size: 14px;
+  font-weight: 600;
   text-align: center;
-  margin-right: 60px;
-  padding: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  width: 92px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  background-color: #DDD;
-  color: #333;
 `;
 
-export const FlagCall = styled.div`
+export const FlagBet = styled(FlagShared)`
+  margin-right: 60px;
+  width: 92px;
+`;
+
+export const FlagCall = styled(FlagShared)`
   ${(props) => {
     if (props.sliderOpen) {
       return `
@@ -155,13 +191,5 @@ export const FlagCall = styled.div`
       margin: 0 auto;
     `;
   }};
-  padding-left: 6px;
-  padding-right: 6px;
-  text-align: center;
   min-width: 80px;
-  padding: 5px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  background-color: #DDD;
-  color: #333;
 `;
