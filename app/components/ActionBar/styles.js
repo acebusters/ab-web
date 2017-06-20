@@ -1,7 +1,7 @@
 /**
 * Created by jzobro 20170531
 */
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import {
   curtainStickyWidth,
@@ -54,6 +54,16 @@ export const ControlPanel = styled.div`
   box-shadow: ${largeBoxShadow};
 `;
 
+const easeSliderIn = keyframes`
+  from { width: 290px; }
+  to { width: 544px; }
+`;
+
+const easeSliderOut = keyframes`
+  from { width: 544px; }
+  to { width: 290px; }
+`;
+
 export const ControlWrapper = styled.div`
   display: flex;
   border-top-left-radius: 11px;
@@ -63,6 +73,11 @@ export const ControlWrapper = styled.div`
   padding-right: 3px;
   background-color: none;
   box-shadow: inset 0 1px 3px 1px rgba(0,0,0,0.50);
+  ${(props) => props.sliderOpen ?
+    `animation: ${easeSliderIn} 0.5s ease-in-out;`
+    :
+    `animation: ${easeSliderOut} 0.5s ease-in-out;`
+  }
 `;
 
 export const ActionButtonWrapper = styled(Button)`
@@ -189,6 +204,29 @@ export const SliderDot = styled.div`
   box-shadow: inset 0 1px 3px 1px rgba(0,0,0,0.50);
 `;
 
+const flagUp = keyframes`
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+`;
+
+const flagDown = keyframes`
+  from {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateY(-20px);
+    opacity: 0;
+    display: none;
+  }
+`;
+
 export const FlagContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -212,8 +250,14 @@ export const FlagButtonWrapper = styled(Button)`
   &:hover {
     cursor: default;
   }
+  ${(props) => props.sliderOpen ?
+    `animation: ${flagUp} .7s ease;
+     display: block;`
+    :
+    `animation: ${flagDown} .7s ease;
+     display: none;`
+  };
 `;
-  // box-shadow: ${largeBoxShadow};
 
 const FlagShared = styled.div`
   padding: 6px 10px;
