@@ -71,14 +71,14 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
         <i className="fa fa-bars fa-2"></i>
       </NavToggle>,
       <NavItem
-        onClick={() => browserHistory.push('/dashboard')}
+        to="dashboard"
         collapsed={collapsed}
         key="2"
         title="Dashboard"
         location={this.props.location}
       />,
       <NavItem
-        onClick={() => browserHistory.push('/lobby')}
+        to="lobby"
         key="3"
         collapsed={collapsed}
         title="Lobby"
@@ -93,13 +93,13 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
       />,
     ]) : ([
       <NavItem
-        onClick={() => browserHistory.push('/register')}
+        to="register"
         key="1"
         title="Register"
         location={this.props.location}
       />,
       <NavItem
-        onClick={() => browserHistory.push('/login')}
+        to="login"
         key="2"
         title="Login"
         location={this.props.location}
