@@ -68,7 +68,6 @@ class Link extends React.Component {
       rest.href = router.createHref(toLocation);
 
       if (activeComponent && router.isActive(toLocation, onlyActiveOnIndex)) {
-        console.log('active', activeComponent);
         Component = activeComponent;
       }
     }

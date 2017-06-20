@@ -36,7 +36,7 @@ const getTableData = (table, props) => {
 
 const getTableHand = (props) => fetchTableState(props.tableAddr).then((rsp) => props.updateReceived(props.tableAddr, rsp));
 
-class LobbyItem extends React.PureComponent {  // eslint-disable-line
+class LobbyItem extends React.PureComponent { // eslint-disable-line
 
   constructor(props) {
     super(props);
@@ -65,12 +65,13 @@ class LobbyItem extends React.PureComponent {  // eslint-disable-line
         <Td key="np">{`${players}/${this.props.data.seats.length}`}</Td>
         <Td key="lh">{this.props.lastHandId}</Td>
         <Td key="ac">
-          <Link to={`/table/${this.props.tableAddr}/hand/${this.props.lastHandId}`}>
-            <Button
-              size="medium"
-              icon="fa fa-eye"
-            />
-          </Link>
+          <Link
+            to={`/table/${this.props.tableAddr}/hand/${this.props.lastHandId}`}
+            size="medium"
+            icon="fa fa-eye"
+            tagName="a"
+            component={Button}
+          />
         </Td>
       </Tr>
     );
