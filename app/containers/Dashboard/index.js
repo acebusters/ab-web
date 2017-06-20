@@ -161,7 +161,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             <QRCode value={qrUrl} size={120} />
 
             <Alert theme="danger">
-              Never send real ether to this address. It is a Rinkeby Testnet Address. Only send Rinkaby TestEther to&nbsp;this&nbsp;Address. Otherwise your Ether will be lost
+              <FormattedMessage {...messages.ethAlert} />
             </Alert>
           </WithLoading>
 
