@@ -15,7 +15,9 @@ import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, conf } from '../../app.config';
 
 import List from '../../components/List';
+import Alert from '../../components/Alert';
 import TransferDialog from '../TransferDialog';
+import PurchaseDialog from '../PurchaseDialog';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import Blocky from '../../components/Blocky';
@@ -40,6 +42,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   constructor(props) {
     super(props);
     this.handleNTZTransfer = this.handleNTZTransfer.bind(this);
+    this.handleNTZPurchase = this.handleNTZPurchase.bind(this);
     this.handleETHTransfer = this.handleETHTransfer.bind(this);
     this.web3 = props.web3Redux.web3;
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
@@ -50,6 +53,13 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         eventList
           .filter(({ args = {} }) => args.from === proxy || args.to === proxy)
           .forEach(props.contractEvent);
+      });
+
+      events.watch((error) => {
+        if (!error && this.props.account.proxy) {
+          this.token.balanceOf.call(this.props.account.proxy);
+          this.web3.eth.getBalance(this.props.account.proxy);
+        }
       });
     });
 
@@ -90,6 +100,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.props.modalDismiss();
   }
 
+  handleNTZPurchase(amount) {
+    this.props.transferETH({
+      dest: confParams.ntzAddr,
+      amount: `0x${new BigNumber(amount).mul(ethDecimals).toString(16)}`,
+    });
+    this.props.modalDismiss();
+  }
+
   handleETHTransfer(dest, amount) {
     this.props.transferETH({
       dest,
@@ -120,6 +138,10 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   render() {
+    // if (this.props.account.proxy) {
+    //   this.token.balanceOf.call(this.props.account.proxy);
+    // }
+
     const qrUrl = `ether:${this.props.account.proxy}`;
     const weiBalance = this.web3.eth.balance(this.props.account.proxy);
     const ethBalance = weiBalance && weiBalance.div(ethDecimals);
@@ -148,7 +170,12 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           >
             <p> { this.props.account.proxy } </p>
             <QRCode value={qrUrl} size={120} />
+
+            <Alert theme="danger">
+              <FormattedMessage {...messages.ethAlert} />
+            </Alert>
           </WithLoading>
+
         </Section>
 
         <Section>
@@ -215,13 +242,45 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               TRANSFER
             </Button>
           }
+          {ethBalance &&
+            <Button
+              align="left"
+              onClick={() => {
+                this.props.modalAdd(
+                  <PurchaseDialog
+                    handlePurchase={this.handleNTZPurchase}
+                  />
+                );
+              }}
+              size="medium"
+              icon="fa fa-money"
+            >
+              PURCHASE
+            </Button>
+          }
         </Section>
 
         <Section>
           <h2><FormattedMessage {...messages.pending} /></h2>
-          <List items={listPending} headers={['#', 'txHash']} noDataMsg="No Pending Transactions" />
+          <List
+            items={listPending}
+            headers={['#', 'txHash']}
+            noDataMsg="No Pending Transactions"
+          />
+
           <h2><FormattedMessage {...messages.included} /></h2>
-          <List items={listTxns} headers={['txHash', 'from', 'to', 'amount']} noDataMsg="No Transactions Yet" />
+          <List
+            items={listTxns}
+            sortableColumns={[1]}
+            headers={[
+              'TX hash',
+              'Block number',
+              'From',
+              'To',
+              'Amount',
+            ]}
+            noDataMsg="No Transactions Yet"
+          />
         </Section>
       </Container>
     );
@@ -234,12 +293,15 @@ const pendingToList = (pending = {}) => (
 
 const txnsToList = (txns, proxyAddr) => {
   if (txns) {
-    return Object.keys(txns).map((key) => [
-      key.substring(2, 8), // txHash
-      txns[key].from.substring(2, 8), // from
-      txns[key].to.substring(2, 8), // to
-      (txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1, // value
-    ]);
+    return Object.keys(txns)
+      .filter((key) => txns[key] && txns[key].to && txns[key].from)
+      .map((key) => [
+        key.substring(2, 8), // txHash
+        txns[key].blockNumber, // blockNumber
+        txns[key].from.substring(2, 8), // from
+        txns[key].to.substring(2, 8), // to
+        new BigNumber((txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1).div(ntzDecimals).toNumber(), // value
+      ]);
   }
 
   return null;
