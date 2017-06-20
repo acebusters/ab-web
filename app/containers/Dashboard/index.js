@@ -47,6 +47,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       const events = this.token.allEvents({ fromBlock: blockNumber - (4 * 60 * 24), toBlock: 'latest' });
       events.get((error, eventList) => {
         eventList.forEach((event) => {
+          console.log(event);
           props.contractEvent(event);
         });
       });
@@ -220,7 +221,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           <h2><FormattedMessage {...messages.pending} /></h2>
           <List items={listPending} headers={['#', 'txHash']} noDataMsg="No Pending Transactions" />
           <h2><FormattedMessage {...messages.included} /></h2>
-          <List items={listTxns} headers={['txHash', 'from', 'to', 'amount']} noDataMsg="No Transactions Yet" />
+          <List items={listTxns} headers={['TX hash', 'Block number', 'From', 'To', 'Amount']} noDataMsg="No Transactions Yet" />
         </Section>
 
       </Container>
@@ -243,6 +244,10 @@ const txnsToList = (txns, proxyAddr) => {
         (key && txns[key] && txns[key].from && txns[key].to) &&
         (txns[key].from === proxyAddr || txns[key].to === proxyAddr)
       ))
+      // .sort((a, b) => {
+      //   console.log(txns[a], txns[b]);
+      //   return 0;
+      // })
       .map((key) => ({
         txHash: key,
         blockNumber: txns[key].blockNumber,
@@ -250,7 +255,7 @@ const txnsToList = (txns, proxyAddr) => {
         to: txns[key].to,
         value: (txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1,
       }))
-      .map((entry) => [entry.txHash.substring(2, 8), entry.from.substring(2, 8), entry.to.substring(2, 8), entry.value]);
+      .map((entry) => [entry.txHash.substring(2, 8), entry.blockNumber, entry.from.substring(2, 8), entry.to.substring(2, 8), entry.value]);
   }
 
   return null;
