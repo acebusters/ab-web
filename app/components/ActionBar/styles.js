@@ -14,7 +14,6 @@ const Button = styled.button`
   padding: 0;
   margin: 0;
   border: none;
-  background: none;
   &:focus {
     outline: none;
   }
@@ -65,9 +64,25 @@ export const ControlWrapper = styled.div`
   box-shadow: inset 0 1px 3px 1px rgba(0,0,0,0.50);
 `;
 
-export const ActionButtonWrapper = styled(Button)`
-  display: flex;
+export const ActionButtonBase = `
   height: 40px;
+  margin-left: 4px;
+  min-width: 88px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  background-color: #7C7C7C;
+  background-image: linear-gradient(0deg, #383838 0%, #7C7C7C 100%);
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.50);
+  color: white;
+  font-weight: 400;
+`;
+
+export const ActionButtonBlank = styled.div`
+  ${ActionButtonBase};
+`;
+
+export const ActionButtonWrapper = styled(Button)`
+  ${ActionButtonBase};
   ${(props) =>
     props.type === 'BET-SET' ||
     props.type === 'RAISE-SET' ||
@@ -76,14 +91,7 @@ export const ActionButtonWrapper = styled(Button)`
   :
     'min-width: 94px;'
   };
-  margin-left: 4px;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
-  background-color: #7C7C7C;
-  background-image: linear-gradient(0deg, #383838 0%, #7C7C7C 100%);
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.50);
-  color: white;
-  font-weight: 400;
+  display: flex;
   &:first-child {
     margin-left: 0;
     border-top-left-radius: 9px;
@@ -94,6 +102,10 @@ export const ActionButtonWrapper = styled(Button)`
   &:active {
     background-color: #666;
     color: #DDD;
+  }
+  &:hover {
+    background-color: #383838;
+    background-image: linear-gradient(0deg, #666 0%, #585858 72%, #7C7C7C 100%);
   }
   &:disabled {
     background-color: #777;
@@ -138,6 +150,27 @@ export const SliderWrapper = styled.div`
   height: 20px;
   margin-left: 24px;
   margin-right: 24px;
+`;
+
+export const SliderHandle = styled.div`
+  position: absolute;
+  width: 34px;
+  height: 40px;
+  margin-left: -12px;
+  margin-top: -12px;
+  cursor: pointer;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: none;
+  background-color: #7C7C7C;
+  background-image: linear-gradient(0deg, #383838 0%, #7C7C7C 100%);
+  boxShadow: 0 1px 2px 0 rgba(0,0,0,0.50);
+  &:hover {
+    background-color: #383838;
+    background-image: linear-gradient(0deg, #666 0%, #585858 72%, #7C7C7C 100%);
+  }
 `;
 
 export const FlagContainer = styled.div`

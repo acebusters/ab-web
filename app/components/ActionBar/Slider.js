@@ -1,26 +1,10 @@
 import React from 'react';
-import RCSlider from 'rc-slider/lib/Slider';
+import RCSlider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import { SliderWrapper } from './styles';
+import { SliderWrapper, SliderHandle } from './styles';
 
 const styles = {
-  handle: {
-    position: 'absolute',
-    width: '34px',
-    height: '40px',
-    marginLeft: '-12px',
-    marginTop: '-15px',
-    cursor: 'pointer',
-    borderTopLeftRadius: '8px',
-    borderTopRightRadius: '8px',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    border: 'none',
-    backgroundColor: '#7A7A7A',
-    backgroundImage: 'linear-gradient(0deg, #383838 0%, #7A7A7A 100%)',
-    boxShadow: '0 1px 2px 0 rgba(0,0,0,0.50)',
-  },
   rail: {
     backgroundColor: '#333',
     height: '6px',
@@ -30,6 +14,26 @@ const styles = {
     backgroundColor: '#333',
     height: '6px',
   },
+};
+
+const Handle = RCSlider.Handle;
+
+const handle = (props) => {
+  const {
+    value,
+    // dragging,
+    // index,
+    ...restProps } = props;
+  return (
+    <Handle value={value} {...restProps}>
+      <SliderHandle />
+    </Handle>
+  );
+};
+handle.propTypes = {
+  value: React.PropTypes.number,
+  // dragging: React.PropTypes.bool,
+  // index: React.PropTypes.number,
 };
 
 class Slider extends React.Component {
@@ -61,7 +65,7 @@ class Slider extends React.Component {
           value={this.state.value}
           onChange={this.onSliderChange}
           onAfterChange={this.onSliderUpdate}
-          handleStyle={styles.handle}
+          handle={handle}
           railStyle={styles.rail}
           trackStyle={styles.track}
         />
