@@ -254,6 +254,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           <h2><FormattedMessage {...messages.included} /></h2>
           <List
             items={listTxns}
+            sortableColumns={[1]}
             headers={[
               'TX hash',
               'Block number',
@@ -280,7 +281,7 @@ const txnsToList = (txns, proxyAddr) => {
       txns[key].blockNumber, // blockNumber
       txns[key].from.substring(2, 8), // from
       txns[key].to.substring(2, 8), // to
-      (txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1, // value
+      new BigNumber((txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1).div(ntzDecimals).toNumber(), // value
     ]);
   }
 
