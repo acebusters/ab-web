@@ -17,6 +17,7 @@ import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, conf } from '../../app.config'
 import List from '../../components/List';
 import TransferDialog from '../TransferDialog';
 import PurchaseDialog from '../PurchaseDialog';
+import SellDialog from '../SellDialog';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import Blocky from '../../components/Blocky';
@@ -42,6 +43,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     super(props);
     this.handleNTZTransfer = this.handleNTZTransfer.bind(this);
     this.handleNTZPurchase = this.handleNTZPurchase.bind(this);
+    this.handleNTZSell = this.handleNTZSell.bind(this);
     this.handleETHTransfer = this.handleETHTransfer.bind(this);
     this.web3 = props.web3Redux.web3;
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
@@ -97,6 +99,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       dest: confParams.ntzAddr,
       amount: `0x${new BigNumber(amount).mul(ethDecimals).toString(16)}`,
     });
+    this.props.modalDismiss();
+  }
+
+  handleNTZSell(amount) {
+    this.token.transfer.sendTransaction(
+      confParams.ntzAddr,
+      `0x${new BigNumber(amount).mul(ntzDecimals).toString(16)}`
+    );
     this.props.modalDismiss();
   }
 
@@ -190,6 +200,23 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               icon="fa fa-money"
             >
               TRANSFER
+            </Button>
+          }
+          {ntzBalance &&
+            <Button
+              align="left"
+              onClick={() => {
+                this.props.modalAdd(
+                  <SellDialog
+                    handleSell={this.handleNTZSell}
+                    maxAmount={ntzBalance}
+                  />
+                );
+              }}
+              size="medium"
+              icon="fa fa-money"
+            >
+              SELL
             </Button>
           }
         </Section>
