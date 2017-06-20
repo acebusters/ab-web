@@ -5,16 +5,11 @@ import { FlagBet } from './styles';
 const FlagAmountBet = ({
   amount,
   sliderOpen,
-}) => {
-  if (sliderOpen) {
-    return (
-      <FlagBet sliderOpen={sliderOpen}>
-        {amount}
-      </FlagBet>
-    );
-  }
-  return null;
-};
+}) => (
+  <FlagBet sliderOpen={sliderOpen}>
+    {amount}
+  </FlagBet>
+);
 FlagAmountBet.propTypes = {
   amount: React.PropTypes.number,
   sliderOpen: React.PropTypes.bool,

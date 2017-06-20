@@ -8,11 +8,9 @@ const FlagAmountCall = ({
   myStack,
 }) => {
   // hide flag if only option is to 'check' or 'all-in'
-  if (amountToCall === 0 || amountToCall > myStack) {
-    return null;
-  }
+  const hide = amountToCall === 0 || amountToCall > myStack;
   return (
-    <FlagCall sliderOpen={sliderOpen}>
+    <FlagCall hide={hide} sliderOpen={sliderOpen}>
       {amountToCall}
     </FlagCall>
   );

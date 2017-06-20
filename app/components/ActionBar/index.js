@@ -33,9 +33,9 @@ const ActionBar = (props) => {
         name="action-bar-wrapper"
       >
 
+        <FlagAmountCall {...props} />
+        <FlagAmountBet {...props} />
         <FlagContainer active={active} name="flag-container">
-          <FlagAmountCall {...props} />
-          <FlagAmountBet {...props} />
           <FlagButton type="quarter" {...props} />
           <FlagButton type="half" {...props} />
           <FlagButton type="pot" {...props} />

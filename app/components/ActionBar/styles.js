@@ -43,6 +43,8 @@ export const ActionBarWrapper = styled.div`
 `;
 
 export const ControlPanel = styled.div`
+  z-index: 3;
+  align-self: center;
   display: flex;
   padding-top: 6px;
   padding-left: 7px;
@@ -204,29 +206,6 @@ export const SliderDot = styled.div`
   box-shadow: inset 0 1px 3px 1px rgba(0,0,0,0.50);
 `;
 
-const flagUp = keyframes`
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 0.5;
-  }
-`;
-
-const flagDown = keyframes`
-  from {
-    transform: translateY(0);
-    opacity: 0.5;
-  }
-  to {
-    transform: translateY(-20px);
-    opacity: 0;
-    display: none;
-  }
-`;
-
 export const FlagContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -235,6 +214,8 @@ export const FlagContainer = styled.div`
 `;
 
 export const FlagButtonWrapper = styled(Button)`
+  transform: translateY(${(props) => !props.sliderOpen ? '32px' : '0'});
+
   opacity: 0.5;
   margin-left: 4px;
   padding: 5px;
@@ -250,13 +231,7 @@ export const FlagButtonWrapper = styled(Button)`
   &:hover {
     cursor: default;
   }
-  ${(props) => props.sliderOpen ?
-    `animation: ${flagUp} .7s ease;
-     display: block;`
-    :
-    `animation: ${flagDown} .7s ease;
-     display: none;`
-  };
+  transition: 0.5s ease;
 `;
 
 const FlagShared = styled.div`
@@ -273,20 +248,29 @@ const FlagShared = styled.div`
 `;
 
 export const FlagBet = styled(FlagShared)`
-  margin-right: 60px;
+  z-index: 1;
+  align-self: center;
+  position: absolute;
+  transform: translate(${(props) => !props.sliderOpen ? '0, 30px' : '-26px, 0px'});
   width: 92px;
+  transition: 0.5s ease;
+  transition-delay: 0.3s;
 `;
 
 export const FlagCall = styled(FlagShared)`
-  ${(props) => {
-    if (props.sliderOpen) {
-      return `
-        margin-right: 18px;
-      `;
-    }
-    return `
-      margin: 0 auto;
-    `;
-  }};
+  z-index: 2;
+  ${(props) => props.sliderOpen ?
+    `
+    margin-right: 18px;
+    align-self: center;
+    transform: translate(-130px, 0px);
+    display: ${props.hide ? 'none' : 'block'};
+    ` : `
+    align-self: center;
+    transform: translateY(${props.hide ? '30px' : '0px'});
+    `
+  };
+  position: absolute;
   min-width: 80px;
+  transition: 0.5s ease;
 `;
