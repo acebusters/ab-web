@@ -21,7 +21,7 @@ const ControlBetRaise = (props) => {
       return (
         <ActionButton
           name="bet-confirm-button"
-          text="BET"
+          text="Bet"
           type="BET-CONFIRM"
           handleClick={() => handleBet()}
           {...props}
@@ -31,13 +31,14 @@ const ControlBetRaise = (props) => {
     return (
       <ActionButton
         name="raise-confirm-button"
-        text="RAISE"
+        text="Raise"
         type="RAISE-CONFIRM"
         handleClick={() => handleBet()}
         {...props}
       />
     );
   }
+
   // after confirming the raise amount in the slider,
   // the buttons will change to (in the future) all you to
   // edit they raise or bet amount
@@ -45,7 +46,7 @@ const ControlBetRaise = (props) => {
     return (
       <ActionButton
         name="raise-confirm-button"
-        text="RAISE"
+        text="Raise"
         type="RAISE-EDIT"
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
@@ -56,19 +57,20 @@ const ControlBetRaise = (props) => {
     return (
       <ActionButton
         name="bet-button"
-        text="BET"
+        text="Bet"
         type="BET-EDIT"
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
     );
   }
+
   // ActionBar will initially present these button options
   if (amountToCall === 0) {
     return (
       <ActionButton
         name="button-bet"
-        text="BET"
+        text="Bet"
         type="BET-SET"
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
@@ -79,7 +81,7 @@ const ControlBetRaise = (props) => {
     return (
       <ActionButton
         name="button-all-in"
-        text="ALL-IN"
+        text="All-In"
         type="ALL-IN"
         handleClick={() => handleAllIn()}
         {...props}
@@ -90,7 +92,7 @@ const ControlBetRaise = (props) => {
     return (
       <ActionButton
         name="button-raise"
-        text="RAISE"
+        text="Raise"
         type="RAISE-SET"
         handleClick={() => setActionBarBetSlider(true)}
         {...props}

@@ -12,7 +12,7 @@ const ControlFold = (props) => {
     return (
       <ActionButton
         name="button-fold"
-        text="FOLD"
+        text="Fold"
         type="FOLD"
         handleClick={() => handleFold()}
         {...props}

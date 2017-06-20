@@ -129,7 +129,7 @@ export const ActionText = styled.div`
   align-self: center;
   color: #CACACA;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 15px;
 `;
 
 export const SliderWrapper = styled.div`
@@ -148,6 +148,7 @@ export const FlagContainer = styled.div`
 `;
 
 export const FlagButtonWrapper = styled(Button)`
+  opacity: 0.5;
   margin-left: 4px;
   padding: 5px;
   padding-left: 18px;
@@ -159,8 +160,11 @@ export const FlagButtonWrapper = styled(Button)`
   color: #C1BFBF;
   font-weight: 600;
   font-size: 12px;
-  box-shadow: ${largeBoxShadow};
+  &:hover {
+    cursor: default;
+  }
 `;
+  // box-shadow: ${largeBoxShadow};
 
 const FlagShared = styled.div`
   padding: 6px 10px;

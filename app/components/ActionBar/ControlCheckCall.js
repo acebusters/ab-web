@@ -18,7 +18,7 @@ const ControlCheckCall = (props) => {
     return (
       <ActionButton
         name="button-call"
-        text="CALL"
+        text="Call"
         type="CALL"
         handleClick={() => handleCall()}
         {...props}
@@ -29,7 +29,7 @@ const ControlCheckCall = (props) => {
     return (
       <ActionButton
         name="button-check"
-        text="CHECK"
+        text="Check"
         type="CHECK"
         handleClick={() => handleCheck()}
         {...props}
