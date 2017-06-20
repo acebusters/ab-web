@@ -153,7 +153,10 @@ export const SliderWrapper = styled.div`
 `;
 
 export const SliderHandle = styled.div`
+  display: flex;
   position: absolute;
+  justify-content: center;
+  align-items: center;
   width: 34px;
   height: 40px;
   margin-left: -12px;
@@ -171,6 +174,14 @@ export const SliderHandle = styled.div`
     background-color: #383838;
     background-image: linear-gradient(0deg, #666 0%, #585858 72%, #7C7C7C 100%);
   }
+`;
+
+export const SliderDot = styled.div`
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: ${(props) => props.active ? 'blue' : 'none'};
+  box-shadow: inset 0 1px 3px 1px rgba(0,0,0,0.50);
 `;
 
 export const FlagContainer = styled.div`

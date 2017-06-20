@@ -2,7 +2,7 @@ import React from 'react';
 import RCSlider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import { SliderWrapper, SliderHandle } from './styles';
+import { SliderWrapper, SliderHandle, SliderDot } from './styles';
 
 const styles = {
   rail: {
@@ -26,7 +26,9 @@ const handle = (props) => {
     ...restProps } = props;
   return (
     <Handle value={value} {...restProps}>
-      <SliderHandle />
+      <SliderHandle>
+        <SliderDot />
+      </SliderHandle>
     </Handle>
   );
 };
