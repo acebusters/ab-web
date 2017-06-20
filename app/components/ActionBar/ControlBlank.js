@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { ActionButtonBlank } from './styles';
+import { ActionButtonWrapper } from './styles';
 
 export default () => (
-  <ActionButtonBlank type="BLANK" name="button-blank" disabled />
+  <ActionButtonWrapper type="BLANK" name="button-blank" disabled />
 );

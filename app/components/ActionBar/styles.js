@@ -35,7 +35,7 @@ export const ActionBarWrapper = styled.div`
   flex-direction: column;
   opacity: ${(props) => props.active && !props.disabled ? 1 : 0.3};
 
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease-out;
 
   @media (min-width: ${curtainStickyWidth}) {
     left: calc(50% + ${curtainHalfWidth});
@@ -65,7 +65,8 @@ export const ControlWrapper = styled.div`
   box-shadow: inset 0 1px 3px 1px rgba(0,0,0,0.50);
 `;
 
-export const ActionButtonBase = `
+export const ActionButtonWrapper = styled(Button)`
+  display: flex;
   height: 40px;
   margin-left: 4px;
   min-width: 88px;
@@ -75,15 +76,6 @@ export const ActionButtonBase = `
   background-image: linear-gradient(0deg, #383838 0%, #7C7C7C 100%);
   box-shadow: 0 1px 2px 0 rgba(0,0,0,0.50);
   font-weight: 400;
-`;
-
-export const ActionButtonBlank = styled.div`
-  ${ActionButtonBase};
-`;
-
-export const ActionButtonWrapper = styled(Button)`
-  display: flex;
-  ${ActionButtonBase};
   ${(props) =>
     props.type === 'BET-SET' ||
     props.type === 'RAISE-SET' ||
@@ -116,13 +108,21 @@ export const ActionButtonWrapper = styled(Button)`
 `;
 
 export const ActionIndicator = styled.div`
+  ${(props) =>
+    props.type === 'BLANK' ||
+    props.type === 'BET-SET' ||
+    props.type === 'RAISE-SET' ?
+    'display: none;'
+    :
+    'display: block;'
+  };
   margin-left: 8px;
   margin-top: 6px;
   height: 34px;
   width: 10px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background-color: ${(props) => props.active ? 'yellow' : 'none'};
+  background-color: ${(props) => props.active ? active : 'none'};
   box-shadow: inset 0 1px 3px 0px rgba(0,0,0,0.50);
 `;
 

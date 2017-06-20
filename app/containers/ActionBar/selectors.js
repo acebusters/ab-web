@@ -65,6 +65,11 @@ export const getActionBarTurnComplete = () => createSelector(
   (actionBar) => actionBar.get('turnComplete'),
 );
 
+export const getActionBarButtonActive = () => createSelector(
+  getActionBarState,
+  (actionBar) => actionBar.get('buttonActive'),
+);
+
 // Other selectors
 const makeAmountToCallSelector = () => createSelector(
   [makeMaxBetSelector(), makeMyMaxBetSelector()],

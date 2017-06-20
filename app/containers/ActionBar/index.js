@@ -12,12 +12,14 @@ import {
   setActionBarTurnComplete,
   setActionBarMode,
   setActionBarBetSlider,
+  setActionBarButtonActive,
 } from './actions';
 
 import {
   getActionBarSliderOpen,
   getActionBarMode,
   getActionBarTurnComplete,
+  getActionBarButtonActive,
   makeSelectActionBarActive,
   makeSelectActionBarVisible,
   makeMinSelector,
@@ -221,6 +223,7 @@ export function mapDispatchToProps(dispatch) {
     setActionBarTurnComplete: (complete) => dispatch(setActionBarTurnComplete(complete)),
     setActionBarBetSlider: (open) => dispatch(setActionBarBetSlider(open)),
     setActionBarMode: (mode) => dispatch(setActionBarMode(mode)),
+    setActionBarButtonActive: (whichBtn) => dispatch(setActionBarButtonActive(whichBtn)),
   };
 }
 
@@ -229,6 +232,7 @@ const mapStateToProps = createStructuredSelector({
   amountToCall: makeAmountToCallSelector(),
   callAmount: makeCallAmountSelector(),
   cards: makeMyCardsSelector(),
+  buttonActive: getActionBarButtonActive(),
   isMyTurn: makeIsMyTurnSelector(),
   playerCount: makePlayersCountSelector(),
   privKey: makeSelectPrivKey(),
