@@ -5,6 +5,7 @@ import {
  ItemWrapper,
  ItemIcon,
  ItemTitle,
+ Button,
 } from './styles';
 
 const MenuItem = ({ item, ...props }) => {
@@ -37,12 +38,11 @@ const MenuItem = ({ item, ...props }) => {
     );
   }
 
-  // ToDo: update styled-component and use extendWith method for change tagName to a
   return (
     <Link
       to={item.to}
       onClick={handleClick}
-      component={ItemWrapper}
+      component={ItemWrapper.withComponent(Button.withComponent('a'))}
     >
       {children}
     </Link>
