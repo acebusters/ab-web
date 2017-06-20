@@ -219,9 +219,24 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
         <Section>
           <h2><FormattedMessage {...messages.pending} /></h2>
-          <List items={listPending} headers={['#', 'txHash']} noDataMsg="No Pending Transactions" />
+          <List
+            items={listPending}
+            headers={['#', 'txHash']}
+            noDataMsg="No Pending Transactions"
+          />
+
           <h2><FormattedMessage {...messages.included} /></h2>
-          <List items={listTxns} headers={['TX hash', 'Block number', 'From', 'To', 'Amount']} noDataMsg="No Transactions Yet" />
+          <List
+            items={listTxns}
+            headers={[
+              'TX hash',
+              'Block number',
+              'From',
+              'To',
+              'Amount',
+            ]}
+            noDataMsg="No Transactions Yet"
+          />
         </Section>
 
       </Container>
@@ -255,7 +270,13 @@ const txnsToList = (txns, proxyAddr) => {
         to: txns[key].to,
         value: (txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1,
       }))
-      .map((entry) => [entry.txHash.substring(2, 8), entry.blockNumber, entry.from.substring(2, 8), entry.to.substring(2, 8), entry.value]);
+      .map((entry) => [
+        entry.txHash.substring(2, 8),
+        entry.blockNumber,
+        entry.from.substring(2, 8),
+        entry.to.substring(2, 8),
+        new BigNumber(entry.value).div(ntzDecimals).toString().replace(/^-/, '−'),
+      ]);
   }
 
   return null;
