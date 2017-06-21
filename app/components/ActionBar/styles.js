@@ -28,6 +28,7 @@ const Button = styled.button`
 
 export const ActionBarWrapper = styled.div`
   position: absolute;
+  min-height: 50px;
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 0);
@@ -44,14 +45,10 @@ export const ActionBarWrapper = styled.div`
 
 export const ControlPanel = styled.div`
   z-index: 3;
-  min-height: 49px;
   align-self: center;
   display: flex;
-  padding-top: 6px;
-  padding-left: 7px;
-  padding-right: 7px;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  padding: 6px 7px 0 7px;
+  border-radius: 16px 16px 0 0;
   background-color: #7A7A7A;
   background-image: linear-gradient(0deg, #383838 0%, #7A7A7A 100%);
   box-shadow: ${largeBoxShadow};
@@ -69,11 +66,8 @@ const easeSliderOut = keyframes`
 
 export const ControlWrapper = styled.div`
   display: flex;
-  border-top-left-radius: 11px;
-  border-top-right-radius: 11px;
-  padding-top: 3px;
-  padding-left: 3px;
-  padding-right: 3px;
+  border-radius: 11px 11px 0 0;
+  padding: 3px 3px 0 3px;
   background-color: none;
   box-shadow: inset 0 1px 3px 1px rgba(0,0,0,0.50);
   ${(props) => props.sliderOpen ?
@@ -88,8 +82,7 @@ export const ActionButtonWrapper = styled(Button)`
   height: 40px;
   margin-left: 4px;
   min-width: 88px;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-radius: 2px 2px 0 0;
   background-color: #7C7C7C;
   background-image: linear-gradient(0deg, #383838 0%, #7C7C7C 100%);
   box-shadow: 0 1px 2px 0 rgba(0,0,0,0.50);
@@ -138,8 +131,7 @@ export const ActionIndicator = styled.div`
   margin-top: 6px;
   height: 34px;
   width: 10px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  border-radius: 4px 4px 0 0;
   background-color: ${(props) => props.active ? active : 'none'};
   box-shadow: inset 0 1px 3px 0px rgba(0,0,0,0.50);
 `;
@@ -180,10 +172,7 @@ export const SliderHandle = styled.div`
   margin-left: -12px;
   margin-top: -12px;
   cursor: pointer;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-radius: 8px 8px 0 0;
   border: none;
   background-color: #7C7C7C;
   background-image: linear-gradient(0deg, #383838 0%, #7C7C7C 100%);
@@ -219,11 +208,8 @@ export const FlagButtonWrapper = styled(Button)`
 
   opacity: 0.5;
   margin-left: 4px;
-  padding: 5px;
-  padding-left: 18px;
-  padding-right: 18px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  padding: 5px 18px ;
+  border-radius: 4px 4px 0 0;
   border-bottom: solid 2px #515151;
   background-color: #7B7B7B;
   color: #C1BFBF;
@@ -236,20 +222,18 @@ export const FlagButtonWrapper = styled(Button)`
 `;
 
 const FlagShared = styled.div`
-  min-height: 30px;
-  padding: 6px 10px;
-  padding-bottom: 4px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  align-self: center;
+  min-height: 20px;
+  min-width: 80px;
+  padding: 6px 10px 4px 10px;
+  border-radius: 4px 4px 0 0;
   background-color: #BCBCBC;
   box-shadow: ${medBoxShadow};
   color: #555;
   font-size: 14px;
   font-weight: 600;
   text-align: center;
-  min-width: 80px;
   transition: 0.5s ease;
-  align-self: center;
 `;
 
 export const FlagBet = styled(FlagShared)`
