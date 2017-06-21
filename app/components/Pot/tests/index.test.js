@@ -9,4 +9,11 @@ describe('calculateChipStacks()', () => {
     );
     expect(renderedComponent.find(Chip).length).toBe(3);
   });
+
+  it('Should not show up when potsize is 0', () => {
+    const renderedComponent = shallow(
+      <Pot potSize={0} right="0%" left="0%" />
+    );
+    expect(renderedComponent.children().length).toBe(0);
+  });
 });
