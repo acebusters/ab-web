@@ -251,7 +251,7 @@ export const StatusSeat = styled.div`
 
 // timer
 export const TimerWrapper = styled(SharedLower)`
-  width: ${scaleSeat(110)};
+  width: ${scaleSeat(100)};
   background-color: #393939;
 `;
 
