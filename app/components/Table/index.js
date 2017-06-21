@@ -38,8 +38,9 @@ const TableComponent = (props) => (
       <TableAndChairs id="table-and-chairs" >
 
         <img src={tableImage} alt="" />
-
-        <Pot potSize={props.potSize} top="55%" left="50%" />
+        { props.potSize > 0 &&
+          <Pot className="pot" potSize={props.potSize} top="55%" left="50%" />
+        }
 
         <Seats seats={props.seats} />
 
