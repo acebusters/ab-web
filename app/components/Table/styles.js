@@ -55,9 +55,9 @@ export const Winner = styled.div`
 `;
 
 export const TableAndChairs = styled.div`
-  position: relative;
-  width: 100%;
-  padding-bottom: 50%;
+  position: relative;   
+  width: 100%
+  padding: 25%;
 `;
 
 export const HandBox = styled.div`
@@ -69,15 +69,4 @@ export const HandBox = styled.div`
   border-radius: 0.5em;
   color: ${white};
   transform: translate(-50%,-20%);
-`;
-
-export const PokerTable = styled.div`
-  position: absolute;
-  margin-top: 10%;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  left: 50%;
-  width: 50%;
-  height: 40%;
-  z-index: 5;
 `;
