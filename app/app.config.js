@@ -158,7 +158,10 @@ export const ABI_SIT_OUT = [{ name: 'sitOut', type: 'function', inputs: [{ type:
 export const ABI_SHOW = [{ name: 'show', type: 'function', inputs: [{ type: 'uint' }, { type: 'uint' }] }];
 export const ABI_LEAVE = [{ name: 'leave', type: 'function', inputs: [{ type: 'uint' }, { type: 'uint' }] }];
 export const ABI_DIST = [{ name: 'distribution', type: 'function', inputs: [{ type: 'uint' }, { type: 'uint' }, { type: 'bytes32[]' }] }];
+
 export const TIMEOUT_PERIOD = 179;
+
+export const NTZ_DECIMALS = 1000000000000;
 
 // chip values and colors
 export const chipValues = [
@@ -174,8 +177,8 @@ export const chipValues = [
 export const SEAT_COORDS = [
   [10, 35, 0],
   [10, 35, 1],
-  [35, 12.5, 0],
-  [35, 12.5, 1],
+  [35, 10, 0],
+  [35, 10, 1],
   [35, 63, 0],
   [35, 63, 1],
   [17.5, 17.5, 0],
@@ -185,15 +188,10 @@ export const SEAT_COORDS = [
 ];
 
 
-export const AMOUNT_COORDS = [
-  [2, 3.5, 0],
-  [2, 3.5, 0],
-  [2, 3.5, 0],
-  [2, 3.5, 0],
-  [2, 3.5, 0],
-  [2, 3.5, 0],
-  [2, 3.5, 0],
-  [2, 3.5, 0],
-  [2, 3.5, 0],
-  [2, 3.5, 0],
-];
+export const AMOUNT_COORDS = {
+  2: [[-295, 0], [275, 10]],
+  4: [[50, 200], [50, 200], [-50, -165], [50, -165]],
+  6: [[50, 200], [50, 200], [-295, 0], [-50, -165], [50, -165], [275, 10]],
+  8: [[50, 200], [50, 200], [-295, 0], [-295, 0], [-50, -165], [50, -165], [275, 10], [275, 10]],
+  10: [[-20, -10], [-15, 0], [-20, -10], [-15, 0], [-15, 0], [-15, 0], [-15, 0], [-15, 0], [-15, 0], [-15, 0], [-15, 0], [-15, 0]],
+};
