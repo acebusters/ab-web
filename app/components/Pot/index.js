@@ -43,8 +43,6 @@ const ChipStack = styled.div`
 
 const Amount = styled.div`
   position: absolute;
-  top: -5%;
-  left: 140%;
   color: ${white};
 `;
 

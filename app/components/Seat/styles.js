@@ -56,7 +56,12 @@ export const SharedLower = styled.div`
 // seat
 export const SeatWrapper = styled.div`
   position: absolute;
-  left: ${(props) => props.coords[0]}%;
+  ${(props) => {
+    if (props.coords[2] === 0) {
+      return `left:${ props.coords[0]}%;`;
+    }
+    return `right:${props.coords[0]}%;`;
+  }}
   top: ${(props) => props.coords[1]}%;
   color: 'white';
   width: 10%;
@@ -287,12 +292,8 @@ export const ButtonStyle = styled(SharedMiddle)`
 
 export const ButtonWrapper = styled.button`
   position: absolute;
-  margin-top: ${scaleButtonJoin(42)};
-  margin-left: ${scaleButtonJoin(42)};
-  height: ${scaleButtonJoin(40)};
-  width: ${scaleButtonJoin(42)};
-  top: ${scaleButtonJoin(-20)};
-  left: ${scaleButtonJoin(-64)};
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
