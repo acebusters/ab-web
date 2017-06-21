@@ -5,7 +5,6 @@ import { nickNameByAddress } from '../../services/nicknames';
 
 import {
   AvatarImage,
-  AmountBox,
   ChipButtonContainer,
   DealerButton,
   DetailWrapper,
@@ -37,14 +36,9 @@ const SeatInfo = ({
     {seatStatus && seatStatus === STATUS_MSG.active ?
       <ChipButtonContainer className="chip-button-container">
         <DealerButton dealer={dealer} pos={pos}>D</DealerButton>
-
-        <AmountBox amountCoords={amountCoords}>
-          { (lastAmount > 0) &&
-            <Pot className="pot" potSize={lastAmount} left="0%" top="0%" />
-          }
-        </AmountBox>
+        <Pot potSize={lastAmount} left={`${amountCoords[0]}em`} top={`${amountCoords[1]}em `} />
       </ChipButtonContainer>
-      : null
+        : null
     }
 
     <AvatarImage className="avatar-image" bgImg={blocky} />

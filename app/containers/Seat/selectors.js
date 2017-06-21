@@ -140,7 +140,7 @@ const makeCoordsSelector = () => createSelector(
 
 const makeAmountCoordsSelector = () => createSelector(
   [makeLineupSelector(), posSelector],
-  (lineup, pos) => (lineup && pos > -1) ? AMOUNT_COORDS[lineup.toJS().length.toString()][pos] : null
+  (lineup, pos) => (lineup && pos > -1) ? AMOUNT_COORDS[pos] : null
 );
 
 const makeBlockySelector = () => createSelector(
