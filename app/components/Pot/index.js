@@ -90,19 +90,20 @@ const range = (start, end, step = 1) => {
 
 function Pot(props) {
   const chipStacks = createChipStacks(chipValues, props.potSize);
+  const wrapper = (<Wrapper top={props.top} left={props.left}>
+    {chipStacks.map((stack, i) => (
+      <ChipStack index={i} key={i}>
+        {range(0, stack.count).map((j) => (
+          <Chip color={stack.color} index={j} key={j} />
+                          ))}
+      </ChipStack>
+                    ))}
+    <Amount>{ props.potSize }</Amount>
+  </Wrapper>);
 
-  return (
-    <Wrapper top={props.top} left={props.left}>
-      {chipStacks.map((stack, i) => (
-        <ChipStack index={i} key={i}>
-          {range(0, stack.count).map((j) => (
-            <Chip color={stack.color} index={j} key={j} />
-          ))}
-        </ChipStack>
-      ))}
-      <Amount>{ props.potSize }</Amount>
-    </Wrapper>
-  );
+  const el = props.potSize > 0 ? wrapper : null;
+
+  return el;
 }
 
 Pot.propTypes = {
