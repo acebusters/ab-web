@@ -5,10 +5,10 @@ import { fromJS } from 'immutable';
 import * as types from './actions';
 
 export const initialState = fromJS({
-  buttonActive: '',
-  sliderOpen: false,
+  buttonActive: '', // used for activeIndicator
+  sliderOpen: false, // toggles slider open/closed
   turnComplete: false,
-  mode: '',
+  mode: '', // tracks active button's life-cycle
 });
 
 export default function actionBarReducer(state = initialState, action) {
