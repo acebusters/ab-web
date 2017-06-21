@@ -144,7 +144,6 @@ export const ActionIndicator = styled.div`
 `;
 
 export const ActionText = styled.div`
-  height: 100%;
   ${(props) =>
     props.type === 'BET-SET' ||
     props.type === 'RAISE-SET' ||
