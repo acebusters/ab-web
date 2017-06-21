@@ -5,7 +5,7 @@ import {
  ItemWrapper,
  ItemIcon,
  ItemTitle,
- Button,
+ LinkWrapper,
 } from './styles';
 
 const MenuItem = ({ item, ...props }) => {
@@ -17,6 +17,7 @@ const MenuItem = ({ item, ...props }) => {
   ];
 
   const handleClick = () => {
+    // if the menu is open, close it
     if (props.open) {
       props.toggleMenuOpen();
     }
@@ -26,7 +27,6 @@ const MenuItem = ({ item, ...props }) => {
   };
 
   if (item.onClick) {
-    // if the menu is open, close it
     return (
       <ItemWrapper
         name={item.name}
@@ -42,7 +42,7 @@ const MenuItem = ({ item, ...props }) => {
     <Link
       to={item.to}
       onClick={handleClick}
-      component={ItemWrapper.withComponent(Button.withComponent('a'))}
+      component={LinkWrapper}
     >
       {children}
     </Link>

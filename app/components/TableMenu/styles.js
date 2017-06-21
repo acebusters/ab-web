@@ -141,6 +141,8 @@ export const ItemWrapper = styled(Button)`
   }
 `;
 
+export const LinkWrapper = ItemWrapper.withComponent(Button.withComponent('a'));
+
 export const ItemIcon = styled.i`
   &:before {
     font-size: 16px;
