@@ -33,7 +33,7 @@ const SeatInfo = ({
     {seatStatus && seatStatus === STATUS_MSG.active ?
       <ChipButtonContainer className="chip-button-container">
         <DealerButton dealer={dealer} pos={pos}>D</DealerButton>
-        <Pot potSize={lastAmount} left={`${amountCoords[0]}em`} top={`${amountCoords[1]}em `} />
+        <Pot className="pot" potSize={lastAmount} left={`${amountCoords[0]}em`} top={`${amountCoords[1]}em `} />
       </ChipButtonContainer>
         : null
     }
