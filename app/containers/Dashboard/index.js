@@ -37,6 +37,8 @@ const ethDecimals = new BigNumber(10).pow(18);
 // 1 x 10^0 - Babz
 const ntzDecimals = new BigNumber(10).pow(12);
 
+const LOOK_BEHIND_PERIOD = 4 * 60 * 24;
+
 export class Dashboard extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props) {
@@ -85,7 +87,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const web3 = getWeb3();
     this.proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
     this.web3.eth.getBlockNumber((err, blockNumber) => {
-      this.proxy.Received({ fromBlock: blockNumber - (4 * 60 * 24), toBlock: 'latest' }).watch(() => {
+      this.proxy.Received({ fromBlock: blockNumber - LOOK_BEHIND_PERIOD, toBlock: 'latest' }).watch(() => {
         this.web3.eth.getBalance(proxyAddr);
       });
     });
@@ -93,7 +95,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
   watchTokenEvents(proxyAddr) {
     this.web3.eth.getBlockNumber((err, blockNumber) => {
-      const events = this.token.allEvents({ fromBlock: blockNumber - (4 * 60 * 24), toBlock: 'latest' });
+      const events = this.token.allEvents({ fromBlock: blockNumber - LOOK_BEHIND_PERIOD, toBlock: 'latest' });
       events.get((error, eventList) => {
         eventList
           .filter(({ args = {} }) => args.from === proxyAddr || args.to === proxyAddr)
@@ -155,10 +157,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   render() {
-    // if (this.props.account.proxy) {
-    //   this.token.balanceOf.call(this.props.account.proxy);
-    // }
-
     const qrUrl = `ether:${this.props.account.proxy}`;
     const weiBalance = this.web3.eth.balance(this.props.account.proxy);
     const ethBalance = weiBalance && weiBalance.div(ethDecimals);
