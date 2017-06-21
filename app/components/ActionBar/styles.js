@@ -44,6 +44,7 @@ export const ActionBarWrapper = styled.div`
 
 export const ControlPanel = styled.div`
   z-index: 3;
+  min-height: 49px;
   align-self: center;
   display: flex;
   padding-top: 6px;
@@ -213,6 +214,7 @@ export const FlagContainer = styled.div`
 `;
 
 export const FlagButtonWrapper = styled(Button)`
+  height: 30px;
   transform: translateY(${(props) => !props.sliderOpen ? '32px' : '0'});
 
   opacity: 0.5;
@@ -234,6 +236,7 @@ export const FlagButtonWrapper = styled(Button)`
 `;
 
 const FlagShared = styled.div`
+  min-height: 30px;
   padding: 6px 10px;
   padding-bottom: 4px;
   border-top-left-radius: 4px;
@@ -244,32 +247,29 @@ const FlagShared = styled.div`
   font-size: 14px;
   font-weight: 600;
   text-align: center;
+  min-width: 80px;
+  transition: 0.5s ease;
+  align-self: center;
 `;
 
 export const FlagBet = styled(FlagShared)`
   z-index: 1;
-  align-self: center;
-  position: absolute;
-  transform: translate(${(props) => !props.sliderOpen ? '0, 30px' : '-26px, 0px'});
-  width: 92px;
-  transition: 0.5s ease;
-  transition-delay: 0.3s;
+  ${(props) => props.sliderOpen ?
+    `transform: translate(-26px, 30px);
+    transition-delay: 0.3s;
+    ` : `
+    transform: translate(0px, 60px);`
+  }
 `;
 
 export const FlagCall = styled(FlagShared)`
   z-index: 2;
   ${(props) => props.sliderOpen ?
-    `
-    margin-right: 18px;
-    align-self: center;
-    transform: translate(-130px, 0px);
+    `margin-right: 18px;
     display: ${props.hide ? 'none' : 'block'};
+    transform: translate(-116px, 60px);
     ` : `
-    align-self: center;
-    transform: translateY(${props.hide ? '30px' : '0px'});
+    transform: translateY(${props.hide ? '90px' : '60px'});
     `
   };
-  position: absolute;
-  min-width: 80px;
-  transition: 0.5s ease;
 `;
