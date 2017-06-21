@@ -50,7 +50,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
     if (this.props.account.proxy) {
       this.web3.eth.getBalance(this.props.account.proxy);
-      this.setupProxyContract(this.props.account.proxy);
+      this.watchProxyEvents(this.props.account.proxy);
       this.watchTokenEvents(this.props.account.proxy);
     }
   }
@@ -69,7 +69,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
     if (this.props.account.proxy === undefined && nextProps.account.proxy) {
       this.web3.eth.getBalance(nextProps.account.proxy);
-      this.setupProxyContract(nextProps.account.proxy);
+      this.watchProxyEvents(nextProps.account.proxy);
       this.watchTokenEvents(nextProps.account.proxy);
     }
 
@@ -81,11 +81,13 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     }
   }
 
-  setupProxyContract(proxyAddr) {
+  watchProxyEvents(proxyAddr) {
     const web3 = getWeb3();
     this.proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
-    this.proxy.Deposit({ toBlock: 'latest' }).watch(() => {
-      this.web3.eth.getBalance(proxyAddr);
+    this.web3.eth.getBlockNumber((err, blockNumber) => {
+      this.proxy.Received({ fromBlock: blockNumber - (4 * 60 * 24), toBlock: 'latest' }).watch(() => {
+        this.web3.eth.getBalance(proxyAddr);
+      });
     });
   }
 
