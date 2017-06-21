@@ -41,6 +41,7 @@ const MenuItem = ({ item, ...props }) => {
   return (
     <Link
       to={item.to}
+      name={item.name}
       onClick={handleClick}
       component={LinkWrapper}
     >
