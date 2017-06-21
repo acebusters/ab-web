@@ -15,10 +15,15 @@ import {
   TableHeader,
   TableContainer,
   TableAndChairs,
-  PokerTable,
   HandBox,
   Winner,
 } from './styles';
+
+const Seats = (props) => (
+  <div name="seats">
+    { props.seats }
+  </div>
+);
 
 const TableComponent = (props) => (
   <div name="table-component">
@@ -32,22 +37,19 @@ const TableComponent = (props) => (
 
       <TableAndChairs id="table-and-chairs" >
 
-        <PokerTable name="poker-table">
+        <img src={tableImage} alt="" />
 
-          <img src={tableImage} alt="" />
+        <Pot potSize={props.potSize} top="55%" left="50%" />
 
-          <Pot potSize={props.potSize} top="85%" left="45%" />
+        <Seats seats={props.seats} />
 
-          { props.seats }
+        <Board id="board" board={props.board}>
+          { props.board }
+        </Board>
 
-          <Board id="board" board={props.board}>
-            { props.board }
-          </Board>
-
-          { props.winners.length > 0 &&
-            <Winner className="winner">{ props.winners }</Winner>
-          }
-        </PokerTable>
+        { props.winners.length > 0 &&
+        <Winner className="winner">{ props.winners }</Winner>
+        }
 
       </TableAndChairs>
 
@@ -65,6 +67,10 @@ const TableComponent = (props) => (
 
   </div>
 );
+
+Seats.propTypes = {
+  seats: React.PropTypes.array,
+};
 
 TableComponent.propTypes = {
   state: React.PropTypes.string,
