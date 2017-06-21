@@ -269,7 +269,7 @@ function* contractTransactionSendSaga() {
   const txChan = yield actionChannel(CONTRACT_TX_SEND);
   while (true) { // eslint-disable-line no-constant-condition
     const req = yield take(txChan);
-    const { dest, key, data, privKey } = req.payload;
+    const { dest, key, data, privKey, callback } = req.payload;
     const state = yield select();
     const nonce = state.get('account').get('lastNonce') + 1;
     const controller = state.get('account').get('controller');
@@ -277,9 +277,15 @@ function* contractTransactionSendSaga() {
     // send it.
     try {
       const value = yield sendTx(forwardReceipt);
+      if (callback) {
+        yield call(callback, null, value.txHash);
+      }
       yield put(contractTxSuccess({ address: dest, nonce, txHash: value.txHash, key }));
     } catch (err) {
-      const error = (err.message) ? err.message : err;
+      const error = err.message || err;
+      if (callback) {
+        yield call(callback, error);
+      }
       yield put(contractTxError({ address: dest, nonce, error }));
     }
   }

@@ -1,6 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { contractMethodCall, contractTxSend } from './actions';
 import { getWeb3 } from './sagas';
+import { last } from '../../utils/last';
 
 function degrade(fn, fallback) {
   try {
@@ -34,6 +35,7 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         dest: address,
         data: contractInstance[methodName].getData(...args),
         privKey: getState().get('privKey'),
+        callback: typeof last(args) === 'function' ? last(args) : undefined,
       }),
     }, dispatch);
     // base getter

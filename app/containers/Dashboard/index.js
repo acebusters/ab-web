@@ -132,7 +132,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   handleNTZSell(amount) {
     this.token.transfer.sendTransaction(
       confParams.ntzAddr,
-      `0x${new BigNumber(amount).mul(ntzDecimals).toString(16)}`
+      `0x${new BigNumber(amount).mul(ntzDecimals).toString(16)}`,
+      {
+        from: this.props.account.proxy,
+        gas: 2000000,
+      },
+      (err, res) => {
+        console.log(err, res);
+      }
     );
     this.props.modalDismiss();
   }
