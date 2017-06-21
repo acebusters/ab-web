@@ -48,7 +48,7 @@ export const SharedMiddle = styled.div`
 `;
 
 export const SharedLower = styled.div`
-  margin-left: ${scaleSeat(8)};
+  margin-left: ${scaleSeat(0)};
   box-shadow: ${smallShadow};
   border-radius: 0 0 ${scaleSeat(3)} ${scaleSeat(3)};
 `;
@@ -70,15 +70,12 @@ export const SeatWrapper = styled.div`
 
 export const SeatContainer = styled.div`
   position: absolute;
-  top: ${scaleSeat(-20)};
-  left: ${scaleSeat(-64)};
+  height: 75%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  width: ${scaleSeat(128)};
-  height: auto;
-
-  color: white;
-  background-color: none;
+  align-items: center;
+  justify-content: center; 
   opacity: ${(props) => props.activePlayer ? 1 : 0.5};
 `;
 
@@ -91,8 +88,8 @@ export const ChipButtonContainer = styled.div`
 export const DealerButton = styled.div`
   display: ${(props) => !(props.dealer === props.pos) ? 'none' : 'inherit'};
   position: absolute;
-  top: ${scaleSeat(-28)};
-  left: ${scaleSeat(12)};
+  top: ${scaleSeat(13)};
+  left: ${scaleSeat(-35)};
   width: ${scaleSeat(20)};
   height: ${scaleSeat(20)};
 
@@ -154,8 +151,9 @@ export const CardStyle = styled.img`
 export const InfoWrapper = styled(SharedMiddle)`
   display: flex;
   border-radius: ${scaleSeat(4)};
-
   color: #D5D5D5;
+  min-width: 110px;
+  min-height: 44px;
   font-weight: 400;
 `;
 
@@ -230,7 +228,7 @@ export const StatusSeatWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-right: ${scaleSeat(6)};
-  margin-top: ${scaleSeat(22)};
+  min-width: 75px;
 
   background-color: none;
 `;

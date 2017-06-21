@@ -44,6 +44,8 @@ const ChipStack = styled.div`
 const Amount = styled.div`
   position: absolute;
   color: ${white};
+  left: 1.5em;
+  top: 0.5em;
 `;
 
 const Wrapper = styled.div`
@@ -90,7 +92,7 @@ function Pot(props) {
   const chipStacks = createChipStacks(chipValues, props.potSize);
 
   return (
-    <Wrapper top={props.top} left={props.left}>
+    <Wrapper name="stack-wrapper" top={props.top} left={props.left}>
       {chipStacks.map((stack, i) => (
         <ChipStack index={i} key={i}>
           {range(0, stack.count).map((j) => (
