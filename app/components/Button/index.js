@@ -91,15 +91,13 @@ const sizes = {
 };
 
 function Button({
-  size = 'medium',
   icon = '',
   align = 'center',
-  tagName = 'button',
   children,
   ...props
 }) {
   // Render an anchor tag
-  const ButtonComponent = getButtonComponent(size, tagName);
+  const ButtonComponent = getButtonComponent(props);
 
   return (
     <Wrapper align={align}>
@@ -120,15 +118,14 @@ Button.propTypes = {
   align: PropTypes.oneOf(['center', 'left']),
   icon: PropTypes.string,
   disabled: PropTypes.bool,
-  tagName: PropTypes.string,
   children: PropTypes.node,
 };
 
-function getButtonComponent(size, tagName) {
+function getButtonComponent({ size, href }) {
   const component = sizes[size] || Medium;
 
-  if (tagName !== 'button') {
-    return component.withComponent(SharedButton.withComponent(tagName));
+  if (href) {
+    return component.withComponent(SharedButton.withComponent('a'));
   }
 
   return component;

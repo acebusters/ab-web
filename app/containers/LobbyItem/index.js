@@ -69,7 +69,6 @@ class LobbyItem extends React.PureComponent { // eslint-disable-line
             to={`/table/${this.props.tableAddr}/hand/${this.props.lastHandId}`}
             size="medium"
             icon="fa fa-eye"
-            tagName="a"
             component={Button}
           />
         </Td>
