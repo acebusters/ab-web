@@ -2,7 +2,7 @@
  * Copyright (c) 2017 Acebusters
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
- */
+*/
 
 const DEFAULT_REF_CODE = '00000000';
 
@@ -158,20 +158,21 @@ export const ABI_SIT_OUT = [{ name: 'sitOut', type: 'function', inputs: [{ type:
 export const ABI_SHOW = [{ name: 'show', type: 'function', inputs: [{ type: 'uint' }, { type: 'uint' }] }];
 export const ABI_LEAVE = [{ name: 'leave', type: 'function', inputs: [{ type: 'uint' }, { type: 'uint' }] }];
 export const ABI_DIST = [{ name: 'distribution', type: 'function', inputs: [{ type: 'uint' }, { type: 'uint' }, { type: 'bytes32[]' }] }];
-export const TIMEOUT_PERIOD = 60;
+
+export const TIMEOUT_PERIOD = 179;
+
+export const NTZ_DECIMALS = 1000000000000;
 
 // chip values and colors
 export const chipValues = [
-  [50000000000000000, '#f056c5'],
-  [10000000000000000, '#e7e401'],
-  [5000000000000000, '#774ac1'],
-  [1000000000000000, '#ac2a2a'],
-  [500000000000000, '#328eee'],
-  [100000000000000, '#745f2a'],
-  [10000000000000, '#FFFFFF'],
+  [5000, '#f056c5'],
+  [1000, '#e7e401'],
+  [500, '#774ac1'],
+  [100, '#ac2a2a'],
+  [50, '#328eee'],
+  [10, '#745f2a'],
+  [1, '#FFFFFF'],
 ];
-
-export const NTZ_DECIMALS = 1000000000000;
 
 export const SEAT_COORDS = [
   [10, 35, 0],
