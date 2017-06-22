@@ -66,10 +66,11 @@ export const SeatWrapper = styled.div`
   color: 'white';
   width: 10%;
   ${(props) => {
-    if (props.mySeat) {
+    console.dir(props.pos === props.myPos);
+    if (props.pos === props.myPos) {
       return 'height: 145px';
     }
-    return 'height: 110px;';
+    return 'height: 140px;';
   }}
 `;
 
