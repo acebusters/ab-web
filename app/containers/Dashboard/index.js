@@ -94,19 +94,20 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   watchTokenEvents(proxyAddr) {
+    const isUserEvent = makeIsUserEvent(proxyAddr);
     this.web3.eth.getBlockNumber((err, blockNumber) => {
       const events = this.token.allEvents({ fromBlock: blockNumber - LOOK_BEHIND_PERIOD, toBlock: 'latest' });
       events.get((error, eventList) => {
         eventList
-          .filter(({ args = {} }) => args.from === proxyAddr || args.to === proxyAddr)
+          .filter(isUserEvent)
           .forEach(this.props.contractEvent);
+      });
 
-        events.watch((watchError) => {
-          if (!watchError && this.props.account.proxy) {
-            this.token.balanceOf.call(this.props.account.proxy);
-            this.web3.eth.getBalance(this.props.account.proxy);
-          }
-        });
+      events.watch((watchError, event) => {
+        if (!watchError && isUserEvent(event)) {
+          this.token.balanceOf.call(this.props.account.proxy);
+          this.web3.eth.getBalance(this.props.account.proxy);
+        }
       });
     });
   }
@@ -162,6 +163,9 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const ethBalance = weiBalance && weiBalance.div(ethDecimals);
     const babBalance = this.token.balanceOf(this.props.account.proxy);
     const ntzBalance = babBalance && babBalance.div(ntzDecimals);
+
+    console.log(weiBalance, ethBalance);
+    // debugger;
 
     const listPending = pendingToList(this.props.account.pending);
 
@@ -338,6 +342,7 @@ const mapStateToProps = createStructuredSelector({
   privKey: makeSelectPrivKey(),
 });
 
+const makeIsUserEvent = (proxyAddr) => ({ args = {} }) => args.from === proxyAddr || args.to === proxyAddr;
 
 function mapDispatchToProps() {
   return {
