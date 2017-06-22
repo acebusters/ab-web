@@ -44,13 +44,13 @@ const SeatInfo = ({
     }
 
     <AvatarImage className="avatar-image" bgImg={blocky} />
-
     <DetailWrapper>
       <NameBox className="name-box">{nickNameByAddress(signerAddr)}</NameBox>
       <StackBox className="stack-box">{stackToString(stackSize / NTZ_DECIMALS)}</StackBox>
     </DetailWrapper>
   </InfoWrapper>
 );
+
 SeatInfo.propTypes = {
   amountCoords: React.PropTypes.array,
   blocky: React.PropTypes.string,

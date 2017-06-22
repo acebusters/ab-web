@@ -65,13 +65,7 @@ export const SeatWrapper = styled.div`
   top: ${(props) => props.coords[1]}%;
   color: 'white';
   width: 10%;
-  ${(props) => {
-    console.dir(props.pos === props.myPos);
-    if (props.pos === props.myPos) {
-      return 'height: 145px';
-    }
-    return 'height: 140px;';
-  }}
+  height: 25%;
 `;
 
 export const SeatContainer = styled.div`
@@ -199,13 +193,15 @@ export const StackBox = styled.div`
 // status
 export const StatusWrapper = styled.div`
   position: absolute;
-  top: 95px;  
   display: flex;
+  justify-content: flex-end;
+  min-width: 75px;  
   background-color: none;
 `;
 
 export const StatusActionStyle = styled(SharedLower)`
   padding-top: 0;
+  margin-top: 9em;
   padding-left: ${scaleSeat(10)};
   padding-bottom: ${scaleSeat(1)};
   padding-right: ${scaleSeat(10)};
@@ -244,6 +240,7 @@ export const StatusSeatWrapper = styled.div`
 
 export const StatusSeat = styled.div`
   padding-top: 0;
+  margin-top: -40px;
   padding-left: ${scaleSeat(14)};
   padding-bottom: ${scaleSeat(1)};
   padding-right: ${scaleSeat(14)};
