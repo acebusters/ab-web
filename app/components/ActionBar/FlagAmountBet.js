@@ -7,7 +7,7 @@ const FlagAmountBet = ({
   sliderOpen,
 }) => (
   <FlagBet sliderOpen={sliderOpen}>
-    {amount}
+    {amount && (amount).formatNtz()}
   </FlagBet>
 );
 FlagAmountBet.propTypes = {

@@ -6,10 +6,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import {
-  chipValues,
-  NTZ_DECIMALS,
-} from '../../app.config';
+import { chipValues } from '../../app.config';
 import {
   white,
 } from '../../variables';
@@ -103,7 +100,7 @@ function Pot(props) {
           ))}
         </ChipStack>
       ))}
-      <Amount>{ props.potSize / NTZ_DECIMALS }</Amount>
+      <Amount>{ (props.potSize).formatNtz() }</Amount>
     </Wrapper>
   );
 }

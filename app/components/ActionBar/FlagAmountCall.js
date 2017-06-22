@@ -12,7 +12,7 @@ const FlagAmountCall = ({
   const hide = amountToCall === 0 || amountToCall > myStack || !active;
   return (
     <FlagCall hide={hide} sliderOpen={sliderOpen}>
-      {amountToCall}
+      {amountToCall && (amountToCall).formatNtz()}
     </FlagCall>
   );
 };

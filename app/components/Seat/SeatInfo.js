@@ -13,15 +13,7 @@ import {
   NameBox,
   StackBox,
 } from './styles';
-import {
-  STATUS_MSG,
-  NTZ_DECIMALS,
-} from '../../app.config';
-
-const stackToString = (stackSize) => {
-  if (!stackSize) return '0';
-  return stackSize.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-};
+import { STATUS_MSG } from '../../app.config';
 
 const SeatInfo = ({
   amountCoords,
@@ -51,7 +43,7 @@ const SeatInfo = ({
 
     <DetailWrapper>
       <NameBox className="name-box">{nickNameByAddress(signerAddr)}</NameBox>
-      <StackBox className="stack-box">{stackToString(stackSize / NTZ_DECIMALS)}</StackBox>
+      <StackBox className="stack-box">{(stackSize) ? (stackSize).formatNtz() : '0 NTZ'}</StackBox>
     </DetailWrapper>
   </InfoWrapper>
 );

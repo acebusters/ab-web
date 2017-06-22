@@ -173,6 +173,18 @@ export const chipValues = [
 
 export const NTZ_DECIMALS = 1000000000000;
 
+Number.prototype.formatNtz = function formatNtz(cur, dec, th) { // eslint-disable-line no-extend-native
+  let n = this;
+  const c = isNaN(Math.abs(cur)) ? 0 : Math.abs(cur);
+  const d = dec === undefined ? '.' : dec;
+  const t = th === undefined ? ',' : th;
+  const s = n < 0 ? '-' : '';
+  const i = String(parseInt(n = Math.abs(Number(n / NTZ_DECIMALS) || 0).toFixed(c), 10));
+  const j = (i.length) > 3 ? i.length % 3 : 0;
+  const p = i.substr(j).replace(/(\d{3})(?=\d)/g, `$1${t}`);
+  return `${s}${(j ? i.substr(0, j) + t : '')}${p}${(c ? d + Math.abs(n - i).toFixed(c).slice(2) : ' NTZ')}`;
+};
+
 export const SEAT_COORDS = {
   2: [
     [-20, 60],
