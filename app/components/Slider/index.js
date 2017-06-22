@@ -2,7 +2,7 @@ import React from 'react';
 import RCSlider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import { SliderWrapper, SliderHandle, SliderDot } from './styles';
+import { SliderWrapper, SliderHandle, SliderDot } from '../ActionBar/styles';
 
 const styles = {
   rail: {
@@ -42,7 +42,7 @@ class Slider extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 0,
+      value: 50,
     };
     this.onSliderChange = this.onSliderChange.bind(this);
     this.onSliderUpdate = this.onSliderUpdate.bind(this);
