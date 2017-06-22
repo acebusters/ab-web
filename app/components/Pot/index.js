@@ -48,8 +48,7 @@ const ChipStack = styled.div`
 const Amount = styled.div`
   color: ${white};
   float: left;
-  left: 1.5em;
-  top: 0.5em;
+  margin-top: 0.5em;
 `;
 
 const Wrapper = styled.div`
