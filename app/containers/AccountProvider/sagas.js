@@ -160,18 +160,11 @@ function* web3MethodCallSaga({ payload: { method, args, key } }) {
   }
 }
 
-function* contractMethodCallSaga({ payload: { method, args, key, address, callback } }) {
+function* contractMethodCallSaga({ payload: { method, args, key, address } }) {
   try {
     const value = yield callMethod({ method, args });
     yield put(contractMethodSuccess({ address, key, payload: { value, updated: new Date() } }));
-
-    if (callback) {
-      yield call(callback, null, value);
-    }
   } catch (err) {
-    if (callback) {
-      yield call(callback, err);
-    }
     yield put(contractMethodError({ address, key, err }));
   }
 }
