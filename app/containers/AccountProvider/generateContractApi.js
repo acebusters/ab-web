@@ -27,7 +27,11 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
     const actions = bindActionCreators({
       // dispatches action to read contract method results and write into store
       call: (...args) => contractMethodCall({
-        args, address, key: getMethodKey({ methodName, args }), method: contractInstance[methodName].call,
+        args,
+        address,
+        key: getMethodKey({ methodName, args }),
+        method: contractInstance[methodName].call,
+        callback: typeof last(args) === 'function' ? last(args) : undefined,
       }),
       // creates receipt for to invoke contract through account controller
       sendTransaction: (...args) => contractTxSend({

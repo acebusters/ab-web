@@ -110,10 +110,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               confParams.ntzAddr,
               this.props.account.proxy,
               0,
-              {
-                from: this.props.account.proxy,
-                // gas: 2000000,
-              }
+              { from: this.props.account.proxy }
             );
             this.props.claimETH(event.transactionHash);
           }
@@ -123,6 +120,21 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           }
         });
       });
+    });
+
+    // Check if we have unfinished sell
+    this.token.allowance.callPromise(
+      confParams.ntzAddr,
+      proxyAddr,
+    ).then((value) => {
+      if (!value.eq(0)) {
+        this.token.transferFrom.sendTransaction(
+          confParams.ntzAddr,
+          this.props.account.proxy,
+          0,
+          { from: this.props.account.proxy }
+        );
+      }
     });
   }
 
@@ -146,10 +158,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.token.transfer.sendTransaction(
       confParams.ntzAddr,
       `0x${new BigNumber(amount).mul(ntzDecimals).toString(16)}`,
-      {
-        from: this.props.account.proxy,
-        // gas: 2000000,
-      }
+      { from: this.props.account.proxy }
     );
     this.props.modalDismiss();
   }
