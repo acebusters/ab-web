@@ -43,6 +43,7 @@ const StatusAction = ({
   // else show nothing
   return null;
 };
+
 StatusAction.propTypes = {
   pos: React.PropTypes.number,
   showStatus: React.PropTypes.object,
