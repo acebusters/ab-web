@@ -25,7 +25,6 @@ import {
   WEB3_CONNECTED,
   BLOCK_NOTIFY,
   ETH_TRANSFER,
-  // CONTRACT_EVENT,
   web3Error,
   web3Connected,
   web3Disconnected,
@@ -129,7 +128,6 @@ function* web3ConnectSaga() {
     const tokenContract = web3Instance.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
     yield call(delay, 500);
     yield fork(ethEventListenerSaga, tokenContract);
-    // yield fork(claimETHSaga, tokenContract);
   } catch (err) {
     yield put(web3Disconnected({ isConnected: false, error: err }));
   }
@@ -312,14 +310,6 @@ function* transferETHSaga() {
     }
   }
 }
-
-// function* claimETHSaga(contract) {
-//   const eventChan = yield actionChannel(CONTRACT_EVENT);
-//   while (true) { // eslint-disable-line no-constant-condition
-//     const { payload } = yield take(eventChan);
-//     console.log(payload, contract);
-//   }
-// }
 
 const ethEvent = (contract) => eventChannel((emitter) => {
   const contractEvents = contract.allEvents({ fromBlock: 'latest' });

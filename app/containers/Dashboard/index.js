@@ -202,11 +202,8 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const weiBalance = this.web3.eth.balance(this.props.account.proxy);
     const ethBalance = weiBalance && weiBalance.div(ethDecimals);
     const floor = this.token.floor();
-    // const ethFloor = weiFloor && weiFloor.div(ethDecimals);
     const babBalance = this.token.balanceOf(this.props.account.proxy);
     const ntzBalance = babBalance && babBalance.div(ntzDecimals);
-
-    // console.log(ethFloor && ethFloor.toString(), weiFloor && weiFloor.toString());
 
     const listPending = pendingToList(this.props.account.pending);
 
