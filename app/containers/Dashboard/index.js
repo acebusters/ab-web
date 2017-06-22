@@ -10,7 +10,7 @@ import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from
 import messages from './messages';
 import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
-import { contractEvent, accountLoaded, transferETH } from '../AccountProvider/actions';
+import { contractEvent, accountLoaded, transferETH, claimETH } from '../AccountProvider/actions';
 import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, conf } from '../../app.config';
 
@@ -103,7 +103,20 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           .filter(({ args = {} }) => args.from === proxyAddr || args.to === proxyAddr)
           .forEach(this.props.contractEvent);
 
-        events.watch((watchError) => {
+        events.watch((watchError, event) => {
+          const { pendingSell = [] } = this.props.account;
+          if (pendingSell.indexOf(event.transactionHash) > -1) {
+            this.token.transferFrom.sendTransaction(
+              confParams.ntzAddr,
+              this.props.account.proxy,
+              0,
+              {
+                from: this.props.account.proxy,
+                // gas: 2000000,
+              }
+            );
+            this.props.claimETH(event.transactionHash);
+          }
           if (!watchError && this.props.account.proxy) {
             this.token.balanceOf.call(this.props.account.proxy);
             this.web3.eth.getBalance(this.props.account.proxy);
@@ -135,10 +148,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       `0x${new BigNumber(amount).mul(ntzDecimals).toString(16)}`,
       {
         from: this.props.account.proxy,
-        gas: 2000000,
-      },
-      (err, res) => {
-        console.log(err, res);
+        // gas: 2000000,
       }
     );
     this.props.modalDismiss();
@@ -357,6 +367,7 @@ const txnsToList = (txns, proxyAddr) => {
 Dashboard.propTypes = {
   modalAdd: PropTypes.func,
   transferETH: PropTypes.func,
+  claimETH: PropTypes.func,
   modalDismiss: PropTypes.func,
   contractEvent: PropTypes.func,
   accountLoaded: PropTypes.func,
@@ -378,6 +389,7 @@ function mapDispatchToProps() {
     modalAdd,
     modalDismiss,
     transferETH,
+    claimETH,
     contractEvent: (event) => contractEvent({ event }),
     accountLoaded,
   };

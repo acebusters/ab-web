@@ -31,6 +31,8 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
       }),
       // creates receipt for to invoke contract through account controller
       sendTransaction: (...args) => contractTxSend({
+        args,
+        methodName,
         key: getMethodKey({ methodName, args }),
         dest: address,
         data: contractInstance[methodName].getData(...args),
