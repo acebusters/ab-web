@@ -70,7 +70,7 @@ export const SeatWrapper = styled.div`
 
 export const SeatContainer = styled.div`
   position: absolute;
-  height: 75%;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -259,21 +259,30 @@ export const StatusSeat = styled.div`
 export const TimerWrapper = styled(SharedLower)`
   width: ${scaleSeat(100)};
   background-color: #393939;
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 75px;  
+  background-color: none;
 `;
 
 export const TimerBackground = styled.div`
-  position: absolute;
+  position: relative;
   height: ${scaleSeat(6)};
-  margin-top: 0;
   margin-right: ${scaleSeat(3)};
   margin-bottom: ${scaleSeat(3)};
   margin-left: ${scaleSeat(3)};
   background-color: #727272;
   border-radius: 0 0 ${scaleSeat(2)} ${scaleSeat(2)};
+  margin--bottom: 0;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  background-color: none;
 `;
 
 export const TimerBar = styled.div`
-  position: absolute;
+  position: relative;
   height: 100%;
   top: 0px;
   left: 0px;
@@ -286,6 +295,10 @@ export const TimerBar = styled.div`
     if (props.type === 'danger') return dangerBg;
     return infoBg;
   }};
+  display: flex;
+  justify-content: flex-start;
+  background-color: none;
+  
 `;
 
 // ButtonJoin
