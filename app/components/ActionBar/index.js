@@ -9,7 +9,7 @@ import FlagButton from './FlagButton';
 import ControlBetRaise from './ControlBetRaise';
 import ControlCheckCall from './ControlCheckCall';
 import ControlFold from './ControlFold';
-import Slider from '../Slider';
+import Slider from '../../containers/Slider';
 
 import {
   ActionBarWrapper,
