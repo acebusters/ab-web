@@ -42,17 +42,20 @@ const ChipStack = styled.div`
   margin-right: 0.5em;
   width: 1em;
   height: 2em;
+  z-index: 2000;
 `;
 
 const Amount = styled.div`
-  position: absolute;
   color: ${white};
+  float: left;
   left: 1.5em;
   top: 0.5em;
 `;
 
 const Wrapper = styled.div`
   position: absolute;
+  min-width: 4em;
+  z-index: 1000;
   top: ${(props) => props.top};
   left: ${(props) => props.left};
 `;
