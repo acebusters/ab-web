@@ -41,18 +41,13 @@ handle.propTypes = {
 class Slider extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      value: 50,
-    };
     this.onSliderChange = this.onSliderChange.bind(this);
     this.onSliderUpdate = this.onSliderUpdate.bind(this);
   }
   componentWillMount() {
-    this.setState({ value: this.props.minRaise });
     this.props.updateAmount(this.props.minRaise);
   }
   onSliderChange(value) {
-    this.setState({ value });
     this.props.updateAmount(value);
   }
   onSliderUpdate(value) {
@@ -64,7 +59,7 @@ class Slider extends React.Component {
         <RCSlider
           min={this.props.minRaise}
           max={this.props.myStack}
-          value={this.state.value}
+          value={this.props.amount}
           onChange={this.onSliderChange}
           onAfterChange={this.onSliderUpdate}
           handle={handle}
@@ -76,6 +71,7 @@ class Slider extends React.Component {
   }
 }
 Slider.propTypes = {
+  amount: React.PropTypes.number,
   updateAmount: React.PropTypes.func,
   minRaise: React.PropTypes.number,
   myStack: React.PropTypes.number,
