@@ -39,6 +39,7 @@ export const Button = styled.button`
 
 export const Container = styled.div`
   position: absolute;
+  pointer-events: none;
   top: 0;
   left: 0;
   display: flex;
@@ -63,6 +64,7 @@ export const MenuContainer = styled.div`
   flex-direction: column;
   min-width: 148px;
   margin-left: auto;
+  pointer-events: all;
   background: ${(props) => props.open ? menuOpen : 'none'};
   border-bottom-left-radius: 8px;
   box-shadow: ${(props) => props.open ? menuBoxShadow : 'none'};
