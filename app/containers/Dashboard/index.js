@@ -10,7 +10,7 @@ import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from
 import messages from './messages';
 import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
-import { contractEvent, accountLoaded, transferETH, claimETH } from '../AccountProvider/actions';
+import { contractEvent, accountLoaded, transferETH, claimETH, proxyEvent } from '../AccountProvider/actions';
 import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, conf } from '../../app.config';
 
@@ -94,8 +94,11 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const web3 = getWeb3();
     this.proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
     this.web3.eth.getBlockNumber((err, blockNumber) => {
-      this.proxy.Received({ fromBlock: blockNumber - LOOK_BEHIND_PERIOD, toBlock: 'latest' }).watch(() => {
-        this.web3.eth.getBalance(proxyAddr);
+      this.proxy.Received({ fromBlock: blockNumber - LOOK_BEHIND_PERIOD, toBlock: 'latest' }).watch((error, event) => {
+        if (!error && event) {
+          this.props.proxyEvent(event);
+          this.web3.eth.getBalance(proxyAddr);
+        }
       });
     });
   }
@@ -384,6 +387,7 @@ Dashboard.propTypes = {
   modalAdd: PropTypes.func,
   transferETH: PropTypes.func,
   claimETH: PropTypes.func,
+  proxyEvent: PropTypes.func,
   modalDismiss: PropTypes.func,
   contractEvent: PropTypes.func,
   accountLoaded: PropTypes.func,
@@ -405,6 +409,7 @@ function mapDispatchToProps() {
     modalAdd,
     modalDismiss,
     transferETH,
+    proxyEvent,
     claimETH,
     contractEvent: (event) => contractEvent({ event }),
     accountLoaded,

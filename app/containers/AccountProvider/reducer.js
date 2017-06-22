@@ -15,6 +15,7 @@ import {
   CONTRACT_EVENT,
   ACCOUNT_LOADED,
   READY_STATE,
+  PROXY_EVENT,
   ETH_TRANSFER_SUCCESS,
   ETH_CLAIM,
 } from './actions';
@@ -105,17 +106,12 @@ function accountProviderReducer(state = initialState, action) {
     case CONTRACT_TX_ERROR:
       return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
 
+    case PROXY_EVENT:
+      return completePending(action.payload.event.transactionHash)(state);
+
     case CONTRACT_EVENT:
       return state
-        .withMutations((newState) => (
-          newState.get('pending').reduce((st, value, key) => {
-            if (value.get('txHash') === action.event.transactionHash) {
-              return st.deleteIn(['pending', key]);
-            }
-
-            return st;
-          }, newState)
-        ))
+        .withMutations(completePending(action.event.transactionHash))
         .withMutations((newState) => {
           const tx = {
             blockNumber: action.event.blockNumber,
@@ -169,6 +165,18 @@ function addPending(state, action) {
   // at the same time and no nonce can be reused by accident.
   return state.set('lastNonce', action.payload.nonce)
               .setIn(['pending', action.payload.nonce, 'txHash'], action.payload.txHash);
+}
+
+function completePending(txHash) {
+  return (state) => (
+    state.get('pending').reduce((st, value, key) => {
+      if (value.get('txHash') === txHash) {
+        return st.deleteIn(['pending', key]);
+      }
+
+      return st;
+    }, state)
+  );
 }
 
 export default accountProviderReducer;
