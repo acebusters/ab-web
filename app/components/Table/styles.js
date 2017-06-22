@@ -14,7 +14,7 @@ import {
 
 export const TableContainer = styled.div`
   background-image: ${backgroundTable};
-  margin-top: 18px;
+  margin-top: 5%;
   margin-right: auto;
   margin-left: auto;
   
@@ -69,4 +69,14 @@ export const HandBox = styled.div`
   border-radius: 0.5em;
   color: ${white};
   transform: translate(-50%,-20%);
+`;
+
+export const PokerTable = styled.div`
+  position: absolute;
+  transform: translateX(-50%);
+  top: -20%;
+  left: 50%;
+  width: 100%;
+  height: 150%;
+  padding: 20%;
 `;
