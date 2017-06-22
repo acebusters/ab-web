@@ -13,7 +13,8 @@ import { StatusWrapper, StatusActionStyle } from './styles';
 
 const Wrapper = styled.div`
   position: relative;
-  margin-right: 5em;
+  margin-right: 7em;
+  margin-left: 0;
 `;
 
 const StatusAction = ({

@@ -66,6 +66,7 @@ export const SeatWrapper = styled.div`
   color: 'white';
   width: 10%;
   height: 25%;
+  min-width: 100px;
 `;
 
 export const SeatContainer = styled.div`
