@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import ethUtil from 'ethereumjs-util';
-import { takeLatest, select, actionChannel, put, fork, take, takeEvery, call, cancelled } from 'redux-saga/effects';
+import { takeLatest, select, actionChannel, put, fork, take, takeEvery, call } from 'redux-saga/effects';
 import { delay, eventChannel, END } from 'redux-saga';
 import fetch from 'isomorphic-fetch';
 import Raven from 'raven-js';
@@ -328,13 +328,11 @@ const ethEvent = (contract) => eventChannel((emitter) => {
 
 export function* ethEventListenerSaga(contract) {
   const chan = yield call(ethEvent, contract);
-  try {
-    const event = yield take(chan);
-    yield put(contractEvent({ event }));
-  } finally {
-    if (yield cancelled()) {
-      chan.close();
-    }
+  while (true) { // eslint-disable-line no-constant-condition
+    try {
+      const event = yield take(chan);
+      yield put(contractEvent({ event }));
+    } catch (e) {} // eslint-disable-line no-empty
   }
 }
 
