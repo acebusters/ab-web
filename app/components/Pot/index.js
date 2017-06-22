@@ -42,7 +42,7 @@ const ChipStack = styled.div`
   margin-right: 0.5em;
   width: 1em;
   height: 2em;
-  z-index: 2000;
+  z-index: 1000;
 `;
 
 const Amount = styled.div`
