@@ -193,7 +193,7 @@ export const StackBox = styled.div`
 // status
 export const StatusWrapper = styled.div`
   display: flex;
-
+  
   background-color: none;
 `;
 
@@ -202,11 +202,13 @@ export const StatusActionStyle = styled(SharedLower)`
   padding-left: ${scaleSeat(10)};
   padding-bottom: ${scaleSeat(1)};
   padding-right: ${scaleSeat(10)};
+  min-width: 85px;
+  min-height: 15px;
+  text-align: center;
   font-weight: ${
     (props) => (props.type === 'info') ? fontWeightInfo : fontWeigthBold
   };
   font-size: ${scaleSeat(11)};
-
   color: ${(props) => {
     if (props.type === 'success') return successColor;
     if (props.type === 'info') return 'black';
@@ -256,7 +258,7 @@ export const TimerWrapper = styled(SharedLower)`
 `;
 
 export const TimerBackground = styled.div`
-  position: relative;
+  position: absolute;
   height: ${scaleSeat(6)};
   margin-top: 0;
   margin-right: ${scaleSeat(3)};
