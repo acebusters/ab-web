@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import BigNumber from 'bignumber.js';
 
-import { Form, reduxForm } from 'redux-form/immutable';
+import { Form, reduxForm, formValueSelector } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
 
 import Button from '../../components/Button';
@@ -10,6 +11,9 @@ import AmountField from '../../components/AmountField';
 import H2 from '../../components/H2';
 
 import messages from './messages';
+
+const ntzDecimals = new BigNumber(10).pow(12);
+const ethDecimals = new BigNumber(10).pow(18);
 
 const validate = (values) => {
   const errors = {};
@@ -36,13 +40,13 @@ class SellDialog extends React.Component { // eslint-disable-line react/prefer-s
   }
 
   render() {
-    const { handleSubmit, submitting, maxAmount } = this.props;
+    const { handleSubmit, submitting, maxAmount, floorPrice, amount = 0 } = this.props;
 
     return (
       <div>
         <H2><FormattedMessage {...messages.header} /></H2>
 
-        Floor price → amount eth (should be live)
+        {floorPrice.div(ethDecimals.div(ntzDecimals)).mul(amount).toString()} ETH
 
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <AmountField
@@ -66,8 +70,10 @@ class SellDialog extends React.Component { // eslint-disable-line react/prefer-s
 SellDialog.propTypes = {
   submitting: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
+  floorPrice: PropTypes.object, // BigNumber
   handleSubmit: PropTypes.func,
   handleSell: PropTypes.func,
+  amount: PropTypes.number,
   // error: PropTypes.any,
 };
 
@@ -78,12 +84,15 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const mapStateToProps = () => ({
+const valueSelector = formValueSelector('ntz-sell');
+
+const mapStateToProps = (state) => ({
+  amount: valueSelector(state, 'amount'),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
-    form: 'purchase',
+    form: 'ntz-sell',
     validate,
     warn,
   })(SellDialog)

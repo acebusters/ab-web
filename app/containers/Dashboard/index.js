@@ -66,9 +66,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   componentWillReceiveProps(nextProps) {
-    const balance = this.token.balanceOf(this.props.account.proxy);
+    const balance = this.token.balanceOf(nextProps.account.proxy);
     if (!balance && nextProps.account.proxy) {
       this.token.balanceOf.call(nextProps.account.proxy);
+    }
+
+    const floor = this.token.floor();
+    if (!floor) {
+      this.token.floor.call();
     }
 
     if (this.props.account.proxy === undefined && nextProps.account.proxy) {
@@ -157,7 +162,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   handleNTZSell(amount) {
     this.token.transfer.sendTransaction(
       confParams.ntzAddr,
-      BigNumber(amount).mul(ntzDecimals),
+      new BigNumber(amount).mul(ntzDecimals),
       { from: this.props.account.proxy }
     );
     this.props.modalDismiss();
@@ -196,8 +201,12 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const qrUrl = `ether:${this.props.account.proxy}`;
     const weiBalance = this.web3.eth.balance(this.props.account.proxy);
     const ethBalance = weiBalance && weiBalance.div(ethDecimals);
+    const floor = this.token.floor();
+    // const ethFloor = weiFloor && weiFloor.div(ethDecimals);
     const babBalance = this.token.balanceOf(this.props.account.proxy);
     const ntzBalance = babBalance && babBalance.div(ntzDecimals);
+
+    // console.log(ethFloor && ethFloor.toString(), weiFloor && weiFloor.toString());
 
     const listPending = pendingToList(this.props.account.pending);
 
@@ -212,7 +221,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
         <Section>
           <Blocky blocky={createBlocky(this.props.signerAddr)} />
-          <h3> Your address:</h3>
+          <h3>Your address:</h3>
 
           <WithLoading
             isLoading={!this.props.account.proxy || this.props.account.proxy === '0x'}
@@ -260,7 +269,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               TRANSFER
             </Button>
           }
-          {ntzBalance &&
+          {ntzBalance && floor &&
             <Button
               align="left"
               onClick={() => {
@@ -268,6 +277,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                   <SellDialog
                     handleSell={this.handleNTZSell}
                     maxAmount={ntzBalance}
+                    floorPrice={floor}
                   />
                 );
               }}
