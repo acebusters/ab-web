@@ -72,6 +72,9 @@ class ActionBarContainer extends React.Component {
       this.props.setActionBarTurnComplete(false);
       this.props.setActionBarMode('');
     }
+    if (nextProps.minRaise && nextProps.minRaise !== this.props.minRaise) {
+      this.updateAmount(nextProps.minRaise);
+    }
   }
 
   // call this after each player action

@@ -38,38 +38,20 @@ handle.propTypes = {
   // index: React.PropTypes.number,
 };
 
-class Slider extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onSliderChange = this.onSliderChange.bind(this);
-    this.onSliderUpdate = this.onSliderUpdate.bind(this);
-  }
-  componentWillMount() {
-    this.props.updateAmount(this.props.minRaise);
-  }
-  onSliderChange(value) {
-    this.props.updateAmount(value);
-  }
-  onSliderUpdate(value) {
-    this.props.updateAmount(value);
-  }
-  render() {
-    return (
-      <SliderWrapper name="slider-wrapper">
-        <RCSlider
-          min={this.props.minRaise}
-          max={this.props.myStack}
-          value={this.props.amount}
-          onChange={this.onSliderChange}
-          onAfterChange={this.onSliderUpdate}
-          handle={handle}
-          railStyle={styles.rail}
-          trackStyle={styles.track}
-        />
-      </SliderWrapper>
-    );
-  }
-}
+const Slider = (props) => (
+  <SliderWrapper name="slider-wrapper">
+    <RCSlider
+      min={props.minRaise}
+      max={props.myStack}
+      value={props.amount}
+      onChange={(value) => props.updateAmount(value)}
+      onAfterChange={(value) => props.updateAmount(value)}
+      handle={handle}
+      railStyle={styles.rail}
+      trackStyle={styles.track}
+    />
+  </SliderWrapper>
+);
 Slider.propTypes = {
   amount: React.PropTypes.number,
   updateAmount: React.PropTypes.func,
