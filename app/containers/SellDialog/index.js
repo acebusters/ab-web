@@ -46,7 +46,12 @@ class SellDialog extends React.Component { // eslint-disable-line react/prefer-s
       <div>
         <H2><FormattedMessage {...messages.header} /></H2>
 
-        {floorPrice.div(ethDecimals.div(ntzDecimals)).mul(amount).toString()} ETH
+        <FormattedMessage
+          {...messages.expectedAmount}
+          values={{
+            amount: floorPrice.div(ethDecimals.div(ntzDecimals)).mul(amount).toString(),
+          }}
+        />
 
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <AmountField
