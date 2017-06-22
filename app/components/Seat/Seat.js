@@ -18,10 +18,13 @@ import {
 const Seat = (props) => {
   const {
     coords,
+    pos,
+    myPos,
     seatStatus,
   } = props;
+
   return (
-    <SeatWrapper coords={coords} mySeat={props.myPos === props.pos}>
+    <SeatWrapper coords={coords} pos={pos} myPos={myPos}>
       <SeatContainer
         activePlayer={seatStatus && seatStatus === STATUS_MSG.active}
       >
