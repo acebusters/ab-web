@@ -3,11 +3,18 @@
 */
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
+import styled from 'styled-components';
 
 import SeatTimer from './SeatTimer';
 import SitoutTimer from './SitoutTimer';
 
 import { StatusWrapper, StatusActionStyle } from './styles';
+
+
+const Wrapper = styled.div`
+  position: relative;
+  margin-right: 5em;
+`;
 
 const StatusAction = ({
   showStatus,
@@ -19,11 +26,23 @@ const StatusAction = ({
 }) => {
   // if seat's turn for action, show timer for action
   if (whosTurn === pos) {
-    if (timeLeft >= 0) return <SeatTimer timeLeft={timeLeft} />;
+    if (timeLeft >= 0) {
+      return (
+        <Wrapper>
+          <SeatTimer name="time-left" timeLeft={timeLeft} />
+        </Wrapper>
+      );
+    }
   }
 
   // if seat is in sitout, show the sitout timer
-  if (sitout >= 0) return <SitoutTimer sitout={sitout} />;
+  if (sitout >= 0) {
+    return (
+      <Wrapper>
+        <SitoutTimer sitout={sitout} />
+      </Wrapper>
+    );
+  }
 
   // if seat has a status, show action status
   if (!isEmpty(showStatus)) {
