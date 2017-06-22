@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableContainer,
   TableAndChairs,
+  PokerTable,
   HandBox,
   Winner,
 } from './styles';
@@ -36,23 +37,25 @@ const TableComponent = (props) => (
       </TableHeader>
 
       <TableAndChairs id="table-and-chairs" >
+        <PokerTable>
+          <img src={tableImage} alt="" />
+          { props.potSize > 0 &&
+            <Pot className="pot" potSize={props.potSize} top="55%" left="50%" />
+          }
 
-        <img src={tableImage} alt="" />
-        { props.potSize > 0 &&
-          <Pot className="pot" potSize={props.potSize} top="55%" left="50%" />
-        }
+          <Seats seats={props.seats} />
 
-        <Seats seats={props.seats} />
+          <Board id="board" board={props.board}>
+            { props.board }
+          </Board>
 
-        <Board id="board" board={props.board}>
-          { props.board }
-        </Board>
-
-        { props.winners.length > 0 &&
-        <Winner className="winner">{ props.winners }</Winner>
-        }
+          { props.winners.length > 0 &&
+            <Winner className="winner">{ props.winners }</Winner>
+          }
+        </PokerTable>
 
       </TableAndChairs>
+
 
       { props.myHand &&
         <HandBox className="hand-box"> { props.myHand.descr }</HandBox>
