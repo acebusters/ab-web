@@ -25,6 +25,7 @@ export const TableContainer = styled.div`
 
 export const TableHeader = styled.div`
    position: relative;
+   
    text-align: left;
    color: ${white};
    padding-left: 10em;
@@ -43,7 +44,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Winner = styled.div`
+export const Winner = styled.div` 
   left: 50%;
   top: 100%;
   position: absolute;

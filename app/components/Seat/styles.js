@@ -48,7 +48,7 @@ export const SharedMiddle = styled.div`
 `;
 
 export const SharedLower = styled.div`
-  margin-left: ${scaleSeat(0)};
+  margin-left: ${scaleSeat(8)};
   box-shadow: ${smallShadow};
   border-radius: 0 0 ${scaleSeat(3)} ${scaleSeat(3)};
 `;
@@ -65,18 +65,21 @@ export const SeatWrapper = styled.div`
   top: ${(props) => props.coords[1]}%;
   color: 'white';
   width: 10%;
-  height: 25%;
-  min-width: 100px;
+  height: 25%;  
+  z-index: 1000;
 `;
 
 export const SeatContainer = styled.div`
   position: absolute;
-  height: 100%;
-  width: 100%;
+  top: ${scaleSeat(-20)};
+  left: ${scaleSeat(-64)};
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center; 
+  width: ${scaleSeat(128)};
+  height: auto;
+
+  color: white;
+  background-color: none;
   opacity: ${(props) => props.activePlayer ? 1 : 0.5};
 `;
 
@@ -89,8 +92,8 @@ export const ChipButtonContainer = styled.div`
 export const DealerButton = styled.div`
   display: ${(props) => !(props.dealer === props.pos) ? 'none' : 'inherit'};
   position: absolute;
-  top: ${scaleSeat(13)};
-  left: ${scaleSeat(-35)};
+  top: ${scaleSeat(-28)};
+  left: ${scaleSeat(12)};
   width: ${scaleSeat(20)};
   height: ${scaleSeat(20)};
 
@@ -152,10 +155,10 @@ export const CardStyle = styled.img`
 export const InfoWrapper = styled(SharedMiddle)`
   display: flex;
   border-radius: ${scaleSeat(4)};
+
   color: #D5D5D5;
-  min-width: 110px;
-  min-height: 44px;
   font-weight: 400;
+  z-index: 100;
 `;
 
 export const AvatarImage = styled.div`
@@ -193,26 +196,21 @@ export const StackBox = styled.div`
 
 // status
 export const StatusWrapper = styled.div`
-  position: absolute;
   display: flex;
-  justify-content: flex-end;
-  min-width: 75px;  
+
   background-color: none;
 `;
 
 export const StatusActionStyle = styled(SharedLower)`
   padding-top: 0;
-  margin-top: 9em;
   padding-left: ${scaleSeat(10)};
   padding-bottom: ${scaleSeat(1)};
   padding-right: ${scaleSeat(10)};
-  min-width: 85px;
-  min-height: 15px;
-  text-align: center;
   font-weight: ${
     (props) => (props.type === 'info') ? fontWeightInfo : fontWeigthBold
   };
   font-size: ${scaleSeat(11)};
+
   color: ${(props) => {
     if (props.type === 'success') return successColor;
     if (props.type === 'info') return 'black';
@@ -231,28 +229,25 @@ export const StatusActionStyle = styled(SharedLower)`
 `;
 
 export const StatusSeatWrapper = styled.div`
-  position: absolute;
   display: flex;
   justify-content: flex-end;
   margin-right: ${scaleSeat(6)};
-  min-width: 75px;  
+  margin-top: ${scaleSeat(22)};
+
   background-color: none;
 `;
 
 export const StatusSeat = styled.div`
   padding-top: 0;
-  margin-top: -40px;
-  padding-left: ${scaleSeat(5)};
+  padding-left: ${scaleSeat(14)};
   padding-bottom: ${scaleSeat(1)};
-  padding-right: ${scaleSeat(5)};
+  padding-right: ${scaleSeat(14)};
   height: ${scaleSeat(18)};
 
   font-weight: ${fontWeightInfo};
   font-size: ${scaleSeat(11)};
   color: ${infoColor};
-  justify-content: flex-end;
-  min-width: 85px;
-  text-align:center;
+
   background: ${infoReverseBg};
   box-shadow: ${smallShadow};
   border-radius: ${scaleSeat(3)} ${scaleSeat(3)} 0 0;
@@ -260,32 +255,23 @@ export const StatusSeat = styled.div`
 
 // timer
 export const TimerWrapper = styled(SharedLower)`
-  width: ${scaleSeat(100)};
+  width: ${scaleSeat(110)};
   background-color: #393939;
-  position: absolute;
-  display: flex;
-  justify-content: flex-end;
-  min-width: 75px;  
-  background-color: none;
 `;
 
 export const TimerBackground = styled.div`
   position: relative;
   height: ${scaleSeat(6)};
+  margin-top: 0;
   margin-right: ${scaleSeat(3)};
   margin-bottom: ${scaleSeat(3)};
   margin-left: ${scaleSeat(3)};
   background-color: #727272;
   border-radius: 0 0 ${scaleSeat(2)} ${scaleSeat(2)};
-  margin--bottom: 0;
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-  background-color: none;
 `;
 
 export const TimerBar = styled.div`
-  position: relative;
+  position: absolute;
   height: 100%;
   top: 0px;
   left: 0px;
@@ -298,10 +284,6 @@ export const TimerBar = styled.div`
     if (props.type === 'danger') return dangerBg;
     return infoBg;
   }};
-  display: flex;
-  justify-content: flex-start;
-  background-color: none;
-  
 `;
 
 // ButtonJoin
@@ -312,19 +294,19 @@ export const ButtonStyle = styled(SharedMiddle)`
 
 export const ButtonWrapper = styled.button`
   position: absolute;
-  height: 100%;
-  width: 100%;
+  margin-top: ${scaleButtonJoin(42)};
+  top: ${scaleButtonJoin(-20)};
+  left: ${scaleButtonJoin(-64)};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  width: ${scaleButtonJoin(128)};
+  height: ${scaleButtonJoin(40)};
 
   color: #D5D5D5;
   font-weight: 400;
-  &:focus {
-    outline: none;
-  }
   &:hover {
     color: white;
     transform: scale(1.1, 1.1);
