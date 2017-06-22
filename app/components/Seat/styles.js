@@ -242,15 +242,17 @@ export const StatusSeatWrapper = styled.div`
 export const StatusSeat = styled.div`
   padding-top: 0;
   margin-top: -40px;
-  padding-left: ${scaleSeat(14)};
+  padding-left: ${scaleSeat(5)};
   padding-bottom: ${scaleSeat(1)};
-  padding-right: ${scaleSeat(14)};
+  padding-right: ${scaleSeat(5)};
   height: ${scaleSeat(18)};
 
   font-weight: ${fontWeightInfo};
   font-size: ${scaleSeat(11)};
   color: ${infoColor};
-
+  justify-content: flex-end;
+  min-width: 85px;
+  text-align:center;
   background: ${infoReverseBg};
   box-shadow: ${smallShadow};
   border-radius: ${scaleSeat(3)} ${scaleSeat(3)} 0 0;
