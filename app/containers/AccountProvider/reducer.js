@@ -107,20 +107,15 @@ function accountProviderReducer(state = initialState, action) {
 
     case CONTRACT_EVENT:
       return state
-        .withMutations((newState) => {
-          if (newState.get('pending')) {
-            return newState.get('pending').reduce((st, value, key) => {
-              if (value.get('txHash') === action.event.transactionHash) {
-                return st.deleteIn(['pending', key]);
-              }
+        .withMutations((newState) => (
+          newState.get('pending').reduce((st, value, key) => {
+            if (value.get('txHash') === action.event.transactionHash) {
+              return st.deleteIn(['pending', key]);
+            }
 
-              return st;
-            });
-          }
-
-          return state;
-        })
-        .setIn([action.event.address, 'transactions', action.event.transactionHash, 'blockNumber'], action.event.blockNumber)
+            return st;
+          }, newState)
+        ))
         .withMutations((newState) => {
           const tx = {
             blockNumber: action.event.blockNumber,
