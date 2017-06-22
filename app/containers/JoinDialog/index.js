@@ -7,9 +7,8 @@ import Button from '../../components/Button';
 import H2 from '../../components/H2';
 
 import { makeSbSelector } from '../Table/selectors';
-import {
-  makeSelectProxyAddr,
-} from '../AccountProvider/selectors';
+import { makeSelectProxyAddr } from '../AccountProvider/selectors';
+import { formatNtz } from '../../utils/amountFormater';
 
 export class JoinDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -56,8 +55,8 @@ export class JoinDialog extends React.Component { // eslint-disable-line react/p
           onChange={this.updateAmount}
         >
         </Slider>
-        <div> Max: {(max).formatNtz()}</div>
-        <div>{ (this.state) ? (this.state.amount).formatNtz() : (min).formatNtz() }</div>
+        <div> Max: {formatNtz(max)} &#x20a6;</div>
+        <div>{ (this.state) ? formatNtz(this.state.amount) : formatNtz(min) } &#x20a6;</div>
         <Button onClick={this.handleSubmit}>Join</Button>
       </div>
     );

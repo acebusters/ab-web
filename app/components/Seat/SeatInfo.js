@@ -2,7 +2,7 @@ import React from 'react';
 
 import Pot from '../Pot';
 import { nickNameByAddress } from '../../services/nicknames';
-
+import { formatNtz } from '../../utils/amountFormater';
 import {
   AvatarImage,
   AmountBox,
@@ -43,7 +43,7 @@ const SeatInfo = ({
 
     <DetailWrapper>
       <NameBox className="name-box">{nickNameByAddress(signerAddr)}</NameBox>
-      <StackBox className="stack-box">{(stackSize) ? (stackSize).formatNtz() : '0 NTZ'}</StackBox>
+      <StackBox className="stack-box">{formatNtz(stackSize)}</StackBox>
     </DetailWrapper>
   </InfoWrapper>
 );
