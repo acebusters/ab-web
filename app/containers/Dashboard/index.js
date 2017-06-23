@@ -17,6 +17,7 @@ import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz } from '../../utils/am
 
 import List from '../../components/List';
 import Alert from '../../components/Alert';
+import A from '../../components/A';
 import TransferDialog from '../TransferDialog';
 import PurchaseDialog from '../PurchaseDialog';
 import SellDialog from '../SellDialog';
@@ -352,7 +353,15 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 }
 
 const pendingToList = (pending = {}) => (
-  Object.keys(pending).map((key) => [key, pending[key].txHash])
+  Object.keys(pending).map((key) => [
+    key,
+    <A
+      href={`${confParams.etherscanUrl}tx/${pending[key].txHash}`}
+      target="_blank"
+    >
+      {pending[key].txHash}
+    </A>,
+  ])
 );
 
 const txnsToList = (txns, proxyAddr) => {
@@ -361,7 +370,12 @@ const txnsToList = (txns, proxyAddr) => {
       .filter((key) => txns[key] && txns[key].from && txns[key].to)
       .sort((a, b) => txns[b].blockNumber - txns[a].blockNumber)
       .map((key) => [
-        key.substring(2, 8), // txHash
+        <A
+          href={`${confParams.etherscanUrl}tx/${key}`}
+          target="_blank"
+        >
+          {key.substring(2, 8)}
+        </A>, // txHash
         txns[key].from.substring(2, 8), // from
         txns[key].to.substring(2, 8), // to
         new BigNumber((txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1).div(NTZ_DECIMALS).toNumber(), // value
