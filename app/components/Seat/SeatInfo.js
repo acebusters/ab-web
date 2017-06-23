@@ -2,10 +2,9 @@ import React from 'react';
 
 import Pot from '../Pot';
 import { nickNameByAddress } from '../../services/nicknames';
-
+import { formatNtz } from '../../utils/amountFormater';
 import {
   AvatarImage,
-  AmountBox,
   ChipButtonContainer,
   DealerButton,
   DetailWrapper,
@@ -13,15 +12,7 @@ import {
   NameBox,
   StackBox,
 } from './styles';
-import {
-  STATUS_MSG,
-  NTZ_DECIMALS,
-} from '../../app.config';
-
-const stackToString = (stackSize) => {
-  if (!stackSize) return '0';
-  return stackSize.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-};
+import { STATUS_MSG } from '../../app.config';
 
 const SeatInfo = ({
   amountCoords,
@@ -37,24 +28,21 @@ const SeatInfo = ({
     {seatStatus && seatStatus === STATUS_MSG.active ?
       <ChipButtonContainer className="chip-button-container">
         <DealerButton dealer={dealer} pos={pos}>D</DealerButton>
-
-        <AmountBox amountCoords={amountCoords}>
-          { (lastAmount > 0) &&
-            <Pot className="pot" potSize={lastAmount} left="0%" top="0%" />
-          }
-        </AmountBox>
+        { lastAmount > 0 &&
+          <Pot className="pot" potSize={lastAmount} left={`${amountCoords[0]}em`} top={`${amountCoords[1]}em `} />
+        }
       </ChipButtonContainer>
-      : null
+        : null
     }
 
     <AvatarImage className="avatar-image" bgImg={blocky} />
-
     <DetailWrapper>
       <NameBox className="name-box">{nickNameByAddress(signerAddr)}</NameBox>
-      <StackBox className="stack-box">{stackToString(stackSize / NTZ_DECIMALS)}</StackBox>
+      <StackBox className="stack-box">{formatNtz(stackSize)}</StackBox>
     </DetailWrapper>
   </InfoWrapper>
 );
+
 SeatInfo.propTypes = {
   amountCoords: React.PropTypes.array,
   blocky: React.PropTypes.string,
