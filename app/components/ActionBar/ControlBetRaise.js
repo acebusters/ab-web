@@ -66,6 +66,17 @@ const ControlBetRaise = (props) => {
   }
 
   // ActionBar will initially present these button options
+  if (myStack <= amountToCall || myStack <= minRaise) {
+    return (
+      <ActionButton
+        name="button-all-in"
+        text="All-In"
+        type="ALL-IN"
+        handleClick={() => handleAllIn()}
+        {...props}
+      />
+    );
+  }
   if (amountToCall === 0) {
     return (
       <ActionButton
@@ -73,17 +84,6 @@ const ControlBetRaise = (props) => {
         text="Bet"
         type="BET-SET"
         handleClick={() => setActionBarBetSlider(true)}
-        {...props}
-      />
-    );
-  }
-  if (myStack < amountToCall || myStack < minRaise) {
-    return (
-      <ActionButton
-        name="button-all-in"
-        text="All-In"
-        type="ALL-IN"
-        handleClick={() => handleAllIn()}
         {...props}
       />
     );
