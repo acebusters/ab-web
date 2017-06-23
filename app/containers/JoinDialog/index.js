@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Slider from 'react-rangeslider';
 import 'react-rangeslider/lib/index.css';
 import { createStructuredSelector } from 'reselect';
-import Button from '../../components/Button';
+import SubmitButton from '../../components/SubmitButton';
 import H2 from '../../components/H2';
 
 import { makeSbSelector } from '../Table/selectors';
@@ -40,7 +40,7 @@ export class JoinDialog extends React.Component { // eslint-disable-line react/p
         <div style={{ minWidth: '20em' }}>
           <H2>Sorry!</H2>
           <p>Your balance is not sufficient to join this table!</p>
-          <Button onClick={this.props.modalDismiss}>OK</Button>
+          <SubmitButton onClick={this.props.modalDismiss}>OK</SubmitButton>
         </div>
       );
     }
@@ -58,7 +58,8 @@ export class JoinDialog extends React.Component { // eslint-disable-line react/p
         </Slider>
         <div> Max: {max}</div>
         <div>{ (this.state) ? this.state.amount : min }</div>
-        <Button onClick={this.handleSubmit}>Join</Button>
+
+        <SubmitButton onClick={this.handleSubmit}>Join</SubmitButton>
       </div>
     );
   }
