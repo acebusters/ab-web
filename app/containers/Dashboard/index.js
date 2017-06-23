@@ -117,7 +117,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         if (!watchError && isUserEvent(event)) {
           this.token.balanceOf.call(this.props.account.proxy);
           this.web3.eth.getBalance(this.props.account.proxy);
-
           const { pendingSell = [] } = this.props.account;
           if (pendingSell.indexOf(event.transactionHash) > -1) {
             this.token.transferFrom.sendTransaction(
