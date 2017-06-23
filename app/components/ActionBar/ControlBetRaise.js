@@ -5,6 +5,7 @@ import ControlBlank from './ControlBlank';
 
 const ControlBetRaise = (props) => {
   const {
+    amount,
     amountToCall,
     handleAllIn,
     handleBet,
@@ -21,7 +22,7 @@ const ControlBetRaise = (props) => {
       return (
         <ActionButton
           name="bet-confirm-button"
-          text="Bet"
+          text={amount === myStack ? 'All-In' : 'Bet'}
           type="BET-CONFIRM"
           handleClick={() => handleBet()}
           {...props}
@@ -31,7 +32,7 @@ const ControlBetRaise = (props) => {
     return (
       <ActionButton
         name="raise-confirm-button"
-        text="Raise"
+        text={amount === myStack ? 'All-In' : 'Raise'}
         type="RAISE-CONFIRM"
         handleClick={() => handleBet()}
         {...props}
@@ -46,7 +47,7 @@ const ControlBetRaise = (props) => {
     return (
       <ActionButton
         name="raise-confirm-button"
-        text="Raise"
+        text={amount === myStack ? 'All-In' : 'Raise'}
         type="RAISE-EDIT"
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
@@ -57,7 +58,7 @@ const ControlBetRaise = (props) => {
     return (
       <ActionButton
         name="bet-button"
-        text="Bet"
+        text={amount === myStack ? 'All-In' : 'Bet'}
         type="BET-EDIT"
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
@@ -102,6 +103,7 @@ const ControlBetRaise = (props) => {
   return <ControlBlank {...props} />;
 };
 ControlBetRaise.propTypes = {
+  amount: React.PropTypes.number,
   amountToCall: React.PropTypes.number,
   handleBet: React.PropTypes.func,
   handleAllIn: React.PropTypes.func,
