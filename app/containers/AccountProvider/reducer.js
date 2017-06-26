@@ -15,7 +15,7 @@ import {
   CONTRACT_EVENTS,
   ACCOUNT_LOADED,
   READY_STATE,
-  PROXY_EVENT,
+  PROXY_EVENTS,
   ETH_TRANSFER_SUCCESS,
   ETH_CLAIM,
 } from './actions';
@@ -106,8 +106,11 @@ function accountProviderReducer(state = initialState, action) {
     case CONTRACT_TX_ERROR:
       return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
 
-    case PROXY_EVENT:
-      return completePending(action.payload.event.transactionHash)(state);
+    case PROXY_EVENTS:
+      return action.payload.reduce(
+        (newState, { transactionHash }) => completePending(transactionHash)(newState),
+        state
+      );
 
     case CONTRACT_EVENTS:
       return action.events.reduce(handleEvent, state);

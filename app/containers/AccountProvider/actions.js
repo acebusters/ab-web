@@ -24,7 +24,7 @@ export const ETH_TRANSFER = 'acebusters/AccountProvider/ETH_TRANSFER';
 export const ETH_TRANSFER_SUCCESS = 'acebusters/AccountProvider/ETH_TRANSFER_SUCCESS';
 export const ETH_TRANSFER_ERROR = 'acebusters/AccountProvider/ETH_TRANSFER_ERROR';
 
-export const PROXY_EVENT = 'acebusters/AccountProvider/PROXY_EVENT';
+export const PROXY_EVENTS = 'acebusters/AccountProvider/PROXY_EVENTS';
 
 export const CONTRACT_EVENTS = 'acebusters/AccountProvider/CONTRACT_EVENTS';
 export const BLOCK_NOTIFY = 'acebusters/AccountProvider/BLOCK_NOTIFY';
@@ -161,8 +161,15 @@ export function transferETHError(payload) {
 
 export function proxyEvent(event) {
   return {
-    type: PROXY_EVENT,
-    payload: { event },
+    type: PROXY_EVENTS,
+    payload: [event],
+  };
+}
+
+export function proxyEvents(events) {
+  return {
+    type: PROXY_EVENTS,
+    payload: events,
   };
 }
 
