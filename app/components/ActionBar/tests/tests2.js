@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable';
+import sinon from 'sinon';
 export const combine = (describe, it) => `${describe}, ${it}`;
 
 export const baseProps = fromJS({
@@ -6,8 +7,10 @@ export const baseProps = fromJS({
     tableAddr: '0x123',
   },
   active: false,
-  // amount: 0,
+  amount: 0,
   amountToCall: 0,
+  buttonActive: '',
+  disabled: false,
   callAmount: 0,
   minRaise: 0,
   mode: '',
@@ -15,13 +18,15 @@ export const baseProps = fromJS({
   sliderOpen: false,
   turnComplete: false,
   visible: false,
-  setActionBarBetSlider: () => {},
-  handleFold: () => {},
-  handleCheck: () => {},
-  handleCall: () => {},
-  handleBet: () => {},
-  updateAmount: () => {},
-  handleAllIn: () => {},
+  setActionBarMode: sinon.spy(),
+  setActionBarBetSlider: sinon.spy(),
+  setActionBarButtonActive: sinon.spy(),
+  handleFold: sinon.spy(),
+  handleCheck: sinon.spy(),
+  handleCall: sinon.spy(),
+  handleBet: sinon.spy(),
+  updateAmount: sinon.spy(),
+  handleAllIn: sinon.spy(),
 });
 
 export const atTable0 = {
@@ -34,17 +39,18 @@ export const atTable1 = {
   describe: 'when at table, and not Turn',
   it: 'actionBar should render as disabled, buttons should not be clickable',
   props: baseProps.merge({
-    active: true,
+    active: false,
     visible: true,
   }).toJS(),
 };
 
 export const atTable2 = {
   describe: 'when at table, and is Turn',
-  it: 'actionBar should render',
+  it: 'actionBar should render, and be clickable',
   props: baseProps.merge({
     active: true,
     visible: true,
+    buttonActive: 'CHECK',
   }).toJS(),
 };
 

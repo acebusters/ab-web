@@ -3,58 +3,93 @@
  */
 
 import React from 'react';
+import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import ActionBar from '../index';
 
-import tests from './tests';
+import * as tests from './tests2';
 
-describe(tests[0].describe, () => {
-  it(tests[0].it, () => {
+describe('atTable', () => {
+  describe(tests.atTable0.describe, () => {
+    it(tests.atTable0.it, () => {
+      const actionBar = shallow(
+        <ActionBar {...tests.atTable0.props} />
+      );
+      expect(actionBar.find('ActionBarComponent').length).toBe(0);
+    });
+  });
+
+  describe(tests.atTable1.describe, () => {
     const actionBar = shallow(
-      <ActionBar {...tests[0].props} />
+      <ActionBar {...tests.atTable1.props} />
     );
-    expect(actionBar.find('ActionBarComponent').length).toBe(0);
+    it(tests.atTable1.it, () => {
+      expect(actionBar.find({ name: 'action-bar-wrapper' }).length).toBe(1);
+    });
+    it('should not be clickable', () => {
+      actionBar.find('ControlCheckCall').simulate('click');
+      sinon.assert.notCalled(
+        tests.atTable1.props.handleCheck
+      );
+    });
+  });
+
+  describe(tests.atTable2.describe, () => {
+    const actionBar = mount(
+      <ActionBar {...tests.atTable2.props} />
+    );
+    it(tests.atTable2.it, () => {
+      expect(actionBar.find({ name: 'action-bar-wrapper' }).length).toBe(1);
+    });
+    it('should render as expected', () => {
+      expect(actionBar.find('ControlCheckCall').length).toBe(1);
+      expect(actionBar.find('ControlBetRaise').length).toBe(1);
+    });
+    it('should be clickable', () => {
+      // simulating mouseup here, as the modified props
+      // already simulate a mouseDown by setting the
+      // 'buttonActive' prop to 'CHECK' in this case
+      actionBar.find('ControlCheckCall').simulate('mouseUp');
+      sinon.assert.calledOnce(
+        tests.atTable2.props.handleCheck
+      );
+    });
   });
 });
 
-describe(tests[1].describe, () => {
-  it(tests[1].it, () => {
-    const actionBar = shallow(
-      <ActionBar {...tests[1].props} />
-    );
-    expect(actionBar.find('ActionBarComponent').length).toBe(0);
+describe(tests.amountToCheck.describe, () => {
+  const actionBar = mount(<ActionBar {...tests.amountToCheck.props} />);
+  it(tests.amountToCheck.it, () => {
+    expect(actionBar.find({ name: 'button-blank' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-check' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-bet' }).length).toEqual(1);
   });
 });
 
-describe(tests[2].describe, () => {
-  it(tests[2].it, () => {
-    const actionBar = shallow(
-      <ActionBar {...tests[2].props} />
+describe(tests.amountToCall0.describe, () => {
+  it(tests.amountToCall0.it, () => {
+    const actionBar = mount(
+      <ActionBar {...tests.amountToCall0.props} />
     );
-    expect(actionBar.find({ name: 'action-bar-wrapper' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-fold' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-call' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-raise' }).length).toEqual(1);
   });
 });
 
-describe(tests[3].describe, () => {
-  it(tests[3].it, () => {
-    const actionBar = shallow(
-      <ActionBar {...tests[3].props} />
+describe(tests.amountToCall1.describe, () => {
+  it(tests.amountToCall1.it, () => {
+    const actionBar = mount(
+      <ActionBar {...tests.amountToCall1.props} />
     );
-    expect(actionBar.find('ActionBarComponent').length).toBe(0);
+    expect(actionBar.find({ name: 'button-fold' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-call' }).length).toEqual(0);
+    expect(actionBar.find({ name: 'button-blank' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-all-in' }).length).toEqual(1);
   });
 });
 
-describe(tests[4].describe, () => {
-  it(tests[4].it, () => {
-    const actionBar = shallow(
-      <ActionBar {...tests[4].props} />
-    );
-    expect(actionBar.find('ButtonFold').html()).toContain('FOLD');
-    expect(actionBar.find('ButtonCheckCall').length).toBe(1);
-    expect(actionBar.find('ButtonBetRaise').length).toBe(1);
-  });
-});
-
+/*
 describe(tests[5].describe, () => {
   it(tests[5].it, () => {
     const actionBar = shallow(
@@ -141,3 +176,4 @@ describe(tests[12].describe, () => {
     expect(actionBar.find('ActionBarComponent').length).toBe(0);
   });
 });
+*/

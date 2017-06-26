@@ -1,4 +1,3 @@
-export const combine = (describe, it) => `${describe}, ${it}`;
 
 export default [{
   describe: '[0] during table "waiting"',
