@@ -28,6 +28,7 @@ import Blocky from '../../components/Blocky';
 import WithLoading from '../../components/WithLoading';
 
 import { Section } from './styles';
+import { createDashboardTxsSelector } from './selectors';
 
 const confParams = conf();
 
@@ -79,7 +80,20 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   watchProxyEvents(proxyAddr) {
     const web3 = getWeb3();
     this.proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
-    this.proxy.Received({ toBlock: 'latest' }).watch((error, event) => {
+    const isUserEvent = makeIsUserEvent(proxyAddr);
+
+    this.web3.eth.getBlockNumber((err, blockNumber) => {
+      this.proxy.allEvents({
+        fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
+        toBlock: 'latest',
+      }).get((error, eventList) => {
+        console.log(eventList.filter(isUserEvent));
+      });
+    });
+
+    this.proxy.Received({
+      toBlock: 'latest',
+    }).watch((error, event) => {
       if (!error && event) {
         this.props.proxyEvent(event);
         this.web3.eth.getBalance(proxyAddr);
@@ -100,25 +114,25 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             .filter(isUserEvent)
         );
       });
+    });
 
-      this.token.allEvents({
-        toBlock: 'latest',
-      }).watch((watchError, event) => {
-        if (!watchError && isUserEvent(event)) {
-          this.token.balanceOf.call(this.props.account.proxy);
-          this.web3.eth.getBalance(this.props.account.proxy);
-          const { pendingSell = [] } = this.props.account;
-          if (pendingSell.indexOf(event.transactionHash) > -1) {
-            this.token.transferFrom.sendTransaction(
-              confParams.ntzAddr,
-              this.props.account.proxy,
-              0,
-              { from: this.props.account.proxy }
-            );
-            this.props.claimETH(event.transactionHash);
-          }
+    this.token.allEvents({
+      toBlock: 'latest',
+    }).watch((watchError, event) => {
+      if (!watchError && isUserEvent(event)) {
+        this.token.balanceOf.call(this.props.account.proxy);
+        this.web3.eth.getBalance(this.props.account.proxy);
+        const { pendingSell = [] } = this.props.dashboardTxs;
+        if (pendingSell.indexOf(event.transactionHash) > -1) {
+          this.token.transferFrom.sendTransaction(
+            confParams.ntzAddr,
+            this.props.account.proxy,
+            0,
+            { from: this.props.account.proxy }
+          );
+          this.props.claimETH(event.transactionHash);
         }
-      });
+      }
     });
 
     // Check if we have unfinished sell
@@ -197,7 +211,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const floor = this.token.floor();
     const babzBalance = this.token.balanceOf(this.props.account.proxy);
 
-    const listPending = pendingToList(this.props.account.pending);
+    const listPending = pendingToList(this.props.dashboardTxs.pending);
 
     let listTxns = null;
     if (this.props.account[confParams.ntzAddr]) {
@@ -395,23 +409,27 @@ Dashboard.propTypes = {
   accountLoaded: PropTypes.func,
   web3Redux: PropTypes.any,
   signerAddr: PropTypes.string,
-  account: PropTypes.any,
+  account: PropTypes.object,
+  dashboardTxs: PropTypes.object,
   privKey: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
   account: makeSelectAccountData(),
+  dashboardTxs: createDashboardTxsSelector(),
   signerAddr: makeSignerAddrSelector(),
   privKey: makeSelectPrivKey(),
 });
 
-const makeIsUserEvent = (proxyAddr) => ({ args = {} }) => (
+const makeIsUserEvent = (proxyAddr) => ({ args = {}, address }) => (
   args.from === proxyAddr ||
   args.purchaser === proxyAddr ||
   args.seller === proxyAddr ||
+  args.sender === proxyAddr ||
   args.owner === proxyAddr ||
   args.spender === proxyAddr ||
-  args.to === proxyAddr
+  args.to === proxyAddr ||
+  address === proxyAddr
 );
 
 function mapDispatchToProps() {

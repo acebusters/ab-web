@@ -185,9 +185,7 @@ function addTx(event) {
 }
 
 function handleEvent(state, event) {
-  return state
-    .withMutations(completePending(event.transactionHash))
-    .withMutations(addTx(event));
+  return addTx(event)(state);
 }
 
 export default accountProviderReducer;
