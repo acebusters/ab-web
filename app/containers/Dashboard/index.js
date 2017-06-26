@@ -10,7 +10,7 @@ import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from
 import messages from './messages';
 import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
-import { contractEvents, accountLoaded, transferETH, claimETH, proxyEvent } from '../AccountProvider/actions';
+import { contractEvents, accountLoaded, transferETH, claimETH, proxyEvents } from '../AccountProvider/actions';
 import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, conf } from '../../app.config';
 import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz } from '../../utils/amountFormater';
@@ -87,7 +87,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
         toBlock: 'latest',
       }).get((error, eventList) => {
-        console.log(eventList.filter(isUserEvent));
+        this.props.proxyEvents(eventList.filter(isUserEvent));
       });
     });
 
@@ -95,7 +95,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       toBlock: 'latest',
     }).watch((error, event) => {
       if (!error && event) {
-        this.props.proxyEvent(event);
+        this.props.proxyEvents([event]);
         this.web3.eth.getBalance(proxyAddr);
       }
     });
@@ -403,7 +403,7 @@ Dashboard.propTypes = {
   modalAdd: PropTypes.func,
   transferETH: PropTypes.func,
   claimETH: PropTypes.func,
-  proxyEvent: PropTypes.func,
+  proxyEvents: PropTypes.func,
   modalDismiss: PropTypes.func,
   contractEvents: PropTypes.func,
   accountLoaded: PropTypes.func,
@@ -421,23 +421,37 @@ const mapStateToProps = createStructuredSelector({
   privKey: makeSelectPrivKey(),
 });
 
-const makeIsUserEvent = (proxyAddr) => ({ args = {}, address }) => (
-  args.from === proxyAddr ||
-  args.purchaser === proxyAddr ||
-  args.seller === proxyAddr ||
-  args.sender === proxyAddr ||
-  args.owner === proxyAddr ||
-  args.spender === proxyAddr ||
-  args.to === proxyAddr ||
-  address === proxyAddr
-);
+const makeIsUserEvent = (proxyAddr) => (event) => {
+  const { args = {}, address } = event;
+  // console.log(
+  //   args.from === proxyAddr,
+  //   args.purchaser === proxyAddr,
+  //   args.seller === proxyAddr,
+  //   args.sender === proxyAddr,
+  //   args.owner === proxyAddr,
+  //   args.spender === proxyAddr,
+  //   args.to === proxyAddr,
+  //   address === proxyAddr
+  // );
+  // console.log('-----');
+  return (
+    args.from === proxyAddr ||
+    args.purchaser === proxyAddr ||
+    args.seller === proxyAddr ||
+    args.sender === proxyAddr ||
+    args.owner === proxyAddr ||
+    args.spender === proxyAddr ||
+    args.to === proxyAddr ||
+    address === proxyAddr
+  );
+};
 
 function mapDispatchToProps() {
   return {
     modalAdd,
     modalDismiss,
     transferETH,
-    proxyEvent,
+    proxyEvents,
     claimETH,
     contractEvents,
     accountLoaded,

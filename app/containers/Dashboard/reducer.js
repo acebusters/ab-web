@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable';
 
 import {
+  ACCOUNT_LOADED,
   CONTRACT_EVENTS,
   PROXY_EVENTS,
   ETH_CLAIM,
@@ -16,22 +17,26 @@ const confParams = conf();
 /**
  * interface DashboardEvent {
  *   unit: 'eth' | 'ntz';
- *   value: BigNumber;
+ *   value: string;
  *   blockNumber: number;
  *   address: string;
  *   type: 'income' | 'outcome' | 'pending';
  *   transactionHash: string;
- *   date: string;
+ *   date?: string;
  * }
  */
 const initialState = fromJS({
+  proxy: null,
   pending: {},
   pendingSell: [],
-  events: {},
+  events: [],
 });
 
 function dashboardReducer(state = initialState, action) {
   switch (action.type) {
+    case ACCOUNT_LOADED:
+      return state.set('proxy', action.data.proxy);
+
     case ETH_CLAIM:
       return state.withMutations((newState) => {
         const index = newState.get('pendingSell').indexOf(action.payload.sellTxHash);
@@ -52,11 +57,17 @@ function dashboardReducer(state = initialState, action) {
 
     case PROXY_EVENTS:
       return action.payload
-        .map(({ transactionHash }) => transactionHash)
-        .reduce(completePending, state);
+        .reduce((newState, event) => completePending(
+          addProxyEvent(newState, event),
+          event.transactionHash
+        ), state);
 
     case CONTRACT_EVENTS:
-      return action.payload.reduce(handleEvent, state);
+      return action.payload
+        .reduce((newState, event) => completePending(
+          addNTZContractEvent(newState, event),
+          event.transactionHash
+        ), state);
 
     default:
       return state;
@@ -85,6 +96,50 @@ function addPendingSell(state, action) {
   return state;
 }
 
+function makeEvent(event, address, unit, type) {
+  return fromJS({
+    blockNumber: event.blockNumber,
+    transactionHash: event.transactionHash,
+    value: event.args.value,
+    date: event.date,
+    address,
+    unit,
+    type,
+  });
+}
+
+function addProxyEvent(state, event) {
+  const events = state.get('events');
+  const isReceived = event.event === 'Received';
+  return state.set(
+    'events',
+    events.push(makeEvent(
+      event,
+      isReceived ? event.args.sender : event.address,
+      'eth',
+      isReceived ? 'income' : 'outcome',
+    )),
+  );
+}
+
+function addNTZContractEvent(state, event) {
+  const events = state.get('events');
+
+  if (event.event === 'Transfer') {
+    return state.set(
+      'events',
+      events.push(makeEvent(
+        event,
+        event.args.to === state.get('proxy') ? event.args.from : event.args.to,
+        'ntz',
+        event.args.to === state.get('proxy') ? 'income' : 'outcome',
+      )),
+    );
+  }
+
+  return state;
+}
+
 function completePending(state, txHash) {
   return state.get('pending').reduce((st, value, key) => {
     if (value.get('txHash') === txHash) {
@@ -93,8 +148,4 @@ function completePending(state, txHash) {
 
     return st;
   }, state);
-}
-
-function handleEvent(state, event) {
-  return completePending(state, event.transactionHash);
 }
