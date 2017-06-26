@@ -13,9 +13,21 @@ import { conf } from '../../app.config';
 
 const confParams = conf();
 
+/**
+ * interface DashboardEvent {
+ *   unit: 'eth' | 'ntz';
+ *   value: BigNumber;
+ *   blockNumber: number;
+ *   address: string;
+ *   type: 'income' | 'outcome' | 'pending';
+ *   transactionHash: string;
+ *   date: string;
+ * }
+ */
 const initialState = fromJS({
   pending: {},
   pendingSell: [],
+  events: {},
 });
 
 function dashboardReducer(state = initialState, action) {
