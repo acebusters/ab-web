@@ -7,7 +7,7 @@ import {
   number,
 } from '@storybook/addon-knobs';
 
-import * as tests from '../tests2';
+import * as tests from '../tests';
 
 import ActionBar from '../../index';
 
@@ -53,16 +53,11 @@ createStory(tests.atTable0);
 createStory(tests.atTable1);
 createStory(tests.atTable2);
 createStory(tests.amountToCheck);
-createStory(tests.actionDispatchCheck);
 createStory(tests.amountToCall0);
-createStory(tests.actionDispatchCall);
 createStory(tests.amountToCall1);
 createStory(tests.minRaise0);
-createStory(tests.actionDispatchAllIn);
-createStory(tests.actionDispatchFold);
 createStory(tests.buttonBet0);
 createStory(tests.buttonBet1);
-createStory(tests.actionDispatchBet);
 createStory(tests.buttonRaise0);
 createStory(tests.buttonRaise1);
-createStory(tests.actionDispatchRaise);
+createStory(tests.actionDispatchRaise0);

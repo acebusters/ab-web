@@ -43,7 +43,6 @@ const ActionButton = (props) => {
     <ActionButtonWrapper
       type={type}
       name={name}
-      // onClick={handleThisClick}
       onMouseDown={() => setActionBarButtonActive(type)}
       onMouseUp={handleThisClick}
       onMouseLeave={handleThisLeave}

@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import ActionBar from '../index';
 
-import * as tests from './tests2';
+import * as tests from './tests';
 
 describe('atTable', () => {
   describe(tests.atTable0.describe, () => {
@@ -89,91 +89,153 @@ describe(tests.amountToCall1.describe, () => {
   });
 });
 
-/*
-describe(tests[5].describe, () => {
-  it(tests[5].it, () => {
-    const actionBar = shallow(
-      <ActionBar {...tests[5].props} />
-    );
-    expect(actionBar.find('ButtonFold').html()).toContain('blank');
-    expect(actionBar.find('ButtonCheckCall').length).toBe(1);
-    expect(actionBar.find('ButtonBetRaise').length).toBe(1);
-  });
-});
-
-describe(tests[6].describe, () => {
-  it(tests[6].it, () => {
+describe(tests.minRaise0.describe, () => {
+  it(tests.minRaise0.it, () => {
     const actionBar = mount(
-      <ActionBar {...tests[6].props} />
+      <ActionBar {...tests.minRaise0.props} />
     );
-    expect(actionBar.find('ButtonFold').html()).toContain('blank');
-    expect(actionBar.find('ButtonCheckCall').length).toBe(1);
-    expect(actionBar.find('ButtonBetRaise').html()).toContain('BET 2000');
+    expect(actionBar.find({ name: 'button-fold' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-call' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-blank' }).length).toEqual(0);
+    expect(actionBar.find({ name: 'button-all-in' }).length).toEqual(1);
   });
 });
 
-describe(tests[7].describe, () => {
-  it(tests[7].it, () => {
-    const actionBar = mount(
-      <ActionBar {...tests[7].props} />
-    );
-    expect(actionBar.find('ButtonFold').html()).toContain('FOLD');
-    expect(actionBar.find('ButtonCheckCall').length).toBe(1);
-    expect(actionBar.find('ButtonBetRaise').html()).toContain('RAISE 5000');
+describe('bet slider', () => {
+  describe(tests.buttonBet0.describe, () => {
+    it(tests.buttonBet0.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.buttonBet0.props} />
+      );
+      expect(actionBar.find({ name: 'slider-wrapper' }).length).toEqual(0);
+    });
+  });
+
+  describe(tests.buttonBet1.describe, () => {
+    it(tests.buttonBet1.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.buttonBet1.props} />
+      );
+      expect(actionBar.find({ name: 'slider-wrapper' }).length).toEqual(1);
+    });
   });
 });
 
-describe(tests[8].describe, () => {
-  it(tests[8].it, () => {
-    const actionBar = mount(
-      <ActionBar {...tests[8].props} />
-    );
-    expect(actionBar.find('ButtonFold').html()).toContain('blank');
-    expect(actionBar.find('ButtonCheckCall').length).toBe(1);
-    expect(actionBar.find('ButtonBetRaise').html()).toContain('BET 1750');
+describe('raise slider', () => {
+  describe(tests.buttonRaise0.describe, () => {
+    it(tests.buttonRaise0.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.buttonRaise0.props} />
+      );
+      expect(actionBar.find({ name: 'slider-wrapper' }).length).toEqual(0);
+    });
+  });
+
+  describe(tests.buttonRaise1.describe, () => {
+    it(tests.buttonRaise1.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.buttonRaise1.props} />
+      );
+      expect(actionBar.find({ name: 'slider-wrapper' }).length).toEqual(1);
+    });
   });
 });
 
-describe(tests[9].describe, () => {
-  it(tests[9].it, () => {
-    const actionBar = shallow(
-      <ActionBar {...tests[9].props} />
-    );
-    expect(actionBar.find('ButtonFold').html()).toContain('blank');
-    expect(actionBar.find('ButtonCheckCall').html()).toContain('CHECK');
-    expect(actionBar.find('ButtonBetRaise').length).toBe(1);
+describe('dispatch player actions', () => {
+  describe(tests.actionDispatchAllIn.describe, () => {
+    it(tests.actionDispatchAllIn.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.actionDispatchAllIn.props} />
+      );
+      expect(actionBar.find('ControlBetRaise').length).toBe(1);
+      actionBar.find('ControlBetRaise').simulate('mouseUp');
+      sinon.assert.calledOnce(
+        tests.actionDispatchAllIn.props.handleAllIn
+      );
+    });
+  });
+  describe(tests.actionDispatchCall.describe, () => {
+    it(tests.actionDispatchCall.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.actionDispatchCall.props} />
+      );
+      expect(actionBar.find('ControlCheckCall').length).toBe(1);
+      actionBar.find('ControlCheckCall').simulate('mouseUp');
+      sinon.assert.calledOnce(
+        tests.actionDispatchCall.props.handleCall
+      );
+    });
+  });
+  describe(tests.actionDispatchFold.describe, () => {
+    it(tests.actionDispatchFold.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.actionDispatchFold.props} />
+      );
+      expect(actionBar.find('ControlFold').length).toBe(1);
+      actionBar.find('ControlFold').simulate('mouseUp');
+      sinon.assert.calledOnce(
+        tests.actionDispatchFold.props.handleFold
+      );
+    });
   });
 });
 
-describe(tests[10].describe, () => {
-  it(tests[10].it, () => {
-    const actionBar = shallow(
-      <ActionBar {...tests[10].props} />
-    );
-    expect(actionBar.find('ButtonCheckCall').html()).toContain('CALL 1000');
+describe('Button Bet actions', () => {
+  describe(tests.actionDispatchBet0.describe, () => {
+    it(tests.actionDispatchBet0.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.actionDispatchBet0.props} />
+      );
+      expect(actionBar.find('ControlBetRaise').length).toBe(1);
+      expect(actionBar.find({ name: 'button-bet' }).length).toBe(1);
+      const spy = tests.actionDispatchBet0.props.setActionBarBetSlider;
+      sinon.assert.callCount(spy, 0);
+      actionBar.find('ControlBetRaise').simulate('mouseUp');
+      sinon.assert.callCount(spy, 2); // once by default
+    });
+  });
+  describe(tests.actionDispatchBet1.describe, () => {
+    it(tests.actionDispatchBet1.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.actionDispatchBet1.props} />
+      );
+      expect(actionBar.find('ControlBetRaise').length).toBe(1);
+      expect(actionBar.find({ name: 'button-bet-confirm' }).length).toBe(1);
+      const spy = tests.actionDispatchBet1.props.setActionBarBetSlider;
+      actionBar.find('ControlBetRaise').simulate('mouseUp');
+      sinon.assert.callCount(spy, 1); // once by default
+      const spy1 = tests.actionDispatchBet1.props.handleBet;
+      sinon.assert.calledOnce(spy1);
+    });
   });
 });
 
-describe(tests[11].describe, () => {
-  it(tests[11].it, () => {
-    const actionBar = mount(
-      <ActionBar {...tests[11].props} />
-    );
-
-    expect(actionBar.find('ButtonFold').length).toBe(1);
-    expect(actionBar.find('ButtonCheckCall').html()).toContain('CALL 800');
-    expect(actionBar.find('ButtonBetRaise').html()).toContain('blank');
-    expect(actionBar.find('ButtonBetRaise').html()).not.toContain('RAISEj');
+describe('Button Raise actions', () => {
+  describe(tests.actionDispatchRaise0.describe, () => {
+    it(tests.actionDispatchRaise0.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.actionDispatchRaise0.props} />
+      );
+      expect(actionBar.find('ControlBetRaise').length).toBe(1);
+      expect(actionBar.find({ name: 'button-raise' }).length).toBe(1);
+      const spy = tests.actionDispatchRaise0.props.setActionBarBetSlider;
+      sinon.assert.callCount(spy, 0);
+      actionBar.find('ControlBetRaise').simulate('mouseUp');
+      sinon.assert.callCount(spy, 2); // once by default
+    });
+  });
+  describe(tests.actionDispatchRaise1.describe, () => {
+    it(tests.actionDispatchRaise1.it, () => {
+      const actionBar = mount(
+        <ActionBar {...tests.actionDispatchRaise1.props} />
+      );
+      expect(actionBar.find('ControlBetRaise').length).toBe(1);
+      expect(actionBar.find({ name: 'button-raise-confirm' }).length).toBe(1);
+      const spy = tests.actionDispatchRaise1.props.setActionBarBetSlider;
+      actionBar.find('ControlBetRaise').simulate('mouseUp');
+      sinon.assert.callCount(spy, 1); // once by default
+      const spy1 = tests.actionDispatchRaise1.props.handleBet;
+      sinon.assert.calledOnce(spy1);
+    });
   });
 });
-
-describe(tests[12].describe, () => {
-  it(tests[12].it, () => {
-    const actionBar = shallow(
-      <ActionBar {...tests[12].props} />
-    );
-    // actionBar.instance().setActive(false);
-    expect(actionBar.find('ActionBarComponent').length).toBe(0);
-  });
-});
-*/

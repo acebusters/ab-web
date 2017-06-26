@@ -22,7 +22,7 @@ const ControlBetRaise = (props) => {
     if (mode === 'BET-SET') {
       return (
         <ActionButton
-          name="bet-confirm-button"
+          name="button-bet-confirm"
           text={amount === myStack ? 'All-In' : 'Bet'}
           type="BET-CONFIRM"
           handleClick={() => handleBet()}
@@ -32,7 +32,7 @@ const ControlBetRaise = (props) => {
     }
     return (
       <ActionButton
-        name="raise-confirm-button"
+        name="button-raise-confirm"
         text={amount === myStack ? 'All-In' : 'Raise'}
         type="RAISE-CONFIRM"
         handleClick={() => handleBet()}
@@ -42,12 +42,12 @@ const ControlBetRaise = (props) => {
   }
 
   // after confirming the raise amount in the slider,
-  // the buttons will change to (in the future) all you to
+  // the buttons will change to (in the future)
   // edit they raise or bet amount
   if (mode === 'RAISE-CONFIRM') {
     return (
       <ActionButton
-        name="raise-confirm-button"
+        name="button-raise-edit"
         text={amount === myStack ? 'All-In' : 'Raise'}
         type="RAISE-EDIT"
         handleClick={() => setActionBarBetSlider(true)}
@@ -58,7 +58,7 @@ const ControlBetRaise = (props) => {
   if (mode === 'BET-CONFIRM') {
     return (
       <ActionButton
-        name="bet-button"
+        name="button-bet-edit"
         text={amount === myStack ? 'All-In' : 'Bet'}
         type="BET-EDIT"
         handleClick={() => setActionBarBetSlider(true)}
