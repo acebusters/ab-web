@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ActionButton from './ActionButton';
 import ControlBlank from './ControlBlank';
@@ -103,15 +104,15 @@ const ControlBetRaise = (props) => {
   return <ControlBlank {...props} />;
 };
 ControlBetRaise.propTypes = {
-  amount: React.PropTypes.number,
-  amountToCall: React.PropTypes.number,
-  handleBet: React.PropTypes.func,
-  handleAllIn: React.PropTypes.func,
-  minRaise: React.PropTypes.number,
-  mode: React.PropTypes.string,
-  myStack: React.PropTypes.number,
-  sliderOpen: React.PropTypes.bool,
-  setActionBarBetSlider: React.PropTypes.func,
+  amount: PropTypes.number,
+  amountToCall: PropTypes.number,
+  handleBet: PropTypes.func,
+  handleAllIn: PropTypes.func,
+  minRaise: PropTypes.number,
+  mode: PropTypes.string,
+  myStack: PropTypes.number,
+  sliderOpen: PropTypes.bool,
+  setActionBarBetSlider: PropTypes.func,
 };
 
 export default ControlBetRaise;
