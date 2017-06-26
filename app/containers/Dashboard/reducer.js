@@ -44,7 +44,7 @@ function dashboardReducer(state = initialState, action) {
         .reduce(completePending, state);
 
     case CONTRACT_EVENTS:
-      return action.events.reduce(handleEvent, state);
+      return action.payload.reduce(handleEvent, state);
 
     default:
       return state;
@@ -84,5 +84,5 @@ function completePending(state, txHash) {
 }
 
 function handleEvent(state, event) {
-  return completePending(event.transactionHash)(state);
+  return completePending(state, event.transactionHash);
 }

@@ -10,19 +10,11 @@ import {
   CONTRACT_METHOD_SUCCESS,
   CONTRACT_METHOD_ERROR,
   CONTRACT_TX_SEND,
-  CONTRACT_TX_SUCCESS,
-  CONTRACT_TX_ERROR,
   CONTRACT_EVENTS,
   ACCOUNT_LOADED,
   READY_STATE,
-  PROXY_EVENTS,
-  ETH_TRANSFER_SUCCESS,
-  ETH_CLAIM,
 } from './actions';
-import { conf } from '../../app.config';
 import * as storageService from '../../services/localStorage';
-
-const confParams = conf();
 
 const isLoggedIn = () => {
   const privKey = storageService.getItem('privKey');
@@ -39,8 +31,6 @@ const initialState = fromJS({
   signerAddr: null,
   web3ReadyState: READY_STATE.CONNECTING,
   web3ErrMsg: null,
-  pending: {},
-  pendingSell: [],
 });
 
 function accountProviderReducer(state = initialState, action) {
@@ -81,39 +71,8 @@ function accountProviderReducer(state = initialState, action) {
       // Note: CONTRACT_TX_SEND is useless at this moment, but still keep it for consistency with the relevant actions.
       return state;
 
-    case ETH_CLAIM:
-      return state.withMutations((newState) => {
-        const index = newState.get('pendingSell').indexOf(action.payload.sellTxHash);
-        return newState.deleteIn(['pendingSell', index]);
-      });
-
-    case CONTRACT_TX_SUCCESS:
-      return addPending(state, action)
-              .withMutations((newState) => {
-                const { payload: { address, txHash, methodName } } = action;
-                if (address === confParams.ntzAddr && methodName === 'transfer') {
-                  return newState.set(
-                    'pendingSell',
-                    newState.get('pendingSell').push(txHash)
-                  );
-                }
-                return newState;
-              });
-
-    case ETH_TRANSFER_SUCCESS:
-      return addPending(state, action);
-
-    case CONTRACT_TX_ERROR:
-      return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
-
-    case PROXY_EVENTS:
-      return action.payload.reduce(
-        (newState, { transactionHash }) => completePending(transactionHash)(newState),
-        state
-      );
-
     case CONTRACT_EVENTS:
-      return action.events.reduce(handleEvent, state);
+      return action.payload.reduce(handleEvent, state);
 
     case SET_AUTH:
       // ToDo: extract side effects to sagas (storageService and Raven calls)
@@ -144,26 +103,6 @@ function accountProviderReducer(state = initialState, action) {
     default:
       return state;
   }
-}
-
-function addPending(state, action) {
-  // the nonce is only increased after the call was successfull.
-  // in the account saga we use a channel, so no 2 requests are submitted
-  // at the same time and no nonce can be reused by accident.
-  return state.set('lastNonce', action.payload.nonce)
-              .setIn(['pending', action.payload.nonce, 'txHash'], action.payload.txHash);
-}
-
-function completePending(txHash) {
-  return (state) => (
-    state.get('pending').reduce((st, value, key) => {
-      if (value.get('txHash') === txHash) {
-        return st.deleteIn(['pending', key]);
-      }
-
-      return st;
-    }, state)
-  );
 }
 
 function addTx(event) {

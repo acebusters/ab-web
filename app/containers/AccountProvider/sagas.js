@@ -331,7 +331,7 @@ export function* ethEventListenerSaga(contract) {
   while (true) { // eslint-disable-line no-constant-condition
     try {
       const event = yield take(chan);
-      yield put(contractEvent({ event }));
+      yield put(contractEvent(event));
     } catch (e) {} // eslint-disable-line no-empty
   }
 }

@@ -185,10 +185,10 @@ export function contractTxError({ address, nonce, error }) {
   return { type: CONTRACT_TX_ERROR, payload: { address, nonce, error } };
 }
 
-export function contractEvent({ event }) {
-  return { type: CONTRACT_EVENTS, events: [event] };
+export function contractEvent(event) {
+  return { type: CONTRACT_EVENTS, payload: [event] };
 }
 
 export function contractEvents(events) {
-  return { type: CONTRACT_EVENTS, events };
+  return { type: CONTRACT_EVENTS, payload: events };
 }
