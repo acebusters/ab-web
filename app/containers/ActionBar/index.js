@@ -213,7 +213,7 @@ ActionBarContainer.propTypes = {
   state: React.PropTypes.string,
   setActionBarTurnComplete: React.PropTypes.func,
   setActionBarMode: React.PropTypes.func,
-  turnComplete: React.PropTypes.func,
+  turnComplete: React.PropTypes.bool,
 };
 
 export function mapDispatchToProps(dispatch) {
