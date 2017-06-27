@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 
 import {
   CurtainWrapper,
-  CurtainToggler,
   CurtainHeader,
 } from '../../components/Curtain';
+import CurtainToggler from '../../components/Curtain/CurtainToggler';
 
 import Chat from '../../containers/Chat';
 
