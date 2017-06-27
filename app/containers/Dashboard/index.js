@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import ethUtil from 'ethereumjs-util';
 import BigNumber from 'bignumber.js';
 import partition from 'lodash/partition';
+import styled from 'styled-components';
 
 import { getWeb3 } from '../AccountProvider/sagas';
 import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -113,9 +114,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         toBlock: 'latest',
       }).get((error, eventList) => {
         this.props.contractEvents(
-          eventList
-            // .filter(({ event }) => event === 'Transfer')
-            .filter(isUserEvent)
+          eventList.filter(isUserEvent)
         );
       });
     });
@@ -364,10 +363,9 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             items={listTxns}
             headers={[
               '',
-              'TX hash',
               'Address',
               'Amount',
-              'Unit',
+              '',
               '',
             ]}
             noDataMsg="No Transactions Yet"
@@ -390,9 +388,13 @@ const pendingToList = (pending = {}) => (
   ])
 );
 
+const TypeIcon = styled.i`
+  color: ${(props) => props.children === typeIcons.income ? '#43ba67' : '#da0a16'};
+`;
+
 const typeIcons = {
-  income: '↑',
-  outcome: '↓',
+  income: '▲',
+  outcome: '▼',
 };
 
 const txnsToList = (events, tableAddrs, proxyAddr) => {
@@ -406,18 +408,12 @@ const txnsToList = (events, tableAddrs, proxyAddr) => {
   );
   return pending.concat(completed)
     .map((event) => [
-      event.pending ? '...' : typeIcons[event.type],
-      <A
-        href={`${confParams.etherscanUrl}tx/${event.transactionHash}`}
-        target="_blank"
-      >
-        {event.transactionHash.substring(2, 8)}
-      </A>,
+      event.pending
+        ? '...'
+        : <TypeIcon>{typeIcons[event.type]}</TypeIcon>,
       formatTxAddress(event.address, tableAddrs, proxyAddr),
-      new BigNumber(
-        event.type === 'income' ? event.value : event.value * -1
-      ).div(event.unit === 'ntz' ? NTZ_DECIMALS : ETH_DECIMALS).toNumber(),
-      event.unit.toUpperCase(),
+      formatValue(event),
+      infoIcon(event),
       txDescription(event, tableAddrs, proxyAddr),
     ]);
 };
@@ -434,6 +430,29 @@ function formatTxAddress(address, tableAddrs, proxyAddr) {
   }
 
   return cutAddress(address);
+}
+
+function formatValue(event) {
+  const sign = event.type === 'income' ? '' : '−';
+  const decimals = event.unit === 'ntz' ? NTZ_DECIMALS : ETH_DECIMALS;
+  const number = new BigNumber(event.value).div(decimals);
+  return `${sign}${number.toString()} ${event.unit.toUpperCase()}`;
+}
+
+const Icon = styled.i``;
+
+function infoIcon(event) {
+  return (
+    <A
+      href={`${confParams.etherscanUrl}tx/${event.transactionHash}`}
+      target="_blank"
+    >
+      <Icon
+        className="fa fa-info-circle"
+        aria-hidden="true"
+      />
+    </A>
+  );
 }
 
 function txDescription(event, tableAddrs, proxyAddr) {
@@ -496,17 +515,6 @@ function mapDispatchToProps() {
 
 const makeIsUserEvent = (proxyAddr) => (event) => {
   const { args = {}, address } = event;
-  // console.log(
-  //   args.from === proxyAddr,
-  //   args.purchaser === proxyAddr,
-  //   args.seller === proxyAddr,
-  //   args.sender === proxyAddr,
-  //   args.owner === proxyAddr,
-  //   args.spender === proxyAddr,
-  //   args.to === proxyAddr,
-  //   address === proxyAddr
-  // );
-  // console.log('-----');
   return (
     args.from === proxyAddr ||
     args.purchaser === proxyAddr ||
