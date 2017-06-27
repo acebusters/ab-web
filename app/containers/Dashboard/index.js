@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react';
 import QRCode from 'qrcode.react';
-import { FormattedMessage, FormattedDate, FormattedTime } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import ethUtil from 'ethereumjs-util';
 import BigNumber from 'bignumber.js';
-import partition from 'lodash/partition';
 
 import { getWeb3 } from '../AccountProvider/sagas';
 import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -19,18 +18,17 @@ import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz } from '../../utils/am
 
 import List from '../../components/List';
 import Alert from '../../components/Alert';
-import A from '../../components/A';
 import TransferDialog from '../TransferDialog';
 import PurchaseDialog from '../PurchaseDialog';
 import SellDialog from '../SellDialog';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import Blocky from '../../components/Blocky';
-// import FormGroup from '../../components/Form/FormGroup';
 import WithLoading from '../../components/WithLoading';
 
-import { Section, Icon, TypeIcon, typeIcons } from './styles';
+import { Section } from './styles';
 import { createDashboardTxsSelector } from './selectors';
+import { txnsToList } from './txnsToList';
 
 const confParams = conf();
 
@@ -216,16 +214,11 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const babzBalance = this.token.balanceOf(this.props.account.proxy);
     const tables = this.tableFactory.getTables();
 
-    const listPending = pendingToList(this.props.dashboardTxs.pending);
-
-    let listTxns = null;
-    if (this.props.account[confParams.ntzAddr]) {
-      listTxns = txnsToList(
-        this.props.dashboardTxs.dashboardEvents,
-        tables,
-        this.props.account.proxy
-      );
-    }
+    const listTxns = txnsToList(
+      this.props.dashboardTxs.dashboardEvents,
+      tables,
+      this.props.account.proxy
+    );
 
     return (
       <Container>
@@ -351,13 +344,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         </Section>
 
         <Section>
-          <h2><FormattedMessage {...messages.pending} /></h2>
-          <List
-            items={listPending}
-            headers={['#', 'txHash']}
-            noDataMsg="No Pending Transactions"
-          />
-
           <h2><FormattedMessage {...messages.included} /></h2>
           <List
             items={listTxns}
@@ -383,122 +369,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       </Container>
     );
   }
-}
-
-const pendingToList = (pending = {}) => (
-  Object.keys(pending).map((key) => [
-    key,
-    <A
-      href={`${confParams.etherscanUrl}tx/${pending[key].txHash}`}
-      target="_blank"
-    >
-      {pending[key].txHash}
-    </A>,
-  ])
-);
-
-const txnsToList = (events, tableAddrs, proxyAddr) => {
-  if (!tableAddrs) {
-    return null;
-  }
-
-  const [pending, completed] = partition(
-    events.sort((a, b) => b.blockNumber - a.blockNumber),
-    (event) => event.pending,
-  );
-  return pending.concat(completed)
-    .map((event) => [
-      event.pending
-        ? <WithLoading isLoading loadingSize={14} type="inline" />
-        : <TypeIcon>{typeIcons[event.type]}</TypeIcon>,
-      formatTxAddress(event.address, tableAddrs, proxyAddr),
-      formatDate(event.timestamp),
-      infoIcon(event),
-      formatValue(event),
-      txDescription(event, tableAddrs, proxyAddr),
-    ]);
-};
-
-function formatDate(timestamp) {
-  if (!timestamp) {
-    return '';
-  }
-
-  const date = new Date(timestamp * 1000);
-
-  return (
-    <span>
-      <FormattedDate
-        value={date}
-        year="numeric"
-        month="numeric"
-        day="2-digit"
-      />,&nbsp;
-      <FormattedTime
-        value={date}
-        hour12={false}
-      />
-    </span>
-  );
-}
-
-const cutAddress = (addr) => addr.substring(2, 8);
-
-function formatTxAddress(address, tableAddrs, proxyAddr) {
-  if (address === confParams.ntzAddr) {
-    return 'Nutz Contract';
-  } else if (tableAddrs.indexOf(address) > -1) {
-    return `Table ${cutAddress(address)}`;
-  } else if (address === proxyAddr) {
-    return 'Me';
-  }
-
-  return cutAddress(address);
-}
-
-function formatValue(event) {
-  const sign = event.type === 'income' ? '' : '−';
-  const formatFn = event.unit === 'ntz' ? formatNtz : formatEth;
-  const number = formatFn(new BigNumber(event.value));
-  return `${sign}${number.toString()} ${event.unit.toUpperCase()}`;
-}
-
-function infoIcon(event) {
-  return (
-    <A
-      href={`${confParams.etherscanUrl}tx/${event.transactionHash}`}
-      target="_blank"
-    >
-      <Icon
-        className="fa fa-info-circle"
-        aria-hidden="true"
-      />
-    </A>
-  );
-}
-
-function txDescription(event, tableAddrs, proxyAddr) {
-  if (tableAddrs.indexOf(event.address) > -1) {
-    return `Table ${event.type === 'income' ? 'leave' : 'join'}`;
-  } else if (
-    event.address === confParams.ntzAddr &&
-    event.unit === 'eth' &&
-    event.type === 'income'
-  ) {
-    return 'Sell end';
-  } else if (
-    event.address === confParams.ntzAddr &&
-    event.unit === 'ntz' &&
-    event.type === 'outcome'
-  ) {
-    return 'Sell start';
-  } else if (event.address === proxyAddr && event.unit === 'ntz') {
-    return 'Purchase end';
-  } else if (event.address === confParams.ntzAddr && event.unit === 'eth') {
-    return 'Purchase start';
-  }
-
-  return 'Transfer';
 }
 
 Dashboard.propTypes = {

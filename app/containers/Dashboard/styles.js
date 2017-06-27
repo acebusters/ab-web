@@ -6,8 +6,9 @@ export const typeIcons = {
 };
 
 export const Section = styled.div`
+  padding-bottom: 20px;
+
   & + & {
-    margin-top: 20px;
     border-top: 1px solid #ccc;
   }
 `;
