@@ -14,43 +14,32 @@ import {
 class Header extends React.Component {
   constructor(props) {
     super(props);
-    this.toggleCollapsedMenu = this.toggleCollapsedMenu.bind(this);
-    this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.state = {
-      toggleCollapsed: true,
-    };
-  }
-
-  toggleCollapsedMenu() {
-    const collapsed = (this.state) ? !this.state.toggleCollapsed : false;
-    this.setState({ toggleCollapsed: collapsed });
   }
 
   handleClickOutside() {
-    if (!this.state.toggleCollapsed) {
-      this.toggleCollapsedMenu();
-    }
-  }
-
-  handleMouseLeave() {
-    if (!this.state.toggleCollapsed) {
-      this.toggleCollapsedMenu();
+    if (!this.props.collapsed) {
+      this.props.setCollapsed(true);
     }
   }
 
   render() {
-    const collapsed = (this.state) ? this.state.toggleCollapsed : true;
+    const toggleCollapsedMenu = () => {
+      if (this.props.collapsed) {
+        return this.props.setCollapsed(false);
+      }
+      return this.props.setCollapsed(true);
+    };
     const navButtons = this.props.loggedIn ? ([
       <NavToggle
-        onClick={this.toggleCollapsedMenu}
+        onClick={toggleCollapsedMenu}
         key="nav-toggle"
       >
         <i className="fa fa-bars fa-2"></i>
       </NavToggle>,
       <NavItem
         to="dashboard"
-        collapsed={collapsed}
+        collapsed={this.props.collapsed}
         key="2"
         title="Dashboard"
         location={this.props.location}
@@ -58,13 +47,13 @@ class Header extends React.Component {
       <NavItem
         to="lobby"
         key="3"
-        collapsed={collapsed}
+        collapsed={this.props.collapsed}
         title="Lobby"
         location={this.props.location}
       />,
       <UserMenu
         onLogout={this.props.onClickLogout}
-        collapsed={collapsed}
+        collapsed={this.props.collapsed}
         key="4"
         {...this.props}
       />,
@@ -84,7 +73,7 @@ class Header extends React.Component {
     ]);
     return (
       <StyledHeader
-        onMouseLeave={this.handleMouseLeave}
+        onMouseLeave={this.handleClickOutside}
         fixed={this.props.fixed}
         id="header"
       >
@@ -103,6 +92,8 @@ Header.propTypes = {
   location: PropTypes.object,
   loggedIn: PropTypes.bool,
   onClickLogout: PropTypes.func,
+  setCollapsed: PropTypes.func,
+  collapsed: PropTypes.bool,
 };
 
 Header.defaultProps = {
