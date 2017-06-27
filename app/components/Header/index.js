@@ -10,7 +10,7 @@ import {
   NavToggle,
 } from './styles';
 
-class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class Header extends React.Component {
   constructor(props) {
     super(props);
     this.toggleCollapsedMenu = this.toggleCollapsedMenu.bind(this);
