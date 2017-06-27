@@ -1,53 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import Navbar from './Navbar';
 import UserMenu from './UserMenu';
 import NavItem from './NavItem';
 
 import {
-  screenXsMax,
-} from '../../variables';
-
-const StyledHeader = styled.header`
-  /* clearfix */
-  &:before, &:after {
-    display: table;
-    content: " ";
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-  &:after {
-    clear: both;
-  }
-  position: ${(props) => (props.fixed ? 'fixed' : 'relative')};
-  width: 100%;
-  max-height: 50px;
-  z-index: 1030;
-  /* theme */
-  ${(props) => props.theme.headerBoxShadow && `
-    -webkit-box-shadow: ${props.theme.headerBoxShadow};
-    box-shadow: ${props.theme.headerBoxShadow};
-  `}
-`;
-
-const NavToggle = styled.button`
-  position: relative;
-  float: right;
-  padding: 9px 10px;
-  margin-top: 8px;
-  margin-right: 15px;
-  margin-bottom: 8px;
-  background-color: transparent;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  cursor: pointer;
-  @media (min-width: ${screenXsMax}) {
-    display: none;
-  }
-`;
+  StyledHeader,
+  NavToggle,
+} from './styles';
 
 class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -116,10 +77,10 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
 }
 
 Header.propTypes = {
-  fixed: React.PropTypes.bool,
-  location: React.PropTypes.object,
-  loggedIn: React.PropTypes.bool,
-  onClickLogout: React.PropTypes.func,
+  fixed: PropTypes.bool,
+  location: PropTypes.object,
+  loggedIn: PropTypes.bool,
+  onClickLogout: PropTypes.func,
 };
 
 Header.defaultProps = {

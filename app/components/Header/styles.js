@@ -14,6 +14,7 @@ import {
   screenXsMax,
 } from '../../variables';
 
+
 const imageSize = `${Math.floor(parseInt(navbarHeight, 10) / 2)}px`;
 const imageMarginTop = `-${Math.ceil(
   ((parseInt(imageSize, 10) +
@@ -176,5 +177,45 @@ export const StyledUserMenu = styled.li`
       }
       return 'block';
     }};
+  }
+`;
+
+export const StyledHeader = styled.header`
+  /* clearfix */
+  &:before, &:after {
+    display: table;
+    content: " ";
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  &:after {
+    clear: both;
+  }
+  position: ${(props) => (props.fixed ? 'fixed' : 'relative')};
+  width: 100%;
+  max-height: 50px;
+  z-index: 1030;
+  /* theme */
+  ${(props) => props.theme.headerBoxShadow && `
+    -webkit-box-shadow: ${props.theme.headerBoxShadow};
+    box-shadow: ${props.theme.headerBoxShadow};
+  `}
+`;
+
+export const NavToggle = styled.button`
+  position: relative;
+  float: right;
+  padding: 9px 10px;
+  margin-top: 8px;
+  margin-right: 15px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  @media (min-width: ${screenXsMax}) {
+    display: none;
   }
 `;
