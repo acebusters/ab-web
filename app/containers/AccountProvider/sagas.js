@@ -15,7 +15,7 @@ import {
   ABI_ACCOUNT_FACTORY,
 } from '../../app.config';
 
-import { addEventsDate, getWeb3 } from './utils';
+import { addEventsDate, getWeb3, isUserEvent } from './utils';
 
 import {
   WEB3_CONNECT,
@@ -339,8 +339,12 @@ export function* ethEventListenerSaga(contract) {
   while (true) { // eslint-disable-line no-constant-condition
     try {
       const event = yield take(chan);
-      const events = yield call(addEventsDate, [event]);
-      yield put(contractEvent(events[0]));
+      const state = yield select();
+      if (isUserEvent(state.get('proxy'))(event)) {
+        const events = yield call(addEventsDate, [event]);
+        yield put(contractEvent(events[0]));
+        yield put(contractEvent(event));
+      }
     } catch (e) {} // eslint-disable-line no-empty
   }
 }

@@ -11,7 +11,7 @@ import messages from './messages';
 import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
 import { contractEvents, accountLoaded, transferETH, claimETH, proxyEvents } from '../AccountProvider/actions';
-import { addEventsDate } from '../AccountProvider/utils';
+import { addEventsDate, isUserEvent } from '../AccountProvider/utils';
 import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, ABI_TABLE_FACTORY, conf } from '../../app.config';
 import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz } from '../../utils/amountFormater';
@@ -83,14 +83,13 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   watchProxyEvents(proxyAddr) {
     const web3 = getWeb3();
     this.proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
-    const isUserEvent = makeIsUserEvent(proxyAddr);
 
     this.web3.eth.getBlockNumber((err, blockNumber) => {
       this.proxy.allEvents({
         fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
         toBlock: 'latest',
       }).get((error, eventList) => {
-        addEventsDate(eventList.filter(isUserEvent))
+        addEventsDate(eventList.filter(isUserEvent(proxyAddr)))
           .then(this.props.proxyEvents);
       });
     });
@@ -106,13 +105,12 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   watchTokenEvents(proxyAddr) {
-    const isUserEvent = makeIsUserEvent(proxyAddr);
     this.web3.eth.getBlockNumber((err, blockNumber) => {
       this.token.allEvents({
         fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
         toBlock: 'latest',
       }).get((error, eventList) => {
-        addEventsDate(eventList.filter(isUserEvent))
+        addEventsDate(eventList.filter(isUserEvent(proxyAddr)))
           .then(this.props.contractEvents);
       });
     });
@@ -120,7 +118,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.token.allEvents({
       toBlock: 'latest',
     }).watch((watchError, event) => {
-      if (!watchError && isUserEvent(event)) {
+      if (!watchError && isUserEvent(proxyAddr)(event)) {
         this.token.balanceOf.call(this.props.account.proxy);
         this.web3.eth.getBalance(this.props.account.proxy);
         const { pendingSell = [] } = this.props.dashboardTxs;
@@ -404,19 +402,5 @@ function mapDispatchToProps() {
     accountLoaded,
   };
 }
-
-const makeIsUserEvent = (proxyAddr) => (event) => {
-  const { args = {}, address } = event;
-  return (
-    args.from === proxyAddr ||
-    args.purchaser === proxyAddr ||
-    args.seller === proxyAddr ||
-    args.sender === proxyAddr ||
-    args.owner === proxyAddr ||
-    args.spender === proxyAddr ||
-    args.to === proxyAddr ||
-    address === proxyAddr
-  );
-};
 
 export default web3Connect(mapStateToProps, mapDispatchToProps)(Dashboard);
