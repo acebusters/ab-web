@@ -45,19 +45,19 @@ function dashboardReducer(state = initialState, action) {
       });
 
     case CONTRACT_TX_SUCCESS:
-      return addPending(
+      return addNTZPending(
         addPendingSell(state, action),
         action.payload
       );
 
     case ETH_TRANSFER_SUCCESS:
-      return addPending(state, action.payload);
+      return addETHPending(state, action.payload);
 
     case CONTRACT_TX_ERROR:
       return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
 
     case PROXY_EVENTS:
-      console.log('proxy', action.payload);
+      // console.log('proxy', action.payload);
       return action.payload
         .reduce((newState, event) => completePending(
           addProxyEvent(newState, event),
@@ -65,7 +65,7 @@ function dashboardReducer(state = initialState, action) {
         ), state);
 
     case CONTRACT_EVENTS:
-      console.log('nutz', action.payload);
+      // console.log('nutz', action.payload);
       return action.payload
         .reduce((newState, event) => completePending(
           addNTZContractEvent(newState, event),
@@ -79,7 +79,21 @@ function dashboardReducer(state = initialState, action) {
 
 export default dashboardReducer;
 
-function addPending(state, { methodName, args, txHash }) {
+function addETHPending(state, { txHash, amount, address }) {
+  return state.setIn(
+    ['events', txHash],
+    fromJS({
+      address,
+      value: amount.toString ? amount.toString() : amount,
+      type: 'outcome',
+      unit: 'eth',
+      pending: true,
+      transactionHash: txHash,
+    }),
+  );
+}
+
+function addNTZPending(state, { methodName, args, txHash }) {
   if (methodName === 'transfer' && args[0] !== confParams.ntzAddr) {
     return state.setIn(
       ['events', txHash],
@@ -92,7 +106,21 @@ function addPending(state, { methodName, args, txHash }) {
         transactionHash: txHash,
       }),
     );
+  } else if (methodName === 'transfer' && args[0] === confParams.ntzAddr) {
+    return state.setIn(
+      ['events', txHash],
+      fromJS({
+        address: confParams.ntzAddr,
+        value: args[1].toString ? args[1].toString() : args[1],
+        type: 'outcome',
+        unit: 'ntz',
+        pending: true,
+        transactionHash: txHash,
+      }),
+    );
   }
+
+  console.log(methodName, args, txHash);
 
   return state;
 }
@@ -138,6 +166,32 @@ function addNTZContractEvent(state, event) {
         address: isIncome ? event.args.from : event.args.to,
         unit: 'ntz',
         type: isIncome ? 'income' : 'outcome',
+      }),
+    );
+  } else if (event.event === 'Sell') {
+    return state.setIn(
+      ['events', event.transactionHash],
+      fromJS({
+        blockNumber: event.blockNumber,
+        transactionHash: event.transactionHash,
+        value: event.args.value,
+        date: event.date,
+        address: confParams.ntzAddr,
+        unit: 'ntz',
+        type: 'outcome',
+      }),
+    );
+  } else if (event.event === 'Purchase') {
+    return state.setIn(
+      ['events', event.transactionHash],
+      fromJS({
+        blockNumber: event.blockNumber,
+        transactionHash: event.transactionHash,
+        value: event.args.value,
+        date: event.date,
+        address: state.get('proxy'),
+        unit: 'ntz',
+        type: 'income',
       }),
     );
   }

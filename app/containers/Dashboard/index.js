@@ -114,7 +114,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       }).get((error, eventList) => {
         this.props.contractEvents(
           eventList
-            .filter(({ event }) => event === 'Transfer')
+            // .filter(({ event }) => event === 'Transfer')
             .filter(isUserEvent)
         );
       });
@@ -124,6 +124,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       toBlock: 'latest',
     }).watch((watchError, event) => {
       if (!watchError && isUserEvent(event)) {
+        console.log(event);
         this.token.balanceOf.call(this.props.account.proxy);
         this.web3.eth.getBalance(this.props.account.proxy);
         const { pendingSell = [] } = this.props.dashboardTxs;
@@ -417,27 +418,25 @@ const txnsToList = (events, tableAddrs, proxyAddr) => {
         event.type === 'income' ? event.value : event.value * -1
       ).div(event.unit === 'ntz' ? NTZ_DECIMALS : ETH_DECIMALS).toNumber(),
       event.unit.toUpperCase(),
-      txDescription(event, tableAddrs),
+      txDescription(event, tableAddrs, proxyAddr),
     ]);
-  // return Object.keys(txns)
-  //   .filter((key) => txns[key] && txns[key].from && txns[key].to)
-  //   .map((key) => [
-  //   ]);
 };
 
 const cutAddress = (addr) => addr.substring(2, 8);
 
-function formatTxAddress(address, tableAddrs) {
+function formatTxAddress(address, tableAddrs, proxyAddr) {
   if (address === confParams.ntzAddr) {
     return 'Nutz Contract';
   } else if (tableAddrs.indexOf(address) > -1) {
     return `Table ${cutAddress(address)}`;
+  } else if (address === proxyAddr) {
+    return 'Me';
   }
 
   return cutAddress(address);
 }
 
-function txDescription(event, tableAddrs) {
+function txDescription(event, tableAddrs, proxyAddr) {
   if (tableAddrs.indexOf(event.address) > -1) {
     return `Table ${event.type === 'income' ? 'leave' : 'join'}`;
   } else if (
@@ -452,6 +451,10 @@ function txDescription(event, tableAddrs) {
     event.type === 'outcome'
   ) {
     return 'Sell start';
+  } else if (event.address === proxyAddr && event.unit === 'ntz') {
+    return 'Purchase end';
+  } else if (event.address === confParams.ntzAddr && event.unit === 'eth') {
+    return 'Purchase start';
   }
 
   return 'Transfer';
