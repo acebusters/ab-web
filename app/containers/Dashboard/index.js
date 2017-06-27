@@ -153,6 +153,27 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     });
   }
 
+  watchAccountCreated() {
+    const web3 = getWeb3();
+    const privKey = this.props.privKey;
+    const privKeyBuffer = new Buffer(privKey.replace('0x', ''), 'hex');
+    const signer = `0x${ethUtil.privateToAddress(privKeyBuffer).toString('hex')}`;
+    const accountFactory = web3.eth.contract(ABI_ACCOUNT_FACTORY).at(confParams.accountFactory);
+    const events = accountFactory.AccountCreated({ signer }, { fromBlock: 'latest' });
+
+    events.watch((err, ev) => {  // eslint-disable-line no-unused-vars
+      accountFactory.getAccount.call(signer, (e, res) => {
+        const proxy = res[0];
+        const controller = res[1];
+        const lastNonce = res[2].toNumber();
+
+        this.props.accountLoaded({ proxy, controller, lastNonce });
+      });
+
+      events.stopWatching();
+    });
+  }
+
   handleNTZTransfer(to, amount) {
     this.token.transfer.sendTransaction(
       to,
@@ -184,27 +205,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       amount: new BigNumber(amount).mul(ETH_DECIMALS),
     });
     this.props.modalDismiss();
-  }
-
-  watchAccountCreated() {
-    const web3 = getWeb3();
-    const privKey = this.props.privKey;
-    const privKeyBuffer = new Buffer(privKey.replace('0x', ''), 'hex');
-    const signer = `0x${ethUtil.privateToAddress(privKeyBuffer).toString('hex')}`;
-    const accountFactory = web3.eth.contract(ABI_ACCOUNT_FACTORY).at(confParams.accountFactory);
-    const events = accountFactory.AccountCreated({ signer }, { fromBlock: 'latest' });
-
-    events.watch((err, ev) => {  // eslint-disable-line no-unused-vars
-      accountFactory.getAccount.call(signer, (e, res) => {
-        const proxy = res[0];
-        const controller = res[1];
-        const lastNonce = res[2].toNumber();
-
-        this.props.accountLoaded({ proxy, controller, lastNonce });
-      });
-
-      events.stopWatching();
-    });
   }
 
   render() {

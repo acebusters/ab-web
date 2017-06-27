@@ -24,7 +24,7 @@ export function txnsToList(events, tableAddrs, proxyAddr) {
   return pending.concat(completed)
     .map((event) => [
       event.pending
-        ? <WithLoading isLoading loadingSize={14} type="inline" />
+        ? <WithLoading isLoading loadingSize="14px" type="inline" />
         : <TypeIcon>{typeIcons[event.type]}</TypeIcon>,
       formatTxAddress(event.address, tableAddrs, proxyAddr),
       formatDate(event.timestamp),
