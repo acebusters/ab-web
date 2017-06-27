@@ -5,13 +5,12 @@ import { connect } from 'react-redux';
 import { Form, reduxForm, formValueSelector } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
 
-import { ErrorMessage } from '../../components/FormMessages';
 import SubmitButton from '../../components/SubmitButton';
 import FormField from '../../components/Form/FormField';
 import AmountField from '../../components/AmountField';
 import H2 from '../../components/H2';
 
-import { NTZ_DECIMALS, formatNtz } from '../../utils/amountFormater';
+import { NTZ_DECIMALS, ETH_DECIMALS, formatNtz, formatEth } from '../../utils/amountFormater';
 import { round } from '../../utils/round';
 
 import messages from './messages';
@@ -30,38 +29,53 @@ const warn = () => {
   return warnings;
 };
 
-class PurchaseDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class ExchangeDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(values) {
-    this.props.handlePurchase(values.get('amount'));
+    this.props.handleExchange(values.get('amount'));
   }
 
   render() {
-    const { error, handleSubmit, submitting, maxAmount, amount = 0, ceilingPrice } = this.props;
+    const {
+      handleSubmit,
+      submitting,
+      maxAmount,
+      amount = 0,
+      calcExpectedAmount,
+      amountUnit,
+      title,
+    } = this.props;
+    const expectedAmountUnit = amountUnit.toLowerCase() === 'ntz' ? 'eth' : 'ntz';
+    const formatExpValue = expectedAmountUnit === 'ntz' ? formatNtz : formatEth;
+    const decimals = expectedAmountUnit === 'ntz' ? NTZ_DECIMALS : ETH_DECIMALS;
 
     return (
       <div>
-        <H2><FormattedMessage {...messages.header} /></H2>
+        {title &&
+          <H2>{title}</H2>
+        }
 
-        <FormattedMessage
-          {...messages.expectedAmount}
-          values={{
-            amount: formatNtz(ceilingPrice.mul(round(amount, 5)).mul(NTZ_DECIMALS)),
-          }}
-        />
+        {calcExpectedAmount &&
+          <FormattedMessage
+            {...messages.expectedAmount}
+            values={{
+              amount: formatExpValue(calcExpectedAmount(round(amount, 5)).mul(decimals)),
+              unit: expectedAmountUnit.toUpperCase(),
+            }}
+          />
+        }
 
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <AmountField
             name="amount"
             component={FormField}
-            label="Amount (ETH)"
+            label={`Amount (${amountUnit.toUpperCase()})`}
             maxAmount={maxAmount}
           />
-          {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <SubmitButton disabled={submitting}>Submit</SubmitButton>
         </Form>
@@ -70,14 +84,15 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
   }
 }
 
-PurchaseDialog.propTypes = {
+ExchangeDialog.propTypes = {
   submitting: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
-  ceilingPrice: PropTypes.object, // BigNumber
+  calcExpectedAmount: PropTypes.func,
   handleSubmit: PropTypes.func,
-  handlePurchase: PropTypes.func,
+  handleExchange: PropTypes.func,
   amount: PropTypes.number,
-  error: PropTypes.any,
+  title: PropTypes.node,
+  amountUnit: PropTypes.string.isRequired,
 };
 
 
@@ -87,7 +102,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const valueSelector = formValueSelector('purchase');
+const valueSelector = formValueSelector('exchange');
 
 const mapStateToProps = (state) => ({
   amount: valueSelector(state, 'amount'),
@@ -95,8 +110,8 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
-    form: 'purchase',
+    form: 'exchange',
     validate,
     warn,
-  })(PurchaseDialog)
+  })(ExchangeDialog)
 );

@@ -19,8 +19,7 @@ import List from '../../components/List';
 import Alert from '../../components/Alert';
 import A from '../../components/A';
 import TransferDialog from '../TransferDialog';
-import PurchaseDialog from '../PurchaseDialog';
-import SellDialog from '../SellDialog';
+import ExchangeDialog from '../ExchangeDialog';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import Blocky from '../../components/Blocky';
@@ -265,10 +264,12 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               align="left"
               onClick={() => {
                 this.props.modalAdd(
-                  <SellDialog
-                    handleSell={this.handleNTZSell}
+                  <ExchangeDialog
+                    title={<FormattedMessage {...messages.sellTitle} />}
+                    amountUnit="ntz"
+                    calcExpectedAmount={(amount) => floor.div(ETH_DECIMALS.div(NTZ_DECIMALS)).mul(amount)}
+                    handleExchange={this.handleNTZSell}
                     maxAmount={babzBalance.div(NTZ_DECIMALS)}
-                    floorPrice={floor}
                   />
                 );
               }}
@@ -316,10 +317,12 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               align="left"
               onClick={() => {
                 this.props.modalAdd(
-                  <PurchaseDialog
-                    ceilingPrice={ceiling}
+                  <ExchangeDialog
+                    title={<FormattedMessage {...messages.purchaseTitle} />}
+                    amountUnit="eth"
+                    calcExpectedAmount={(amount) => ceiling.mul(amount)}
+                    handleExchange={this.handleNTZPurchase}
                     maxAmount={weiBalance.div(ETH_DECIMALS)}
-                    handlePurchase={this.handleNTZPurchase}
                   />
                 );
               }}

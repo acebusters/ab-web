@@ -22,4 +22,12 @@ export default defineMessages({
     id: 'app.containers.Dashboard.ethAlert',
     defaultMessage: 'Never send real ether to this address. It is a Rinkeby Testnet Address. Only send Rinkaby TestEther to this Address. Otherwise your Ether will be lost',
   },
+  sellTitle: {
+    id: 'app.containers.Dashboard.sellTitle',
+    defaultMessage: 'Sell NTZ',
+  },
+  purchaseTitle: {
+    id: 'app.containers.Dashboard.purchaseTitle',
+    defaultMessage: 'Purchase NTZ',
+  },
 });
