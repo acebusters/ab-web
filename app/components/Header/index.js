@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import onClickOutside from 'react-onclickoutside';
 
 import Navbar from './Navbar';
 import UserMenu from './UserMenu';
@@ -14,11 +15,28 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
     this.toggleCollapsedMenu = this.toggleCollapsedMenu.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.state = {
+      toggleCollapsed: true,
+    };
   }
 
   toggleCollapsedMenu() {
     const collapsed = (this.state) ? !this.state.toggleCollapsed : false;
     this.setState({ toggleCollapsed: collapsed });
+  }
+
+  handleClickOutside() {
+    if (!this.state.toggleCollapsed) {
+      this.toggleCollapsedMenu();
+    }
+  }
+
+  handleMouseLeave() {
+    if (!this.state.toggleCollapsed) {
+      this.toggleCollapsedMenu();
+    }
   }
 
   render() {
@@ -65,7 +83,11 @@ class Header extends React.Component {
       />,
     ]);
     return (
-      <StyledHeader fixed={this.props.fixed} id="header">
+      <StyledHeader
+        onMouseLeave={this.handleMouseLeave}
+        fixed={this.props.fixed}
+        id="header"
+      >
         <Navbar
           loggedIn={this.props.loggedIn}
         >
@@ -90,4 +112,4 @@ Header.defaultProps = {
   logoSm: <span><b>A</b>B</span>,
 };
 
-export default Header;
+export default onClickOutside(Header);
