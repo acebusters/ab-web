@@ -13,7 +13,7 @@ import { Icon, TypeIcon, typeIcons } from './styles';
 const confParams = conf();
 
 export function txnsToList(events, tableAddrs, proxyAddr) {
-  if (!tableAddrs) {
+  if (!tableAddrs || !events) {
     return null;
   }
 

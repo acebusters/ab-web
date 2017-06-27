@@ -30,7 +30,7 @@ const initialState = fromJS({
   proxy: null,
   pending: {},
   pendingSell: [],
-  events: {},
+  events: null,
 });
 
 function dashboardReducer(state = initialState, action) {
@@ -46,31 +46,35 @@ function dashboardReducer(state = initialState, action) {
 
     case CONTRACT_TX_SUCCESS:
       return addNTZPending(
-        addPendingSell(state, action),
+        addPendingSell(
+          initEvents(state),
+          action
+        ),
         action.payload
       );
 
     case ETH_TRANSFER_SUCCESS:
-      return addETHPending(state, action.payload);
+      return addETHPending(
+        initEvents(state),
+        action.payload
+      );
 
     case CONTRACT_TX_ERROR:
       return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
 
     case PROXY_EVENTS:
-      // console.log('proxy', action.payload);
       return action.payload
         .reduce((newState, event) => completePending(
           addProxyEvent(newState, event),
           event.transactionHash
-        ), state);
+        ), initEvents(state));
 
     case CONTRACT_EVENTS:
-      // console.log('nutz', action.payload);
       return action.payload
         .reduce((newState, event) => completePending(
           addNTZContractEvent(newState, event),
           event.transactionHash
-        ), state);
+        ), initEvents(state));
 
     default:
       return state;
@@ -78,6 +82,14 @@ function dashboardReducer(state = initialState, action) {
 }
 
 export default dashboardReducer;
+
+function initEvents(state) {
+  if (state.get('events') === null) {
+    return state.set('events', fromJS({}));
+  }
+
+  return state;
+}
 
 function addETHPending(state, { txHash, amount, address }) {
   return state.setIn(

@@ -8,7 +8,7 @@ export const createDashboardTxsSelector = () => createSelector(
   selectDashboard,
   (dashboard) => ({
     pending: dashboard.get('pending').toJS(),
-    dashboardEvents: dashboard.get('events').toList().toJS(),
+    dashboardEvents: dashboard.get('events') && dashboard.get('events').toList().toJS(),
     pendingSell: dashboard.get('pendingSell').toJS(),
   }),
 );
