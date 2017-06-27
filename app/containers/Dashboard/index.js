@@ -368,6 +368,13 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               '',
               '',
             ]}
+            columnsStyle={{
+              0: { width: 20 },
+              1: { textAlign: 'left', width: 10, whiteSpace: 'nowrap' },
+              2: { textAlign: 'right', whiteSpace: 'nowrap' },
+              3: { width: 20 },
+              4: { width: '100%', textAlign: 'left' },
+            }}
             noDataMsg="No Transactions Yet"
           />
         </Section>
@@ -409,7 +416,7 @@ const txnsToList = (events, tableAddrs, proxyAddr) => {
   return pending.concat(completed)
     .map((event) => [
       event.pending
-        ? '...'
+        ? <WithLoading isLoading loadingSize={14} type="inline" />
         : <TypeIcon>{typeIcons[event.type]}</TypeIcon>,
       formatTxAddress(event.address, tableAddrs, proxyAddr),
       formatValue(event),
