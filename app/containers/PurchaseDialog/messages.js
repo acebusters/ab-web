@@ -5,4 +5,8 @@ export default defineMessages({
     id: 'app.containers.PurchaseDialog.header',
     defaultMessage: 'Purchase Dialog:',
   },
+  expectedAmount: {
+    id: 'app.containers.PurchaseDialog.expectedAmount',
+    defaultMessage: 'Expected amount: {amount} NTZ',
+  },
 });

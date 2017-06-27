@@ -62,6 +62,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   componentWillReceiveProps(nextProps) {
     if (this.props.account.proxy === undefined && nextProps.account.proxy) {
       this.token.floor.call();
+      this.token.ceiling.call();
       this.watchProxyEvents(nextProps.account.proxy);
       this.watchTokenEvents(nextProps.account.proxy);
       this.token.balanceOf.call(nextProps.account.proxy);
@@ -195,6 +196,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const qrUrl = `ether:${this.props.account.proxy}`;
     const weiBalance = this.web3.eth.balance(this.props.account.proxy);
     const floor = this.token.floor();
+    const ceiling = this.token.ceiling();
     const babzBalance = this.token.balanceOf(this.props.account.proxy);
 
     const listPending = pendingToList(this.props.account.pending);
@@ -309,12 +311,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               TRANSFER
             </Button>
           }
-          {weiBalance &&
+          {weiBalance && ceiling &&
             <Button
               align="left"
               onClick={() => {
                 this.props.modalAdd(
                   <PurchaseDialog
+                    ceilingPrice={ceiling}
+                    maxAmount={weiBalance.div(ETH_DECIMALS)}
                     handlePurchase={this.handleNTZPurchase}
                   />
                 );

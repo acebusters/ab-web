@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+// import BigNumber from 'bignumber.js';
 
-import { Form, reduxForm } from 'redux-form/immutable';
+import { Form, reduxForm, formValueSelector } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
 
 import { ErrorMessage } from '../../components/FormMessages';
@@ -9,6 +10,9 @@ import SubmitButton from '../../components/SubmitButton';
 import FormField from '../../components/Form/FormField';
 import AmountField from '../../components/AmountField';
 import H2 from '../../components/H2';
+
+import { NTZ_DECIMALS, formatNtz } from '../../utils/amountFormater';
+import { round } from '../../utils/round';
 
 import messages from './messages';
 
@@ -37,11 +41,19 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   render() {
-    const { error, handleSubmit, submitting, maxAmount } = this.props;
+    const { error, handleSubmit, submitting, maxAmount, amount = 0, ceilingPrice } = this.props;
 
     return (
       <div>
         <H2><FormattedMessage {...messages.header} /></H2>
+
+        <FormattedMessage
+          {...messages.expectedAmount}
+          values={{
+            amount: formatNtz(ceilingPrice.mul(round(amount, 5)).mul(NTZ_DECIMALS)),
+          }}
+        />
+
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <AmountField
             name="amount"
@@ -61,8 +73,10 @@ class PurchaseDialog extends React.Component { // eslint-disable-line react/pref
 PurchaseDialog.propTypes = {
   submitting: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
+  ceilingPrice: PropTypes.object, // BigNumber
   handleSubmit: PropTypes.func,
   handlePurchase: PropTypes.func,
+  amount: PropTypes.number,
   error: PropTypes.any,
 };
 
@@ -73,7 +87,10 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const mapStateToProps = () => ({
+const valueSelector = formValueSelector('purchase');
+
+const mapStateToProps = (state) => ({
+  amount: valueSelector(state, 'amount'),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(
