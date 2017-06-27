@@ -213,6 +213,9 @@ export const NavToggle = styled.button`
   border: 1px solid transparent;
   border-radius: 4px;
   cursor: pointer;
+  &:focus {
+    outline: none;
+  }
   @media (min-width: ${screenXsMax}) {
     display: none;
   }
