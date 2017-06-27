@@ -9,6 +9,8 @@ import {
   CONTRACT_METHOD_SUCCESS,
   CONTRACT_METHOD_ERROR,
   CONTRACT_TX_SEND,
+  CONTRACT_TX_SUCCESS,
+  ETH_TRANSFER_SUCCESS,
   CONTRACT_EVENTS,
   ACCOUNT_LOADED,
   READY_STATE,
@@ -61,6 +63,10 @@ function accountProviderReducer(state = initialState, action) {
     case CONTRACT_TX_SEND:
       // Note: CONTRACT_TX_SEND is useless at this moment, but still keep it for consistency with the relevant actions.
       return state;
+
+    case CONTRACT_TX_SUCCESS:
+    case ETH_TRANSFER_SUCCESS:
+      return state.set('lastNonce', action.payload.nonce);
 
     case CONTRACT_EVENTS:
       return action.payload.reduce(handleEvent, state);

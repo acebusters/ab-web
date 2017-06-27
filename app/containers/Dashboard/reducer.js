@@ -18,18 +18,19 @@ const confParams = conf();
  * interface DashboardEvent {
  *   unit: 'eth' | 'ntz';
  *   value: string;
- *   blockNumber: number;
+ *   blockNumber?: number;
  *   address: string;
  *   type: 'income' | 'outcome' | 'pending';
  *   transactionHash: string;
- *   date?: string;
+ *   date?: number;
+ *   pending?: boolean;
  * }
  */
 const initialState = fromJS({
   proxy: null,
   pending: {},
   pendingSell: [],
-  events: [],
+  events: {},
 });
 
 function dashboardReducer(state = initialState, action) {
@@ -46,16 +47,17 @@ function dashboardReducer(state = initialState, action) {
     case CONTRACT_TX_SUCCESS:
       return addPending(
         addPendingSell(state, action),
-        action
+        action.payload
       );
 
     case ETH_TRANSFER_SUCCESS:
-      return addPending(state, action);
+      return addPending(state, action.payload);
 
     case CONTRACT_TX_ERROR:
       return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
 
     case PROXY_EVENTS:
+      console.log('proxy', action.payload);
       return action.payload
         .reduce((newState, event) => completePending(
           addProxyEvent(newState, event),
@@ -63,6 +65,7 @@ function dashboardReducer(state = initialState, action) {
         ), state);
 
     case CONTRACT_EVENTS:
+      console.log('nutz', action.payload);
       return action.payload
         .reduce((newState, event) => completePending(
           addNTZContractEvent(newState, event),
@@ -76,12 +79,22 @@ function dashboardReducer(state = initialState, action) {
 
 export default dashboardReducer;
 
-function addPending(state, action) {
-  // the nonce is only increased after the call was successfull.
-  // in the account saga we use a channel, so no 2 requests are submitted
-  // at the same time and no nonce can be reused by accident.
-  return state.set('lastNonce', action.payload.nonce)
-              .setIn(['pending', action.payload.nonce, 'txHash'], action.payload.txHash);
+function addPending(state, { methodName, args, txHash }) {
+  if (methodName === 'transfer' && args[0] !== confParams.ntzAddr) {
+    return state.setIn(
+      ['events', txHash],
+      fromJS({
+        address: args[0],
+        value: args[1].toString ? args[1].toString() : args[1],
+        type: 'outcome',
+        unit: 'ntz',
+        pending: true,
+        transactionHash: txHash,
+      }),
+    );
+  }
+
+  return state;
 }
 
 function addPendingSell(state, action) {
@@ -96,44 +109,36 @@ function addPendingSell(state, action) {
   return state;
 }
 
-function makeEvent(event, address, unit, type) {
-  return fromJS({
-    blockNumber: event.blockNumber,
-    transactionHash: event.transactionHash,
-    value: event.args.value,
-    date: event.date,
-    address,
-    unit,
-    type,
-  });
-}
-
 function addProxyEvent(state, event) {
-  const events = state.get('events');
   const isReceived = event.event === 'Received';
-  return state.set(
-    'events',
-    events.push(makeEvent(
-      event,
-      isReceived ? event.args.sender : event.address,
-      'eth',
-      isReceived ? 'income' : 'outcome',
-    )),
+  return state.setIn(
+    ['events', event.transactionHash],
+    fromJS({
+      blockNumber: event.blockNumber,
+      transactionHash: event.transactionHash,
+      value: event.args.value,
+      date: event.date,
+      address: isReceived ? event.args.sender : event.address,
+      unit: 'eth',
+      type: isReceived ? 'income' : 'outcome',
+    }),
   );
 }
 
 function addNTZContractEvent(state, event) {
-  const events = state.get('events');
-
   if (event.event === 'Transfer') {
-    return state.set(
-      'events',
-      events.push(makeEvent(
-        event,
-        event.args.to === state.get('proxy') ? event.args.from : event.args.to,
-        'ntz',
-        event.args.to === state.get('proxy') ? 'income' : 'outcome',
-      )),
+    const isIncome = event.args.to === state.get('proxy');
+    return state.setIn(
+      ['events', event.transactionHash],
+      fromJS({
+        blockNumber: event.blockNumber,
+        transactionHash: event.transactionHash,
+        value: event.args.value,
+        date: event.date,
+        address: isIncome ? event.args.from : event.args.to,
+        unit: 'ntz',
+        type: isIncome ? 'income' : 'outcome',
+      }),
     );
   }
 

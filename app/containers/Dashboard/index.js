@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import ethUtil from 'ethereumjs-util';
 import BigNumber from 'bignumber.js';
+import partition from 'lodash/partition';
 
 import { getWeb3 } from '../AccountProvider/sagas';
 import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -12,7 +13,7 @@ import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
 import { contractEvents, accountLoaded, transferETH, claimETH, proxyEvents } from '../AccountProvider/actions';
 import { createBlocky } from '../../services/blockies';
-import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, conf } from '../../app.config';
+import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, ABI_TABLE_FACTORY, conf } from '../../app.config';
 import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz } from '../../utils/amountFormater';
 
 import List from '../../components/List';
@@ -45,6 +46,9 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.web3 = props.web3Redux.web3;
 
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
+    this.tableFactory = this.web3.eth.contract(ABI_TABLE_FACTORY).at(confParams.tableFactory);
+
+    this.tableFactory.getTables.call();
 
     if (this.props.account.proxy) {
       this.token.balanceOf.call(this.props.account.proxy);
@@ -210,12 +214,17 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const weiBalance = this.web3.eth.balance(this.props.account.proxy);
     const floor = this.token.floor();
     const babzBalance = this.token.balanceOf(this.props.account.proxy);
+    const tables = this.tableFactory.getTables();
 
     const listPending = pendingToList(this.props.dashboardTxs.pending);
 
     let listTxns = null;
     if (this.props.account[confParams.ntzAddr]) {
-      listTxns = txnsToList(this.props.account[confParams.ntzAddr].transactions, this.props.account.proxy);
+      listTxns = txnsToList(
+        this.props.dashboardTxs.dashboardEvents,
+        tables,
+        this.props.account.proxy
+      );
     }
 
     return (
@@ -353,10 +362,12 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           <List
             items={listTxns}
             headers={[
+              '',
               'TX hash',
-              'From',
-              'To',
+              'Address',
               'Amount',
+              'Unit',
+              '',
             ]}
             noDataMsg="No Transactions Yet"
           />
@@ -378,26 +389,73 @@ const pendingToList = (pending = {}) => (
   ])
 );
 
-const txnsToList = (txns, proxyAddr) => {
-  if (txns) {
-    return Object.keys(txns)
-      .filter((key) => txns[key] && txns[key].from && txns[key].to)
-      .sort((a, b) => txns[b].blockNumber - txns[a].blockNumber)
-      .map((key) => [
-        <A
-          href={`${confParams.etherscanUrl}tx/${key}`}
-          target="_blank"
-        >
-          {key.substring(2, 8)}
-        </A>, // txHash
-        txns[key].from.substring(2, 8), // from
-        txns[key].to.substring(2, 8), // to
-        new BigNumber((txns[key].to === proxyAddr) ? txns[key].value : txns[key].value * -1).div(NTZ_DECIMALS).toNumber(), // value
-      ]);
+const typeIcons = {
+  income: '↑',
+  outcome: '↓',
+};
+
+const txnsToList = (events, tableAddrs, proxyAddr) => {
+  if (!tableAddrs) {
+    return null;
   }
 
-  return null;
+  const [pending, completed] = partition(
+    events.sort((a, b) => b.blockNumber - a.blockNumber),
+    (event) => event.pending,
+  );
+  return pending.concat(completed)
+    .map((event) => [
+      event.pending ? '...' : typeIcons[event.type],
+      <A
+        href={`${confParams.etherscanUrl}tx/${event.transactionHash}`}
+        target="_blank"
+      >
+        {event.transactionHash.substring(2, 8)}
+      </A>,
+      formatTxAddress(event.address, tableAddrs, proxyAddr),
+      new BigNumber(
+        event.type === 'income' ? event.value : event.value * -1
+      ).div(event.unit === 'ntz' ? NTZ_DECIMALS : ETH_DECIMALS).toNumber(),
+      event.unit.toUpperCase(),
+      txDescription(event, tableAddrs),
+    ]);
+  // return Object.keys(txns)
+  //   .filter((key) => txns[key] && txns[key].from && txns[key].to)
+  //   .map((key) => [
+  //   ]);
 };
+
+const cutAddress = (addr) => addr.substring(2, 8);
+
+function formatTxAddress(address, tableAddrs) {
+  if (address === confParams.ntzAddr) {
+    return 'Nutz Contract';
+  } else if (tableAddrs.indexOf(address) > -1) {
+    return `Table ${cutAddress(address)}`;
+  }
+
+  return cutAddress(address);
+}
+
+function txDescription(event, tableAddrs) {
+  if (tableAddrs.indexOf(event.address) > -1) {
+    return `Table ${event.type === 'income' ? 'leave' : 'join'}`;
+  } else if (
+    event.address === confParams.ntzAddr &&
+    event.unit === 'eth' &&
+    event.type === 'income'
+  ) {
+    return 'Sell end';
+  } else if (
+    event.address === confParams.ntzAddr &&
+    event.unit === 'ntz' &&
+    event.type === 'outcome'
+  ) {
+    return 'Sell start';
+  }
+
+  return 'Transfer';
+}
 
 Dashboard.propTypes = {
   modalAdd: PropTypes.func,
@@ -420,6 +478,18 @@ const mapStateToProps = createStructuredSelector({
   signerAddr: makeSignerAddrSelector(),
   privKey: makeSelectPrivKey(),
 });
+
+function mapDispatchToProps() {
+  return {
+    modalAdd,
+    modalDismiss,
+    transferETH,
+    proxyEvents,
+    claimETH,
+    contractEvents,
+    accountLoaded,
+  };
+}
 
 const makeIsUserEvent = (proxyAddr) => (event) => {
   const { args = {}, address } = event;
@@ -445,17 +515,5 @@ const makeIsUserEvent = (proxyAddr) => (event) => {
     address === proxyAddr
   );
 };
-
-function mapDispatchToProps() {
-  return {
-    modalAdd,
-    modalDismiss,
-    transferETH,
-    proxyEvents,
-    claimETH,
-    contractEvents,
-    accountLoaded,
-  };
-}
 
 export default web3Connect(mapStateToProps, mapDispatchToProps)(Dashboard);
