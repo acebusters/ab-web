@@ -1,11 +1,10 @@
 import React, { PropTypes } from 'react';
 import QRCode from 'qrcode.react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, FormattedDate, FormattedTime } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import ethUtil from 'ethereumjs-util';
 import BigNumber from 'bignumber.js';
 import partition from 'lodash/partition';
-import styled from 'styled-components';
 
 import { getWeb3 } from '../AccountProvider/sagas';
 import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -13,6 +12,7 @@ import messages from './messages';
 import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
 import { contractEvents, accountLoaded, transferETH, claimETH, proxyEvents } from '../AccountProvider/actions';
+import { addEventsDate } from '../AccountProvider/utils';
 import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, ABI_TABLE_FACTORY, conf } from '../../app.config';
 import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz } from '../../utils/amountFormater';
@@ -29,7 +29,7 @@ import Blocky from '../../components/Blocky';
 // import FormGroup from '../../components/Form/FormGroup';
 import WithLoading from '../../components/WithLoading';
 
-import { Section } from './styles';
+import { Section, Icon, TypeIcon, typeIcons } from './styles';
 import { createDashboardTxsSelector } from './selectors';
 
 const confParams = conf();
@@ -92,7 +92,8 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
         toBlock: 'latest',
       }).get((error, eventList) => {
-        this.props.proxyEvents(eventList.filter(isUserEvent));
+        addEventsDate(eventList.filter(isUserEvent))
+          .then(this.props.proxyEvents);
       });
     });
 
@@ -100,7 +101,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       toBlock: 'latest',
     }).watch((error, event) => {
       if (!error && event) {
-        this.props.proxyEvents([event]);
+        addEventsDate([event]).then(this.props.proxyEvents);
         this.web3.eth.getBalance(proxyAddr);
       }
     });
@@ -113,9 +114,8 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
         toBlock: 'latest',
       }).get((error, eventList) => {
-        this.props.contractEvents(
-          eventList.filter(isUserEvent)
-        );
+        addEventsDate(eventList.filter(isUserEvent))
+          .then(this.props.contractEvents);
       });
     });
 
@@ -123,10 +123,10 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       toBlock: 'latest',
     }).watch((watchError, event) => {
       if (!watchError && isUserEvent(event)) {
-        console.log(event);
         this.token.balanceOf.call(this.props.account.proxy);
         this.web3.eth.getBalance(this.props.account.proxy);
         const { pendingSell = [] } = this.props.dashboardTxs;
+
         if (pendingSell.indexOf(event.transactionHash) > -1) {
           this.token.transferFrom.sendTransaction(
             confParams.ntzAddr,
@@ -364,16 +364,18 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             headers={[
               '',
               'Address',
-              'Amount',
+              'Date',
               '',
+              'Amount',
               '',
             ]}
             columnsStyle={{
               0: { width: 20 },
               1: { textAlign: 'left', width: 10, whiteSpace: 'nowrap' },
-              2: { textAlign: 'right', whiteSpace: 'nowrap' },
-              3: { width: 20 },
-              4: { width: '100%', textAlign: 'left' },
+              2: { width: 20 },
+              3: { textAlign: 'left', whiteSpace: 'nowrap' },
+              4: { textAlign: 'right', whiteSpace: 'nowrap' },
+              5: { width: '100%', textAlign: 'left' },
             }}
             noDataMsg="No Transactions Yet"
           />
@@ -395,15 +397,6 @@ const pendingToList = (pending = {}) => (
   ])
 );
 
-const TypeIcon = styled.i`
-  color: ${(props) => props.children === typeIcons.income ? '#43ba67' : '#da0a16'};
-`;
-
-const typeIcons = {
-  income: '▲',
-  outcome: '▼',
-};
-
 const txnsToList = (events, tableAddrs, proxyAddr) => {
   if (!tableAddrs) {
     return null;
@@ -419,11 +412,35 @@ const txnsToList = (events, tableAddrs, proxyAddr) => {
         ? <WithLoading isLoading loadingSize={14} type="inline" />
         : <TypeIcon>{typeIcons[event.type]}</TypeIcon>,
       formatTxAddress(event.address, tableAddrs, proxyAddr),
-      formatValue(event),
+      formatDate(event.timestamp),
       infoIcon(event),
+      formatValue(event),
       txDescription(event, tableAddrs, proxyAddr),
     ]);
 };
+
+function formatDate(timestamp) {
+  if (!timestamp) {
+    return '';
+  }
+
+  const date = new Date(timestamp * 1000);
+
+  return (
+    <span>
+      <FormattedDate
+        value={date}
+        year="numeric"
+        month="numeric"
+        day="2-digit"
+      />,&nbsp;
+      <FormattedTime
+        value={date}
+        hour12={false}
+      />
+    </span>
+  );
+}
 
 const cutAddress = (addr) => addr.substring(2, 8);
 
@@ -441,12 +458,10 @@ function formatTxAddress(address, tableAddrs, proxyAddr) {
 
 function formatValue(event) {
   const sign = event.type === 'income' ? '' : '−';
-  const decimals = event.unit === 'ntz' ? NTZ_DECIMALS : ETH_DECIMALS;
-  const number = new BigNumber(event.value).div(decimals);
+  const formatFn = event.unit === 'ntz' ? formatNtz : formatEth;
+  const number = formatFn(new BigNumber(event.value));
   return `${sign}${number.toString()} ${event.unit.toUpperCase()}`;
 }
-
-const Icon = styled.i``;
 
 function infoIcon(event) {
   return (

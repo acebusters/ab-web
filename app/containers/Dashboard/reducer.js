@@ -22,7 +22,7 @@ const confParams = conf();
  *   address: string;
  *   type: 'income' | 'outcome' | 'pending';
  *   transactionHash: string;
- *   date?: number;
+ *   timestamp?: number;
  *   pending?: boolean;
  * }
  */
@@ -120,8 +120,6 @@ function addNTZPending(state, { methodName, args, txHash }) {
     );
   }
 
-  console.log(methodName, args, txHash);
-
   return state;
 }
 
@@ -145,7 +143,7 @@ function addProxyEvent(state, event) {
       blockNumber: event.blockNumber,
       transactionHash: event.transactionHash,
       value: event.args.value,
-      date: event.date,
+      timestamp: event.timestamp,
       address: isReceived ? event.args.sender : event.address,
       unit: 'eth',
       type: isReceived ? 'income' : 'outcome',
@@ -162,7 +160,7 @@ function addNTZContractEvent(state, event) {
         blockNumber: event.blockNumber,
         transactionHash: event.transactionHash,
         value: event.args.value,
-        date: event.date,
+        timestamp: event.timestamp,
         address: isIncome ? event.args.from : event.args.to,
         unit: 'ntz',
         type: isIncome ? 'income' : 'outcome',
@@ -175,7 +173,7 @@ function addNTZContractEvent(state, event) {
         blockNumber: event.blockNumber,
         transactionHash: event.transactionHash,
         value: event.args.value,
-        date: event.date,
+        timestamp: event.timestamp,
         address: confParams.ntzAddr,
         unit: 'ntz',
         type: 'outcome',
@@ -188,7 +186,7 @@ function addNTZContractEvent(state, event) {
         blockNumber: event.blockNumber,
         transactionHash: event.transactionHash,
         value: event.args.value,
-        date: event.date,
+        timestamp: event.timestamp,
         address: state.get('proxy'),
         unit: 'ntz',
         type: 'income',
