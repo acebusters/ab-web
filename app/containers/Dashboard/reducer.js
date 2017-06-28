@@ -4,7 +4,6 @@ import {
   ACCOUNT_LOADED,
   CONTRACT_EVENTS,
   PROXY_EVENTS,
-  ETH_CLAIM,
   CONTRACT_TX_SUCCESS,
   ETH_TRANSFER_SUCCESS,
   CONTRACT_TX_ERROR,
@@ -35,7 +34,6 @@ const confParams = conf();
 const initialState = fromJS({
   proxy: null,
   failedTx: null,
-  pendingSell: [],
   events: null,
 });
 
@@ -44,18 +42,9 @@ function dashboardReducer(state = initialState, action) {
     case ACCOUNT_LOADED:
       return state.set('proxy', action.data.proxy);
 
-    case ETH_CLAIM:
-      return state.withMutations((newState) => {
-        const index = newState.get('pendingSell').indexOf(action.payload.sellTxHash);
-        return newState.deleteIn(['pendingSell', index]);
-      });
-
     case CONTRACT_TX_SUCCESS:
       return addNTZPending(
-        addPendingSell(
-          initEvents(state),
-          action
-        ),
+        initEvents(state),
         action.payload
       );
 
@@ -140,18 +129,6 @@ function addNTZPending(state, { methodName, args, txHash }) {
         pending: true,
         transactionHash: txHash,
       }),
-    );
-  }
-
-  return state;
-}
-
-function addPendingSell(state, action) {
-  const { payload: { address, txHash, methodName } } = action;
-  if (address === confParams.ntzAddr && methodName === 'transfer') {
-    return state.set(
-      'pendingSell',
-      state.get('pendingSell').push(txHash)
     );
   }
 

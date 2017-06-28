@@ -6,7 +6,6 @@ import { modalDismiss } from '../../App/actions';
 describe('dashboard reducer tests', () => {
   it('should return the default state.', () => {
     expect(dashboardReducer(undefined, {}).toJS()).toEqual({
-      pendingSell: [],
       proxy: null,
       failedTx: null,
       events: null,

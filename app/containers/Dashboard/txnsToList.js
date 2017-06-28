@@ -10,6 +10,7 @@ import { formatEth, formatNtz } from '../../utils/amountFormater';
 
 import { Icon, TypeIcon, typeIcons } from './styles';
 import messages from './messages';
+import { isSellStartEvent, isSellEndEvent, isPurchaseStartEvent, isPurchaseEndEvent } from './utils';
 
 const confParams = conf();
 
@@ -107,23 +108,16 @@ function txDescription(event, tableAddrs, proxyAddr) {
         {...(event.type === 'income' ? messages.tableLeave : messages.tableJoin)}
       />
     );
-  } else if (
-    event.address === confParams.ntzAddr &&
-    event.unit === 'eth' &&
-    event.type === 'income'
-  ) {
+  } else if (isSellEndEvent(event)) {
     return <FormattedMessage {...messages.sellEnd} />;
-  } else if (
-    event.address === confParams.ntzAddr &&
-    event.unit === 'ntz' &&
-    event.type === 'outcome'
-  ) {
+  } else if (isSellStartEvent(event)) {
     return <FormattedMessage {...messages.sellStart} />;
-  } else if (event.address === proxyAddr && event.unit === 'ntz') {
+  } else if (isPurchaseEndEvent(event, proxyAddr)) {
     return <FormattedMessage {...messages.purchaseEnd} />;
-  } else if (event.address === confParams.ntzAddr && event.unit === 'eth') {
+  } else if (isPurchaseStartEvent(event)) {
     return <FormattedMessage {...messages.purchaseStart} />;
   }
 
   return <FormattedMessage {...messages.trasnferStatus} />;
 }
+

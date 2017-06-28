@@ -10,7 +10,7 @@ import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from
 import messages from './messages';
 import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
-import { contractEvents, accountLoaded, transferETH, claimETH, proxyEvents } from '../AccountProvider/actions';
+import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
 import { addEventsDate, isUserEvent } from '../AccountProvider/utils';
 import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, ABI_TABLE_FACTORY, conf } from '../../app.config';
@@ -151,7 +151,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             0,
             { from: this.props.account.proxy }
           );
-          this.props.claimETH(event.transactionHash);
         }
       }
     });
@@ -393,7 +392,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 Dashboard.propTypes = {
   modalAdd: PropTypes.func,
   transferETH: PropTypes.func,
-  claimETH: PropTypes.func,
   proxyEvents: PropTypes.func,
   modalDismiss: PropTypes.func,
   contractEvents: PropTypes.func,
@@ -419,7 +417,6 @@ function mapDispatchToProps() {
     modalDismiss,
     transferETH,
     proxyEvents,
-    claimETH,
     contractEvents,
     accountLoaded,
   };
