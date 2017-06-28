@@ -313,6 +313,26 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               SELL
             </Button>
           }
+          {weiBalance && ceiling &&
+            <Button
+              align="left"
+              onClick={() => {
+                this.props.modalAdd(
+                  <ExchangeDialog
+                    title={<FormattedMessage {...messages.purchaseTitle} />}
+                    amountUnit="eth"
+                    calcExpectedAmount={(amount) => ceiling.mul(amount)}
+                    handleExchange={this.handleNTZPurchase}
+                    maxAmount={weiBalance.div(ETH_DECIMALS)}
+                  />
+                );
+              }}
+              size="medium"
+              icon="fa fa-money"
+            >
+              PURCHASE
+            </Button>
+          }
         </Section>
 
         <Section>
@@ -344,26 +364,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               icon="fa fa-money"
             >
               TRANSFER
-            </Button>
-          }
-          {weiBalance && ceiling &&
-            <Button
-              align="left"
-              onClick={() => {
-                this.props.modalAdd(
-                  <ExchangeDialog
-                    title={<FormattedMessage {...messages.purchaseTitle} />}
-                    amountUnit="eth"
-                    calcExpectedAmount={(amount) => ceiling.mul(amount)}
-                    handleExchange={this.handleNTZPurchase}
-                    maxAmount={weiBalance.div(ETH_DECIMALS)}
-                  />
-                );
-              }}
-              size="medium"
-              icon="fa fa-money"
-            >
-              PURCHASE
             </Button>
           }
         </Section>
