@@ -25,7 +25,6 @@ export const ETH_TRANSFER_ERROR = 'acebusters/AccountProvider/ETH_TRANSFER_ERROR
 export const PROXY_EVENTS = 'acebusters/AccountProvider/PROXY_EVENTS';
 
 export const CONTRACT_EVENTS = 'acebusters/AccountProvider/CONTRACT_EVENTS';
-export const BLOCK_NOTIFY = 'acebusters/AccountProvider/BLOCK_NOTIFY';
 
 // Note: refer to  https://developer.mozilla.org/en-US/docs/Web/API/WebSocket#Ready_state_constants
 export const READY_STATE = {
@@ -82,10 +81,6 @@ export function setAuthState(newAuthState) {
 
 export function accountLoaded(data) {
   return { type: ACCOUNT_LOADED, data };
-}
-
-export function blockNotify() {
-  return { type: BLOCK_NOTIFY };
 }
 
 export function web3Error(err) {
