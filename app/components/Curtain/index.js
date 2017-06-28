@@ -40,6 +40,9 @@ export const CurtainTogglerWrapper = styled.div`
   display: flex;
   align-items: center;
   color: ${gray};
+  @media (min-width: ${curtainStickyWidth}) {
+    display: none;
+  }
 `;
 
 export const ToggleTriangle = styled.span`
