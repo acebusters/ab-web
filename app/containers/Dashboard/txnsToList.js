@@ -81,6 +81,10 @@ function formatTxAddress(address, tableAddrs, proxyAddr) {
 }
 
 function formatValue(event) {
+  if (event.value === undefined) {
+    return '';
+  }
+
   const sign = event.type === 'income' ? '' : '−';
   const formatFn = event.unit === 'ntz' ? formatNtz : formatEth;
   const number = formatFn(new BigNumber(event.value));

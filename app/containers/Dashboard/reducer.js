@@ -130,6 +130,22 @@ function addNTZPending(state, { methodName, args, txHash }) {
         transactionHash: txHash,
       }),
     );
+  } else if ( // eth claim
+    methodName === 'transferFrom' &&
+    args[0] === confParams.ntzAddr &&
+    args[1] === state.get('proxy') &&
+    args[2] === 0
+  ) {
+    return state.setIn(
+      ['events', txHash],
+      fromJS({
+        address: confParams.ntzAddr,
+        type: 'income',
+        unit: 'eth',
+        pending: true,
+        transactionHash: txHash,
+      }),
+    );
   }
 
   return state;
