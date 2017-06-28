@@ -340,7 +340,7 @@ export function* ethEventListenerSaga(contract) {
     try {
       const event = yield take(chan);
       const state = yield select();
-      if (isUserEvent(state.get('proxy'))(event)) {
+      if (isUserEvent(state.getIn(['account', 'proxy']))(event)) {
         const events = yield call(addEventsDate, [event]);
         yield put(contractEvents(events));
       }
