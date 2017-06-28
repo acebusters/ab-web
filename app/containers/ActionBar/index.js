@@ -8,6 +8,7 @@ import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 import TableService from '../../services/tableService';
+import { playIsPlayerTurn } from '../../sounds';
 
 import {
   setActionBarTurnComplete,
@@ -75,6 +76,14 @@ class ActionBarContainer extends React.Component {
     }
     if (nextProps.minRaise && nextProps.minRaise !== this.props.minRaise) {
       this.updateAmount(nextProps.minRaise);
+    }
+    // should play sound
+    if (
+      nextProps.active && // isPlayersTurn || appropriate hand state || !turnComplete
+      !this.state.disabled && // disabled by previous player action
+      nextProps.mode === '' // mode has been set by previous action
+    ) {
+      playIsPlayerTurn();
     }
   }
 
@@ -197,12 +206,14 @@ class ActionBarContainer extends React.Component {
 }
 
 ActionBarContainer.propTypes = {
+  active: PropTypes.bool,
   bet: PropTypes.func,
   callAmount: PropTypes.number,
   check: PropTypes.func,
   dispatch: PropTypes.func,
   fold: PropTypes.func,
   lastReceipt: PropTypes.object,
+  mode: PropTypes.string,
   minRaise: PropTypes.number,
   myMaxBet: PropTypes.number,
   myPos: PropTypes.number,
