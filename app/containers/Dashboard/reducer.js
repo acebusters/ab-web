@@ -22,10 +22,10 @@ const confParams = conf();
 /**
  * interface DashboardEvent {
  *   unit: 'eth' | 'ntz';
- *   value: string;
+ *   value?: string;
  *   blockNumber?: number;
  *   address: string;
- *   type: 'income' | 'outcome' | 'pending';
+ *   type: 'income' | 'outcome';
  *   transactionHash: string;
  *   timestamp?: number;
  *   pending?: boolean;
@@ -63,13 +63,13 @@ function dashboardReducer(state = initialState, action) {
     case PROXY_EVENTS:
       return action.payload.reduce(
         composeReducers(addProxyEvent, completePending),
-        initEvents(state)
+        initEvents(state).set('proxy', action.meta && action.meta.proxy)
       );
 
     case CONTRACT_EVENTS:
       return action.payload.reduce(
         composeReducers(addNTZContractEvent, completePending),
-        initEvents(state)
+        initEvents(state).set('proxy', action.meta && action.meta.proxy)
       );
 
     default:
@@ -133,7 +133,6 @@ function addNTZPending(state, { methodName, args, txHash }) {
   } else if ( // eth claim
     methodName === 'transferFrom' &&
     args[0] === confParams.ntzAddr &&
-    args[1] === state.get('proxy') &&
     args[2] === 0
   ) {
     return state.setIn(
@@ -187,7 +186,7 @@ function addNTZContractEvent(state, event) {
     return state.setIn(
       ['events', event.transactionHash],
       makeDashboardEvent(event, {
-        address: state.get('proxy'),
+        address: event.args.purchaser,
         unit: 'ntz',
         type: 'income',
       }),

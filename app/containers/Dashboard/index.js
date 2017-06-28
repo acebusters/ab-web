@@ -111,7 +111,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         toBlock: 'latest',
       }).get((error, eventList) => {
         addEventsDate(eventList.filter(isUserEvent(proxyAddr)))
-          .then(this.props.proxyEvents);
+          .then((events) => this.props.proxyEvents(events, this.props.account.proxy));
       });
     });
 
@@ -119,7 +119,8 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       toBlock: 'latest',
     }).watch((error, event) => {
       if (!error && event) {
-        addEventsDate([event]).then(this.props.proxyEvents);
+        addEventsDate([event])
+          .then((events) => this.props.proxyEvents(events, this.props.account.proxy));
         this.web3.eth.getBalance(proxyAddr);
       }
     });
@@ -132,7 +133,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         toBlock: 'latest',
       }).get((error, eventList) => {
         addEventsDate(eventList.filter(isUserEvent(proxyAddr)))
-          .then(this.props.contractEvents);
+          .then((events) => this.props.contractEvents(events, this.props.account.proxy));
       });
     });
 
