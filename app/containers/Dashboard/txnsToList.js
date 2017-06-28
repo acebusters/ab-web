@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedDate, FormattedTime } from 'react-intl';
+import { FormattedDate, FormattedTime, FormattedMessage } from 'react-intl';
 import partition from 'lodash/partition';
 import BigNumber from 'bignumber.js';
 
@@ -9,6 +9,7 @@ import { conf } from '../../app.config';
 import { formatEth, formatNtz } from '../../utils/amountFormater';
 
 import { Icon, TypeIcon, typeIcons } from './styles';
+import messages from './messages';
 
 const confParams = conf();
 
@@ -61,11 +62,18 @@ const cutAddress = (addr) => addr.substring(2, 8);
 
 function formatTxAddress(address, tableAddrs, proxyAddr) {
   if (address === confParams.ntzAddr) {
-    return 'Nutz Contract';
+    return <FormattedMessage {...messages.nutzContract} />;
   } else if (tableAddrs.indexOf(address) > -1) {
-    return `Table ${cutAddress(address)}`;
+    return (
+      <FormattedMessage
+        {...messages.tableAddress}
+        values={{
+          address: cutAddress(address),
+        }}
+      />
+    );
   } else if (address === proxyAddr) {
-    return 'Me';
+    return <FormattedMessage {...messages.me} />;
   }
 
   return cutAddress(address);
@@ -94,24 +102,28 @@ function infoIcon(event) {
 
 function txDescription(event, tableAddrs, proxyAddr) {
   if (tableAddrs.indexOf(event.address) > -1) {
-    return `Table ${event.type === 'income' ? 'leave' : 'join'}`;
+    return (
+      <FormattedMessage
+        {...(event.type === 'income' ? messages.tableLeave : messages.tableJoin)}
+      />
+    );
   } else if (
     event.address === confParams.ntzAddr &&
     event.unit === 'eth' &&
     event.type === 'income'
   ) {
-    return 'Sell end';
+    return <FormattedMessage {...messages.sellEnd} />;
   } else if (
     event.address === confParams.ntzAddr &&
     event.unit === 'ntz' &&
     event.type === 'outcome'
   ) {
-    return 'Sell start';
+    return <FormattedMessage {...messages.sellStart} />;
   } else if (event.address === proxyAddr && event.unit === 'ntz') {
-    return 'Purchase end';
+    return <FormattedMessage {...messages.purchaseEnd} />;
   } else if (event.address === confParams.ntzAddr && event.unit === 'eth') {
-    return 'Purchase start';
+    return <FormattedMessage {...messages.purchaseStart} />;
   }
 
-  return 'Transfer';
+  return <FormattedMessage {...messages.trasnferStatus} />;
 }

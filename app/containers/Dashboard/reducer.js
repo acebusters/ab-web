@@ -7,8 +7,10 @@ import {
   ETH_CLAIM,
   CONTRACT_TX_SUCCESS,
   ETH_TRANSFER_SUCCESS,
-  CONTRACT_TX_ERROR,
+  // CONTRACT_TX_ERROR,
 } from '../AccountProvider/actions';
+
+import { composeReducers } from '../../utils/composeReducers';
 
 import { conf } from '../../app.config';
 
@@ -28,7 +30,6 @@ const confParams = conf();
  */
 const initialState = fromJS({
   proxy: null,
-  pending: {},
   pendingSell: [],
   events: null,
 });
@@ -59,22 +60,20 @@ function dashboardReducer(state = initialState, action) {
         action.payload
       );
 
-    case CONTRACT_TX_ERROR:
-      return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
+    // case CONTRACT_TX_ERROR:
+    //   return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
 
     case PROXY_EVENTS:
-      return action.payload
-        .reduce((newState, event) => completePending(
-          addProxyEvent(newState, event),
-          event.transactionHash
-        ), initEvents(state));
+      return action.payload.reduce(
+        composeReducers(addProxyEvent, completePending),
+        initEvents(state)
+      );
 
     case CONTRACT_EVENTS:
-      return action.payload
-        .reduce((newState, event) => completePending(
-          addNTZContractEvent(newState, event),
-          event.transactionHash
-        ), initEvents(state));
+      return action.payload.reduce(
+        composeReducers(addNTZContractEvent, completePending),
+        initEvents(state)
+      );
 
     default:
       return state;
@@ -89,6 +88,10 @@ function initEvents(state) {
   }
 
   return state;
+}
+
+function completePending(state, event) {
+  return state.deleteIn(['events', event.transactionHash]);
 }
 
 function addETHPending(state, { txHash, amount, address }) {
@@ -151,11 +154,7 @@ function addProxyEvent(state, event) {
   const isReceived = event.event === 'Received';
   return state.setIn(
     ['events', event.transactionHash],
-    fromJS({
-      blockNumber: event.blockNumber,
-      transactionHash: event.transactionHash,
-      value: event.args.value,
-      timestamp: event.timestamp,
+    makeDashboardEvent(event, {
       address: isReceived ? event.args.sender : event.address,
       unit: 'eth',
       type: isReceived ? 'income' : 'outcome',
@@ -168,11 +167,7 @@ function addNTZContractEvent(state, event) {
     const isIncome = event.args.to === state.get('proxy');
     return state.setIn(
       ['events', event.transactionHash],
-      fromJS({
-        blockNumber: event.blockNumber,
-        transactionHash: event.transactionHash,
-        value: event.args.value,
-        timestamp: event.timestamp,
+      makeDashboardEvent(event, {
         address: isIncome ? event.args.from : event.args.to,
         unit: 'ntz',
         type: isIncome ? 'income' : 'outcome',
@@ -181,11 +176,7 @@ function addNTZContractEvent(state, event) {
   } else if (event.event === 'Sell') {
     return state.setIn(
       ['events', event.transactionHash],
-      fromJS({
-        blockNumber: event.blockNumber,
-        transactionHash: event.transactionHash,
-        value: event.args.value,
-        timestamp: event.timestamp,
+      makeDashboardEvent(event, {
         address: confParams.ntzAddr,
         unit: 'ntz',
         type: 'outcome',
@@ -194,11 +185,7 @@ function addNTZContractEvent(state, event) {
   } else if (event.event === 'Purchase') {
     return state.setIn(
       ['events', event.transactionHash],
-      fromJS({
-        blockNumber: event.blockNumber,
-        transactionHash: event.transactionHash,
-        value: event.args.value,
-        timestamp: event.timestamp,
+      makeDashboardEvent(event, {
         address: state.get('proxy'),
         unit: 'ntz',
         type: 'income',
@@ -209,12 +196,12 @@ function addNTZContractEvent(state, event) {
   return state;
 }
 
-function completePending(state, txHash) {
-  return state.get('pending').reduce((st, value, key) => {
-    if (value.get('txHash') === txHash) {
-      return st.deleteIn(['pending', key]);
-    }
-
-    return st;
-  }, state);
+function makeDashboardEvent(event, fields) {
+  return fromJS({
+    blockNumber: event.blockNumber,
+    transactionHash: event.transactionHash,
+    value: event.args.value,
+    timestamp: event.timestamp,
+    ...fields,
+  });
 }

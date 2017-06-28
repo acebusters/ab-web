@@ -36,7 +36,7 @@ import {
   contractMethodError,
   contractTxSuccess,
   contractTxError,
-  contractEvent,
+  contractEvents,
   transferETHSuccess,
   transferETHError,
 } from './actions';
@@ -320,17 +320,17 @@ function* updateLoggedInStatusSaga(action) { // SET_AUTH action
 }
 
 const ethEvent = (contract) => eventChannel((emitter) => {
-  const contractEvents = contract.allEvents({ fromBlock: 'latest' });
-  contractEvents.watch((error, results) => {
+  const events = contract.allEvents({ fromBlock: 'latest' });
+  events.watch((error, results) => {
     if (error) {
       emitter(END);
-      contractEvents.stopWatching();
+      events.stopWatching();
       return;
     }
     emitter(results);
   });
   return () => {
-    contractEvents.stopWatching();
+    events.stopWatching();
   };
 });
 
@@ -342,8 +342,7 @@ export function* ethEventListenerSaga(contract) {
       const state = yield select();
       if (isUserEvent(state.get('proxy'))(event)) {
         const events = yield call(addEventsDate, [event]);
-        yield put(contractEvent(events[0]));
-        yield put(contractEvent(event));
+        yield put(contractEvents(events));
       }
     } catch (e) {} // eslint-disable-line no-empty
   }
