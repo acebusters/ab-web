@@ -48,7 +48,6 @@ export const CurtainTogglerWrapper = styled.div`
 export const ToggleTriangle = styled.span`
   width: 70px;
   height: 70px;
-  position: absolute;
   clip: rect(auto, 70px, auto, 50px);
   transform: translateX(-50px);
   &:before {
@@ -63,9 +62,8 @@ export const ToggleTriangle = styled.span`
   }
 `;
 
-export const ToggleIcon = styled.span`
-  padding-top: 4px;
-  margin-left: 28px;
+export const ToggleIcon = styled.i`
+  margin-left: -36px;
 `;
 
 export const ToggleText = styled.span`
