@@ -267,7 +267,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                   <ExchangeDialog
                     title={<FormattedMessage {...messages.sellTitle} />}
                     amountUnit="ntz"
-                    calcExpectedAmount={(amount) => floor.div(ETH_DECIMALS.div(NTZ_DECIMALS)).mul(amount)}
+                    calcExpectedAmount={(amount) => new BigNumber(amount).div(floor)}
                     handleExchange={this.handleNTZSell}
                     maxAmount={babzBalance.div(NTZ_DECIMALS)}
                   />
