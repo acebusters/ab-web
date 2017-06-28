@@ -7,8 +7,12 @@ import {
   ETH_CLAIM,
   CONTRACT_TX_SUCCESS,
   ETH_TRANSFER_SUCCESS,
-  // CONTRACT_TX_ERROR,
+  CONTRACT_TX_ERROR,
 } from '../AccountProvider/actions';
+
+import {
+  MODAL_DISMISS,
+} from '../App/actions';
 
 import { composeReducers } from '../../utils/composeReducers';
 
@@ -30,6 +34,7 @@ const confParams = conf();
  */
 const initialState = fromJS({
   proxy: null,
+  failedTx: null,
   pendingSell: [],
   events: null,
 });
@@ -60,8 +65,11 @@ function dashboardReducer(state = initialState, action) {
         action.payload
       );
 
-    // case CONTRACT_TX_ERROR:
-    //   return state.setIn(['pending', action.payload.nonce, 'error'], action.payload.error);
+    case CONTRACT_TX_ERROR:
+      return state.set('failedTx', fromJS(action.payload));
+
+    case MODAL_DISMISS:
+      return state.set('failedTx', null);
 
     case PROXY_EVENTS:
       return action.payload.reduce(

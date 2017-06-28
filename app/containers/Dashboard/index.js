@@ -17,12 +17,14 @@ import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, ABI_TABLE_FACTORY, 
 import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz } from '../../utils/amountFormater';
 
 import List from '../../components/List';
+import H2 from '../../components/H2';
 import Alert from '../../components/Alert';
 import TransferDialog from '../TransferDialog';
 import PurchaseDialog from '../PurchaseDialog';
 import SellDialog from '../SellDialog';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
+import SubmitButton from '../../components/SubmitButton';
 import Blocky from '../../components/Blocky';
 import WithLoading from '../../components/WithLoading';
 
@@ -70,6 +72,25 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       this.watchTokenEvents(nextProps.account.proxy);
       this.token.balanceOf.call(nextProps.account.proxy);
       this.web3.eth.getBalance(nextProps.account.proxy);
+    }
+
+    if (this.props.dashboardTxs.txError !== nextProps.dashboardTxs.txError && nextProps.dashboardTxs.txError) {
+      this.props.modalAdd(
+        <div>
+          <H2>
+            <FormattedMessage {...messages.transactionErrorTitle} />
+          </H2>
+          <p>{nextProps.dashboardTxs.txError}</p>
+          <SubmitButton
+            onClick={() => {
+              this.props.dispatch(nextProps.dashboardTxs.failedTxAction);
+              this.props.modalDismiss();
+            }}
+          >
+            <FormattedMessage {...messages.retryTransaction} />
+          </SubmitButton>
+        </div>
+      );
     }
 
     // Note: listen to AccountFactory's AccountCreated Event if proxy address is not ready
@@ -382,6 +403,7 @@ Dashboard.propTypes = {
   account: PropTypes.object,
   dashboardTxs: PropTypes.object,
   privKey: PropTypes.string,
+  dispatch: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({

@@ -263,8 +263,8 @@ function notifyBlock() {
 function* contractTransactionSendSaga() {
   const txChan = yield actionChannel(CONTRACT_TX_SEND);
   while (true) { // eslint-disable-line no-constant-condition
-    const req = yield take(txChan);
-    const { dest, key, data, privKey, callback, args, methodName } = req.payload;
+    const action = yield take(txChan);
+    const { dest, key, data, privKey, callback, args, methodName } = action.payload;
     const state = yield select();
     const nonce = state.get('account').get('lastNonce') + 1;
     const controller = state.get('account').get('controller');
@@ -281,7 +281,7 @@ function* contractTransactionSendSaga() {
       if (callback) {
         yield call(callback, error);
       }
-      yield put(contractTxError({ address: dest, nonce, error, args, methodName }));
+      yield put(contractTxError({ address: dest, nonce, error, args, methodName, action }));
     }
   }
 }

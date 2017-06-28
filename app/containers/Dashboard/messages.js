@@ -10,13 +10,17 @@ export default defineMessages({
     id: 'app.containers.Dashboard.header',
     defaultMessage: 'Account Dashboard',
   },
-  pending: {
-    id: 'app.containers.Dashboard.pending',
-    defaultMessage: 'Pending Transactions:',
-  },
   included: {
     id: 'app.containers.Dashboard.included',
     defaultMessage: 'Transaction History:',
+  },
+  transactionErrorTitle: {
+    id: 'app.containers.Dashboard.transactionErrorTitle',
+    defaultMessage: 'Transaction error',
+  },
+  retryTransaction: {
+    id: 'app.containers.Dashboard.retryTransaction',
+    defaultMessage: 'Retry',
   },
   ethAlert: {
     id: 'app.containers.Dashboard.ethAlert',

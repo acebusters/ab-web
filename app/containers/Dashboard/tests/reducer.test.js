@@ -1,12 +1,14 @@
 import { fromJS } from 'immutable';
 import dashboardReducer from '../reducer';
-import { contractEvent, proxyEvent } from '../../AccountProvider/actions';
+import { contractEvent, proxyEvent, contractTxError } from '../../AccountProvider/actions';
+import { modalDismiss } from '../../App/actions';
 
 describe('dashboard reducer tests', () => {
   it('should return the default state.', () => {
     expect(dashboardReducer(undefined, {}).toJS()).toEqual({
       pendingSell: [],
       proxy: null,
+      failedTx: null,
       events: null,
     });
   });
@@ -112,5 +114,21 @@ describe('dashboard reducer tests', () => {
       pending: {},
       proxy: '0x7c08ca8bef208ac8be8cd03ad15fbef643dd355c',
     }));
+  });
+
+  it('should save payload of transaction error action', () => {
+    expect(dashboardReducer(
+      undefined,
+      contractTxError({ error: 'Some error message' })
+    ).get('failedTx')).toEqual(fromJS({ error: 'Some error message' }));
+  });
+
+  it('should reset failed transaction on modal dismiss action', () => {
+    expect(dashboardReducer(
+      fromJS({
+        failedTx: { error: 'Some error message' },
+      }),
+      modalDismiss()
+    ).get('failedTx')).toEqual(null);
   });
 });

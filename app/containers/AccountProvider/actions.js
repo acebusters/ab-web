@@ -184,8 +184,8 @@ export function contractTxSuccess(payload) {
   return { type: CONTRACT_TX_SUCCESS, payload };
 }
 
-export function contractTxError({ address, nonce, error }) {
-  return { type: CONTRACT_TX_ERROR, payload: { address, nonce, error } };
+export function contractTxError(payload) {
+  return { type: CONTRACT_TX_ERROR, payload };
 }
 
 export function contractEvent(event) {
