@@ -51,6 +51,8 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.tableFactory.getTables.call();
 
     if (this.props.account.proxy) {
+      this.token.floor.call();
+      this.token.ceiling.call();
       this.token.balanceOf.call(this.props.account.proxy);
       this.web3.eth.getBalance(this.props.account.proxy);
       this.watchProxyEvents(this.props.account.proxy);
@@ -314,6 +316,26 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               SELL
             </Button>
           }
+          {weiBalance && ceiling &&
+            <Button
+              align="left"
+              onClick={() => {
+                this.props.modalAdd(
+                  <ExchangeDialog
+                    title={<FormattedMessage {...messages.purchaseTitle} />}
+                    amountUnit="eth"
+                    calcExpectedAmount={(amount) => ceiling.mul(amount)}
+                    handleExchange={this.handleNTZPurchase}
+                    maxAmount={weiBalance.div(ETH_DECIMALS)}
+                  />
+                );
+              }}
+              size="medium"
+              icon="fa fa-money"
+            >
+              PURCHASE
+            </Button>
+          }
         </Section>
 
         <Section>
@@ -345,26 +367,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               icon="fa fa-money"
             >
               TRANSFER
-            </Button>
-          }
-          {weiBalance && ceiling &&
-            <Button
-              align="left"
-              onClick={() => {
-                this.props.modalAdd(
-                  <ExchangeDialog
-                    title={<FormattedMessage {...messages.purchaseTitle} />}
-                    amountUnit="eth"
-                    calcExpectedAmount={(amount) => ceiling.mul(amount)}
-                    handleExchange={this.handleNTZPurchase}
-                    maxAmount={weiBalance.div(ETH_DECIMALS)}
-                  />
-                );
-              }}
-              size="medium"
-              icon="fa fa-money"
-            >
-              PURCHASE
             </Button>
           }
         </Section>
