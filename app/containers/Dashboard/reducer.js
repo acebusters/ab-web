@@ -152,13 +152,13 @@ function addNTZPending(state, { methodName, args, txHash }) {
 }
 
 function addProxyEvent(state, event) {
-  const isReceived = event.event === 'Received';
+  const isDeposit = event.event === 'Deposit';
   return state.setIn(
     ['events', event.transactionHash],
     makeDashboardEvent(event, {
-      address: isReceived ? event.args.sender : event.address,
+      address: isDeposit ? event.args.sender : event.address,
       unit: 'eth',
-      type: isReceived ? 'income' : 'outcome',
+      type: isDeposit ? 'income' : 'outcome',
     }),
   );
 }
