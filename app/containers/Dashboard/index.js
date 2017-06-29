@@ -111,7 +111,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         toBlock: 'latest',
       }).get((error, eventList) => {
         addEventsDate(eventList.filter(isUserEvent(proxyAddr)))
-          .then((events) => this.props.proxyEvents(events, this.props.account.proxy));
+          .then((events) => this.props.proxyEvents(events, proxyAddr));
       });
     });
 
@@ -120,7 +120,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     }).watch((error, event) => {
       if (!error && event) {
         addEventsDate([event])
-          .then((events) => this.props.proxyEvents(events, this.props.account.proxy));
+          .then((events) => this.props.proxyEvents(events, proxyAddr));
         this.web3.eth.getBalance(proxyAddr);
       }
     });
@@ -133,7 +133,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         toBlock: 'latest',
       }).get((error, eventList) => {
         addEventsDate(eventList.filter(isUserEvent(proxyAddr)))
-          .then((events) => this.props.contractEvents(events, this.props.account.proxy));
+          .then((events) => this.props.contractEvents(events, proxyAddr));
       });
     });
 
@@ -141,16 +141,16 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       toBlock: 'latest',
     }).watch((watchError, event) => {
       if (!watchError && isUserEvent(proxyAddr)(event)) {
-        this.token.balanceOf.call(this.props.account.proxy);
-        this.web3.eth.getBalance(this.props.account.proxy);
+        this.token.balanceOf.call(proxyAddr);
+        this.web3.eth.getBalance(proxyAddr);
         const { pendingSell = [] } = this.props.dashboardTxs;
 
         if (pendingSell.indexOf(event.transactionHash) > -1) {
           this.token.transferFrom.sendTransaction(
             confParams.ntzAddr,
-            this.props.account.proxy,
+            proxyAddr,
             0,
-            { from: this.props.account.proxy }
+            { from: proxyAddr }
           );
         }
       }
@@ -164,9 +164,9 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       if (!value.eq(0)) {
         this.token.transferFrom.sendTransaction(
           confParams.ntzAddr,
-          this.props.account.proxy,
+          proxyAddr,
           0,
-          { from: this.props.account.proxy }
+          { from: proxyAddr }
         );
       }
     });
