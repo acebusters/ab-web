@@ -153,7 +153,7 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
           <Form
             onSubmit={handleSubmit(this.handleSubmit)}
           >
-            <Label style={{ float: 'none' }}>Random Secret</Label>
+            <Label style={{ float: 'none' }}>Generate Random Secret</Label>
             <MouseEntropy totalBits={768} width="100%" height="200px" onFinish={updateEntropy} sampleRate={0} />
             <Field name="entropy" type="hidden" component={FormField} label="" value={entropy} />
             <Field name="password" type="password" component={FormField} label="password" />
