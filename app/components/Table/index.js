@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Board } from './Board';
 import TableMenu from '../../containers/TableMenu';
 import ActionBar from '../../containers/ActionBar';
@@ -70,12 +71,12 @@ Seats.propTypes = {
 };
 
 TableComponent.propTypes = {
-  board: React.PropTypes.array,
-  seats: React.PropTypes.array,
-  potSize: React.PropTypes.number,
-  winners: React.PropTypes.array,
-  myHand: React.PropTypes.object,
-  sb: React.PropTypes.number,
+  board: PropTypes.array,
+  seats: PropTypes.array,
+  potSize: PropTypes.number,
+  winners: PropTypes.array,
+  myHand: PropTypes.object,
+  sb: PropTypes.number,
 };
 
 export default TableComponent;
