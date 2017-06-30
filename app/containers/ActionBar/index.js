@@ -7,7 +7,6 @@ import Raven from 'raven-js';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
-import TableService from '../../services/tableService';
 import { playIsPlayerTurn } from '../../sounds';
 
 import {
@@ -56,7 +55,6 @@ class ActionBarContainer extends React.Component {
     this.handleCall = this.handleCall.bind(this);
     this.handleFold = this.handleFold.bind(this);
     this.updateAmount = this.updateAmount.bind(this);
-    this.table = new TableService(props.params.tableAddr, this.props.privKey);
     this.state = {
       amount: 0,
       disabled: false,
