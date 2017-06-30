@@ -12,7 +12,6 @@ import Curtain from '../../containers/Curtain';
 import FeedbackButton from '../../containers/FeedbackButton';
 
 import {
-  TableHeader,
   TableContainer,
   TableAndChairs,
   PokerTable,
@@ -32,10 +31,6 @@ const TableComponent = (props) => (
 
     <TableContainer name="table-container">
 
-      <TableHeader className="table-header">
-        { `state: ${props.state}` } <br />
-      </TableHeader>
-
       <TableAndChairs id="table-and-chairs" >
         <PokerTable>
           <img src={tableImage} alt="" />
@@ -53,9 +48,7 @@ const TableComponent = (props) => (
             <Winner className="winner">{ props.winners }</Winner>
           }
         </PokerTable>
-
       </TableAndChairs>
-
 
       { props.myHand &&
         <HandBox className="hand-box"> { props.myHand.descr }</HandBox>
@@ -77,7 +70,6 @@ Seats.propTypes = {
 };
 
 TableComponent.propTypes = {
-  state: React.PropTypes.string,
   board: React.PropTypes.array,
   seats: React.PropTypes.array,
   potSize: React.PropTypes.number,
