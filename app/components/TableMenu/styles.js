@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import {
   curtainStickyWidth,
-  curtainHalfWidth,
 } from '../../variables';
 
 const menuActiveBG = '#35c5e3'; // electric blue
@@ -52,7 +51,7 @@ export const LogoWrapper = styled.div`
   height: 46px;
   border: 1px dashed red;
   @media (min-width: ${curtainStickyWidth}) {
-    left: calc(${curtainHalfWidth} * 2);
+    display: none;
   }
 `;
 
