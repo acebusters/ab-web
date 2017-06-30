@@ -6,7 +6,7 @@ import {
   curtainStickyWidth,
   curtainWidth,
   menuClose,
-} from 'variables';
+} from '../../variables';
 
 import {
   Logo,

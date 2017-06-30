@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import {
   baseColor,
   white,
-} from 'variables';
+} from '../../variables';
 
 export const LogoContainer = styled.div`
   width: 60px;
