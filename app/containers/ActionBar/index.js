@@ -63,12 +63,6 @@ class ActionBarContainer extends React.Component {
     };
   }
 
-  componentWillMount() {
-    if (this.props.minRaise) {
-      this.updateAmount(this.props.minRaise);
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.turnComplete === true) {
       this.props.setActionBarTurnComplete(false);
@@ -77,12 +71,13 @@ class ActionBarContainer extends React.Component {
     if (nextProps.minRaise && nextProps.minRaise !== this.props.minRaise) {
       this.updateAmount(nextProps.minRaise);
     }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const wasDisabled = !prevProps.active || prevState.disabled;
+    const disabled = !this.props.active || this.state.disabled;
     // should play sound
-    if (
-      nextProps.active && // isPlayersTurn || appropriate hand state || !turnComplete
-      !this.state.disabled && // disabled by previous player action
-      nextProps.mode === '' // mode has been set by previous action
-    ) {
+    if (wasDisabled && !disabled) {
       playIsPlayerTurn();
     }
   }
@@ -213,7 +208,6 @@ ActionBarContainer.propTypes = {
   dispatch: PropTypes.func,
   fold: PropTypes.func,
   lastReceipt: PropTypes.object,
-  mode: PropTypes.string,
   minRaise: PropTypes.number,
   myMaxBet: PropTypes.number,
   myPos: PropTypes.number,
