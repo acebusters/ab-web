@@ -46,11 +46,10 @@ export const Button = styled.button`
 // Logo
 export const LogoWrapper = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 24px;
+  left: 18px;
   display: flex;
   align-items: center;
-  margin: 12px;
   pointer-events: none;
   @media (min-width: ${curtainStickyWidth}) {
     display: none;

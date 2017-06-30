@@ -10,7 +10,6 @@ import {
 
 import {
   Logo,
-  LogoContainer,
   LogoName,
   NameContainer,
 } from '../Logo';
@@ -78,14 +77,19 @@ export const ToggleText = styled.span`
 const CurtainHeaderContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 6px 0 16px 8px;
+`;
+
+const CurtainLogoContainer = styled.div`
+  width: 60px;
+  height: 60px;
 `;
 
 export const CurtainHeader = () => (
   <CurtainHeaderContainer>
-    <LogoContainer>
+    <CurtainLogoContainer>
       <Logo name="curtain-logo" />
-    </LogoContainer>
+    </CurtainLogoContainer>
     <NameContainer>
       <LogoName name="container-name" />
     </NameContainer>
