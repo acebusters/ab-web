@@ -1,26 +1,28 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { FlagCall } from './styles';
+import { formatNtz } from '../../utils/amountFormater';
 
 const FlagAmountCall = ({
+  active,
   amountToCall,
   sliderOpen,
   myStack,
 }) => {
   // hide flag if only option is to 'check' or 'all-in'
-  if (amountToCall === 0 || amountToCall > myStack) {
-    return null;
-  }
+  const hide = amountToCall === 0 || amountToCall > myStack || !active;
   return (
-    <FlagCall sliderOpen={sliderOpen}>
-      {amountToCall}
+    <FlagCall hide={hide} sliderOpen={sliderOpen}>
+      {formatNtz(amountToCall)}
     </FlagCall>
   );
 };
 FlagAmountCall.propTypes = {
-  amountToCall: React.PropTypes.number,
-  myStack: React.PropTypes.number,
-  sliderOpen: React.PropTypes.bool,
+  active: PropTypes.bool,
+  amountToCall: PropTypes.number,
+  myStack: PropTypes.number,
+  sliderOpen: PropTypes.bool,
 };
 
 export default FlagAmountCall;

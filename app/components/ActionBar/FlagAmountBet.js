@@ -1,24 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { FlagBet } from './styles';
+import { formatNtz } from '../../utils/amountFormater';
 
 const FlagAmountBet = ({
   amount,
-  amountToCall,
   sliderOpen,
 }) => (
   <FlagBet sliderOpen={sliderOpen}>
-    {amountToCall !== 0 ?
-        `RAISE ${amount}`
-      :
-        `BET ${amount}`
-      }
+    {formatNtz(amount)}
   </FlagBet>
 );
 FlagAmountBet.propTypes = {
-  amount: React.PropTypes.number,
-  amountToCall: React.PropTypes.number,
-  sliderOpen: React.PropTypes.bool,
+  amount: PropTypes.number,
+  sliderOpen: PropTypes.bool,
 };
 
 export default FlagAmountBet;

@@ -2,6 +2,7 @@
  * Created by helge on 24.08.16.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import Raven from 'raven-js';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -9,14 +10,17 @@ import { connect } from 'react-redux';
 import TableService from '../../services/tableService';
 
 import {
-  setActionBarActive,
+  setActionBarTurnComplete,
   setActionBarMode,
   setActionBarBetSlider,
+  setActionBarButtonActive,
 } from './actions';
 
 import {
   getActionBarSliderOpen,
   getActionBarMode,
+  getActionBarTurnComplete,
+  getActionBarButtonActive,
   makeSelectActionBarActive,
   makeSelectActionBarVisible,
   makeMinSelector,
@@ -52,14 +56,34 @@ class ActionBarContainer extends React.Component {
     this.handleFold = this.handleFold.bind(this);
     this.updateAmount = this.updateAmount.bind(this);
     this.table = new TableService(props.params.tableAddr, this.props.privKey);
-    this.state = { amount: 0 };
+    this.state = {
+      amount: 0,
+      disabled: false,
+    };
+  }
+
+  componentWillMount() {
+    if (this.props.minRaise) {
+      this.updateAmount(this.props.minRaise);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.isMyTurn === true) {
-      this.props.setActionBarActive(true);
-      this.props.setActionBarMode(null);
+    if (nextProps.turnComplete === true) {
+      this.props.setActionBarTurnComplete(false);
+      this.props.setActionBarMode('');
     }
+    if (nextProps.minRaise && nextProps.minRaise !== this.props.minRaise) {
+      this.updateAmount(nextProps.minRaise);
+    }
+  }
+
+  // call this after each player action
+  disableTemporarilyAfterAction() {
+    this.setState({ disabled: true });
+    setTimeout(() => {
+      this.setState({ disabled: false });
+    }, 3000);
   }
 
   updateAmount(value) {
@@ -76,8 +100,8 @@ class ActionBarContainer extends React.Component {
         tableAddr: self.props.params.tableAddr,
         handId,
       } });
-      this.props.setActionBarActive(true);
-      this.props.setActionBarMode(null);
+      this.props.setActionBarTurnComplete(true);
+      this.props.setActionBarMode('');
     };
   }
 
@@ -89,7 +113,8 @@ class ActionBarContainer extends React.Component {
   }
 
   handleBet() {
-    this.props.setActionBarActive(false);
+    this.props.setActionBarTurnComplete(true);
+    this.disableTemporarilyAfterAction();
     const amount = this.state.amount + this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
 
@@ -109,7 +134,8 @@ class ActionBarContainer extends React.Component {
   }
 
   handleCheck() {
-    this.props.setActionBarActive(false);
+    this.props.setActionBarTurnComplete(true);
+    this.disableTemporarilyAfterAction();
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const checkStates = ['preflop', 'turn', 'river', 'flop'];
@@ -133,7 +159,8 @@ class ActionBarContainer extends React.Component {
   }
 
   handleFold() {
-    this.props.setActionBarActive(false);
+    this.props.setActionBarTurnComplete(true);
+    this.disableTemporarilyAfterAction();
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const action = this.props.fold(
@@ -156,6 +183,7 @@ class ActionBarContainer extends React.Component {
     return (
       <ActionBar
         amount={this.state.amount}
+        disabled={this.state.disabled}
         handleAllIn={this.handleAllIn}
         handleBet={this.handleBet}
         handleCheck={this.handleCheck}
@@ -169,23 +197,24 @@ class ActionBarContainer extends React.Component {
 }
 
 ActionBarContainer.propTypes = {
-  bet: React.PropTypes.func,
-  callAmount: React.PropTypes.number,
-  check: React.PropTypes.func,
-  dispatch: React.PropTypes.func,
-  fold: React.PropTypes.func,
-  lastReceipt: React.PropTypes.object,
-  minRaise: React.PropTypes.number,
-  myMaxBet: React.PropTypes.number,
-  myPos: React.PropTypes.number,
-  myStack: React.PropTypes.number,
-  pay: React.PropTypes.func,
-  params: React.PropTypes.object,
-  privKey: React.PropTypes.string,
-  setCards: React.PropTypes.func,
-  state: React.PropTypes.string,
-  setActionBarActive: React.PropTypes.func,
-  setActionBarMode: React.PropTypes.func,
+  bet: PropTypes.func,
+  callAmount: PropTypes.number,
+  check: PropTypes.func,
+  dispatch: PropTypes.func,
+  fold: PropTypes.func,
+  lastReceipt: PropTypes.object,
+  minRaise: PropTypes.number,
+  myMaxBet: PropTypes.number,
+  myPos: PropTypes.number,
+  myStack: PropTypes.number,
+  pay: PropTypes.func,
+  params: PropTypes.object,
+  privKey: PropTypes.string,
+  setCards: PropTypes.func,
+  state: PropTypes.string,
+  setActionBarTurnComplete: PropTypes.func,
+  setActionBarMode: PropTypes.func,
+  turnComplete: PropTypes.bool,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -202,9 +231,10 @@ export function mapDispatchToProps(dispatch) {
       ) => check(
         tableAddr, handId, amount, privKey, myPos, lastReceipt, checkType
     ),
-    setActionBarActive: (active) => dispatch(setActionBarActive(active)),
+    setActionBarTurnComplete: (complete) => dispatch(setActionBarTurnComplete(complete)),
     setActionBarBetSlider: (open) => dispatch(setActionBarBetSlider(open)),
     setActionBarMode: (mode) => dispatch(setActionBarMode(mode)),
+    setActionBarButtonActive: (whichBtn) => dispatch(setActionBarButtonActive(whichBtn)),
   };
 }
 
@@ -213,6 +243,7 @@ const mapStateToProps = createStructuredSelector({
   amountToCall: makeAmountToCallSelector(),
   callAmount: makeCallAmountSelector(),
   cards: makeMyCardsSelector(),
+  buttonActive: getActionBarButtonActive(),
   isMyTurn: makeIsMyTurnSelector(),
   playerCount: makePlayersCountSelector(),
   privKey: makeSelectPrivKey(),
@@ -222,6 +253,7 @@ const mapStateToProps = createStructuredSelector({
   myMaxBet: makeMyMaxBetSelector(),
   myStack: makeMyStackSelector(),
   sliderOpen: getActionBarSliderOpen(),
+  turnComplete: getActionBarTurnComplete(),
   visible: makeSelectActionBarVisible(),
 });
 

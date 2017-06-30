@@ -108,12 +108,14 @@ class MouseEntropy extends React.Component {
     } = this.props;
     const { bitCount, status }  = this.state;
     const percent = ((100 * bitCount) / totalBits).toFixed(2);
+    const percentInt = percent.substr(0, percent.length - 3);
     const isReady = status === ST.DONE;
 
     return (
       <div style={{ width }}>
         <div
           role="button"
+          tabIndex="0"
           onMouseMove={this.onMouseMove}
           onTouchMove={this.onTouchMove}
           style={{
@@ -125,9 +127,13 @@ class MouseEntropy extends React.Component {
             color: isReady ? 'green' : 'black',
           }}
         >
-          {isReady ? 'Done! ' : 'Move in this area'}
+          {isReady ?
+            'Random secret successfully created!'
+            :
+            `Move mouse randomly in this area ${percentInt}/100%`
+          }
         </div>
-        <div style={{ width: `${percent}%`, height: '3px', background: '#20dd66' }}></div>
+        <div tabIndex="-1" style={{ width: `${percent}%`, height: '3px', background: '#20dd66' }}></div>
       </div>
     );
   }

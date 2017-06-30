@@ -3,10 +3,15 @@
 */
 import styled from 'styled-components';
 
+import {
+  curtainStickyWidth,
+  curtainHalfWidth,
+} from '../../variables';
+
 const menuActiveBG = '#35c5e3'; // electric blue
 const menuBoxShadow = '0 2px 4px 0 rgba(0,0,0,0.31)';
 const menuColor = '#ebe8e8'; // light gray
-const menuClose = 'linear-gradient(0deg, #606060 0%, #808080 100%)';
+export const menuClose = 'linear-gradient(0deg, #606060 0%, #808080 100%)';
 const menuOpen = 'linear-gradient(0deg, #383838 0%, #717171 100%)';
 const menuHoverBoxShadow = 'inset 1px 1px 5px 1px rgba(0,0,0,0.3)';
 const menuActiveBoxShadow = 'inset 2px 1px 5px 2px rgba(0,0,0,0.50)';
@@ -17,6 +22,7 @@ export const Button = styled.button`
   color: ${menuColor};
   border: none;
   background: none;
+  text-decoration: none;
   &:focus {
     outline: none;
   }
@@ -36,20 +42,18 @@ export const Button = styled.button`
   }
 `;
 
-export const Container = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  width: 100%;
-`;
-
 // Logo
 export const LogoWrapper = styled.div`
-  display: flex;
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
   width: 128px;
   height: 46px;
   border: 1px dashed red;
+  @media (min-width: ${curtainStickyWidth}) {
+    left: calc(${curtainHalfWidth} * 2);
+  }
 `;
 
 export const Logo = styled.div`
@@ -58,10 +62,14 @@ export const Logo = styled.div`
 
 // table-menu
 export const MenuContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: calc(100% - 148px);
   display: flex;
   flex-direction: column;
   min-width: 148px;
   margin-left: auto;
+  pointer-events: all;
   background: ${(props) => props.open ? menuOpen : 'none'};
   border-bottom-left-radius: 8px;
   box-shadow: ${(props) => props.open ? menuBoxShadow : 'none'};
@@ -128,6 +136,7 @@ export const MenuItemsWrapper = styled.div`
 
 export const ItemWrapper = styled(Button)`
   display: flex;
+  align-items: center;
   height: 40px;
   margin-left: 8px;
   padding-left: 12px;
@@ -138,6 +147,8 @@ export const ItemWrapper = styled(Button)`
     margin-bottom: 10px;
   }
 `;
+
+export const LinkWrapper = ItemWrapper.withComponent(Button.withComponent('a'));
 
 export const ItemIcon = styled.i`
   &:before {

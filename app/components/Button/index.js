@@ -30,6 +30,10 @@ const SharedButton = styled.button`
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: bold;
   color: ${white};
+
+  & + & {
+    margin-left: 10px;
+  }
 `;
 
 const Medium = styled(SharedButton)`{
@@ -80,34 +84,26 @@ const Icon = styled.i`
   }}
 `;
 
-const Wrapper = styled.div`
-  text-align: ${(props) => props.align};
-  width: 100%;
-`;
-
 const sizes = {
   medium: Medium,
   large: Large,
 };
 
 function Button({
-  size = 'medium',
   icon = '',
-  align = 'center',
+  children,
   ...props
 }) {
   // Render an anchor tag
-  const ButtonComponent = sizes[size] || Medium;
+  const ButtonComponent = getButtonComponent(props);
 
   return (
-    <Wrapper align={align}>
-      <ButtonComponent onClick={props.onClick} type={props.type} disabled={props.disabled}>
-        {Children.toArray(props.children)}
-        {icon &&
-          <Icon className={icon} content={Children.toArray(props.children)}></Icon>
-        }
-      </ButtonComponent>
-    </Wrapper>
+    <ButtonComponent {...props}>
+      {Children.toArray(children)}
+      {icon &&
+        <Icon className={icon} content={Children.toArray(children)}></Icon>
+      }
+    </ButtonComponent>
   );
 }
 
@@ -115,10 +111,19 @@ Button.propTypes = {
   onClick: PropTypes.func,
   type: PropTypes.string,
   size: PropTypes.oneOf(['large', 'medium']),
-  align: PropTypes.oneOf(['center', 'left']),
   icon: PropTypes.string,
   disabled: PropTypes.bool,
   children: PropTypes.node,
 };
+
+function getButtonComponent({ size, href }) {
+  const component = sizes[size] || Medium;
+
+  if (href) {
+    return component.withComponent(SharedButton.withComponent('a'));
+  }
+
+  return component;
+}
 
 export default Button;

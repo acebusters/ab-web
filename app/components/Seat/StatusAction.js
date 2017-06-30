@@ -30,6 +30,7 @@ const StatusAction = ({
     return (
       <StatusWrapper>
         <StatusActionStyle
+          name="status-action-style"
           type={showStatus.style}
           recent={wasMostRecentAction}
         >

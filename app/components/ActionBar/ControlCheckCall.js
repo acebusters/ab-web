@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ActionButton from './ActionButton';
 import ControlBlank from './ControlBlank';
@@ -18,8 +19,8 @@ const ControlCheckCall = (props) => {
     return (
       <ActionButton
         name="button-call"
-        text="CALL"
-        newMode="CALL"
+        text="Call"
+        type="CALL"
         handleClick={() => handleCall()}
         {...props}
       />
@@ -29,8 +30,8 @@ const ControlCheckCall = (props) => {
     return (
       <ActionButton
         name="button-check"
-        text="CHECK"
-        newMode="CHECK"
+        text="Check"
+        type="CHECK"
         handleClick={() => handleCheck()}
         {...props}
       />
@@ -39,10 +40,10 @@ const ControlCheckCall = (props) => {
   return <ControlBlank {...props} />;
 };
 ControlCheckCall.propTypes = {
-  amountToCall: React.PropTypes.number,
-  handleCall: React.PropTypes.func,
-  handleCheck: React.PropTypes.func,
-  myStack: React.PropTypes.number,
+  amountToCall: PropTypes.number,
+  handleCall: PropTypes.func,
+  handleCheck: PropTypes.func,
+  myStack: PropTypes.number,
 };
 
 export default ControlCheckCall;

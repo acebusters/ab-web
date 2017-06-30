@@ -1,30 +1,40 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { FlagButtonWrapper } from './styles';
 
 const FlagButton = ({
-  type,
+  potSize,
+  minRaise,
   sliderOpen,
+  type,
+  updateAmount,
 }) => {
   const textType = () => {
-    if (type === 'quarter') return '1/4';
-    if (type === 'half') return '1/2';
-    if (type === 'pot') return 'POT';
+    if (type === 0.25) return '1/4';
+    if (type === 0.50) return '1/2';
+    if (type === 1.00) return 'POT';
     return null;
   };
-  // only display if slider is Open
-  if (sliderOpen) {
-    return (
-      <FlagButtonWrapper name="flag-button">
-        {textType()}
-      </FlagButtonWrapper>
-    );
-  }
-  return null;
+  const result = potSize * type;
+  const isDisabled = result <= minRaise;
+  return (
+    <FlagButtonWrapper
+      onClick={() => updateAmount(result)}
+      sliderOpen={sliderOpen}
+      name="flag-button"
+      disabled={isDisabled}
+    >
+      {textType()}
+    </FlagButtonWrapper>
+  );
 };
 FlagButton.propTypes = {
-  type: React.PropTypes.string,
-  sliderOpen: React.PropTypes.bool,
+  potSize: PropTypes.number,
+  minRaise: PropTypes.number,
+  type: PropTypes.number,
+  sliderOpen: PropTypes.bool,
+  updateAmount: PropTypes.func,
 };
 
 export default FlagButton;

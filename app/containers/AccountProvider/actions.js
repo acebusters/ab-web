@@ -22,8 +22,9 @@ export const ETH_TRANSFER = 'acebusters/AccountProvider/ETH_TRANSFER';
 export const ETH_TRANSFER_SUCCESS = 'acebusters/AccountProvider/ETH_TRANSFER_SUCCESS';
 export const ETH_TRANSFER_ERROR = 'acebusters/AccountProvider/ETH_TRANSFER_ERROR';
 
-export const CONTRACT_EVENT = 'acebusters/AccountProvider/CONTRACT_EVENT';
-export const BLOCK_NOTIFY = 'acebusters/AccountProvider/BLOCK_NOTIFY';
+export const PROXY_EVENTS = 'acebusters/AccountProvider/PROXY_EVENTS';
+
+export const CONTRACT_EVENTS = 'acebusters/AccountProvider/CONTRACT_EVENTS';
 
 // Note: refer to  https://developer.mozilla.org/en-US/docs/Web/API/WebSocket#Ready_state_constants
 export const READY_STATE = {
@@ -69,7 +70,10 @@ export const SUPPORTED_WEB3_METHODS = {
 
 /**
  * Sets the authentication state of the application
- * @param  {boolean} newAuthState True means a user is logged in, false means no user is logged in
+ * @param {Object} newAuthState New auth state
+ * @param {boolean} loggedIn True means a user is logged in, false means no user is logged in
+ * @param {string} privKey
+ * @param {string} email
  */
 export function setAuthState(newAuthState) {
   return { type: SET_AUTH, newAuthState };
@@ -77,10 +81,6 @@ export function setAuthState(newAuthState) {
 
 export function accountLoaded(data) {
   return { type: ACCOUNT_LOADED, data };
-}
-
-export function blockNotify() {
-  return { type: BLOCK_NOTIFY };
 }
 
 export function web3Error(err) {
@@ -151,18 +151,34 @@ export function transferETHError(payload) {
   return { type: ETH_TRANSFER_ERROR, payload };
 }
 
+export function proxyEvent(event, proxy) {
+  return proxyEvents([event], proxy);
+}
+
+export function proxyEvents(events, proxy) {
+  return {
+    type: PROXY_EVENTS,
+    payload: events,
+    meta: { proxy },
+  };
+}
+
 export function contractTxSend(payload) {
   return { type: CONTRACT_TX_SEND, payload };
 }
 
-export function contractTxSuccess({ key, address, nonce, txHash }) {
-  return { type: CONTRACT_TX_SUCCESS, payload: { key, address, nonce, txHash } };
+export function contractTxSuccess(payload) {
+  return { type: CONTRACT_TX_SUCCESS, payload };
 }
 
-export function contractTxError({ address, nonce, error }) {
-  return { type: CONTRACT_TX_ERROR, payload: { address, nonce, error } };
+export function contractTxError(payload) {
+  return { type: CONTRACT_TX_ERROR, payload };
 }
 
-export function contractEvent({ event }) {
-  return { type: CONTRACT_EVENT, event };
+export function contractEvent(event, proxy) {
+  return contractEvents([event], proxy);
+}
+
+export function contractEvents(events, proxy) {
+  return { type: CONTRACT_EVENTS, payload: events, meta: { proxy } };
 }

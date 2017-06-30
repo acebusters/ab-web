@@ -7,9 +7,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { chipValues } from '../../app.config';
-import {
-  white,
-} from '../../variables';
+import { white } from '../../variables';
+import { formatNtz } from '../../utils/amountFormater';
 
 export const Chip = styled.div`
   position: absolute;
@@ -39,17 +38,19 @@ const ChipStack = styled.div`
   margin-right: 0.5em;
   width: 1em;
   height: 2em;
+  z-index: 2000;
 `;
 
 const Amount = styled.div`
-  position: absolute;
-  top: -5%;
-  left: 140%;
   color: ${white};
+  float: left;
+  margin-top: 0.5em;
 `;
 
 const Wrapper = styled.div`
   position: absolute;
+  min-width: 4em;
+  z-index: 1000;
   top: ${(props) => props.top};
   left: ${(props) => props.left};
 `;
@@ -92,7 +93,7 @@ function Pot(props) {
   const chipStacks = createChipStacks(chipValues, props.potSize);
 
   return (
-    <Wrapper top={props.top} left={props.left}>
+    <Wrapper name="stack-wrapper" top={props.top} left={props.left}>
       {chipStacks.map((stack, i) => (
         <ChipStack index={i} key={i}>
           {range(0, stack.count).map((j) => (
@@ -100,7 +101,7 @@ function Pot(props) {
           ))}
         </ChipStack>
       ))}
-      <Amount>{ props.potSize }</Amount>
+      <Amount>{ formatNtz(props.potSize) }</Amount>
     </Wrapper>
   );
 }

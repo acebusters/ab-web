@@ -11,7 +11,6 @@ import {
   makeSbSelector,
   makeHandSelector,
   makeHandStateSelector,
-  makeMyPosSelector,
 } from '../Table/selectors';
 
 import {
@@ -27,12 +26,13 @@ const pokerHelper = new PokerHelper(rc);
  * ActionBar related selectors
  */
 export const makeSelectActionBarActive = () => createSelector(
-  [makeSelectActionBarVisible(), makeHandStateSelector(), getIsMyTurn],
-  (visible, handState, isMyTurn) => {
+  [makeHandStateSelector(), getIsMyTurn, getActionBarTurnComplete()],
+  (handState, isMyTurn, turnComplete) => {
+    if (turnComplete) return false;
     const isAppropriateState = (
       handState !== 'waiting' && handState !== 'dealing' && handState !== 'showdown'
     );
-    if (visible && isMyTurn && isAppropriateState) {
+    if (isMyTurn && isAppropriateState) {
       return true;
     }
     return false;
@@ -41,7 +41,7 @@ export const makeSelectActionBarActive = () => createSelector(
 
 // show the ActionBar if the player is sitting at the table
 export const makeSelectActionBarVisible = () => createSelector(
-  [makeMyPosSelector()],
+  (_, props) => props.myPos,
   (myPos) => {
     if (myPos === undefined) return false;
     if (typeof myPos === 'number') return true;
@@ -57,6 +57,16 @@ export const getActionBarMode = () => createSelector(
 export const getActionBarSliderOpen = () => createSelector(
   getActionBarState,
   (actionBar) => actionBar.get('sliderOpen'),
+);
+
+export const getActionBarTurnComplete = () => createSelector(
+  getActionBarState,
+  (actionBar) => actionBar.get('turnComplete'),
+);
+
+export const getActionBarButtonActive = () => createSelector(
+  getActionBarState,
+  (actionBar) => actionBar.get('buttonActive'),
 );
 
 // Other selectors

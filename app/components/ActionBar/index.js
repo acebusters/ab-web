@@ -2,6 +2,7 @@
  * Created by helge on 24.08.16.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import FlagAmountBet from './FlagAmountBet';
 import FlagAmountCall from './FlagAmountCall';
@@ -9,7 +10,7 @@ import FlagButton from './FlagButton';
 import ControlBetRaise from './ControlBetRaise';
 import ControlCheckCall from './ControlCheckCall';
 import ControlFold from './ControlFold';
-import Slider from './Slider';
+import Slider from '../Slider';
 
 import {
   ActionBarWrapper,
@@ -21,29 +22,28 @@ import {
 const ActionBar = (props) => {
   const {
     active,
+    disabled,
     sliderOpen,
     visible,
   } = props;
   if (visible) {
     return (
-      <ActionBarWrapper active={active} name="action-bar-wrapper">
+      <ActionBarWrapper
+        active={active}
+        disabled={disabled}
+        name="action-bar-wrapper"
+      >
 
-        {sliderOpen ?
-          <FlagContainer active={active} name="flag-container">
-            <FlagAmountCall {...props} />
-            <FlagAmountBet {...props} />
-            <FlagButton type="quarter" {...props} />
-            <FlagButton type="half" {...props} />
-            <FlagButton type="pot" {...props} />
-          </FlagContainer>
-          :
-          <FlagContainer active={active} name="flag-container">
-            <FlagAmountCall {...props} />
-          </FlagContainer>
-        }
+        <FlagAmountCall {...props} />
+        <FlagAmountBet {...props} />
+        <FlagContainer active={active} name="flag-container">
+          <FlagButton type={0.25} {...props} />
+          <FlagButton type={0.50} {...props} />
+          <FlagButton type={1.00} {...props} />
+        </FlagContainer>
 
         <ControlPanel name="control-panel-visible">
-          <ControlWrapper>
+          <ControlWrapper sliderOpen={sliderOpen} >
             <ControlFold {...props} />
             <ControlCheckCall {...props} />
             <ControlBetRaise {...props} />
@@ -58,9 +58,10 @@ const ActionBar = (props) => {
 };
 
 ActionBar.propTypes = {
-  visible: React.PropTypes.bool.isRequired,
-  active: React.PropTypes.bool.isRequired,
-  sliderOpen: React.PropTypes.bool.isRequired,
+  visible: PropTypes.bool,
+  active: PropTypes.bool,
+  disabled: PropTypes.bool,
+  sliderOpen: PropTypes.bool,
 };
 
 export default ActionBar;

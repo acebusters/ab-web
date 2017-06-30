@@ -1,7 +1,9 @@
+import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
 import { setAuthState } from '../AccountProvider/actions';
+
 import {
   makeSelectOpen,
   makeSelectActive,
@@ -17,6 +19,16 @@ import {
 } from './actions';
 
 import TableMenu from '../../components/TableMenu';
+
+const TableMenuContainer = (props) => (
+  <TableMenu
+    disableOnClickOutside={!props.open}
+    {...props}
+  />
+);
+TableMenuContainer.propTypes = {
+  open: React.PropTypes.bool,
+};
 
 const mapDispatchToProps = (dispatch) => ({
   handleClickLogout: () => {
@@ -35,4 +47,7 @@ const mapStateToProps = createStructuredSelector({
   nickName: makeNickNameSelector(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TableMenu);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TableMenuContainer);

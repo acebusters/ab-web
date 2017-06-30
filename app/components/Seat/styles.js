@@ -101,17 +101,6 @@ export const DealerButton = styled.div`
   color: #353535;
 `;
 
-export const AmountBox = styled.div`
-  position: absolute;
-  left: ${(props) => `${props.amountCoords[0]}px`};
-  top: ${(props) => `${props.amountCoords[1]}px`};
-  border-radius: 25%;
-  color: white;
-  line-height: 3em;
-  text-align: center;
-  width: 100%;
-`;
-
 // cards
 export const CardContainer = styled.div`
   display: flex;
@@ -141,7 +130,6 @@ export const CardFront = styled(CardShared)`
 export const CardStyle = styled.img`
   max-width: 100%;
   height: auto;
-
   box-shadow: ${smallShadow};
 `;
 
@@ -152,6 +140,7 @@ export const InfoWrapper = styled(SharedMiddle)`
 
   color: #D5D5D5;
   font-weight: 400;
+  z-index: 100;
 `;
 
 export const AvatarImage = styled.div`
@@ -301,13 +290,13 @@ export const ButtonWrapper = styled.button`
 
   color: #D5D5D5;
   font-weight: 400;
-  &:focus {
-    outline: none;
-  }
   &:hover {
     color: white;
     transform: scale(1.1, 1.1);
     ${''/* box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.50); */}
+  }
+  &:focus {
+    outline: none;
   }
   &:active {
     color: ${activeColor};

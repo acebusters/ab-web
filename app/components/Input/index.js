@@ -15,8 +15,8 @@ const InputStyled = styled.input`
       return `border: 2px solid ${green}`;
     }
     return 'border: 1px solid #ccc';
-  }}
-  -webkit-box-shadow: 0 0 0px 1000px white inset !important
+  }};
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
   padding: 10px;
   border: solid 1px gainsboro;
   -webkit-transition: box-shadow 0.3s, border 0.3s;
@@ -40,6 +40,14 @@ const InputStyled = styled.input`
   -ms-border-radius: none;
   -o-border-radius: none;
   border-radius: 4px;
+`;
+
+export const CheckBox = styled.input`
+  display: inline-block;
+  margin-top: 0.7em;
+  margin-right: 1em;
+  padding-right: 5px;
+  float: left;
 `;
 
 export default InputStyled;
