@@ -101,10 +101,11 @@ export default function tableReducer(state = initialState, action) {
     case TableActions.PENDING_SET: {
       const { payload: { handId, tableAddr, pos, data = {} } } = action;
       const path = [tableAddr, handId.toString(), 'lineup', pos, 'pending'];
-      return state.setIn(path, fromJS({
-        ...data,
-        blocky: createBlocky(data.signerAddr),
-      }));
+
+      if (data.signerAddr) {
+        data.blocky = createBlocky(data.signerAddr);
+      }
+      return state.setIn(path, fromJS(data));
     }
 
     case TableActions.PENDING_DROP: {
