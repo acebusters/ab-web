@@ -4,6 +4,7 @@
 import { Map, List, fromJS } from 'immutable';
 import * as TableActions from './actions';
 import * as storageService from '../../services/localStorage';
+import { createBlocky } from '../../services/blockies';
 
 // Expecting a structure of the state like this:
   // [tableAddr]: {
@@ -98,13 +99,12 @@ export default function tableReducer(state = initialState, action) {
     }
 
     case TableActions.PENDING_SET: {
-      const { payload: { handId, tableAddr, pos, data } } = action;
+      const { payload: { handId, tableAddr, pos, data = {} } } = action;
       const path = [tableAddr, handId.toString(), 'lineup', pos, 'pending'];
-      if (!state.getIn(path)) {
-        return state.setIn(path, data);
-      }
-
-      return state;
+      return state.setIn(path, fromJS({
+        ...data,
+        blocky: createBlocky(data.signerAddr),
+      }));
     }
 
     case TableActions.PENDING_DROP: {

@@ -20,11 +20,7 @@ const SeatComponent = (props) => {
     if (myPos === undefined || pending) {
       if (pending) {
         return (
-          <Seat
-            {...props}
-            signerAddr={pending.signerAddr}
-            stackSize={pending.amount}
-          />
+          <Seat {...props} {...pending} />
         );
       }
 

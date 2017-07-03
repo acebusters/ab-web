@@ -208,7 +208,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
           this.tableAddr,
           this.props.params.handId,
           pos,
-          { signerAddr: event.payload.signer, amount },
+          { signerAddr: event.payload.signer, stackSize: amount },
         );
       }
     }
@@ -252,7 +252,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       this.tableAddr,
       this.props.params.handId,
       pos,
-      { signerAddr: this.props.signerAddr, amount }
+      { signerAddr: this.props.signerAddr, stackSize: amount }
     );
   }
 
