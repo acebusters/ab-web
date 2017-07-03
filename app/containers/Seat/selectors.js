@@ -135,7 +135,10 @@ const makeFoldedSelector = () => createSelector(
 
 const makeCoordsSelector = () => createSelector(
   [makeLineupSelector(), posSelector],
-  (lineup, pos) => (lineup && pos > -1) ? SEAT_COORDS[pos] : null
+  (lineup, pos) => {
+    const coordsPos = Math.round(pos * (SEAT_COORDS.length / lineup.size));
+    return (lineup && pos > -1) ? SEAT_COORDS[coordsPos] : null;
+  }
 );
 
 const makeAmountCoordsSelector = () => createSelector(
