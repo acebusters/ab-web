@@ -18,6 +18,16 @@ const SeatComponent = (props) => {
   } = props;
   if (open) {
     if (myPos === undefined || pending) {
+      if (pending) {
+        return (
+          <Seat
+            {...props}
+            signerAddr={pending.signerAddr}
+            stackSize={pending.amount}
+          />
+        );
+      }
+
       return (
         <ButtonJoinSeat
           onClickHandler={() => isTaken(open, myPos, pending, pos)}
@@ -36,7 +46,7 @@ SeatComponent.propTypes = {
   myPos: PropTypes.number,
   open: PropTypes.bool,
   pos: PropTypes.number,
-  pending: PropTypes.bool,
+  pending: PropTypes.any,
 };
 
 export default SeatComponent;
