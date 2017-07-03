@@ -401,7 +401,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
         let msg = 'Ups Something went wrong';
         const errorCode = result.args.errorCode.toNumber();
-        // this.props.setPending(this.tableAddr, this.props.params.handId);
         if (errorCode === 1) {
           msg = 'Wrong Amount';
         }
