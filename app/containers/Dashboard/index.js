@@ -42,6 +42,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.handleNTZPurchase = this.handleNTZPurchase.bind(this);
     this.handleNTZSell = this.handleNTZSell.bind(this);
     this.handleETHTransfer = this.handleETHTransfer.bind(this);
+    this.handlePowerUp = this.handlePowerUp.bind(this);
     this.web3 = props.web3Redux.web3;
 
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
@@ -204,7 +205,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     });
   }
 
-  handleNTZTransfer(to, amount) {
+  handleNTZTransfer(amount, to) {
     this.token.transfer.sendTransaction(
       to,
       new BigNumber(amount).mul(NTZ_DECIMALS)
@@ -229,11 +230,16 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.props.modalDismiss();
   }
 
-  handleETHTransfer(dest, amount) {
+  handleETHTransfer(amount, dest) {
     this.props.transferETH({
       dest,
       amount: new BigNumber(amount).mul(ETH_DECIMALS),
     });
+    this.props.modalDismiss();
+  }
+
+  handlePowerUp(amount) {
+    console.log('power up', amount);
     this.props.modalDismiss();
   }
 
@@ -293,6 +299,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               onClick={() => {
                 this.props.modalAdd(
                   <TransferDialog
+                    title={<FormattedMessage {...messages.ntzTransferTitle} />}
                     handleTransfer={this.handleNTZTransfer}
                     maxAmount={babzBalance.div(NTZ_DECIMALS)}
                     amountUnit="NTZ"
@@ -302,7 +309,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               size="medium"
               icon="fa fa-money"
             >
-              TRANSFER
+              Transfer
             </DBButton>
           }
           {babzBalance && floor &&
@@ -321,7 +328,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               size="medium"
               icon="fa fa-money"
             >
-              SELL
+              Sell
             </DBButton>
           }
           {weiBalance && ceiling &&
@@ -340,7 +347,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               size="medium"
               icon="fa fa-money"
             >
-              PURCHASE
+              Purchase
             </DBButton>
           }
         </Section>
@@ -363,6 +370,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               onClick={() => {
                 this.props.modalAdd(
                   <TransferDialog
+                    title={<FormattedMessage {...messages.ethTransferTitle} />}
                     handleTransfer={this.handleETHTransfer}
                     maxAmount={weiBalance.div(ETH_DECIMALS)}
                     amountUnit="ETH"
@@ -372,7 +380,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               size="medium"
               icon="fa fa-money"
             >
-              TRANSFER
+              Transfer
             </DBButton>
           }
         </Section>
@@ -390,6 +398,26 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               <span>{pwrBalance && formatAbp(pwrBalance)} ABP</span>
             </WithLoading>
           </p>
+
+          {babzBalance &&
+            <DBButton
+              onClick={() => {
+                this.props.modalAdd(
+                  <TransferDialog
+                    handleTransfer={this.handlePowerUp}
+                    maxAmount={babzBalance.div(NTZ_DECIMALS)}
+                    hideAddress
+                    title={<FormattedMessage {...messages.powerUpTitle} />}
+                    amountUnit="NTZ"
+                  />
+                );
+              }}
+              size="medium"
+              icon="fa fa-money"
+            >
+              Power Up
+            </DBButton>
+          }
         </Section>
 
         <Section>
