@@ -47,6 +47,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.web3 = props.web3Redux.web3;
 
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
+    this.power = this.web3.eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
     this.tableFactory = this.web3.eth.contract(ABI_TABLE_FACTORY).at(confParams.tableFactory);
 
     this.tableFactory.getTables.call();
@@ -54,6 +55,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     if (this.props.account.proxy) {
       this.watchProxyEvents(this.props.account.proxy);
       this.watchTokenEvents(this.props.account.proxy);
+      this.power.balanceOf.call(this.props.account.proxy);
     }
   }
 
@@ -67,13 +69,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     if (this.props.account.proxy === undefined && nextProps.account.proxy) {
       this.watchProxyEvents(nextProps.account.proxy);
       this.watchTokenEvents(nextProps.account.proxy);
-    }
-
-    if (!this.power && nextProps.account.proxy) {
-      const powerAddr = this.token.powerAddr();
-      if (powerAddr) {
-        this.initPowerContract(powerAddr, nextProps.account.proxy);
-      }
+      this.power.balanceOf.call(nextProps.account.proxy);
     }
 
     if (this.props.dashboardTxs.txError !== nextProps.dashboardTxs.txError && nextProps.dashboardTxs.txError) {
@@ -101,11 +97,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         && nextProps.account.proxy === '0x') {
       this.watchAccountCreated();
     }
-  }
-
-  initPowerContract(powerAddr, proxyAddr) {
-    this.power = this.web3.eth.contract(ABI_POWER_CONTRACT).at(powerAddr);
-    this.power.balanceOf.call(proxyAddr);
   }
 
   watchProxyEvents(proxyAddr) {
@@ -154,10 +145,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       toBlock: 'latest',
     }).watch((watchError, event) => {
       if (!watchError && isUserEvent(proxyAddr)(event)) {
-        if (this.power) {
-          this.power.balanceOf.call(proxyAddr);
-        }
-
+        this.power.balanceOf.call(proxyAddr);
         this.token.balanceOf.call(proxyAddr);
         this.web3.eth.getBalance(proxyAddr);
         const { pendingSell = [] } = this.props.dashboardTxs;
@@ -265,7 +253,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const floor = this.token.floor();
     const ceiling = this.token.ceiling();
     const babzBalance = this.token.balanceOf(this.props.account.proxy);
-    const pwrBalance = this.power && this.power.balanceOf(this.props.account.proxy);
+    const pwrBalance = this.power.balanceOf(this.props.account.proxy);
     const tables = this.tableFactory.getTables();
 
     const listTxns = txnsToList(
@@ -415,7 +403,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             </WithLoading>
           </p>
 
-          {babzBalance && this.power &&
+          {babzBalance &&
             <DBButton
               onClick={() => {
                 this.props.modalAdd(
@@ -435,7 +423,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             </DBButton>
           }
 
-          {pwrBalance && this.power &&
+          {pwrBalance &&
             <DBButton
               onClick={() => {
                 this.props.modalAdd(
