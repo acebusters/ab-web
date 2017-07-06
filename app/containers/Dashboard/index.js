@@ -233,7 +233,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
   handlePowerUp(amount) {
     this.token.transfer.sendTransaction(
-      this.power.address,
+      confParams.pwrAddr,
       new BigNumber(amount).mul(NTZ_DECIMALS)
     );
     this.props.modalDismiss();
@@ -241,7 +241,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
   handlePowerDown(amount) {
     this.power.transfer.sendTransaction(
-      this.power.address,
+      confParams.ntzAddr,
       new BigNumber(amount).mul(ABP_DECIMALS)
     );
     this.props.modalDismiss();
@@ -428,10 +428,11 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               onClick={() => {
                 this.props.modalAdd(
                   <TransferDialog
+                    title={<FormattedMessage {...messages.powerDownTitle} />}
+                    description="Power Down will convert ABP back to NTZ over a period of 3 month"
                     handleTransfer={this.handlePowerDown}
                     maxAmount={pwrBalance.div(ABP_DECIMALS)}
                     hideAddress
-                    title={<FormattedMessage {...messages.powerDownTitle} />}
                     amountUnit="ABP"
                   />
                 );

@@ -52,6 +52,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
       maxAmount,
       hideAddress,
       title,
+      description,
     } = this.props;
 
     const limitAmount = (value) => {
@@ -63,6 +64,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
     return (
       <div>
         {title && <H2>{title}</H2>}
+        {description && <p>{description}</p>}
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <Field
             name="amount"
@@ -92,6 +94,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
 
 TransferDialog.propTypes = {
   title: PropTypes.any,
+  description: PropTypes.any,
   submitting: PropTypes.bool,
   hideAddress: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
