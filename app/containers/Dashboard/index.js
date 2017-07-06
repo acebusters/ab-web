@@ -13,8 +13,8 @@ import web3Connect from '../AccountProvider/web3Connect';
 import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
 import { addEventsDate, isUserEvent } from '../AccountProvider/utils';
 import { createBlocky } from '../../services/blockies';
-import { ABI_TOKEN_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, ABI_TABLE_FACTORY, conf } from '../../app.config';
-import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz } from '../../utils/amountFormater';
+import { ABI_TOKEN_CONTRACT, ABI_POWER_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, ABI_TABLE_FACTORY, conf } from '../../app.config';
+import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz, formatAbp } from '../../utils/amountFormater';
 
 import List from '../../components/List';
 import H2 from '../../components/H2';
@@ -50,10 +50,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.tableFactory.getTables.call();
 
     if (this.props.account.proxy) {
-      this.token.floor.call();
-      this.token.ceiling.call();
-      this.token.balanceOf.call(this.props.account.proxy);
-      this.web3.eth.getBalance(this.props.account.proxy);
       this.watchProxyEvents(this.props.account.proxy);
       this.watchTokenEvents(this.props.account.proxy);
     }
@@ -67,12 +63,15 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
   componentWillReceiveProps(nextProps) {
     if (this.props.account.proxy === undefined && nextProps.account.proxy) {
-      this.token.floor.call();
-      this.token.ceiling.call();
       this.watchProxyEvents(nextProps.account.proxy);
       this.watchTokenEvents(nextProps.account.proxy);
-      this.token.balanceOf.call(nextProps.account.proxy);
-      this.web3.eth.getBalance(nextProps.account.proxy);
+    }
+
+    if (!this.power && nextProps.account.proxy) {
+      const powerAddr = this.token.powerAddr();
+      if (powerAddr) {
+        this.initPowerContract(powerAddr, nextProps.account.proxy);
+      }
     }
 
     if (this.props.dashboardTxs.txError !== nextProps.dashboardTxs.txError && nextProps.dashboardTxs.txError) {
@@ -102,6 +101,11 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     }
   }
 
+  initPowerContract(powerAddr, proxyAddr) {
+    this.power = this.web3.eth.contract(ABI_POWER_CONTRACT).at(powerAddr);
+    this.power.balanceOf.call(proxyAddr);
+  }
+
   watchProxyEvents(proxyAddr) {
     const web3 = getWeb3();
     this.proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
@@ -128,6 +132,12 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   watchTokenEvents(proxyAddr) {
+    this.token.floor.call();
+    this.token.ceiling.call();
+    this.token.powerAddr.call();
+    this.token.balanceOf.call(proxyAddr);
+    this.web3.eth.getBalance(proxyAddr);
+
     this.web3.eth.getBlockNumber((err, blockNumber) => {
       this.token.allEvents({
         fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
@@ -233,6 +243,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const floor = this.token.floor();
     const ceiling = this.token.ceiling();
     const babzBalance = this.token.balanceOf(this.props.account.proxy);
+    const pwrBalance = this.power && this.power.balanceOf(this.props.account.proxy);
     const tables = this.tableFactory.getTables();
 
     const listTxns = txnsToList(
@@ -364,6 +375,21 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               TRANSFER
             </DBButton>
           }
+        </Section>
+
+        <Section>
+          <h2>Power</h2>
+          <p>
+            <span>Balance: </span>
+            <WithLoading
+              isLoading={!pwrBalance}
+              loadingSize="14px"
+              type="inline"
+              styles={{ layout: { marginLeft: '15px' } }}
+            >
+              <span>{pwrBalance && formatAbp(pwrBalance)} ABP</span>
+            </WithLoading>
+          </p>
         </Section>
 
         <Section>
