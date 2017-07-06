@@ -54,7 +54,7 @@ import {
 import {
   makeTableDataSelector,
   makeIsMyTurnSelector,
-  makePotSizeSelector,
+  makeAmountInTheMiddleSelector,
   makeBoardSelector,
   makeHandSelector,
   makeHandStateSelector,
@@ -535,7 +535,7 @@ const mapStateToProps = createStructuredSelector({
   missingHands: makeMissingHandSelector(),
   myHand: makeMyHandValueSelector(),
   myPos: makeMyPosSelector(),
-  potSize: makePotSizeSelector(),
+  potSize: makeAmountInTheMiddleSelector(),
   privKey: makeSelectPrivKey(),
   proxyAddr: makeSelectProxyAddr(),
   sitoutAmount: makeSitoutAmountSelector(),

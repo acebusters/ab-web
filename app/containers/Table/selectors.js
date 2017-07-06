@@ -483,6 +483,11 @@ const makeLastRoundMaxBetSelector = () => createSelector(
 );
 
 const makePotSizeSelector = () => createSelector(
+  makeLineupSelector(),
+  (lineup) => (lineup) ? pokerHelper.calculatePotsize(lineup.toJS()) : 0
+);
+
+const makeAmountInTheMiddleSelector = () => createSelector(
   [makeLineupSelector(), makeLastRoundMaxBetSelector()],
   (lineupImmu, lastRoundMaxBet) => {
     if (!lineupImmu || !lineupImmu.toJS) {
@@ -530,4 +535,5 @@ export {
     makeMessagesSelector,
     makePlayersCountSelector,
     makeLastRoundMaxBetSelector,
+    makeAmountInTheMiddleSelector,
 };
