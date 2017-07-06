@@ -49,7 +49,6 @@ import makeSelectAccountData, {
 
 import {
   makeLastReceiptSelector,
-  makeLastRoundMaxBetSelector,
 } from '../Seat/selectors';
 
 import {
@@ -500,7 +499,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
           board={board}
           seats={seats}
           hand={this.props.hand}
-          potSize={this.props.potSize - this.props.lastRoundMaxBet}
+          potSize={this.props.potSize}
           onLeave={() => this.handleLeave(this.props.myPos)}
           onSitout={this.handleSitout}
         >
@@ -537,7 +536,6 @@ const mapStateToProps = createStructuredSelector({
   myHand: makeMyHandValueSelector(),
   myPos: makeMyPosSelector(),
   potSize: makePotSizeSelector(),
-  lastRoundMaxBet: makeLastRoundMaxBetSelector(),
   privKey: makeSelectPrivKey(),
   proxyAddr: makeSelectProxyAddr(),
   sitoutAmount: makeSitoutAmountSelector(),
@@ -566,7 +564,6 @@ Table.propTypes = {
   data: React.PropTypes.any,
   myPos: React.PropTypes.any,
   potSize: React.PropTypes.number,
-  lastRoundMaxBet: React.PropTypes.number,
   modalAdd: React.PropTypes.func,
   handRequest: React.PropTypes.func,
   setPending: React.PropTypes.func,
