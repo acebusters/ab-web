@@ -14,7 +14,7 @@ import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../Acco
 import { addEventsDate, isUserEvent } from '../AccountProvider/utils';
 import { createBlocky } from '../../services/blockies';
 import { ABI_TOKEN_CONTRACT, ABI_POWER_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, ABI_TABLE_FACTORY, conf } from '../../app.config';
-import { ETH_DECIMALS, NTZ_DECIMALS, formatEth, formatNtz, formatAbp } from '../../utils/amountFormater';
+import { ETH_DECIMALS, NTZ_DECIMALS, ABP_DECIMALS, formatEth, formatNtz, formatAbp } from '../../utils/amountFormater';
 
 import List from '../../components/List';
 import H2 from '../../components/H2';
@@ -43,6 +43,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.handleNTZSell = this.handleNTZSell.bind(this);
     this.handleETHTransfer = this.handleETHTransfer.bind(this);
     this.handlePowerUp = this.handlePowerUp.bind(this);
+    this.handlePowerDown = this.handlePowerDown.bind(this);
     this.web3 = props.web3Redux.web3;
 
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
@@ -250,6 +251,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     this.props.modalDismiss();
   }
 
+  handlePowerDown(amount) {
+    this.power.transfer.sendTransaction(
+      this.power.address,
+      new BigNumber(amount).mul(ABP_DECIMALS)
+    );
+    this.props.modalDismiss();
+  }
+
   render() {
     const qrUrl = `ether:${this.props.account.proxy}`;
     const weiBalance = this.web3.eth.balance(this.props.account.proxy);
@@ -402,7 +411,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               type="inline"
               styles={{ layout: { marginLeft: '15px' } }}
             >
-              <span>{pwrBalance && formatAbp(pwrBalance)} ABP</span>
+              <span>{pwrBalance && formatAbp(pwrBalance, 5)} ABP</span>
             </WithLoading>
           </p>
 
@@ -423,6 +432,26 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               icon="fa fa-money"
             >
               Power Up
+            </DBButton>
+          }
+
+          {pwrBalance && this.power &&
+            <DBButton
+              onClick={() => {
+                this.props.modalAdd(
+                  <TransferDialog
+                    handleTransfer={this.handlePowerDown}
+                    maxAmount={pwrBalance.div(ABP_DECIMALS)}
+                    hideAddress
+                    title={<FormattedMessage {...messages.powerDownTitle} />}
+                    amountUnit="ABP"
+                  />
+                );
+              }}
+              size="medium"
+              icon="fa fa-money"
+            >
+              Power Down
             </DBButton>
           }
         </Section>

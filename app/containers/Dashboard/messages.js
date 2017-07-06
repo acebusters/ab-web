@@ -38,6 +38,10 @@ export default defineMessages({
     id: 'app.containers.Dashboard.powerUpTitle',
     defaultMessage: 'Power Up',
   },
+  powerDownTitle: {
+    id: 'app.containers.Dashboard.powerDownTitle',
+    defaultMessage: 'Power Down',
+  },
   sellTitle: {
     id: 'app.containers.Dashboard.sellTitle',
     defaultMessage: 'Sell NTZ',
