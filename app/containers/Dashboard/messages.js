@@ -78,6 +78,10 @@ export default defineMessages({
     id: 'app.containers.Dashboard.nutzContract',
     defaultMessage: 'Nutz contract',
   },
+  powerContract: {
+    id: 'app.containers.Dashboard.powerContract',
+    defaultMessage: 'Power contract',
+  },
   me: {
     id: 'app.containers.Dashboard.me',
     defaultMessage: 'Nutz contract',
@@ -86,8 +90,12 @@ export default defineMessages({
     id: 'app.containers.Dashboard.tableAddress',
     defaultMessage: 'Table {address}',
   },
-  trasnferStatus: {
-    id: 'app.containers.Dashboard.trasnferStatus',
+  transferStatus: {
+    id: 'app.containers.Dashboard.transferStatus',
     defaultMessage: 'Transfer',
+  },
+  powerUpStatus: {
+    id: 'app.containers.Dashboard.powerUpStatus',
+    defaultMessage: 'Power Up',
   },
 });

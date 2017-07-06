@@ -22,6 +22,7 @@ export function conf() {
       txUrl: '',
       accountUrl: '',
       ntzAddr: '',
+      pwrAddr: '',
       accountFactory: '',
       tableFactory: '',
       sentryDSN: 'https://8c3e021848b247ddaf627c8040f94e07@sentry.io/153017',
