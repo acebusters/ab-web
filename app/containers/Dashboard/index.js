@@ -153,6 +153,10 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       toBlock: 'latest',
     }).watch((watchError, event) => {
       if (!watchError && isUserEvent(proxyAddr)(event)) {
+        if (this.power) {
+          this.power.balanceOf.call(proxyAddr);
+        }
+
         this.token.balanceOf.call(proxyAddr);
         this.web3.eth.getBalance(proxyAddr);
         const { pendingSell = [] } = this.props.dashboardTxs;
@@ -239,7 +243,10 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   handlePowerUp(amount) {
-    console.log('power up', amount);
+    this.token.transfer.sendTransaction(
+      this.power.address,
+      new BigNumber(amount).mul(NTZ_DECIMALS)
+    );
     this.props.modalDismiss();
   }
 
@@ -399,7 +406,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             </WithLoading>
           </p>
 
-          {babzBalance &&
+          {babzBalance && this.power &&
             <DBButton
               onClick={() => {
                 this.props.modalAdd(
