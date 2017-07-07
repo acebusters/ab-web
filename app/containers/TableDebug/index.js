@@ -48,6 +48,7 @@ const Table = styled.table`
 
   td {
     padding: 5px 10px;
+    white-space: nowrap;
   }
 
   tbody tr:nth-child(odd) {
@@ -68,24 +69,34 @@ export default class TableDebug extends React.Component {
   constructor(props) {
     super(props);
 
+    const visible = !!JSON.parse(localStorage.getItem('table_debug_enabled') || 'false');
+
     this.state = {
       data: null,
-      visible: !!JSON.parse(localStorage.getItem('table_debug_enabled') || 'false'),
+      visible,
       expanded: false,
     };
 
     this.handleRefresh = this.handleRefresh.bind(this);
     this.handleExpandedToggle = this.handleExpandedToggle.bind(this);
 
+    const events = props.contract.allEvents({ to: 'latest' });
     window.enableTableDebug = () => {
       this.setState({ visible: true, expanded: true });
       localStorage.setItem('table_debug_enabled', true);
       this.handleRefresh();
+      events.watch(() => this.handleRefresh());
     };
+
+    if (visible) {
+      this.handleRefresh();
+      events.watch(() => this.handleRefresh());
+    }
 
     window.disableTableDebug = () => {
       this.setState({ visible: false });
       localStorage.setItem('table_debug_enabled', false);
+      events.stopWatching(() => null);
     };
   }
 
@@ -278,6 +289,7 @@ export default class TableDebug extends React.Component {
 }
 
 TableDebug.propTypes = {
+  contract: PropTypes.object.isRequired,
   tableService: PropTypes.object.isRequired,
 };
 
