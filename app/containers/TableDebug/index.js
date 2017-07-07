@@ -201,10 +201,10 @@ export default class TableDebug extends React.Component {
               <td />
               {hands[0].lineup.reduce((memo, seat, j) => memo.concat([
                 <th key={j * 2}>
-                  Dist
+                  Bet
                 </th>,
                 <th key={(j * 2) + 1}>
-                  Last
+                  Dist
                 </th>,
               ]), [])}
             </tr>
@@ -215,10 +215,10 @@ export default class TableDebug extends React.Component {
                 <th>{hand.handId}</th>
                 {hand.lineup.reduce((memo, seat, j) => memo.concat([
                   <td key={j * 2}>
-                    {dists[i] && renderNtz(dists[i][seat.address])}
+                    {renderNtz(parseLastReceiptAmount(seat.last))}
                   </td>,
                   <td key={(j * 2) + 1}>
-                    {renderNtz(parseLastReceiptAmount(seat.last))}
+                    {dists[i] && renderNtz(dists[i][seat.address])}
                   </td>,
                 ]), [])}
               </tr>
@@ -242,7 +242,6 @@ export default class TableDebug extends React.Component {
       return null;
     }
 
-        // {JSON.stringify(data.contract)}
     return (
       <div>
 
