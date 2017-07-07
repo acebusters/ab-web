@@ -15,7 +15,7 @@ const ControlFold = (props) => {
         name="button-fold"
         text="Fold"
         type="FOLD"
-        handleClick={() => handleFold()}
+        handleClick={handleFold}
         {...props}
       />
     );

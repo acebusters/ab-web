@@ -21,7 +21,7 @@ const ControlCheckCall = (props) => {
         name="button-call"
         text="Call"
         type="CALL"
-        handleClick={() => handleCall()}
+        handleClick={handleCall}
         {...props}
       />
     );
@@ -32,7 +32,7 @@ const ControlCheckCall = (props) => {
         name="button-check"
         text="Check"
         type="CHECK"
-        handleClick={() => handleCheck()}
+        handleClick={handleCheck}
         {...props}
       />
     );

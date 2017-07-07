@@ -25,7 +25,7 @@ const ControlBetRaise = (props) => {
           name="button-bet-confirm"
           text={amount === myStack ? 'All-In' : 'Bet'}
           type="BET-CONFIRM"
-          handleClick={() => handleBet()}
+          handleClick={handleBet}
           {...props}
         />
       );
@@ -35,7 +35,7 @@ const ControlBetRaise = (props) => {
         name="button-raise-confirm"
         text={amount === myStack ? 'All-In' : 'Raise'}
         type="RAISE-CONFIRM"
-        handleClick={() => handleBet()}
+        handleClick={handleBet}
         {...props}
       />
     );
@@ -74,7 +74,7 @@ const ControlBetRaise = (props) => {
         name="button-all-in"
         text="All-In"
         type="ALL-IN"
-        handleClick={() => handleAllIn()}
+        handleClick={handleAllIn}
         {...props}
       />
     );
