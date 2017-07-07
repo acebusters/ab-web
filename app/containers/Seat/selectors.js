@@ -12,6 +12,7 @@ import {
   tableStateSelector,
   makeWhosTurnSelector,
   makeSbSelector,
+  makeLastRoundMaxBetSelector,
 } from '../Table/selectors';
 
 import { createBlocky } from '../../services/blockies';
@@ -45,11 +46,6 @@ const makeLastReceiptSelector = () => createSelector(
 const makeSeatSelector = () => createSelector(
     [makeHandSelector(), posSelector],
     (hand, pos) => (hand && pos > -1 && hand.getIn && hand.getIn(['lineup', pos])) ? hand.getIn(['lineup', pos]) : undefined
-);
-
-const makeLastRoundMaxBetSelector = () => createSelector(
-  [makeHandSelector()],
-  (hand) => (hand && hand.get && hand.get('lastRoundMaxBet')) ? hand.get('lastRoundMaxBet') : 0
 );
 
 const makeLastAmountSelector = () => createSelector(
@@ -186,8 +182,8 @@ const makeSeatStatusSelector = () => createSelector(
 );
 
 const makeShowStatusSelector = () => createSelector(
-  [makeHandSelector(), makeLastActionSelector(), makeLastRoundMaxBetSelector(), makeLastReceiptSelector(), makeSbSelector(), posSelector],
-  (hand, lastAction, lastRoundMaxBet, lastReceipt, sb, pos) => {
+  [tableStateSelector, makeHandSelector(), makeLastActionSelector(), makeLastRoundMaxBetSelector(), makeLastReceiptSelector(), makeSbSelector(), posSelector],
+  (table, hand, lastAction, lastRoundMaxBet, lastReceipt, sb, pos) => {
     if (lastAction && lastReceipt && hand && hand.get) {
       const amount = lastReceipt.values[1];
       const state = hand.get('state');
@@ -238,6 +234,11 @@ const makeShowStatusSelector = () => createSelector(
           // bet: amount higher than previous player && previous player amount <= lastRoundMaxBet
           if (amount > prevAmount && prevAmount <= lastRoundMaxBet) {
             return STATUS_MSG.bet;
+          }
+          // all-in: stack is zero
+          const stack = selectStack(table, pos);
+          if (stack === 0) {
+            return STATUS_MSG.allIn;
           }
           // call: amount same as previous player
           if (amount === prevAmount) {
