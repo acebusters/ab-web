@@ -101,9 +101,9 @@ TableService.prototype.message = function message(receipt) {
   });
 };
 
-TableService.prototype.debug = function debug(handId) {
+TableService.prototype.debug = function debug() {
   return new Promise((resolve, reject) => {
-    fetch(`${confParams.oracleUrl}/table/${this.tableAddr}/hand/${handId}/debug`, {
+    fetch(`${confParams.oracleUrl}/table/${this.tableAddr}/debug`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

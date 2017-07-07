@@ -491,7 +491,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       <div>
         <TableDebug
           tableService={this.tableService}
-          handId={Number(this.props.params.handId)}
         />
 
         { this.props.state &&

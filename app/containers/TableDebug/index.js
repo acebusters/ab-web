@@ -2,6 +2,8 @@ import React from 'react';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import EWT from 'ethereum-web-token';
+import { FormattedDate, FormattedTime } from 'react-intl';
+
 import { formatNtz } from '../../utils/amountFormater';
 
 const Wrapper = styled.div`
@@ -23,6 +25,16 @@ const Wrapper = styled.div`
   &:hover {
     opacity: 1;
   }
+`;
+
+const Columns = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const Column = styled.div`
+  flex: 1;
+  margin-right: 30px;
 `;
 
 const Table = styled.table`
@@ -87,12 +99,78 @@ export default class TableDebug extends React.Component {
   }
 
   handleRefresh() {
-    const { tableService, handId } = this.props;
-    tableService.debug(handId).then((response) => {
+    const { tableService } = this.props;
+    tableService.debug().then((response) => {
       this.setState({
         data: response,
       });
     });
+  }
+
+  renderContractData(contractData) {
+    const lastNettingRequestTime = new Date(contractData.lastNettingRequestTime * 1000);
+    return (
+      <div>
+        <ul>
+          <li>
+            <strong>lastHandNetted: </strong>
+            {contractData.lastHandNetted}
+          </li>
+          <li>
+            <strong>lastNettingRequestHandId: </strong>
+            {contractData.lastNettingRequestHandId}
+          </li>
+          <li>
+            <strong>lastNettingRequestTime: </strong>
+            <FormattedDate value={lastNettingRequestTime} />, <FormattedTime value={lastNettingRequestTime} />
+          </li>
+        </ul>
+        <Table>
+          <thead>
+            <tr>
+              <th>Hand Id</th>
+              {contractData.lineup.map((_, i) =>
+                <th key={i} colSpan={2}>Seat {i}</th>)}
+            </tr>
+            <tr>
+              <th></th>
+              {contractData.lineup.reduce((memo, _, i) => memo.concat([
+                <th key={i * 2}>In</th>,
+                <th key={(i * 2) + 1}>Out</th>,
+              ]), [])}
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(contractData.hands).map((handId) => (
+              <tr key={handId}>
+                <td>{handId}</td>
+                {contractData.lineup.reduce((memo, _, i) => memo.concat([
+                  <td key={i * 2}>
+                    {contractData.hands[handId].ins[i]}
+                  </td>,
+                  <td key={(i * 2) + 1}>
+                    {contractData.hands[handId].outs[i] &&
+                      contractData.hands[handId].outs[i].out}
+                  </td>,
+                ]), [])}
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Bal.</th>
+              {contractData.lineup.map((seat, i) =>
+                <td key={i} colSpan={2}>{renderNtz(seat.amount)}</td>)}
+            </tr>
+            <tr>
+              <th>Exit hand</th>
+              {contractData.lineup.map((seat, i) =>
+                <td key={i} colSpan={2}>{renderNtz(seat.exitHand)}</td>)}
+            </tr>
+          </tfoot>
+        </Table>
+      </div>
+    );
   }
 
   renderDbHands(hands) {
@@ -153,49 +231,20 @@ export default class TableDebug extends React.Component {
       return null;
     }
 
+        // {JSON.stringify(data.contract)}
     return (
       <div>
-        {JSON.stringify(data.contract)}
 
-        {this.renderDbHands(data.db)}
-
-        <ul>
-          <li>lastHandNetted: {data.contract.lastHandNetted}</li>
-          <li>lastNettingRequestHandId: {data.contract.lastNettingRequestHandId}</li>
-          <li>lastNettingRequestTime: {new Date(data.contract.lastNettingRequestTime * 1000).toString()}</li>
-        </ul>
-        <Table>
-          <thead>
-            <tr>
-              <th>Hand Id</th>
-              {data.db[0].lineup.map((_, i) =>
-                <th key={i} colSpan={2}>Seat {i}</th>)}
-            </tr>
-            <tr>
-              <th></th>
-              {data.db[0].lineup.reduce((memo, _, i) => memo.concat([
-                <th key={i * 2}>In</th>,
-                <th key={(i * 2) + 1}>Out</th>,
-              ]), [])}
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(data.contract.hands).map((handId) => (
-              <tr key={handId}>
-                <td>{handId}</td>
-                {data.db[0].lineup.reduce((memo, _, i) => memo.concat([
-                  <td key={i * 2}>
-                    {data.contract.hands[handId].ins[i]}
-                  </td>,
-                  <td key={(i * 2) + 1}>
-                    {data.contract.hands[handId].outs[i] &&
-                      data.contract.hands[handId].outs[i].out}
-                  </td>,
-                ]), [])}
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Columns>
+          <Column>
+            <h2>Contract</h2>
+            {this.renderContractData(data.contract)}
+          </Column>
+          <Column>
+            <h2>Db</h2>
+            {this.renderDbHands(data.db)}
+          </Column>
+        </Columns>
       </div>
     );
   }
@@ -230,7 +279,6 @@ export default class TableDebug extends React.Component {
 
 TableDebug.propTypes = {
   tableService: PropTypes.object.isRequired,
-  handId: PropTypes.number.isRequired,
 };
 
 function parseDistribution(distribution) {
@@ -264,7 +312,7 @@ function parseLastReceiptAmount(receipt) {
 
 function renderNtz(amount) {
   if (amount) {
-    return `${formatNtz(amount)} NTZ`;
+    return `${formatNtz(amount, 1)} NTZ`;
   }
 
   return (amount === null || amount === undefined) ? '-' : amount;
