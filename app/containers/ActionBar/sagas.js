@@ -1,7 +1,7 @@
 import {
   call,
   put,
-  takeEvery,
+  takeLatest,
 } from 'redux-saga/effects';
 import {
   delay,
@@ -39,7 +39,7 @@ function* handleClickButton({ buttonType }) {
 }
 
 export function* actionBarSaga() {
-  yield takeEvery(HANDLE_CLICK_BUTTON, handleClickButton);
+  yield takeLatest(HANDLE_CLICK_BUTTON, handleClickButton);
 }
 
 export default [
