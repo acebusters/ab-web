@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import { playIsPlayerTurn } from '../../sounds';
 
 import {
+  setExecuteAction,
+  handleClickButton,
   setActionBarTurnComplete,
   setActionBarMode,
   setActionBarBetSlider,
@@ -17,6 +19,8 @@ import {
 } from './actions';
 
 import {
+  getActionToExecute,
+  getExecuteAction,
   getActionBarSliderOpen,
   getActionBarMode,
   getActionBarTurnComplete,
@@ -61,13 +65,33 @@ class ActionBarContainer extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) { // eslint-disable-line consistent-return
     if (nextProps.turnComplete === true) {
       this.props.setActionBarTurnComplete(false);
       this.props.setActionBarMode('');
     }
     if (nextProps.minRaise && nextProps.minRaise !== this.props.minRaise) {
       this.updateAmount(nextProps.minRaise);
+    }
+    const { executeAction, actionToExecute } = nextProps;
+    // after handleclick saga updates state to execute action
+    if (executeAction && actionToExecute) {
+      this.props.setExecuteAction(false);
+      this.props.setActionBarButtonActive('');
+      switch (actionToExecute) {
+        case 'all-in':
+          return this.handleAllIn();
+        case 'bet':
+          return this.handleBet();
+        case 'check':
+          return this.handleCheck();
+        case 'call':
+          return this.handleCall();
+        case 'fold':
+          return this.handleFold();
+        default:
+          return null;
+      }
     }
   }
 
@@ -218,6 +242,10 @@ ActionBarContainer.propTypes = {
   setActionBarTurnComplete: PropTypes.func,
   setActionBarMode: PropTypes.func,
   turnComplete: PropTypes.bool,
+  executeAction: PropTypes.bool,
+  actionToExecute: PropTypes.string,
+  setExecuteAction: PropTypes.func,
+  setActionBarButtonActive: PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -234,10 +262,12 @@ export function mapDispatchToProps(dispatch) {
       ) => check(
         tableAddr, handId, amount, privKey, myPos, lastReceipt, checkType
     ),
+    handleClickButton: (type) => dispatch(handleClickButton(type)),
     setActionBarTurnComplete: (complete) => dispatch(setActionBarTurnComplete(complete)),
     setActionBarBetSlider: (open) => dispatch(setActionBarBetSlider(open)),
     setActionBarMode: (mode) => dispatch(setActionBarMode(mode)),
     setActionBarButtonActive: (whichBtn) => dispatch(setActionBarButtonActive(whichBtn)),
+    setExecuteAction: () => dispatch(setExecuteAction()),
   };
 }
 
@@ -258,6 +288,8 @@ const mapStateToProps = createStructuredSelector({
   sliderOpen: getActionBarSliderOpen(),
   turnComplete: getActionBarTurnComplete(),
   visible: makeSelectActionBarVisible(),
+  executeAction: getExecuteAction(),
+  actionToExecute: getActionToExecute(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionBarContainer);

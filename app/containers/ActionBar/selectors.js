@@ -69,6 +69,16 @@ export const getActionBarButtonActive = () => createSelector(
   (actionBar) => actionBar.get('buttonActive'),
 );
 
+export const getExecuteAction = () => createSelector(
+  getActionBarState,
+  (actionBar) => actionBar.get('executeAction'),
+);
+
+export const getActionToExecute = () => createSelector(
+  getActionBarState,
+  (actionBar) => actionBar.get('actionToExecute'),
+);
+
 // Other selectors
 const makeAmountToCallSelector = () => createSelector(
   [makeMaxBetSelector(), makeMyMaxBetSelector()],

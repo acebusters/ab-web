@@ -9,6 +9,8 @@ export const initialState = fromJS({
   sliderOpen: false, // toggles slider open/closed
   turnComplete: false,
   mode: '', // tracks active button's life-cycle
+  executeAction: false,
+  actionToExecute: null,
 });
 
 export default function actionBarReducer(state = initialState, action) {
@@ -31,6 +33,14 @@ export default function actionBarReducer(state = initialState, action) {
 
     case types.ACTIONBAR_SET_BUTTON_ACTIVE: {
       return state.set('buttonActive', action.whichBtn);
+    }
+
+    case types.SET_EXECUTE_ACTION: {
+      return state.set('executeAction', action.executeAction);
+    }
+
+    case types.SET_ACTION_TO_EXECUTE: {
+      return state.set('actionToExecute', action.actionToExecute);
     }
 
     default: {

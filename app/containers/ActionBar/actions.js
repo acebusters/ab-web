@@ -1,11 +1,19 @@
 /**
  * Created by jzobro on 20170606
  */
-// const
+// actions
 export const ACTIONBAR_SET_TURN_COMPLETE = 'acebusters/ActionBar/SET_TURN_COMPLETE';
 export const ACTIONBAR_SET_MODE = 'acebusters/ActionBar/SET_MODE';
 export const ACTIONBAR_SET_BET_SLIDER = 'acebusters/ActionBar/SET_BET_SLIDER';
 export const ACTIONBAR_SET_BUTTON_ACTIVE = 'acebusters/ActionBar/SET_BUTTON_ACTIVE';
+export const HANDLE_CLICK_BUTTON = 'acebusters/ActionBar/HANDLE_CLICK_BUTTON';
+export const SET_EXECUTE_ACTION = 'acebusters/ActionBar/SET_EXECUTE_ACTION';
+export const SET_ACTION_TO_EXECUTE = 'acebusters/ActionBar/SET_ACTION_TO_EXECUTE';
+
+// constants
+export const FOLD = 'fold';
+export const CHECK = 'check';
+export const CALL = 'call';
 
 // actionBar
 export function setActionBarTurnComplete(complete) {
@@ -36,3 +44,18 @@ export function setActionBarBetSlider(sliderOpen) {
     sliderOpen,
   };
 }
+
+export const handleClickButton = (type) => ({
+  type: HANDLE_CLICK_BUTTON,
+  buttonType: type,
+});
+
+export const setExecuteAction = (bool) => ({
+  type: SET_EXECUTE_ACTION,
+  executeAction: bool,
+});
+
+export const setActionToExecute = (type) => ({
+  type: SET_ACTION_TO_EXECUTE,
+  actionToExecute: type,
+});
