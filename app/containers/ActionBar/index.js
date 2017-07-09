@@ -16,6 +16,8 @@ import {
   setActionBarMode,
   setActionBarBetSlider,
   setActionBarButtonActive,
+  ALL_IN,
+  BET,
   CHECK,
   CALL,
   FOLD,
@@ -79,12 +81,15 @@ class ActionBarContainer extends React.Component {
     const { executeAction, actionToExecute } = nextProps;
     // after handleclick saga updates state to execute action
     if (executeAction && actionToExecute) {
+      const handId = parseInt(this.props.params.handId, 10);
       this.props.setExecuteAction(false);
       this.props.setActionBarButtonActive('');
+      this.props.setActionBarTurnComplete(true);
+      this.disableTemporarilyAfterAction();
       switch (actionToExecute) {
-        case 'all-in':
+        case ALL_IN:
           return this.handleAllIn();
-        case 'bet':
+        case BET:
           return this.handleBet();
         case CHECK:
           return this.handleCheck();
@@ -93,7 +98,7 @@ class ActionBarContainer extends React.Component {
         case FOLD:
           return this.handleFold();
         default:
-          return null;
+          return this.captureError(handId);
       }
     }
   }
@@ -129,7 +134,6 @@ class ActionBarContainer extends React.Component {
         tableAddr: self.props.params.tableAddr,
         handId,
       } });
-      this.props.setActionBarTurnComplete(true);
       this.props.setActionBarMode('');
     };
   }
@@ -142,11 +146,8 @@ class ActionBarContainer extends React.Component {
   }
 
   handleBet() {
-    this.props.setActionBarTurnComplete(true);
-    this.disableTemporarilyAfterAction();
-    const amount = this.state.amount + this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
-
+    const amount = this.state.amount + this.props.myMaxBet;
     const betAction = this.props.bet(this.props.params.tableAddr, handId, amount, this.props.privKey, this.props.myPos, this.props.lastReceipt);
     return this.props.pay(betAction, this.props.dispatch)
     .then((cards) => {
@@ -163,8 +164,6 @@ class ActionBarContainer extends React.Component {
   }
 
   handleCheck() {
-    this.props.setActionBarTurnComplete(true);
-    this.disableTemporarilyAfterAction();
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const checkStates = ['preflop', 'turn', 'river', 'flop'];
@@ -188,8 +187,6 @@ class ActionBarContainer extends React.Component {
   }
 
   handleFold() {
-    this.props.setActionBarTurnComplete(true);
-    this.disableTemporarilyAfterAction();
     const amount = this.props.myMaxBet;
     const handId = parseInt(this.props.params.handId, 10);
     const action = this.props.fold(
