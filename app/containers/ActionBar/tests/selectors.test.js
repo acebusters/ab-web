@@ -4,6 +4,7 @@
 
 import { fromJS } from 'immutable';
 import EWT from 'ethereum-web-token';
+import { CALL } from '../actions';
 
 import {
   makeMinSelector,
@@ -14,6 +15,8 @@ import {
   getActionBarSliderOpen,
   getActionBarTurnComplete,
   getActionBarButtonActive,
+  getActionToExecute,
+  getExecuteAction,
 } from '../selectors';
 
 import { checkABIs } from '../../../app.config';
@@ -431,13 +434,15 @@ describe('misc actionBar state selectors', () => {
       turnComplete: false,
       buttonActive: false,
       sliderOpen: true,
-      mode: 'CALL',
+      mode: CALL,
+      executeAction: true,
+      actionToExecute: CALL,
     },
   });
   describe('getActionBarMode', () => {
     it('should return \'mode\'', () => {
       const selector = getActionBarMode();
-      expect(selector(mockedState)).toBe('CALL');
+      expect(selector(mockedState)).toBe(CALL);
     });
   });
 
@@ -459,6 +464,20 @@ describe('misc actionBar state selectors', () => {
     it('should return \'buttonActive\'', () => {
       const selector = getActionBarButtonActive();
       expect(selector(mockedState)).toBe(false);
+    });
+  });
+
+  describe('getExecuteAction', () => {
+    it('should return \'executeAction\'', () => {
+      const selector = getExecuteAction();
+      expect(selector(mockedState)).toBe(true);
+    });
+  });
+
+  describe('getActionToExecute', () => {
+    it('should return \'actionToExecute\'', () => {
+      const selector = getActionToExecute();
+      expect(selector(mockedState)).toBe(CALL);
     });
   });
 });

@@ -25,7 +25,9 @@ function* handleClickButton({ buttonType }) {
     update.actionToExecute = buttonType;
   }
 
+  // tracks onMouseDown
   update.buttonActive = buttonType;
+  // tracks bet/raise process (BET_SET > BET_CONFIRM)
   update.mode = buttonType;
 
   // have container call action method for specific buttonTypes

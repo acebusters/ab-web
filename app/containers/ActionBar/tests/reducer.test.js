@@ -4,6 +4,8 @@ import reducer from '../reducer';
 import {
   setActionBarTurnComplete,
   setActionBarButtonActive,
+  updateActionBar,
+  CALL,
 } from '../actions';
 
 describe('setActionBarTurnComplete', () => {
@@ -23,5 +25,23 @@ describe('setActionBarButtonActive', () => {
     });
     const nextState = reducer(before, setActionBarButtonActive('CALL'));
     expect(nextState.get('buttonActive')).toEqual('CALL');
+  });
+});
+
+describe('update', () => {
+  it('shuold merge payload to state', () => {
+    const before = fromJS({
+      buttonActive: '', // used for activeIndicator
+      sliderOpen: false, // toggles slider open/closed
+      turnComplete: false,
+      mode: '', // tracks active button's life-cycle
+      executeAction: false,
+      actionToExecute: null,
+    });
+    const nextState = reducer(before, updateActionBar({
+      actionToExecute: CALL,
+      executeAction: true,
+    }));
+    expect(nextState.get('actionToExecute')).toEqual(CALL);
   });
 });
