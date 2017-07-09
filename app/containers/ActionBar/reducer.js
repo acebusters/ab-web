@@ -43,6 +43,10 @@ export default function actionBarReducer(state = initialState, action) {
       return state.set('actionToExecute', action.actionToExecute);
     }
 
+    case types.UPDATE: {
+      return state.merge(action.payload);
+    }
+
     default: {
       return state;
     }

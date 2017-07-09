@@ -9,6 +9,7 @@ export const ACTIONBAR_SET_BUTTON_ACTIVE = 'acebusters/ActionBar/SET_BUTTON_ACTI
 export const HANDLE_CLICK_BUTTON = 'acebusters/ActionBar/HANDLE_CLICK_BUTTON';
 export const SET_EXECUTE_ACTION = 'acebusters/ActionBar/SET_EXECUTE_ACTION';
 export const SET_ACTION_TO_EXECUTE = 'acebusters/ActionBar/SET_ACTION_TO_EXECUTE';
+export const UPDATE = 'acebusters/ActionBar/UPDATE';
 
 // constants
 export const FOLD = 'fold';
@@ -68,4 +69,9 @@ export const setExecuteAction = (bool) => ({
 export const setActionToExecute = (type) => ({
   type: SET_ACTION_TO_EXECUTE,
   actionToExecute: type,
+});
+
+export const updateActionBar = (payload) => ({
+  type: UPDATE,
+  payload,
 });

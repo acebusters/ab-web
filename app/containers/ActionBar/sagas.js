@@ -1,9 +1,10 @@
 import {
+  call,
   put,
   takeEvery,
 } from 'redux-saga/effects';
 import {
-  // delay,
+  delay,
 } from 'redux-saga';
 import {
   HANDLE_CLICK_BUTTON,
@@ -12,31 +13,29 @@ import {
   BET,
   BET_SET,
   RAISE_SET,
-  setActionBarButtonActive,
-  setActionBarBetSlider,
-  setActionBarMode,
-  setActionToExecute,
-  setExecuteAction,
+  updateActionBar,
 } from './actions';
 
 function* handleClickButton({ buttonType }) {
+  yield call(delay, 300);
+  const update = {};
   if (buttonType === BET_CONFIRM || buttonType === RAISE_CONFIRM) {
-    yield put(setActionToExecute(BET));
+    update.actionToExecute = BET;
   } else {
-    yield put(setActionToExecute(buttonType));
+    update.actionToExecute = buttonType;
   }
 
-  yield put(setActionBarButtonActive(buttonType));
-  yield put(setActionBarMode(buttonType));
+  update.buttonActive = buttonType;
+  update.mode = buttonType;
 
-  // have container call action method
-  // for specific buttonTypes
+  // have container call action method for specific buttonTypes
   if (buttonType === BET_SET || buttonType === RAISE_SET) {
-    yield put(setActionBarBetSlider(true));
+    update.sliderOpen = true;
   } else {
-    yield put(setExecuteAction(true));
-    yield put(setActionBarBetSlider(false));
+    update.executeAction = true;
+    update.sliderOpen = false;
   }
+  yield put(updateActionBar(update));
 }
 
 export function* actionBarSaga() {
