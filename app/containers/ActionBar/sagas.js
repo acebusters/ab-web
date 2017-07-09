@@ -7,6 +7,11 @@ import {
 } from 'redux-saga';
 import {
   HANDLE_CLICK_BUTTON,
+  BET_CONFIRM,
+  RAISE_CONFIRM,
+  BET,
+  BET_SET,
+  RAISE_SET,
   setActionBarButtonActive,
   setActionBarBetSlider,
   setActionBarMode,
@@ -15,12 +20,23 @@ import {
 } from './actions';
 
 function* handleClickButton({ buttonType }) {
-  // yield delay(100);
+  if (buttonType === BET_CONFIRM || buttonType === RAISE_CONFIRM) {
+    yield put(setActionToExecute(BET));
+  } else {
+    yield put(setActionToExecute(buttonType));
+  }
+
   yield put(setActionBarButtonActive(buttonType));
-  yield put(setActionBarBetSlider(false));
   yield put(setActionBarMode(buttonType));
-  yield put(setActionToExecute(buttonType));
-  yield put(setExecuteAction(true));
+
+  // have container call action method
+  // for specific buttonTypes
+  if (buttonType === BET_SET || buttonType === RAISE_SET) {
+    yield put(setActionBarBetSlider(true));
+  } else {
+    yield put(setExecuteAction(true));
+    yield put(setActionBarBetSlider(false));
+  }
 }
 
 export function* actionBarSaga() {

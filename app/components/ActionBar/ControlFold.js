@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ActionButton from './NewActionButton';
+import ActionButton from './ActionButton';
 import ControlBlank from './ControlBlank';
 import { FOLD } from '../../containers/ActionBar/actions';
 

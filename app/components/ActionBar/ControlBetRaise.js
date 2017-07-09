@@ -18,13 +18,10 @@ const ControlBetRaise = (props) => {
   const {
     amount,
     amountToCall,
-    handleAllIn,
-    handleBet,
     minRaise,
     mode,
     myStack,
     sliderOpen,
-    setActionBarBetSlider,
   } = props;
   // after clicking BET or RAISE buttons, the slider will open
   // and display buttons with indicators
@@ -35,7 +32,6 @@ const ControlBetRaise = (props) => {
           name="button-bet-confirm"
           text={amount === myStack ? 'All-In' : 'Bet'}
           type={BET_CONFIRM}
-          handleClick={handleBet}
           {...props}
         />
       );
@@ -45,7 +41,6 @@ const ControlBetRaise = (props) => {
         name="button-raise-confirm"
         text={amount === myStack ? 'All-In' : 'Raise'}
         type={RAISE_CONFIRM}
-        handleClick={handleBet}
         {...props}
       />
     );
@@ -60,7 +55,6 @@ const ControlBetRaise = (props) => {
         name="button-raise-edit"
         text={amount === myStack ? 'All-In' : 'Raise'}
         type={RAISE_EDIT}
-        handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
     );
@@ -71,7 +65,6 @@ const ControlBetRaise = (props) => {
         name="button-bet-edit"
         text={amount === myStack ? 'All-In' : 'Bet'}
         type={BET_EDIT}
-        handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
     );
@@ -84,7 +77,6 @@ const ControlBetRaise = (props) => {
         name="button-all-in"
         text="All-In"
         type={ALL_IN}
-        handleClick={handleAllIn}
         {...props}
       />
     );
@@ -95,7 +87,6 @@ const ControlBetRaise = (props) => {
         name="button-bet"
         text="Bet"
         type={BET_SET}
-        handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
     );
@@ -106,7 +97,6 @@ const ControlBetRaise = (props) => {
         name="button-raise"
         text="Raise"
         type={RAISE_SET}
-        handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
     );
@@ -116,13 +106,10 @@ const ControlBetRaise = (props) => {
 ControlBetRaise.propTypes = {
   amount: PropTypes.number,
   amountToCall: PropTypes.number,
-  handleBet: PropTypes.func,
-  handleAllIn: PropTypes.func,
   minRaise: PropTypes.number,
   mode: PropTypes.string,
   myStack: PropTypes.number,
   sliderOpen: PropTypes.bool,
-  setActionBarBetSlider: PropTypes.func,
 };
 
 export default ControlBetRaise;
