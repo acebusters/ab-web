@@ -16,6 +16,9 @@ import {
   setActionBarMode,
   setActionBarBetSlider,
   setActionBarButtonActive,
+  CHECK,
+  CALL,
+  FOLD,
 } from './actions';
 
 import {
@@ -83,11 +86,11 @@ class ActionBarContainer extends React.Component {
           return this.handleAllIn();
         case 'bet':
           return this.handleBet();
-        case 'check':
+        case CHECK:
           return this.handleCheck();
-        case 'call':
+        case CALL:
           return this.handleCall();
-        case 'fold':
+        case FOLD:
           return this.handleFold();
         default:
           return null;

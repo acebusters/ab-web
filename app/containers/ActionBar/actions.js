@@ -14,6 +14,12 @@ export const SET_ACTION_TO_EXECUTE = 'acebusters/ActionBar/SET_ACTION_TO_EXECUTE
 export const FOLD = 'fold';
 export const CHECK = 'check';
 export const CALL = 'call';
+export const BET_SET = 'bet-set';
+export const BET_EDIT = 'bet-edit';
+export const BET_CONFIRM = 'bet-confirm';
+export const RAISE_SET = 'raise-set';
+export const RAISE_EDIT = 'raise-edit';
+export const RAISE_CONFIRM = 'raise-confirm';
 
 // actionBar
 export function setActionBarTurnComplete(complete) {
