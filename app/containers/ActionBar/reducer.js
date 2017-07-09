@@ -10,7 +10,6 @@ export const initialState = fromJS({
   turnComplete: false,
   mode: '', // tracks active button's life-cycle
   executeAction: false,
-  actionToExecute: null,
 });
 
 export default function actionBarReducer(state = initialState, action) {

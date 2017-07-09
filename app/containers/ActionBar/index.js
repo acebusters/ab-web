@@ -22,7 +22,6 @@ import {
 } from './actions';
 
 import {
-  getActionToExecute,
   getExecuteAction,
   getActionBarSliderOpen,
   getActionBarMode,
@@ -75,13 +74,13 @@ class ActionBarContainer extends React.Component {
     if (nextProps.minRaise && nextProps.minRaise !== this.props.minRaise) {
       this.updateAmount(nextProps.minRaise);
     }
-    const { executeAction, actionToExecute } = nextProps;
+    const { executeAction, mode } = nextProps;
     // after handleClickButton saga updates state to execute action
-    if (executeAction && actionToExecute) {
+    if (executeAction) {
       const handId = parseInt(this.props.params.handId, 10);
       this.resetActionBar();
       this.disableTemporarilyAfterAction();
-      switch (actionToExecute) {
+      switch (mode) {
         case ALL_IN:
           return this.handleAllIn();
         case BET:
@@ -241,7 +240,7 @@ ActionBarContainer.propTypes = {
   setActionBarTurnComplete: PropTypes.func,
   turnComplete: PropTypes.bool,
   executeAction: PropTypes.bool,
-  actionToExecute: PropTypes.string,
+  mode: PropTypes.string,
   updateActionBar: PropTypes.func,
 };
 
@@ -284,7 +283,6 @@ const mapStateToProps = createStructuredSelector({
   turnComplete: getActionBarTurnComplete(),
   visible: makeSelectActionBarVisible(),
   executeAction: getExecuteAction(),
-  actionToExecute: getActionToExecute(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionBarContainer);

@@ -36,12 +36,11 @@ describe('update', () => {
       turnComplete: false,
       mode: '', // tracks active button's life-cycle
       executeAction: false,
-      actionToExecute: null,
     });
     const nextState = reducer(before, updateActionBar({
-      actionToExecute: CALL,
+      mode: CALL,
       executeAction: true,
     }));
-    expect(nextState.get('actionToExecute')).toEqual(CALL);
+    expect(nextState.get('mode')).toEqual(CALL);
   });
 });

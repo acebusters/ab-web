@@ -15,7 +15,6 @@ import {
   getActionBarSliderOpen,
   getActionBarTurnComplete,
   getActionBarButtonActive,
-  getActionToExecute,
   getExecuteAction,
 } from '../selectors';
 
@@ -436,7 +435,6 @@ describe('misc actionBar state selectors', () => {
       sliderOpen: true,
       mode: CALL,
       executeAction: true,
-      actionToExecute: CALL,
     },
   });
   describe('getActionBarMode', () => {
@@ -471,13 +469,6 @@ describe('misc actionBar state selectors', () => {
     it('should return \'executeAction\'', () => {
       const selector = getExecuteAction();
       expect(selector(mockedState)).toBe(true);
-    });
-  });
-
-  describe('getActionToExecute', () => {
-    it('should return \'actionToExecute\'', () => {
-      const selector = getActionToExecute();
-      expect(selector(mockedState)).toBe(CALL);
     });
   });
 });
