@@ -4,6 +4,16 @@ import PropTypes from 'prop-types';
 import ActionButton from './ActionButton';
 import ControlBlank from './ControlBlank';
 
+import {
+  ALL_IN,
+  BET_SET,
+  BET_EDIT,
+  BET_CONFIRM,
+  RAISE_SET,
+  RAISE_EDIT,
+  RAISE_CONFIRM,
+} from '../../containers/ActionBar/actions';
+
 const ControlBetRaise = (props) => {
   const {
     amount,
@@ -19,12 +29,12 @@ const ControlBetRaise = (props) => {
   // after clicking BET or RAISE buttons, the slider will open
   // and display buttons with indicators
   if (sliderOpen) {
-    if (mode === 'BET-SET') {
+    if (mode === BET_SET) {
       return (
         <ActionButton
           name="button-bet-confirm"
           text={amount === myStack ? 'All-In' : 'Bet'}
-          type="BET-CONFIRM"
+          type={BET_CONFIRM}
           handleClick={handleBet}
           {...props}
         />
@@ -34,7 +44,7 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-raise-confirm"
         text={amount === myStack ? 'All-In' : 'Raise'}
-        type="RAISE-CONFIRM"
+        type={RAISE_CONFIRM}
         handleClick={handleBet}
         {...props}
       />
@@ -44,23 +54,23 @@ const ControlBetRaise = (props) => {
   // after confirming the raise amount in the slider,
   // the buttons will change to (in the future)
   // edit they raise or bet amount
-  if (mode === 'RAISE-CONFIRM') {
+  if (mode === RAISE_CONFIRM) {
     return (
       <ActionButton
         name="button-raise-edit"
         text={amount === myStack ? 'All-In' : 'Raise'}
-        type="RAISE-EDIT"
+        type={RAISE_EDIT}
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
     );
   }
-  if (mode === 'BET-CONFIRM') {
+  if (mode === BET_CONFIRM) {
     return (
       <ActionButton
         name="button-bet-edit"
         text={amount === myStack ? 'All-In' : 'Bet'}
-        type="BET-EDIT"
+        type={BET_EDIT}
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
@@ -73,7 +83,7 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-all-in"
         text="All-In"
-        type="ALL-IN"
+        type={ALL_IN}
         handleClick={handleAllIn}
         {...props}
       />
@@ -84,7 +94,7 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-bet"
         text="Bet"
-        type="BET-SET"
+        type={BET_SET}
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
@@ -95,7 +105,7 @@ const ControlBetRaise = (props) => {
       <ActionButton
         name="button-raise"
         text="Raise"
-        type="RAISE-SET"
+        type={RAISE_SET}
         handleClick={() => setActionBarBetSlider(true)}
         {...props}
       />
