@@ -20,27 +20,8 @@ export default function actionBarReducer(state = initialState, action) {
       return state.set('turnComplete', action.complete);
     }
 
-    case types.ACTIONBAR_SET_MODE: {
-      if (action.mode === null) {
-        return state;
-      }
-      return state.set('mode', action.mode);
-    }
-
-    case types.ACTIONBAR_SET_BET_SLIDER: {
-      return state.set('sliderOpen', action.sliderOpen);
-    }
-
     case types.ACTIONBAR_SET_BUTTON_ACTIVE: {
       return state.set('buttonActive', action.whichBtn);
-    }
-
-    case types.SET_EXECUTE_ACTION: {
-      return state.set('executeAction', action.executeAction);
-    }
-
-    case types.SET_ACTION_TO_EXECUTE: {
-      return state.set('actionToExecute', action.actionToExecute);
     }
 
     case types.UPDATE: {

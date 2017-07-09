@@ -24,8 +24,6 @@ export const baseProps = fromJS({
   sliderOpen: false,
   turnComplete: false,
   visible: false,
-  setActionBarMode: sinon.spy(),
-  setActionBarBetSlider: sinon.spy(),
   setActionBarButtonActive: sinon.spy(),
   handleClickButton: sinon.spy(),
   handleFold: sinon.spy(),

@@ -10,12 +10,10 @@ import { connect } from 'react-redux';
 import { playIsPlayerTurn } from '../../sounds';
 
 import {
-  setExecuteAction,
   handleClickButton,
   setActionBarTurnComplete,
-  setActionBarMode,
-  setActionBarBetSlider,
   setActionBarButtonActive,
+  updateActionBar,
   ALL_IN,
   BET,
   CHECK,
@@ -65,7 +63,7 @@ class ActionBarContainer extends React.Component {
     this.handleFold = this.handleFold.bind(this);
     this.updateAmount = this.updateAmount.bind(this);
     this.state = {
-      amount: 0,
+      amount: this.props.minRaise,
       disabled: false,
     };
   }
@@ -73,18 +71,15 @@ class ActionBarContainer extends React.Component {
   componentWillReceiveProps(nextProps) { // eslint-disable-line consistent-return
     if (nextProps.turnComplete === true) {
       this.props.setActionBarTurnComplete(false);
-      this.props.setActionBarMode('');
     }
     if (nextProps.minRaise && nextProps.minRaise !== this.props.minRaise) {
       this.updateAmount(nextProps.minRaise);
     }
     const { executeAction, actionToExecute } = nextProps;
-    // after handleclick saga updates state to execute action
+    // after handleClickButton saga updates state to execute action
     if (executeAction && actionToExecute) {
       const handId = parseInt(this.props.params.handId, 10);
-      this.props.setExecuteAction(false);
-      this.props.setActionBarButtonActive('');
-      this.props.setActionBarTurnComplete(true);
+      this.resetActionBar();
       this.disableTemporarilyAfterAction();
       switch (actionToExecute) {
         case ALL_IN:
@@ -126,6 +121,15 @@ class ActionBarContainer extends React.Component {
     this.setState({ amount });
   }
 
+  resetActionBar() {
+    this.props.updateActionBar({
+      executeAction: false,
+      mode: '',
+      buttonActive: '',
+      turnComplete: true,
+    });
+  }
+
   captureError(handId) {
     const self = this;
 
@@ -134,7 +138,7 @@ class ActionBarContainer extends React.Component {
         tableAddr: self.props.params.tableAddr,
         handId,
       } });
-      this.props.setActionBarMode('');
+      this.resetActionBar();
     };
   }
 
@@ -210,11 +214,6 @@ class ActionBarContainer extends React.Component {
       <ActionBar
         amount={this.state.amount}
         disabled={this.state.disabled}
-        handleAllIn={this.handleAllIn}
-        handleBet={this.handleBet}
-        handleCheck={this.handleCheck}
-        handleCall={this.handleCall}
-        handleFold={this.handleFold}
         updateAmount={this.updateAmount}
         {...this.props}
       />
@@ -240,12 +239,10 @@ ActionBarContainer.propTypes = {
   setCards: PropTypes.func,
   state: PropTypes.string,
   setActionBarTurnComplete: PropTypes.func,
-  setActionBarMode: PropTypes.func,
   turnComplete: PropTypes.bool,
   executeAction: PropTypes.bool,
   actionToExecute: PropTypes.string,
-  setExecuteAction: PropTypes.func,
-  setActionBarButtonActive: PropTypes.func,
+  updateActionBar: PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -264,10 +261,8 @@ export function mapDispatchToProps(dispatch) {
     ),
     handleClickButton: (type) => dispatch(handleClickButton(type)),
     setActionBarTurnComplete: (complete) => dispatch(setActionBarTurnComplete(complete)),
-    setActionBarBetSlider: (open) => dispatch(setActionBarBetSlider(open)),
-    setActionBarMode: (mode) => dispatch(setActionBarMode(mode)),
-    setActionBarButtonActive: (whichBtn) => dispatch(setActionBarButtonActive(whichBtn)),
-    setExecuteAction: () => dispatch(setExecuteAction()),
+    setActionBarButtonActive: (btn) => dispatch(setActionBarButtonActive(btn)),
+    updateActionBar: (payload) => dispatch(updateActionBar(payload)),
   };
 }
 
