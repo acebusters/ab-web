@@ -11,8 +11,10 @@ import {
   BET_SET,
   updateActionBar,
 } from './actions';
+import { playActionBarClick } from '../../sounds';
 
 function* handleClickButton({ buttonType }) {
+  yield call(playActionBarClick);
   yield call(delay, 300);
   const update = {};
   // tracks onMouseDown

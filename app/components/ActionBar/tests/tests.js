@@ -3,7 +3,6 @@ import sinon from 'sinon';
 import {
   BET_SET,
   CHECK,
-  RAISE_SET,
 } from '../../../containers/ActionBar/actions';
 
 export const combine = (describe, it) => `${describe}, ${it}`;
@@ -162,7 +161,7 @@ export const buttonRaise1 = {
     callAmount: 1000,
     visible: true,
     sliderOpen: true,
-    mode: RAISE_SET,
+    mode: BET_SET,
     minRaise: 1900,
     myStack: 2000,
   }).toJS(),
