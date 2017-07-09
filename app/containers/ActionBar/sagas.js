@@ -15,7 +15,7 @@ import { playActionBarClick } from '../../sounds';
 
 function* handleClickButton({ buttonType }) {
   yield call(playActionBarClick);
-  yield call(delay, 300);
+  yield delay(200);
   const update = {};
   // tracks onMouseDown
   update.buttonActive = buttonType;
