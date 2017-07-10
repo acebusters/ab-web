@@ -22,7 +22,7 @@ const ControlBetRaise = (props) => {
     if (amountToCall === 0) return 'Bet';
     if (amount === myStack) return 'All-In';
     if (myStack > amountToCall) return 'Raise';
-    return '???';
+    return 'Bet';
   };
   // after clicking BET or RAISE buttons, the slider will open
   // and display buttons with indicators
