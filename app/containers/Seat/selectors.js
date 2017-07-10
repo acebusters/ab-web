@@ -15,6 +15,8 @@ import {
   makeLastRoundMaxBetSelector,
 } from '../Table/selectors';
 
+import { makeSignerAddrSelector } from '../AccountProvider/selectors';
+
 import { createBlocky } from '../../services/blockies';
 
 import {
@@ -116,9 +118,14 @@ const makePendingSelector = () => createSelector(
   (lineup, pos) => (lineup && pos > -1 && lineup.toJS()[pos]) ? lineup.toJS()[pos].pending : false
 );
 
-const makeSomePendingSelector = () => createSelector(
-  [makeLineupSelector()],
-  (lineup) => (lineup && lineup.toJS) ? lineup.toJS().some((l) => l.pending) : false
+const makeMyPendingSelector = () => createSelector(
+  [makeLineupSelector(), makeSignerAddrSelector()],
+  (lineup, signerAddr) => {
+    if (lineup && lineup.toJS) {
+      return lineup.toJS().some((l) => l.pending && l.pending.signerAddr === signerAddr);
+    }
+    return false;
+  }
 );
 
 const makeDealerSelector = () => createSelector(
@@ -325,7 +332,7 @@ export {
   makeLastAmountSelector,
   makeDealerSelector,
   makePendingSelector,
-  makeSomePendingSelector,
+  makeMyPendingSelector,
   makeOpenSelector,
   makeCoordsSelector,
   makeAmountCoordsSelector,
