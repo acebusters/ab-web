@@ -25,10 +25,6 @@ HeaderContainer.propTypes = {
   collapsed: PropTypes.bool,
 };
 
-const mapDispatchToProps = () => ({
-  setCollapsed,
-});
-
 const mapStateToProps = createStructuredSelector({
   loggedIn: makeSelectLoggedIn(),
   signerAddr: makeSignerAddrSelector(),
@@ -39,5 +35,5 @@ const mapStateToProps = createStructuredSelector({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  { setCollapsed },
 )(HeaderContainer);
