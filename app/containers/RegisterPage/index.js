@@ -67,8 +67,10 @@ const Captcha = (props) => (
 
 const renderCheckBox = ({ input, label, type, meta: { touched, error, warning } }) => (
   <FormGroup>
-    <CheckBox {...input} placeholder={label} type={type} />
-    <Label htmlFor={input.name}><FormattedMessage {...messages.terms.agree} /> {label}</Label>
+    <Label>
+      <CheckBox {...input} placeholder={label} type={type} />
+      <FormattedMessage {...messages.terms.agree} /> {label}
+    </Label>
     {touched && ((error && <ErrorMessage error={error} />) || (warning && <WarningMessage warning={warning} />))}
   </FormGroup>
 );
