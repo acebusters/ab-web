@@ -73,7 +73,7 @@ describe(tests.amountToCall0.describe, () => {
     );
     expect(actionBar.find({ name: 'button-fold' }).length).toEqual(1);
     expect(actionBar.find({ name: 'button-call' }).length).toEqual(1);
-    expect(actionBar.find({ name: 'button-raise' }).length).toEqual(1);
+    expect(actionBar.find({ name: 'button-bet' }).length).toEqual(1);
   });
 });
 
