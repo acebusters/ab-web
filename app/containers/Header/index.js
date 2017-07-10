@@ -20,12 +20,13 @@ const HeaderContainer = (props) => (
     {...props}
   />
 );
+
 HeaderContainer.propTypes = {
   collapsed: PropTypes.bool,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  setCollapsed: (collapsed) => dispatch(setCollapsed(collapsed)),
+const mapDispatchToProps = () => ({
+  setCollapsed,
 });
 
 const mapStateToProps = createStructuredSelector({

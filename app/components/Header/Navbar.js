@@ -28,7 +28,7 @@ const StyledNavbarMenu = styled.div`
   display: block;
   float: right;
   @media (max-width: ${screenXsMax}) {
-    width: 100%;
+    width: ${(props) => props.loggedIn ? '100%' : 'auto'};
   }
 `;
 
