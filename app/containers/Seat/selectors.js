@@ -116,6 +116,11 @@ const makePendingSelector = () => createSelector(
   (lineup, pos) => (lineup && pos > -1 && lineup.toJS()[pos]) ? lineup.toJS()[pos].pending : false
 );
 
+const makeSomePendingSelector = () => createSelector(
+  [makeLineupSelector()],
+  (lineup) => (lineup && lineup.toJS) ? lineup.toJS().some((l) => l.pending) : false
+);
+
 const makeDealerSelector = () => createSelector(
   makeHandSelector(),
   (hand) => (hand && hand.get) ? hand.get('dealer') : -1
@@ -320,6 +325,7 @@ export {
   makeLastAmountSelector,
   makeDealerSelector,
   makePendingSelector,
+  makeSomePendingSelector,
   makeOpenSelector,
   makeCoordsSelector,
   makeAmountCoordsSelector,
