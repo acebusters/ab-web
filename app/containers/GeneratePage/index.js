@@ -163,7 +163,7 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
         })
         .then(() => waitForAccountTx(workerRsp.data.wallet.address))
         .catch((err) => {
-          throw new SubmissionError({ _error: err });
+          throw new SubmissionError({ _error: `Registration failed with message: ${err}` });
         })
         .then(() => browserHistory.push('/login'))
     ));
