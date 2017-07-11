@@ -399,7 +399,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               type="inline"
               styles={{ layout: { marginLeft: '15px' } }}
             >
-              <span>{pwrBalance && formatAbp(pwrBalance, 5)} ABP</span>
+              <span>{pwrBalance && formatAbp(pwrBalance)} ABP</span>
             </WithLoading>
           </p>
 

@@ -13,18 +13,13 @@ export const NTZ_DECIMALS = new BigNumber(10).pow(12);
 
 export const ABP_DECIMALS = new BigNumber(10).pow(12);
 
-export function formatNtz(babzAmount, decimals = 0) {
-  const babzAmountBn = (typeof babzAmount === 'object') ? babzAmount : new BigNumber(babzAmount || 0);
-  return babzAmountBn.div(NTZ_DECIMALS).toFormat(decimals);
+export function formatAmount(decimals, amount, dp) {
+  const amountBn = (typeof amount === 'object' && amount !== null) ? amount : new BigNumber(amount || 0);
+  const divBn = amountBn.div(decimals);
+  const decimalPlaces = dp === undefined ? divBn.dp() : dp;
+  return divBn.toFormat(decimalPlaces);
 }
 
-export function formatAbp(pwrAmount, decimals = 0) {
-  const pwrAmountBn = (typeof pwrAmount === 'object') ? pwrAmount : new BigNumber(pwrAmount || 0);
-  return pwrAmountBn.div(ABP_DECIMALS).toFormat(decimals);
-}
-
-export function formatEth(weiAmount, decimals) {
-  const weiAmountBn = (typeof weiAmount === 'object') ? weiAmount : new BigNumber(weiAmount || 0);
-  const decimalPlaces = decimals || weiAmountBn.div(ETH_DECIMALS).dp();
-  return weiAmountBn.div(ETH_DECIMALS).toFormat(decimalPlaces);
-}
+export const formatNtz = (amount, dp = 0) => formatAmount(NTZ_DECIMALS, amount, dp);
+export const formatAbp = formatAmount.bind(null, ABP_DECIMALS);
+export const formatEth = formatAmount.bind(null, ETH_DECIMALS);
