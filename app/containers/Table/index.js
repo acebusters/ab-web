@@ -241,7 +241,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.token.transData.sendTransaction(
       this.tableAddr,
       amount,
-      `0x0${(pos + 1).toString(16)}${signerAddr.replace('0x', '')}`
+      `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`
     );
 
     const slides = (
