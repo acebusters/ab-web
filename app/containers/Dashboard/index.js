@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import ethUtil from 'ethereumjs-util';
 import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
 
 import { getWeb3 } from '../AccountProvider/sagas';
 import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -199,11 +200,15 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   handleNTZTransfer(amount, to) {
-    this.token.transfer.sendTransaction(
+    const web3 = new Web3(window.web3.currentProvider);
+    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
+    token.transfer.sendTransaction(
       to,
-      new BigNumber(amount).mul(NTZ_DECIMALS)
+      `0x${new BigNumber(amount).mul(NTZ_DECIMALS).toString(16)}`,
+      { from: web3.eth.accounts[0] },
+      (err, result) => console.log(err, result)
     );
-    this.props.modalDismiss();
+    // this.props.modalDismiss();
   }
 
   handleNTZPurchase(amount) {
