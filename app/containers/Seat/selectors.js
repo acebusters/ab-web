@@ -322,7 +322,7 @@ const selectStack = (table, pos) => {
     const distsRec = table.getIn([i.toString(), 'distribution']);
     if (distsRec) {
       const dist = rc.get(distsRec);
-      amount += dist.outs[pos];
+      amount += dist.outs[pos].toNumber();
     }
   }
   return amount;
