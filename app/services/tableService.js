@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import { Receipt } from 'poker-helper';
 
 import { getWeb3 } from '../containers/AccountProvider/sagas';
-import { babz } from '../utils/amountFormater';
+import { babz } from '../utils/amountFormatter';
 
 import { conf, ABI_TABLE_FACTORY } from '../app.config';
 

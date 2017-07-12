@@ -11,7 +11,7 @@ import {
   lineupReceived,
 } from '../actions';
 
-import { babz } from '../../../utils/amountFormater';
+import { babz } from '../../../utils/amountFormatter';
 
 // secretSeed: 'rural tent tests net drip fatigue uncle action repeat couple lawn rival'
 const P1_ADDR = '0x6d2f2c0fa568243d2def3e999a791a6df45d816e';

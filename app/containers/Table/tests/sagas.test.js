@@ -10,7 +10,7 @@ import nock from 'nock';
 import { PLAYER1, PLAYER2, PLAYER3, PLAYER4, PLAYER_EMPTY } from './consts';
 import { updateScanner, payFlow } from '../sagas';
 import { formActionSaga } from '../../../services/reduxFormSaga';
-import { babz } from '../../../utils/amountFormater';
+import { babz } from '../../../utils/amountFormatter';
 import {
   bet,
   pay,
@@ -174,7 +174,7 @@ describe('Saga Tests', () => {
     sagaTester.dispatch(updateReceived(tableAddr, hand));
     const show = sagaTester.getLatestCalledAction();
     expect(show.type).toEqual(SHOW);
-    expect(show.amount).toEqual(1000);
+    expect(show.amount).toEqual(babz(1000).toNumber());
     expect(show.holeCards).toEqual([12, 13]);
     // do the same thing again, and make sure the request
     // is deduplicated
@@ -218,7 +218,7 @@ describe('Saga Tests', () => {
     await sagaTester.dispatch(updateReceived(tableAddr, hand));
     const show = sagaTester.getLatestCalledAction();
     expect(show.type).toEqual(SHOW);
-    expect(show.amount).toEqual(1000);
+    expect(show.amount).toEqual(babz(1000).toNumber());
     expect(show.holeCards).toEqual([12, 13]);
     expect(sagaTester.getCalledActions().length).toEqual(2);
   });

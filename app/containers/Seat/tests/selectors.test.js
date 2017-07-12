@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import { Receipt } from 'poker-helper';
 
-import { babz } from '../../../utils/amountFormater';
+import { babz } from '../../../utils/amountFormatter';
 
 import {
   makeLastReceiptSelector,
@@ -84,7 +84,7 @@ describe('lastAmountSelector', () => {
       },
     };
     const lastAmountSelector = makeLastAmountSelector();
-    expect(lastAmountSelector(mockedState, props)).toEqual(500);
+    expect(lastAmountSelector(mockedState, props)).toEqual(500000000000000);
   });
 });
 
@@ -167,10 +167,10 @@ describe('cardSelector', () => {
             state: 'flop',
             lineup: [{
               address: P1_ADDR,
-              last: 'eyJ0eXBlIjoiRVdUIiwiYWxnIjoiRVMyNTZrIn0.eyJzaXRPdXQiOlt7InVpbnQiOjIxfSx7InVpbnQiOjEwMH1dLCJ2IjoxfQ.Tk6rY4rOwb6qrKsU6fTe3DmH_TqDtWKiVDlNutwzCqkbQ22jnMP8qUBcrhL5Eh9vT1SIVAYWXT6gJPnBEDqWPQ',
+              last: new Receipt(TBL_ADDR).sitOut(21, babz(100)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: 'eyJ0eXBlIjoiRVdUIiwiYWxnIjoiRVMyNTZrIn0.eyJiZXQiOlt7InVpbnQiOjIxfSx7InVpbnQiOjB9XSwidiI6MH0.JdL0EshJbVv9TO-oKqhYkOJcjSb4rTeFpwfAK3G_M9BkdWBYdIeAyDqJwhddJdId-7S5oJRkX9tg1AuLnXfnfA',
+              last: new Receipt(TBL_ADDR).sitOut(21, babz(0)).sign(P2_KEY),
               cards: [12, 21],
             }],
             holeCards: [15, 25],
@@ -204,10 +204,10 @@ describe('cardSelector', () => {
             state: 'flop',
             lineup: [{
               address: P1_ADDR,
-              last: 'eyJ0eXBlIjoiRVdUIiwiYWxnIjoiRVMyNTZrIn0.eyJzaXRPdXQiOlt7InVpbnQiOjIxfSx7InVpbnQiOjEwMH1dLCJ2IjoxfQ.Tk6rY4rOwb6qrKsU6fTe3DmH_TqDtWKiVDlNutwzCqkbQ22jnMP8qUBcrhL5Eh9vT1SIVAYWXT6gJPnBEDqWPQ',
+              last: new Receipt(TBL_ADDR).sitOut(21, babz(100)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: 'eyJ0eXBlIjoiRVdUIiwiYWxnIjoiRVMyNTZrIn0.eyJiZXQiOlt7InVpbnQiOjIxfSx7InVpbnQiOjB9XSwidiI6MH0.JdL0EshJbVv9TO-oKqhYkOJcjSb4rTeFpwfAK3G_M9BkdWBYdIeAyDqJwhddJdId-7S5oJRkX9tg1AuLnXfnfA',
+              last: new Receipt(TBL_ADDR).sitOut(21, babz(0)).sign(P2_KEY),
             }],
             holeCards: [15, 25],
           },
@@ -273,7 +273,7 @@ describe('stackSelector', () => {
             }, {
               address: P2_ADDR,
             }],
-            amounts: [3000, 5000],
+            amounts: [babz(3000).toNumber(), babz(5000).toNumber()],
             lastHandNetted: 3,
           },
         },
@@ -286,7 +286,7 @@ describe('stackSelector', () => {
         tableAddr: TBL_ADDR,
       },
     };
-    expect(stackSelector(mockedState, props)).toEqual(2500);
+    expect(stackSelector(mockedState, props)).toEqual(babz(2500).toNumber());
   });
 
   it('should select player\'s stack with 2 hand in state channel.', () => {
@@ -324,7 +324,7 @@ describe('stackSelector', () => {
             }, {
               address: P2_ADDR,
             }],
-            amounts: [3000, 5000],
+            amounts: [babz(3000).toNumber(), babz(5000).toNumber()],
             lastHandNetted: 3,
           },
         },
@@ -337,7 +337,7 @@ describe('stackSelector', () => {
         tableAddr: TBL_ADDR,
       },
     };
-    expect(stackSelector(mockedState, props)).toEqual(4300);
+    expect(stackSelector(mockedState, props)).toEqual(babz(4300).toNumber());
   });
 });
 
@@ -561,7 +561,7 @@ describe('makeShowStatusSelector', () => {
       table: {
         [TBL_ADDR]: {
           data: {
-            smallBlind: 50,
+            smallBlind: babz(50).toNumber(),
           },
           0: {
             state: 'preflop',
@@ -595,7 +595,7 @@ describe('makeShowStatusSelector', () => {
       table: {
         [TBL_ADDR]: {
           data: {
-            smallBlind: 50,
+            smallBlind: babz(50).toNumber(),
           },
           0: {
             state: 'preflop',
@@ -638,7 +638,7 @@ describe('makeShowStatusSelector', () => {
               last: new Receipt(TBL_ADDR).bet(3, babz(200)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new Receipt(TBL_ADDR).checkFlop(3, 200).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).checkFlop(3, babz(200)).sign(P2_KEY),
             }],
           },
         },
@@ -698,7 +698,7 @@ describe('makeShowStatusSelector', () => {
           },
           3: {
             state: 'flop',
-            lastRoundMaxBet: 100,
+            lastRoundMaxBet: babz(100),
             dealer: 0,
             lineup: [{
               address: P1_ADDR,

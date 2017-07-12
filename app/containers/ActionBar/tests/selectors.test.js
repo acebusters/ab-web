@@ -4,7 +4,7 @@
 
 import { fromJS } from 'immutable';
 import { Receipt } from 'poker-helper';
-import { babz } from '../../../utils/amountFormater';
+import { babz } from '../../../utils/amountFormatter';
 import { CALL } from '../actions';
 
 import {
@@ -44,7 +44,7 @@ describe('minSelector', () => {
         [TBL_ADDR]: {
           4: {
             state: 'flop',
-            lastRoundMaxBet: 1000,
+            lastRoundMaxBet: babz(1000).toNumber(),
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
@@ -58,7 +58,7 @@ describe('minSelector', () => {
             }],
           },
           data: {
-            amounts: [30000, 50000, 20000],
+            amounts: [babz(30000).toNumber(), babz(50000).toNumber(), babz(20000).toNumber()],
             smallBlind: 500,
             lastHandNetted: 3,
           },
@@ -74,7 +74,7 @@ describe('minSelector', () => {
         tableAddr: TBL_ADDR,
       },
     };
-    expect(minSelector(mockedState, props)).toEqual(10000);
+    expect(minSelector(mockedState, props)).toEqual(babz(10000).toNumber());
   });
 
   it('should return 2 times the big blind preflop with no raise', () => {
@@ -100,8 +100,8 @@ describe('minSelector', () => {
             }],
           },
           data: {
-            amounts: [30000, 50000, 20000],
-            smallBlind: 500,
+            amounts: [babz(30000).toNumber(), babz(50000).toNumber(), babz(20000).toNumber()],
+            smallBlind: babz(500).toNumber(),
             lastHandNetted: 3,
           },
         },
@@ -116,7 +116,7 @@ describe('minSelector', () => {
         tableAddr: TBL_ADDR,
       },
     };
-    expect(minSelector(mockedState, props)).toEqual(2000);
+    expect(minSelector(mockedState, props)).toEqual(babz(2000).toNumber());
   });
 
   it('should return BB when there was no bet or raise', () => {
@@ -128,7 +128,7 @@ describe('minSelector', () => {
         [TBL_ADDR]: {
           4: {
             state: 'flop',
-            lastRoundMaxBet: 400,
+            lastRoundMaxBet: babz(400).toNumber(),
             dealer: 0,
             lineup: [{
               address: P2_ADDR,
@@ -139,8 +139,8 @@ describe('minSelector', () => {
             }],
           },
           data: {
-            amounts: [30000, 50000, 20000],
-            smallBlind: 50,
+            amounts: [babz(30000).toNumber(), babz(50000).toNumber(), babz(20000).toNumber()],
+            smallBlind: babz(50).toNumber(),
             lastHandNetted: 3,
           },
         },
@@ -155,7 +155,7 @@ describe('minSelector', () => {
         tableAddr: TBL_ADDR,
       },
     };
-    expect(minSelector(mockedState, props)).toEqual(100);
+    expect(minSelector(mockedState, props)).toEqual(babz(100).toNumber());
   });
 
   it('should return the stacksize when player does not have enough to bet min', () => {
@@ -167,7 +167,7 @@ describe('minSelector', () => {
         [TBL_ADDR]: {
           4: {
             state: 'flop',
-            lastRoundMaxBet: 1000,
+            lastRoundMaxBet: babz(1000).toNumber(),
             lineup: [{
               address: P1_ADDR,
               last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P1_KEY),
@@ -180,8 +180,8 @@ describe('minSelector', () => {
             }],
           },
           data: {
-            amounts: [1421, 50000, 20000],
-            smallBlind: 500,
+            amounts: [babz(1421).toNumber(), babz(50000).toNumber(), babz(20000).toNumber()],
+            smallBlind: babz(500).toNumber(),
             lastHandNetted: 3,
           },
         },
@@ -196,7 +196,7 @@ describe('minSelector', () => {
         tableAddr: TBL_ADDR,
       },
     };
-    expect(minSelector(mockedState, props)).toEqual(421);
+    expect(minSelector(mockedState, props)).toEqual(babz(421).toNumber());
   });
 });
 
@@ -241,7 +241,7 @@ describe('amountToCall Selector', () => {
         tableAddr: TBL_ADDR,
       },
     };
-    expect(amountToCallSelector(mockedState, props)).toEqual(1000);
+    expect(amountToCallSelector(mockedState, props)).toEqual(babz(1000).toNumber());
   });
 
   it('should return difference between maxBet and myMaxBet', () => {
@@ -253,7 +253,7 @@ describe('amountToCall Selector', () => {
         [TBL_ADDR]: {
           4: {
             state: 'preflop',
-            lastRoundMaxBet: 1000,
+            lastRoundMaxBet: babz(1000).toNumber(),
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
@@ -284,7 +284,7 @@ describe('amountToCall Selector', () => {
         tableAddr: TBL_ADDR,
       },
     };
-    expect(amountToCallSelector(mockedState, props)).toEqual(1500);
+    expect(amountToCallSelector(mockedState, props)).toEqual(babz(1500).toNumber());
   });
 });
 
@@ -297,7 +297,7 @@ describe('makeSelectActionBarActive', () => {
       [TBL_ADDR]: {
         4: {
           state: 'flop',
-          lastRoundMaxBet: 1000,
+          lastRoundMaxBet: babz(1000).toNumber(),
           lineup: [{
             address: P1_ADDR,
             last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P1_KEY),
@@ -310,7 +310,7 @@ describe('makeSelectActionBarActive', () => {
           }],
         },
         data: {
-          amounts: [1421, 50000, 20000],
+          amounts: [babz(1421).toNumber(), babz(50000).toNumber(), babz(20000).toNumber()],
           smallBlind: 500,
           lastHandNetted: 3,
         },
@@ -375,7 +375,7 @@ describe('makeSelectActionBarVisible', () => {
       [TBL_ADDR]: {
         4: {
           state: 'flop',
-          lastRoundMaxBet: 1000,
+          lastRoundMaxBet: babz(1000).toNumber(),
           lineup: [{
             address: P1_ADDR,
             last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P1_KEY),
@@ -388,7 +388,7 @@ describe('makeSelectActionBarVisible', () => {
           }],
         },
         data: {
-          amounts: [1421, 50000, 20000],
+          amounts: [babz(1421).toNumber(), babz(50000).toNumber(), babz(20000).toNumber()],
           smallBlind: 500,
           lastHandNetted: 3,
         },

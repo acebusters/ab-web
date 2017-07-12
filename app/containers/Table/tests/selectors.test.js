@@ -11,7 +11,7 @@ import {
 
 import { PLAYER1, PLAYER2, PLAYER3, PLAYER4, PLAYER_EMPTY } from './consts';
 
-import { babz } from '../../../utils/amountFormater';
+import { babz } from '../../../utils/amountFormatter';
 
 const TBL_ADDR = '0x77aabb1133';
 const PROPS = {
@@ -115,8 +115,8 @@ describe('winnersSelector', () => {
       {
         addr: PLAYER2.address,
         hand: "Four of a Kind, Q's",
-        amount: 2000,
-        maxBet: 1000,
+        amount: 2000000000000000,
+        maxBet: 1000000000000000,
       }];
     const selectWinners = makeSelectWinners();
     expect(selectWinners(mockedState, props)).toEqual(winner);
@@ -159,14 +159,14 @@ describe('winnersSelector', () => {
       {
         addr: PLAYER1.address,
         hand: "Pair, A's",
-        amount: 1250,
-        maxBet: 1000,
+        amount: 1250000000000000,
+        maxBet: 1000000000000000,
       },
       {
         addr: PLAYER2.address,
         hand: "Pair, A's",
-        amount: 1250,
-        maxBet: 1000,
+        amount: 1250000000000000,
+        maxBet: 1000000000000000,
       }];
     const selectWinners = makeSelectWinners();
     expect(selectWinners(mockedState, props)).toEqual(winners);
@@ -205,8 +205,8 @@ describe('winnersSelector', () => {
       {
         addr: PLAYER1.address,
         hand: 'A High',
-        amount: 2000,
-        maxBet: 1000,
+        amount: 2000000000000000,
+        maxBet: 1000000000000000,
       }];
     const selectWinners = makeSelectWinners();
     expect(selectWinners(mockedState, props)).toEqual(winners);
@@ -250,20 +250,20 @@ describe('winnersSelector', () => {
       {
         addr: PLAYER1.address,
         hand: "Two Pair, Q's & J's",
-        amount: 1000,
-        maxBet: 1000,
+        amount: 1000000000000000,
+        maxBet: 1000000000000000,
       },
       {
         addr: PLAYER2.address,
         hand: "Two Pair, Q's & J's",
-        amount: 1000,
-        maxBet: 1000,
+        amount: 1000000000000000,
+        maxBet: 1000000000000000,
       },
       {
         addr: PLAYER3.address,
         hand: "Two Pair, Q's & J's",
-        amount: 1000,
-        maxBet: 1000,
+        amount: 1000000000000000,
+        maxBet: 1000000000000000,
       }];
     const selectWinners = makeSelectWinners();
     expect(selectWinners(mockedState, props)).toEqual(winners);
@@ -333,8 +333,8 @@ describe('winnersSelector', () => {
     const winners = [
       {
         addr: PLAYER1.address,
-        amount: 3600,
-        maxBet: 1200,
+        amount: 3600000000000000,
+        maxBet: 1200000000000000,
       }];
     const selectWinners = makeSelectWinners();
     expect(selectWinners(mockedState, props)).toEqual(winners);
@@ -522,6 +522,6 @@ describe('sitout Selector', () => {
       },
     };
     const selectSitoutAmount = makeSitoutAmountSelector();
-    expect(selectSitoutAmount(mockedState, props)).toEqual(100);
+    expect(selectSitoutAmount(mockedState, props)).toEqual(100000000000000);
   });
 });
