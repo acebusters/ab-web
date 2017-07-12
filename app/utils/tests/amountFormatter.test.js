@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { formatAmount, ETH_DECIMALS } from '../amountFormater';
+import { formatAmount, ETH_DECIMALS } from '../amountFormatter';
 
 describe('formatAmount', () => {
   it('should convert value according decimals and format this amount', () => {
