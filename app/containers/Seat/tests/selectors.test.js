@@ -1,5 +1,7 @@
 import { fromJS } from 'immutable';
-import EWT from 'ethereum-web-token';
+import { Receipt } from 'poker-helper';
+
+import { babz } from '../../../utils/amountFormater';
 
 import {
   makeLastReceiptSelector,
@@ -12,12 +14,7 @@ import {
 } from '../selectors';
 
 import {
-  ABI_BET,
-  ABI_DIST,
-  ABI_FOLD,
-  ABI_SIT_OUT,
   STATUS_MSG,
-  checkABIs,
 } from '../../../app.config';
 
 // secretSeed: 'rural tent tests net drip fatigue uncle action repeat couple lawn rival'
@@ -41,7 +38,7 @@ describe('lastReceiptSelector', () => {
               address: P1_ADDR,
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_FOLD).fold(1, 500).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).fold(1, babz(500)).sign(P2_KEY),
             }],
           },
         },
@@ -56,7 +53,7 @@ describe('lastReceiptSelector', () => {
       },
     };
     const receiptSelector = makeLastReceiptSelector();
-    expect(receiptSelector(mockedState, props)).toEqual(EWT.parse(new EWT(ABI_FOLD).fold(1, 500).sign(P2_KEY)));
+    expect(receiptSelector(mockedState, props)).toEqual(Receipt.parse(new Receipt(TBL_ADDR).fold(1, babz(500)).sign(P2_KEY)));
   });
 });
 
@@ -71,9 +68,9 @@ describe('lastAmountSelector', () => {
               address: P1_ADDR,
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(1, 1500).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1500)).sign(P2_KEY),
             }],
-            lastRoundMaxBet: 1000,
+            lastRoundMaxBet: babz(1000),
           },
         },
       },
@@ -102,7 +99,7 @@ describe('foldedSelector', () => {
               address: P1_ADDR,
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_FOLD).fold(1, 500).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).fold(1, babz(500)).sign(P2_KEY),
             }],
           },
         },
@@ -265,7 +262,7 @@ describe('stackSelector', () => {
             state: 'waiting',
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(1, 500).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(500)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
             }],
@@ -293,10 +290,11 @@ describe('stackSelector', () => {
   });
 
   it('should select player\'s stack with 2 hand in state channel.', () => {
-    const dists = [];
-    dists.push(EWT.concat(P1_ADDR, 10).toString('hex')); // rake
-    dists.push(EWT.concat(P2_ADDR, 1000).toString('hex'));
-    const distRec = new EWT(ABI_DIST).distribution(4, 0, dists).sign(P1_KEY);
+    const dists = [
+      babz(10), // rake
+      babz(1000),
+    ];
+    const distRec = new Receipt(TBL_ADDR).dist(4, 0, dists).sign(P1_KEY);
 
     const mockedState = fromJS({
       table: {
@@ -307,7 +305,7 @@ describe('stackSelector', () => {
               address: P1_ADDR,
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(1, 500).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(500)).sign(P2_KEY),
             }],
             distribution: distRec,
           },
@@ -317,7 +315,7 @@ describe('stackSelector', () => {
               address: P1_ADDR,
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(1, 1200).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1200)).sign(P2_KEY),
             }],
           },
           data: {
@@ -357,11 +355,11 @@ describe('makeSeatStatusSelector', () => {
               dealer: 0,
               lineup: [{
                 address: P1_ADDR,
-                last: new EWT(ABI_BET).bet(1, 50).sign(P1_KEY),
+                last: new Receipt(TBL_ADDR).bet(1, babz(50)).sign(P1_KEY),
                 pending: true,
               }, {
                 address: P2_ADDR,
-                last: new EWT(ABI_BET).bet(1, 100).sign(P2_KEY),
+                last: new Receipt(TBL_ADDR).bet(1, babz(100)).sign(P2_KEY),
               }],
             },
           },
@@ -393,11 +391,11 @@ describe('makeSeatStatusSelector', () => {
               dealer: 0,
               lineup: [{
                 address: P1_ADDR,
-                last: new EWT(ABI_BET).bet(1, 50).sign(P1_KEY),
+                last: new Receipt(TBL_ADDR).bet(1, babz(50)).sign(P1_KEY),
                 exitHand: 0,
               }, {
                 address: P2_ADDR,
-                last: new EWT(ABI_BET).bet(1, 100).sign(P2_KEY),
+                last: new Receipt(TBL_ADDR).bet(1, babz(100)).sign(P2_KEY),
               }],
             },
           },
@@ -429,11 +427,11 @@ describe('makeSeatStatusSelector', () => {
               dealer: 0,
               lineup: [{
                 address: P1_ADDR,
-                last: new EWT(ABI_BET).bet(1, 50).sign(P1_KEY),
+                last: new Receipt(TBL_ADDR).bet(1, babz(50)).sign(P1_KEY),
                 sitout: 312431432,
               }, {
                 address: P2_ADDR,
-                last: new EWT(ABI_BET).bet(1, 100).sign(P2_KEY),
+                last: new Receipt(TBL_ADDR).bet(1, babz(100)).sign(P2_KEY),
               }],
             },
           },
@@ -465,10 +463,10 @@ describe('makeSeatStatusSelector', () => {
               dealer: 0,
               lineup: [{
                 address: P1_ADDR,
-                last: new EWT(ABI_SIT_OUT).sitOut(1, 0).sign(P1_KEY),
+                last: new Receipt(TBL_ADDR).sitOut(1, babz(0)).sign(P1_KEY),
               }, {
                 address: P2_ADDR,
-                last: new EWT(ABI_BET).bet(1, 100).sign(P2_KEY),
+                last: new Receipt(TBL_ADDR).bet(1, babz(100)).sign(P2_KEY),
               }],
             },
           },
@@ -500,10 +498,10 @@ describe('makeSeatStatusSelector', () => {
               dealer: 0,
               lineup: [{
                 address: P1_ADDR,
-                last: new EWT(ABI_BET).bet(1, 50).sign(P1_KEY),
+                last: new Receipt(TBL_ADDR).bet(1, babz(50)).sign(P1_KEY),
               }, {
                 address: P2_ADDR,
-                last: new EWT(ABI_BET).bet(1, 100).sign(P2_KEY),
+                last: new Receipt(TBL_ADDR).bet(1, babz(100)).sign(P2_KEY),
               }],
             },
           },
@@ -570,10 +568,10 @@ describe('makeShowStatusSelector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(0, 50).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(0, babz(50)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(0, 100).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(0, babz(100)).sign(P2_KEY),
             }],
           },
         },
@@ -604,10 +602,10 @@ describe('makeShowStatusSelector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(0, 50).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(0, babz(50)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(0, 100).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(0, babz(100)).sign(P2_KEY),
             }],
           },
         },
@@ -637,10 +635,10 @@ describe('makeShowStatusSelector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(3, 200).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(3, babz(200)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(checkABIs.flop).checkFlop(3, 200).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).checkFlop(3, 200).sign(P2_KEY),
             }],
           },
         },
@@ -670,10 +668,10 @@ describe('makeShowStatusSelector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(3, 200).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(3, babz(200)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(3, 200).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(3, babz(200)).sign(P2_KEY),
             }],
           },
         },
@@ -704,10 +702,10 @@ describe('makeShowStatusSelector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(3, 200).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(3, babz(200)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(3, 100).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(3, babz(100)).sign(P2_KEY),
             }],
           },
         },
@@ -738,10 +736,10 @@ describe('makeShowStatusSelector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(3, 400).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(3, babz(400)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(3, 200).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(3, babz(200)).sign(P2_KEY),
             }],
           },
         },

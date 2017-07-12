@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable';
-import EWT from 'ethereum-web-token';
+import { Receipt } from 'poker-helper';
 
 import {
   tableStateSelector,
@@ -11,8 +11,7 @@ import {
 
 import { PLAYER1, PLAYER2, PLAYER3, PLAYER4, PLAYER_EMPTY } from './consts';
 
-import { ABI_FOLD, ABI_BET, ABI_SHOW } from '../../../app.config';
-
+import { babz } from '../../../utils/amountFormater';
 
 const TBL_ADDR = '0x77aabb1133';
 const PROPS = {
@@ -92,11 +91,11 @@ describe('winnersSelector', () => {
               address: PLAYER_EMPTY,
             }, {
               address: PLAYER1.address,
-              last: new EWT(ABI_SHOW).show(1, 1000).sign(PLAYER1.key),
+              last: new Receipt(TBL_ADDR).show(1, babz(1000)).sign(PLAYER1.key),
               cards: [21, 32],
             }, {
               address: PLAYER2.address,
-              last: new EWT(ABI_SHOW).show(1, 1000).sign(PLAYER2.key),
+              last: new Receipt(TBL_ADDR).show(1, babz(1000)).sign(PLAYER2.key),
               cards: [36, 49],
             }],
             cards: [8, 23, 10],
@@ -130,16 +129,16 @@ describe('winnersSelector', () => {
           2: {
             lineup: [{
               address: PLAYER1.address,
-              last: new EWT(ABI_SHOW).show(1, 1000).sign(PLAYER1.key),
+              last: new Receipt(TBL_ADDR).show(1, babz(1000)).sign(PLAYER1.key),
               cards: [25, 38],
             }, {
               address: PLAYER3.address,
-              last: new EWT(ABI_BET).bet(1, 500).sign(PLAYER3.key),
+              last: new Receipt(TBL_ADDR).bet(1, babz(500)).sign(PLAYER3.key),
             }, {
               address: PLAYER_EMPTY,
             }, {
               address: PLAYER2.address,
-              last: new EWT(ABI_SHOW).show(1, 1000).sign(PLAYER2.key),
+              last: new Receipt(TBL_ADDR).show(1, babz(1000)).sign(PLAYER2.key),
               cards: [12, 51],
             }],
             cards: [8, 9, 10],
@@ -181,11 +180,11 @@ describe('winnersSelector', () => {
           2: {
             lineup: [{
               address: PLAYER1.address,
-              last: new EWT(ABI_SHOW).show(1, 1000).sign(PLAYER1.key),
+              last: new Receipt(TBL_ADDR).show(1, babz(1000)).sign(PLAYER1.key),
               cards: [38, 37],
             }, {
               address: PLAYER2.address,
-              last: new EWT(ABI_SHOW).show(1, 1000).sign(PLAYER2.key),
+              last: new Receipt(TBL_ADDR).show(1, babz(1000)).sign(PLAYER2.key),
               cards: [25, 6],
             }],
             cards: [2, 3, 8],
@@ -220,15 +219,15 @@ describe('winnersSelector', () => {
           2: {
             lineup: [{
               address: PLAYER1.address,
-              last: new EWT(ABI_SHOW).show(1, 1000).sign(PLAYER1.key),
+              last: new Receipt(TBL_ADDR).show(1, babz(1000)).sign(PLAYER1.key),
               cards: [35, 36],
             }, {
               address: PLAYER2.address,
-              last: new EWT(ABI_SHOW).show(1, 1000).sign(PLAYER2.key),
+              last: new Receipt(TBL_ADDR).show(1, babz(1000)).sign(PLAYER2.key),
               cards: [22, 23],
             }, {
               address: PLAYER3.address,
-              last: new EWT(ABI_SHOW).show(1, 1000).sign(PLAYER3.key),
+              last: new Receipt(TBL_ADDR).show(1, babz(1000)).sign(PLAYER3.key),
               cards: [48, 49],
             }, {
               address: PLAYER4.address,
@@ -301,16 +300,16 @@ describe('winnersSelector', () => {
           2: {
             lineup: [{
               address: PLAYER2.address,
-              last: new EWT(ABI_FOLD).fold(1, 800).sign(PLAYER2.key),
+              last: new Receipt(TBL_ADDR).fold(1, babz(800)).sign(PLAYER2.key),
             }, {
               address: PLAYER1.address,
-              last: new EWT(ABI_BET).bet(1, 1200).sign(PLAYER1.key),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1200)).sign(PLAYER1.key),
             }, {
               address: PLAYER3.address,
-              last: new EWT(ABI_FOLD).fold(1, 800).sign(PLAYER3.key),
+              last: new Receipt(TBL_ADDR).fold(1, babz(800)).sign(PLAYER3.key),
             }, {
               address: PLAYER4.address,
-              last: new EWT(ABI_FOLD).fold(1, 800).sign(PLAYER4.key),
+              last: new Receipt(TBL_ADDR).fold(1, babz(800)).sign(PLAYER4.key),
             }, {
               address: PLAYER_EMPTY.address,
             }],
@@ -348,13 +347,13 @@ describe('winnersSelector', () => {
           2: {
             lineup: [{
               address: PLAYER2.address,
-              last: new EWT(ABI_BET).bet(1, 1200).sign(PLAYER2.key),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1200)).sign(PLAYER2.key),
             }, {
               address: PLAYER1.address,
-              last: new EWT(ABI_BET).bet(1, 1200).sign(PLAYER1.key),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1200)).sign(PLAYER1.key),
             }, {
               address: PLAYER4.address,
-              last: new EWT(ABI_FOLD).fold(1, 800).sign(PLAYER1.key),
+              last: new Receipt(TBL_ADDR).fold(1, babz(800)).sign(PLAYER1.key),
             }, {
               address: PLAYER_EMPTY.address,
             }],
@@ -504,7 +503,7 @@ describe('sitout Selector', () => {
             state: 'dealing',
             lineup: [{
               address: PLAYER1.address,
-              last: new EWT(ABI_BET).bet(1, 100).sign(PLAYER1.key),
+              last: new Receipt(TBL_ADDR).bet(1, babz(100)).sign(PLAYER1.key),
             }, {
               address: PLAYER2.address,
             }],

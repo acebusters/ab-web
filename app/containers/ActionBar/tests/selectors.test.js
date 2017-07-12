@@ -3,7 +3,8 @@
  */
 
 import { fromJS } from 'immutable';
-import EWT from 'ethereum-web-token';
+import { Receipt } from 'poker-helper';
+import { babz } from '../../../utils/amountFormater';
 import { CALL } from '../actions';
 
 import {
@@ -17,10 +18,6 @@ import {
   getActionBarButtonActive,
   getExecuteAction,
 } from '../selectors';
-
-import { checkABIs } from '../../../app.config';
-
-const ABI_BET = [{ name: 'bet', type: 'function', inputs: [{ type: 'uint' }, { type: 'uint' }] }];
 
 // secretSeed: 'rural tent tests net drip fatigue uncle action repeat couple lawn rival'
 const P1_ADDR = '0x6d2f2c0fa568243d2def3e999a791a6df45d816e';
@@ -51,13 +48,13 @@ describe('minSelector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(1, 1000).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(1, 3000).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(3000)).sign(P2_KEY),
             }, {
               address: P3_ADDR,
-              last: new EWT(ABI_BET).bet(1, 7000).sign(P3_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(7000)).sign(P3_KEY),
             }],
           },
           data: {
@@ -93,13 +90,13 @@ describe('minSelector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(1, 0).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(0)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(1, 500).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(500)).sign(P2_KEY),
             }, {
               address: P3_ADDR,
-              last: new EWT(ABI_BET).bet(1, 1000).sign(P3_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P3_KEY),
             }],
           },
           data: {
@@ -135,10 +132,10 @@ describe('minSelector', () => {
             dealer: 0,
             lineup: [{
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(1, 400).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(400)).sign(P2_KEY),
             }, {
               address: P3_ADDR,
-              last: new EWT(checkABIs.flop).checkFlop(1, 400).sign(P3_KEY),
+              last: new Receipt(TBL_ADDR).checkFlop(1, babz(400)).sign(P3_KEY),
             }],
           },
           data: {
@@ -173,13 +170,13 @@ describe('minSelector', () => {
             lastRoundMaxBet: 1000,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(1, 1000).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(1, 2000).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(2000)).sign(P2_KEY),
             }, {
               address: P3_ADDR,
-              last: new EWT(ABI_BET).bet(1, 1000).sign(P3_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P3_KEY),
             }],
           },
           data: {
@@ -217,13 +214,13 @@ describe('amountToCall Selector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(1, 0).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(0)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(1, 500).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(500)).sign(P2_KEY),
             }, {
               address: P3_ADDR,
-              last: new EWT(ABI_BET).bet(1, 1000).sign(P3_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P3_KEY),
             }, {
               address: P_EMPTY,
             }],
@@ -260,13 +257,13 @@ describe('amountToCall Selector', () => {
             dealer: 0,
             lineup: [{
               address: P1_ADDR,
-              last: new EWT(ABI_BET).bet(1, 1000).sign(P1_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P1_KEY),
             }, {
               address: P2_ADDR,
-              last: new EWT(ABI_BET).bet(1, 1000).sign(P2_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P2_KEY),
             }, {
               address: P3_ADDR,
-              last: new EWT(ABI_BET).bet(1, 2500).sign(P3_KEY),
+              last: new Receipt(TBL_ADDR).bet(1, babz(2500)).sign(P3_KEY),
             }, {
               address: P_EMPTY,
             }],
@@ -303,13 +300,13 @@ describe('makeSelectActionBarActive', () => {
           lastRoundMaxBet: 1000,
           lineup: [{
             address: P1_ADDR,
-            last: new EWT(ABI_BET).bet(1, 1000).sign(P1_KEY),
+            last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P1_KEY),
           }, {
             address: P2_ADDR,
-            last: new EWT(ABI_BET).bet(1, 2000).sign(P2_KEY),
+            last: new Receipt(TBL_ADDR).bet(1, babz(2000)).sign(P2_KEY),
           }, {
             address: P3_ADDR,
-            last: new EWT(ABI_BET).bet(1, 1000).sign(P3_KEY),
+            last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P3_KEY),
           }],
         },
         data: {
@@ -381,13 +378,13 @@ describe('makeSelectActionBarVisible', () => {
           lastRoundMaxBet: 1000,
           lineup: [{
             address: P1_ADDR,
-            last: new EWT(ABI_BET).bet(1, 1000).sign(P1_KEY),
+            last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P1_KEY),
           }, {
             address: P2_ADDR,
-            last: new EWT(ABI_BET).bet(1, 2000).sign(P2_KEY),
+            last: new Receipt(TBL_ADDR).bet(1, babz(2000)).sign(P2_KEY),
           }, {
             address: P3_ADDR,
-            last: new EWT(ABI_BET).bet(1, 1000).sign(P3_KEY),
+            last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(P3_KEY),
           }],
         },
         data: {

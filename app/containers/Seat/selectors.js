@@ -4,7 +4,6 @@
 
 import { PokerHelper, ReceiptCache } from 'poker-helper';
 import { createSelector } from 'reselect';
-import EWT from 'ethereum-web-token';
 import {
   makeHandSelector,
   makeLineupSelector,
@@ -289,7 +288,7 @@ const selectStack = (table, pos) => {
   if (typeof lastHandNetted === 'undefined' || lastHandNetted < 1) {
     return null;
   }
-  const addr = table.getIn(['data', 'seats', pos, 'address']);
+  // const addr = table.getIn(['data', 'seats', pos, 'address']);
   let amount = table.getIn(['data', 'amounts', pos]);
   // get progress of state channel
   let maxHand = 0;
@@ -316,13 +315,8 @@ const selectStack = (table, pos) => {
     // get all the winnings
     const distsRec = table.getIn([i.toString(), 'distribution']);
     if (distsRec) {
-      const dists = rc.get(distsRec);
-      for (let j = 0; j < dists.values[2].length; j += 1) {
-        const dist = EWT.separate(dists.values[2][j]);
-        if (dist.address === addr) {
-          amount += dist.amount;
-        }
-      }
+      const dist = rc.get(distsRec);
+      amount += dist.outs[pos];
     }
   }
   return amount;
