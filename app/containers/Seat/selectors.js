@@ -15,6 +15,8 @@ import {
   makeLastRoundMaxBetSelector,
 } from '../Table/selectors';
 
+import { makeSignerAddrSelector } from '../AccountProvider/selectors';
+
 import { createBlocky } from '../../services/blockies';
 
 import {
@@ -116,6 +118,16 @@ const makePendingSelector = () => createSelector(
   (lineup, pos) => (lineup && pos > -1 && lineup.toJS()[pos]) ? lineup.toJS()[pos].pending : false
 );
 
+const makeMyPendingSelector = () => createSelector(
+  [makeLineupSelector(), makeSignerAddrSelector()],
+  (lineup, signerAddr) => {
+    if (lineup && lineup.toJS) {
+      return lineup.toJS().some((l) => l.pending && l.pending.signerAddr === signerAddr);
+    }
+    return false;
+  }
+);
+
 const makeDealerSelector = () => createSelector(
   makeHandSelector(),
   (hand) => (hand && hand.get) ? hand.get('dealer') : -1
@@ -151,18 +163,22 @@ const makeStackSelector = () => createSelector(
   selectStack
 );
 
+const makeStandingUpSelector = () => createSelector(
+  [makeSeatSelector()],
+  (seat) => seat && seat.get('exitHand') !== undefined
+);
+
 const makeSeatStatusSelector = () => createSelector(
   [makeHandSelector(), makeLastActionSelector(), makeLastReceiptSelector(),
-    posSelector, makePendingSelector(), makeSeatSelector()],
-  (hand, lastAction, lastReceipt, pos, pending, seat) => {
+    posSelector, makePendingSelector(), makeStandingUpSelector()],
+  (hand, lastAction, lastReceipt, pos, pending, standingUp) => {
     const lineup = hand.get('lineup').toJS();
-    const exitHand = seat.get('exitHand');
     // player is joining the table
     if (pending) {
       return STATUS_MSG.sittingIn;
     }
     // player is leaving the table
-    if (exitHand !== undefined) {
+    if (standingUp) {
       return STATUS_MSG.standingUp;
     }
     // player is in sitout
@@ -320,6 +336,7 @@ export {
   makeLastAmountSelector,
   makeDealerSelector,
   makePendingSelector,
+  makeMyPendingSelector,
   makeOpenSelector,
   makeCoordsSelector,
   makeAmountCoordsSelector,
@@ -334,4 +351,5 @@ export {
   makeStackSelector,
   makeLastActionSelector,
   makeSeatStatusSelector,
+  makeStandingUpSelector,
 };
