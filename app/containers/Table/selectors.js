@@ -498,7 +498,7 @@ const makeAmountInTheMiddleSelector = () => createSelector(
     for (let i = 0; i < lineup.length; i += 1) {
       const receipt = lineup[i].last ? rc.get(lineup[i].last) : undefined;
       const bet = receipt ? receipt.amount.toNumber() : 0;
-      potSize += bet < lastRoundMaxBet ? bet : lastRoundMaxBet;
+      potSize += Number(bet < lastRoundMaxBet ? bet : lastRoundMaxBet);
     }
     return potSize;
   }
