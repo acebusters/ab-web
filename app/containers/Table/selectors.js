@@ -7,6 +7,8 @@ import {
   suits,
 } from '../../app.config';
 
+import { babz } from '../../utils/amountFormatter';
+
 const rc = new ReceiptCache();
 const pokerHelper = new PokerHelper(rc);
 
@@ -374,7 +376,7 @@ const makeSitoutAmountSelector = () => createSelector(
 
       // comeback from sitout
       if (sitout) {
-        return 1;
+        return babz(1).toNumber();
       }
 
       // If we want to sitout during any other state we have to pay at least 1
