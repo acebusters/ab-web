@@ -42,7 +42,7 @@ function dashboardReducer(state = initialState, action) {
 
   switch (action.type) {
     case ACCOUNT_LOADED:
-      return state.set('proxy', action.data.proxy);
+      return state.set('proxy', action.payload.proxy);
 
     case CONTRACT_TX_SUCCESS:
       return addNTZPending(

@@ -79,8 +79,8 @@ export function setAuthState(newAuthState) {
   return { type: SET_AUTH, newAuthState };
 }
 
-export function accountLoaded(data) {
-  return { type: ACCOUNT_LOADED, data };
+export function accountLoaded(payload) {
+  return { type: ACCOUNT_LOADED, payload };
 }
 
 export function web3Error(err) {

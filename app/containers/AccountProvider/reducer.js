@@ -38,12 +38,13 @@ function accountProviderReducer(state = initialState, action) {
       return state.set('web3ErrMsg', action.err ? (action.err.message || 'Connection Error') : null);
 
     case ACCOUNT_LOADED:
-      return state.set('proxy', action.data.proxy)
-        .set('controller', action.data.controller)
-        .set('lastNonce', action.data.lastNonce)
-        .set('blocky', action.data.blocky)
-        .set('nickName', action.data.nickName)
-        .set('signerAddr', action.data.signer);
+      return state.set('proxy', action.payload.proxy)
+        .set('isLocked', action.payload.isLocked)
+        .set('controller', action.payload.controller)
+        .set('lastNonce', action.payload.lastNonce)
+        .set('blocky', action.payload.blocky)
+        .set('nickName', action.payload.nickName)
+        .set('signerAddr', action.payload.signer);
 
     case WEB3_METHOD_SUCCESS:
       return state.setIn(['web3', 'methods', action.key], fromJS(action.payload));

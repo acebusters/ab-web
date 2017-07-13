@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import ethUtil from 'ethereumjs-util';
 import BigNumber from 'bignumber.js';
-import Web3 from 'web3';
 
 import { getWeb3 } from '../AccountProvider/sagas';
 import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -200,15 +199,19 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   handleNTZTransfer(amount, to) {
-    const web3 = new Web3(window.web3.currentProvider);
-    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
-    token.transfer.sendTransaction(
+    this.token.transfer.sendTransaction(
       to,
-      `0x${new BigNumber(amount).mul(NTZ_DECIMALS).toString(16)}`,
-      { from: web3.eth.accounts[0] },
-      (err, result) => console.log(err, result)
+      new BigNumber(amount).mul(NTZ_DECIMALS),
     );
-    // this.props.modalDismiss();
+    // const web3 = new Web3(window.web3.currentProvider);
+    // const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
+    // token.transfer.sendTransaction(
+    //   to,
+    //   `0x${new BigNumber(amount).mul(NTZ_DECIMALS).toString(16)}`,
+    //   { from: web3.eth.accounts[0] },
+    //   (err, result) => console.log(err, result)
+    // );
+    this.props.modalDismiss();
   }
 
   handleNTZPurchase(amount) {
@@ -253,18 +256,19 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   render() {
-    const qrUrl = `ether:${this.props.account.proxy}`;
-    const weiBalance = this.web3.eth.balance(this.props.account.proxy);
+    const { account, signerAddr } = this.props;
+    const qrUrl = `ether:${account.proxy}`;
+    const weiBalance = this.web3.eth.balance(account.proxy);
     const floor = this.token.floor();
     const ceiling = this.token.ceiling();
-    const babzBalance = this.token.balanceOf(this.props.account.proxy);
-    const pwrBalance = this.power.balanceOf(this.props.account.proxy);
+    const babzBalance = this.token.balanceOf(account.proxy);
+    const pwrBalance = this.power.balanceOf(account.proxy);
     const tables = this.tableFactory.getTables();
 
     const listTxns = txnsToList(
       this.props.dashboardTxs.dashboardEvents,
       tables,
-      this.props.account.proxy
+      account.proxy
     );
 
     return (
@@ -272,16 +276,20 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         <h1><FormattedMessage {...messages.header} /></h1>
 
         <Section>
-          <Blocky blocky={createBlocky(this.props.signerAddr)} />
+          <Blocky blocky={createBlocky(signerAddr)} />
           <h3>Your address:</h3>
 
           <WithLoading
-            isLoading={!this.props.account.proxy || this.props.account.proxy === '0x'}
+            isLoading={!account.proxy || account.proxy === '0x'}
             loadingSize="40px"
             styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
           >
-            <Address>{this.props.account.proxy}</Address>
+            {account.isLocked !== 'undefined' &&
+              account.isLocked ? 'Fish' : 'Shark'
+            }
+            <Address>{account.proxy}</Address>
             <QRCode value={qrUrl} size={120} />
+
 
             <Alert theme="danger">
               <FormattedMessage {...messages.ethAlert} />

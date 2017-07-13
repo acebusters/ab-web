@@ -13,6 +13,7 @@ import {
   ABI_TOKEN_CONTRACT,
   ABI_CONTROLLER,
   ABI_ACCOUNT_FACTORY,
+  ABI_PROXY,
 } from '../../app.config';
 
 import { addEventsDate, getWeb3, isUserEvent } from './utils';
@@ -63,7 +64,10 @@ const getAccount = (web3, signer) => (
       if (e) {
         reject('login error');
       }
-      resolve(a);
+      const proxyContract = web3.eth.contract(ABI_PROXY).at(a[0]);
+      proxyContract.isLocked.call((err, isLocked) => {
+        resolve([a[0], a[1], a[2].toNumber(), isLocked]);
+      });
     });
   })
 );
@@ -189,15 +193,20 @@ function* accountLoginSaga() {
         id: signer,
       });
       // this reads account data from the account factory
-      const res = yield getAccount(getWeb3(), signer);
-      const proxy = res[0];
-      const controller = res[1];
-      const lastNonce = res[2].toNumber();
+      const [proxy, controller, lastNonce, isLocked] = yield getAccount(getWeb3(), signer);
       const blocky = createBlocky(signer);
       const nickName = nickNameByAddress(signer);
 
       // write data into the state
-      yield put(accountLoaded({ proxy, controller, lastNonce, blocky, nickName, signer }));
+      yield put(accountLoaded({
+        proxy,
+        controller,
+        lastNonce,
+        isLocked,
+        blocky,
+        nickName,
+        signer,
+      }));
 
       // start listen on the account controller for events
       // mostly auth errors
