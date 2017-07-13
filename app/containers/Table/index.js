@@ -20,7 +20,7 @@ import Button from '../../components/Button';
 import Slides from '../../components/Slides';
 import { nickNameByAddress } from '../../services/nicknames';
 import messages from './messages';
-import { formatNtz } from '../../utils/amountFormatter';
+import { formatNtz, babz } from '../../utils/amountFormatter';
 
 // config data
 import {
@@ -315,7 +315,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     const sitoutAction = bet(
       this.props.params.tableAddr,
       handId,
-      this.props.sitoutAmount,
+      babz(this.props.sitoutAmount),
       this.props.privKey,
       this.props.myPos,
       this.props.lastReceipt,
