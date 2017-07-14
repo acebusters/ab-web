@@ -33,6 +33,7 @@ import { txnsToList } from './txnsToList';
 const confParams = conf();
 
 const LOOK_BEHIND_PERIOD = 4 * 60 * 24;
+const ETH_FISH_LIMIT = new BigNumber(0.1);
 
 export class Dashboard extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -259,11 +260,15 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const { account, signerAddr } = this.props;
     const qrUrl = `ether:${account.proxy}`;
     const weiBalance = this.web3.eth.balance(account.proxy);
+    const ethBalance = weiBalance && weiBalance.div(ETH_DECIMALS);
     const floor = this.token.floor();
     const ceiling = this.token.ceiling();
     const babzBalance = this.token.balanceOf(account.proxy);
+    const nutzBalance = babzBalance && babzBalance.div(NTZ_DECIMALS);
     const pwrBalance = this.power.balanceOf(account.proxy);
     const tables = this.tableFactory.getTables();
+    const calcETHAmount = (ntz) => new BigNumber(ntz).div(floor);
+    const calcNTZAmount = (eth) => ceiling.mul(eth);
 
     const listTxns = txnsToList(
       this.props.dashboardTxs.dashboardEvents,
@@ -336,9 +341,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                   <ExchangeDialog
                     title={<FormattedMessage {...messages.sellTitle} />}
                     amountUnit="ntz"
-                    calcExpectedAmount={(amount) => new BigNumber(amount).div(floor)}
+                    calcExpectedAmount={calcETHAmount}
                     handleExchange={this.handleNTZSell}
-                    maxAmount={babzBalance.div(NTZ_DECIMALS)}
+                    maxAmount={BigNumber.min(
+                      account.isLocked
+                        ? BigNumber.max(ETH_FISH_LIMIT.sub(ethBalance), 0).mul(floor)
+                        : nutzBalance,
+                      nutzBalance
+                    )}
                   />
                 );
               }}
@@ -355,9 +365,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                   <ExchangeDialog
                     title={<FormattedMessage {...messages.purchaseTitle} />}
                     amountUnit="eth"
-                    calcExpectedAmount={(amount) => ceiling.mul(amount)}
+                    calcExpectedAmount={calcNTZAmount}
                     handleExchange={this.handleNTZPurchase}
-                    maxAmount={weiBalance.div(ETH_DECIMALS)}
+                    maxAmount={BigNumber.min(
+                      account.isLocked
+                        ? BigNumber.max(ETH_FISH_LIMIT.sub(calcETHAmount(nutzBalance)), 0)
+                        : ethBalance,
+                      ethBalance
+                    )}
                   />
                 );
               }}
@@ -389,7 +404,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                   <TransferDialog
                     title={<FormattedMessage {...messages.ethTransferTitle} />}
                     handleTransfer={this.handleETHTransfer}
-                    maxAmount={weiBalance.div(ETH_DECIMALS)}
+                    maxAmount={ethBalance}
                     amountUnit="ETH"
                   />
                 );
