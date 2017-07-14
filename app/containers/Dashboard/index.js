@@ -22,6 +22,7 @@ import Alert from '../../components/Alert';
 import Button from '../../components/Button';
 import TransferDialog from '../TransferDialog';
 import ExchangeDialog from '../ExchangeDialog';
+import UpgradeDialog from '../UpgradeDialog';
 import Container from '../../components/Container';
 import SubmitButton from '../../components/SubmitButton';
 import Blocky from '../../components/Blocky';
@@ -305,7 +306,14 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           <Section>
             <Alert theme="warning">
               Warning: account limit {ETH_FISH_LIMIT.toString()} ETH<br />
-              <Button size="link">Upgrade to shark account</Button> to deposit more
+              <Button
+                size="link"
+                onClick={() => this.props.modalAdd(
+                  <UpgradeDialog />
+                )}
+              >
+                Upgrade to shark account
+              </Button> to deposit more
             </Alert>
 
             {ethBalance && nutzBalance && floor &&
