@@ -114,7 +114,7 @@ function Button({
 Button.propTypes = {
   onClick: PropTypes.func,
   type: PropTypes.string,
-  size: PropTypes.oneOf(['large', 'medium']),
+  size: PropTypes.oneOf(['large', 'medium', 'link']),
   icon: PropTypes.string,
   disabled: PropTypes.bool,
   children: PropTypes.node,

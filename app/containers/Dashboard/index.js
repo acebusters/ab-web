@@ -309,7 +309,11 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               <Button
                 size="link"
                 onClick={() => this.props.modalAdd(
-                  <UpgradeDialog />
+                  <UpgradeDialog
+                    proxyContract={this.proxy}
+                    account={account}
+                    onSuccessButtonClick={this.props.modalDismiss}
+                  />
                 )}
               >
                 Upgrade to shark account
