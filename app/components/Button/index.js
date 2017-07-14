@@ -33,6 +33,10 @@ const SharedButton = styled.button`
   & + & {
     margin-left: 10px;
   }
+
+  &:disabled {
+    cursor: default;
+  }
 `;
 
 const Medium = styled(SharedButton)`
@@ -46,6 +50,11 @@ const Medium = styled(SharedButton)`
 
   &:active {
     color: ${baseColor};
+  }
+
+  &:disabled {
+    color: ${white};
+    opacity: 0.6;
   }
 `;
 
@@ -69,7 +78,6 @@ const Large = styled(SharedButton)`
     color: ${background};
     background-color: ${disabled};
     border-color: ${disabled};
-    cursor: not-allowed;
   }
 `;
 

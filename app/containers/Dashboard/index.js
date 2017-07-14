@@ -329,7 +329,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                 );
               }}
               size="medium"
-              icon="fa fa-money"
             >
               Transfer
             </DBButton>
@@ -353,7 +352,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                 );
               }}
               size="medium"
-              icon="fa fa-money"
             >
               Sell
             </DBButton>
@@ -377,7 +375,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                 );
               }}
               size="medium"
-              icon="fa fa-money"
             >
               Purchase
             </DBButton>
@@ -410,7 +407,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                 );
               }}
               size="medium"
-              icon="fa fa-money"
             >
               Transfer
             </DBButton>
@@ -445,7 +441,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                 );
               }}
               size="medium"
-              icon="fa fa-money"
+              disabled={account.isLocked}
             >
               Power Up
             </DBButton>
@@ -466,7 +462,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                 );
               }}
               size="medium"
-              icon="fa fa-money"
+              disabled={account.isLocked}
             >
               Power Down
             </DBButton>
