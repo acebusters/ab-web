@@ -8,6 +8,7 @@
 
 import React, { PropTypes, Children } from 'react';
 import styled from 'styled-components';
+import A from '../A';
 
 import {
   baseColor,
@@ -89,6 +90,7 @@ const Icon = styled.i`
 const sizes = {
   medium: Medium,
   large: Large,
+  link: A,
 };
 
 function Button({

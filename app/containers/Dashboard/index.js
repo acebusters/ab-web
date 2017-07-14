@@ -19,12 +19,15 @@ import { ETH_DECIMALS, NTZ_DECIMALS, ABP_DECIMALS, formatEth, formatNtz, formatA
 import List from '../../components/List';
 import H2 from '../../components/H2';
 import Alert from '../../components/Alert';
+import Button from '../../components/Button';
 import TransferDialog from '../TransferDialog';
 import ExchangeDialog from '../ExchangeDialog';
 import Container from '../../components/Container';
 import SubmitButton from '../../components/SubmitButton';
 import Blocky from '../../components/Blocky';
 import WithLoading from '../../components/WithLoading';
+
+import AccountProgress from './AccountProgress';
 
 import { Section, DBButton, Address } from './styles';
 import { createDashboardTxsSelector } from './selectors';
@@ -289,19 +292,32 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             loadingSize="40px"
             styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
           >
-            {account.isLocked !== 'undefined' &&
-              account.isLocked ? 'Fish' : 'Shark'
-            }
             <Address>{account.proxy}</Address>
             <QRCode value={qrUrl} size={120} />
-
 
             <Alert theme="danger">
               <FormattedMessage {...messages.ethAlert} />
             </Alert>
           </WithLoading>
-
         </Section>
+
+        {account.isLocked &&
+          <Section>
+            <Alert theme="warning">
+              Warning: account limit {ETH_FISH_LIMIT.toString()} ETH<br />
+              <Button size="link">Upgrade to shark account</Button> to deposit more
+            </Alert>
+
+            {ethBalance && nutzBalance && floor &&
+              <AccountProgress
+                ethBalance={ethBalance}
+                nutzBalance={nutzBalance}
+                floor={floor}
+                ethLimit={ETH_FISH_LIMIT}
+              />
+            }
+          </Section>
+        }
 
         <Section>
           <h2>Nutz</h2>
