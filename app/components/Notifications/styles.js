@@ -46,7 +46,6 @@ export const Container = styled.div`
 
 export const Wrapper = styled.div`
   position: absolute;
-  left: 0;
   display: flex;
   align-items: center;
   height: 36px;
