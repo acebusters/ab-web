@@ -9,9 +9,9 @@ import {
   CONTRACT_TX_ERROR,
 } from '../AccountProvider/actions';
 
-import {
-  MODAL_DISMISS,
-} from '../App/actions';
+import { MODAL_DISMISS } from '../App/actions';
+
+import { SET_ACTIVE_TAB } from './actions';
 
 import { composeReducers } from '../../utils/composeReducers';
 
@@ -35,12 +35,16 @@ const initialState = fromJS({
   proxy: null,
   failedTx: null,
   events: null,
+  activeTab: 'overview',
 });
 
 function dashboardReducer(state = initialState, action) {
   const { payload, meta = {} } = action;
 
   switch (action.type) {
+    case SET_ACTIVE_TAB:
+      return state.set('activeTab', action.whichTab);
+
     case ACCOUNT_LOADED:
       return state.set('proxy', action.data.proxy);
 

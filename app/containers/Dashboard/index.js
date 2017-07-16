@@ -1,73 +1,53 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
 
-import Overview from './Overview';
-import Wallet from './Wallet';
-import Exchange from './Exchange';
+import {
+  OVERVIEW,
+  WALLET,
+  EXCHANGE,
+  setActiveTab,
+} from './actions';
 
-import { OVERVIEW, WALLET, EXCHANGE } from './constants';
+import { getActiveTab } from './selectors';
+
+import Overview from '../../components/Dashboard/Overview';
+import Wallet from '../../components/Dashboard/Wallet';
+import Exchange from '../../components/Dashboard/Exchange';
+
+import PanesRoot from '../../components/Dashboard/PanesRoot';
+import Tabs from '../../components/Dashboard/Tabs';
 
 const PANE_COMPONENTS = {
-  OVERVIEW: Overview,
-  WALLET: Wallet,
-  EXCHANGE: Exchange,
+  [OVERVIEW]: Overview,
+  [WALLET]: Wallet,
+  [EXCHANGE]: Exchange,
 };
 
-const PanesRoot = ({ panes, paneType, paneProps }) => {
-  if (!paneType) {
-    return null;
-  }
-  const SpecifiedPane = panes[paneType];
-  return <SpecifiedPane name="dashboard-root" {...paneProps} />;
-};
-PanesRoot.propTypes = {
-  panes: PropTypes.object.isRequired,
-  paneType: PropTypes.string.isRequired,
-  paneProps: PropTypes.object.isRequired,
-};
-PanesRoot.defaultProps = {
-  paneType: 'WALLET',
-  paneProps: {
-    signerAddr: '1234',
-  },
-};
-
-const Tabs = ({ tabs }) => (
-  <ul name="tabs" style={{ margin: '80px 0 0 80px' }}>
-    {tabs.map((tab) => (
-      <li name="tab" key={tab}>
-        <button>
-          {/* onClick={() => console.log(tab)} */}
-          {tab}
-        </button>
-      </li>
-    ))}
-  </ul>
-);
-Tabs.propTypes = {
-  tabs: PropTypes.array.isRequired,
-};
-
-const Header = (props) => (
+const DashboardRoot = (props) => (
   <div>
-    <Tabs {...props} />
-  </div>
-);
-
-const DashboardRoot = () => (
-  <div>
-    <Header tabs={[OVERVIEW, WALLET, EXCHANGE]} />
+    <Tabs tabs={[OVERVIEW, WALLET, EXCHANGE]} {...props} />
     <PanesRoot
       panes={PANE_COMPONENTS}
-      paneType={'WALLET'}
-      paneProps={{
-        signerAddr: 'jonathan',
-      }}
+      paneType={props.activeTab}
+      paneProps={props}
     />
   </div>
 );
+DashboardRoot.propTypes = {
+  activeTab: PropTypes.string,
+};
 
-export default DashboardRoot;
-// export default connect(
-//   state => state.modal,
-// )(DashboardRoot);
+const mapDispatchToProps = (dispatch) => ({
+  setActiveTab: (whichTab) => dispatch(setActiveTab(whichTab)),
+});
+
+const mapStateToProps = createStructuredSelector({
+  activeTab: getActiveTab(),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DashboardRoot);
