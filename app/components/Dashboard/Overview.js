@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Pane } from './styles';
 
 const Overview = ({ signerAddr }) => (
-  <div
-    name="dashboard-overview"
-    style={{ margin: '80px 0 0 80px' }}
-  >
+  <Pane name="dashboard-overview">
     overview: {signerAddr}
-  </div>
+  </Pane>
 );
 Overview.propTypes = {
   signerAddr: PropTypes.string,

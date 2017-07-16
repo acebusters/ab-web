@@ -4,6 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 import {
+  ARCHIVE,
   OVERVIEW,
   WALLET,
   EXCHANGE,
@@ -11,7 +12,9 @@ import {
 } from './actions';
 
 import { getActiveTab } from './selectors';
+import Container from '../../components/Container';
 
+import Archive from '../../components/Dashboard/Archive';
 import Overview from '../../components/Dashboard/Overview';
 import Wallet from '../../components/Dashboard/Wallet';
 import Exchange from '../../components/Dashboard/Exchange';
@@ -20,20 +23,21 @@ import PanesRoot from '../../components/Dashboard/PanesRoot';
 import Tabs from '../../components/Dashboard/Tabs';
 
 const PANE_COMPONENTS = {
+  [ARCHIVE]: Archive,
   [OVERVIEW]: Overview,
   [WALLET]: Wallet,
   [EXCHANGE]: Exchange,
 };
 
 const DashboardRoot = (props) => (
-  <div>
-    <Tabs tabs={[OVERVIEW, WALLET, EXCHANGE]} {...props} />
+  <Container>
+    <Tabs tabs={[ARCHIVE, OVERVIEW, WALLET, EXCHANGE]} {...props} />
     <PanesRoot
       panes={PANE_COMPONENTS}
       paneType={props.activeTab}
       paneProps={props}
     />
-  </div>
+  </Container>
 );
 DashboardRoot.propTypes = {
   activeTab: PropTypes.string,

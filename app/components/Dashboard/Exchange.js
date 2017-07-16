@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Pane } from './styles';
 
 const Exchange = ({ signerAddr }) => (
-  <div
-    name="dashboard-exchange"
-    style={{ margin: '80px 0 0 80px' }}
-  >
+  <Pane name="dashboard-exchange" >
     exchange: {signerAddr}
-  </div>
+  </Pane>
 );
 Exchange.propTypes = {
   signerAddr: PropTypes.string,

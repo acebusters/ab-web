@@ -1,21 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Tabs = (props) => {
-  const { tabs, setActiveTab } = props;
-  return (
-    <ul name="tabs" style={{ margin: '80px 0 0 80px' }}>
-      {tabs.map((tab) => (
-        <li name="tab" key={tab}>
-          <button onClick={() => setActiveTab(tab)}>
-            {tab}
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
-};
+import { Tab, TabButton, TabsWrapper } from './styles';
+
+const Tabs = ({ activeTab, tabs, setActiveTab }) => (
+  <TabsWrapper name="tabs">
+    {tabs.map((tab) => (
+      <Tab name="tab" key={tab}>
+        <TabButton active={tab === activeTab} onClick={() => setActiveTab(tab)}>
+          {tab}
+        </TabButton>
+      </Tab>
+    ))}
+  </TabsWrapper>
+);
 Tabs.propTypes = {
+  activeTab: PropTypes.string.isRequired,
   tabs: PropTypes.array.isRequired,
   setActiveTab: PropTypes.func.isRequired,
 };
