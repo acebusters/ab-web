@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import ethUtil from 'ethereumjs-util';
 import BigNumber from 'bignumber.js';
-import Web3 from 'web3';
 
 import { getWeb3 } from '../AccountProvider/sagas';
 import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -106,6 +105,30 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     }
   }
 
+  sendSecureTx(methodName, ...args) {
+    const { account } = this.props;
+    const web3 = getWeb3(true);
+    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
+    const proxy = web3.eth.contract(ABI_PROXY).at(account.proxy);
+    const data = token[methodName].getData(...args);
+    return new Promise((resolve, reject) => {
+      proxy.forward.sendTransaction(
+        confParams.ntzAddr,
+        0,
+        data,
+        { from: web3.eth.accounts[0], gas: 200000 },
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+            this.props.modalDismiss();
+          }
+        }
+      );
+    });
+  }
+
   watchProxyEvents(proxyAddr) {
     const web3 = getWeb3();
     this.proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
@@ -158,12 +181,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
         const { pendingSell = [] } = this.props.dashboardTxs;
 
         if (pendingSell.indexOf(event.transactionHash) > -1) {
-          this.token.transferFrom.sendTransaction(
-            confParams.ntzAddr,
-            proxyAddr,
-            0,
-            { from: proxyAddr }
-          );
+          this.handleETHClaim(proxyAddr);
         }
       }
     });
@@ -174,12 +192,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       proxyAddr,
     ).then((value) => {
       if (!value.eq(0)) {
-        this.token.transferFrom.sendTransaction(
-          confParams.ntzAddr,
-          proxyAddr,
-          0,
-          { from: proxyAddr }
-        );
+        this.handleETHClaim(proxyAddr);
       }
     });
   }
@@ -205,6 +218,25 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     });
   }
 
+  handleETHClaim(proxyAddr) {
+    if (this.props.account.isLocked) {
+      this.token.transferFrom.sendTransaction(
+        confParams.ntzAddr,
+        proxyAddr,
+        0,
+        { from: proxyAddr }
+      );
+    } else {
+      this.sendSecureTx(
+        'transferFrom',
+        confParams.ntzAddr,
+        proxyAddr,
+        0,
+        { from: proxyAddr }
+      );
+    }
+  }
+
   handleNTZTransfer(amount, to) {
     const { account } = this.props;
     const amountBn = new BigNumber(amount).mul(NTZ_DECIMALS);
@@ -213,31 +245,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
       return this.token.transfer.sendTransaction(to, amountBn);
     }
 
-    const web3 = new Web3(window.web3.currentProvider);
-    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
-    const proxy = web3.eth.contract(ABI_PROXY).at(account.proxy);
-    const data = token.transfer.getData(to, amountBn);
-    return new Promise((resolve, reject) => {
-      proxy.forward.sendTransaction(
-        confParams.ntzAddr,
-        0,
-        data,
-        { from: web3.eth.accounts[0], gas: 200000 },
-        (err, result) => {
-          if (err) {
-            reject(err);
-            // console.log('wait', result);
-            // waitForTx(getWeb3(), result).then(
-            //   () => console.log('done!', result),
-            //   (error) => console.error(error),
-            // );
-          } else {
-            resolve(result);
-            this.props.modalDismiss();
-          }
-        }
-      );
-    });
+    return this.sendSecureTx('transfer', to, amountBn);
   }
 
   handleNTZPurchase(amount) {
@@ -249,12 +257,24 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   handleNTZSell(amount) {
-    this.token.transfer.sendTransaction(
+    const { account } = this.props;
+    const amountBn = new BigNumber(amount).mul(NTZ_DECIMALS);
+
+    if (account.isLocked) {
+      this.props.modalDismiss();
+      return this.token.transfer.sendTransaction(
+        confParams.ntzAddr,
+        amountBn,
+        { from: this.props.account.proxy }
+      );
+    }
+
+    return this.sendSecureTx(
+      'transfer',
       confParams.ntzAddr,
-      new BigNumber(amount).mul(NTZ_DECIMALS),
+      amountBn,
       { from: this.props.account.proxy }
     );
-    this.props.modalDismiss();
   }
 
   handleETHTransfer(amount, dest) {
