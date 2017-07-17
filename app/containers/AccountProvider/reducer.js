@@ -13,6 +13,7 @@ import {
   ETH_TRANSFER_SUCCESS,
   CONTRACT_EVENTS,
   ACCOUNT_LOADED,
+  ACCOUNT_UNLOCKED,
   READY_STATE,
 } from './actions';
 
@@ -36,6 +37,9 @@ function accountProviderReducer(state = initialState, action) {
 
     case WEB3_ERROR:
       return state.set('web3ErrMsg', action.err ? (action.err.message || 'Connection Error') : null);
+
+    case ACCOUNT_UNLOCKED:
+      return state.set('isLocked', false);
 
     case ACCOUNT_LOADED:
       return state.set('proxy', action.payload.proxy)

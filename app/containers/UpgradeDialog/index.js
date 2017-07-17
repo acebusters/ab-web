@@ -12,6 +12,8 @@ import { CheckBox } from '../../components/Input';
 import Label from '../../components/Label';
 import H2 from '../../components/H2';
 
+import { accountUnlocked } from '../AccountProvider/actions';
+
 import { ABI_PROXY } from '../../app.config';
 import { waitForTx } from '../../utils/waitForTx';
 
@@ -52,6 +54,7 @@ class UpgradeDialog extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.submitting === false && this.props.submitting === true && !nextProps.invalid) {
       this.setState({ success: true });
+      this.props.accountUnlocked();
     }
   }
 
@@ -134,13 +137,14 @@ UpgradeDialog.propTypes = {
   invalid: PropTypes.bool,
   submitting: PropTypes.bool,
   handleSubmit: PropTypes.func,
+  accountUnlocked: PropTypes.func,
   onSuccessButtonClick: PropTypes.func,
 };
 
 UpgradeDialog.defaultProps = {
 };
 
-export default connect()(
+export default connect(null, { accountUnlocked })(
   reduxForm({
     form: 'upgrade',
     validate,

@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Form, Field, reduxForm } from 'redux-form/immutable';
-import BigNumber from 'bignumber.js';
 
 import { ErrorMessage } from '../../components/FormMessages';
 import SubmitButton from '../../components/SubmitButton';
 import FormField from '../../components/Form/FormField';
+import AmountField from '../../components/AmountField';
 import H2 from '../../components/H2';
 
 import { isEthereumAddress } from './isEthereumAddress';
@@ -55,23 +55,16 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
       description,
     } = this.props;
 
-    const limitAmount = (value) => {
-      const numValue = Math.max(0, Number(value));
-
-      return maxAmount.gte(new BigNumber(numValue)) ? numValue : maxAmount.toNumber();
-    };
-
     return (
       <div>
         {title && <H2>{title}</H2>}
         {description && <p>{description}</p>}
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          <Field
+          <AmountField
             name="amount"
             component={FormField}
-            type="number"
             label={`Amount (${amountUnit})`}
-            normalize={maxAmount && limitAmount}
+            maxAmount={maxAmount}
           />
 
           {!hideAddress &&
@@ -108,17 +101,7 @@ TransferDialog.defaultProps = {
   hideAddress: false,
 };
 
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-const mapStateToProps = () => ({
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect()(
   reduxForm({
     form: 'transfer',
     validate,

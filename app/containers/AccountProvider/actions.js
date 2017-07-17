@@ -1,5 +1,6 @@
 export const SET_AUTH = 'acebusters/AccountProvider/SET_AUTH';
 export const ACCOUNT_LOADED = 'acebusters/AccountProvider/ACCOUNT_LOADED';
+export const ACCOUNT_UNLOCKED = 'acebusters/AccountProvider/ACCOUNT_UNLOCKED';
 
 export const WEB3_ERROR = 'acebusters/AccountProvider/WEB3_ERROR';
 export const WEB3_CONNECT = 'acebusters/AccountProvider/WEB3_CONNECT';
@@ -77,6 +78,10 @@ export const SUPPORTED_WEB3_METHODS = {
  */
 export function setAuthState(newAuthState) {
   return { type: SET_AUTH, newAuthState };
+}
+
+export function accountUnlocked() {
+  return { type: ACCOUNT_UNLOCKED };
 }
 
 export function accountLoaded(payload) {

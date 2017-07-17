@@ -95,20 +95,13 @@ ExchangeDialog.propTypes = {
   amountUnit: PropTypes.string.isRequired,
 };
 
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
 const valueSelector = formValueSelector('exchange');
 
 const mapStateToProps = (state) => ({
   amount: valueSelector(state, 'amount'),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect(mapStateToProps)(
   reduxForm({
     form: 'exchange',
     validate,
