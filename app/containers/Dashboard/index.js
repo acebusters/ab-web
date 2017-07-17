@@ -105,18 +105,43 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     }
   }
 
+  sendSecureEthTx(dest, amount) {
+    const { account } = this.props;
+    const web3 = getWeb3(true);
+    const proxy = web3.eth.contract(ABI_PROXY).at(account.proxy);
+    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
+    const data = token.transfer.getData(dest, amount);
+
+    return new Promise((resolve, reject) => {
+      proxy.forward.sendTransaction(
+        dest,
+        `0x${amount.toString(16)}`,
+        data,
+        { from: window.web3.eth.accounts[0], gas: 200000 },
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+            this.props.modalDismiss();
+          }
+        }
+      );
+    });
+  }
+
   sendSecureTx(methodName, ...args) {
     const { account } = this.props;
     const web3 = getWeb3(true);
-    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
     const proxy = web3.eth.contract(ABI_PROXY).at(account.proxy);
+    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
     const data = token[methodName].getData(...args);
     return new Promise((resolve, reject) => {
       proxy.forward.sendTransaction(
         confParams.ntzAddr,
         0,
         data,
-        { from: web3.eth.accounts[0], gas: 200000 },
+        { from: window.web3.eth.accounts[0], gas: 200000 },
         (err, result) => {
           if (err) {
             reject(err);
@@ -248,14 +273,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     return this.sendSecureTx('transfer', to, amountBn);
   }
 
-  handleNTZPurchase(amount) {
-    this.props.transferETH({
-      dest: confParams.ntzAddr,
-      amount: new BigNumber(amount).mul(ETH_DECIMALS),
-    });
-    this.props.modalDismiss();
-  }
-
   handleNTZSell(amount) {
     const { account } = this.props;
     const amountBn = new BigNumber(amount).mul(NTZ_DECIMALS);
@@ -277,28 +294,58 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     );
   }
 
+  handleNTZPurchase(amount) {
+    const { account } = this.props;
+    const amountBn = new BigNumber(amount).mul(ETH_DECIMALS);
+
+    if (account.isLocked) {
+      this.props.modalDismiss();
+      return this.props.transferETH({
+        dest: confParams.ntzAddr,
+        amount: amountBn,
+      });
+    }
+
+    return this.sendSecureEthTx(confParams.ntzAddr, amountBn);
+  }
+
   handleETHTransfer(amount, dest) {
-    this.props.transferETH({
-      dest,
-      amount: new BigNumber(amount).mul(ETH_DECIMALS),
-    });
-    this.props.modalDismiss();
+    const { account } = this.props;
+    const amountBn = new BigNumber(amount).mul(ETH_DECIMALS);
+
+    if (account.isLocked) {
+      this.props.modalDismiss();
+      return this.props.transferETH({
+        dest,
+        amount: amountBn,
+      });
+    }
+
+    return this.sendSecureEthTx(dest, amountBn);
   }
 
   handlePowerUp(amount) {
-    this.token.transfer.sendTransaction(
-      confParams.pwrAddr,
-      new BigNumber(amount).mul(NTZ_DECIMALS)
-    );
-    this.props.modalDismiss();
+    const { account } = this.props;
+    const amountBn = new BigNumber(amount).mul(NTZ_DECIMALS);
+
+    if (account.isLocked) {
+      this.props.modalDismiss();
+      return this.token.transfer.sendTransaction(confParams.pwrAddr, amountBn);
+    }
+
+    return this.sendSecureTx('transfer', confParams.pwrAddr, amountBn);
   }
 
   handlePowerDown(amount) {
-    this.power.transfer.sendTransaction(
-      confParams.ntzAddr,
-      new BigNumber(amount).mul(ABP_DECIMALS)
-    );
-    this.props.modalDismiss();
+    const { account } = this.props;
+    const amountBn = new BigNumber(amount).mul(NTZ_DECIMALS);
+
+    if (account.isLocked) {
+      this.props.modalDismiss();
+      return this.power.transfer.sendTransaction(confParams.ntzAddr, amountBn);
+    }
+
+    return this.sendSecureTx(confParams.ntzAddr, amountBn);
   }
 
   render() {
