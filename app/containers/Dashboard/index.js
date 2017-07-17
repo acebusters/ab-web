@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import ethUtil from 'ethereumjs-util';
 import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
 
 import { getWeb3 } from '../AccountProvider/sagas';
 import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -33,6 +34,7 @@ import AccountProgress from './AccountProgress';
 import { Section, DBButton, Address } from './styles';
 import { createDashboardTxsSelector } from './selectors';
 import { txnsToList } from './txnsToList';
+// import { waitForTx } from '../../utils/waitForTx';
 
 const confParams = conf();
 
@@ -204,19 +206,38 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
   }
 
   handleNTZTransfer(amount, to) {
-    this.token.transfer.sendTransaction(
-      to,
-      new BigNumber(amount).mul(NTZ_DECIMALS),
-    );
-    // const web3 = new Web3(window.web3.currentProvider);
-    // const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
-    // token.transfer.sendTransaction(
-    //   to,
-    //   `0x${new BigNumber(amount).mul(NTZ_DECIMALS).toString(16)}`,
-    //   { from: web3.eth.accounts[0] },
-    //   (err, result) => console.log(err, result)
-    // );
-    this.props.modalDismiss();
+    const { account } = this.props;
+    const amountBn = new BigNumber(amount).mul(NTZ_DECIMALS);
+    if (account.isLocked) {
+      this.props.modalDismiss();
+      return this.token.transfer.sendTransaction(to, amountBn);
+    }
+
+    const web3 = new Web3(window.web3.currentProvider);
+    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
+    const proxy = web3.eth.contract(ABI_PROXY).at(account.proxy);
+    const data = token.transfer.getData(to, amountBn);
+    return new Promise((resolve, reject) => {
+      proxy.forward.sendTransaction(
+        confParams.ntzAddr,
+        0,
+        data,
+        { from: web3.eth.accounts[0], gas: 200000 },
+        (err, result) => {
+          if (err) {
+            reject(err);
+            // console.log('wait', result);
+            // waitForTx(getWeb3(), result).then(
+            //   () => console.log('done!', result),
+            //   (error) => console.error(error),
+            // );
+          } else {
+            resolve(result);
+            this.props.modalDismiss();
+          }
+        }
+      );
+    });
   }
 
   handleNTZPurchase(amount) {
