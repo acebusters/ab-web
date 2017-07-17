@@ -22,18 +22,37 @@ import Exchange from '../../components/Dashboard/Exchange';
 import PanesRoot from '../../components/Dashboard/PanesRoot';
 import Tabs from '../../components/Dashboard/Tabs';
 
-const PANE_COMPONENTS = {
+const PANES = {
   [ARCHIVE]: Archive,
   [OVERVIEW]: Overview,
   [WALLET]: Wallet,
   [EXCHANGE]: Exchange,
 };
 
+const TABS = [
+  {
+    title: ARCHIVE,
+    icon: 'fa-archive',
+  },
+  {
+    title: OVERVIEW,
+    icon: 'fa-tachometer',
+  },
+  {
+    title: WALLET,
+    icon: 'fa-money',
+  },
+  {
+    title: EXCHANGE,
+    icon: 'fa-exchange',
+  },
+];
+
 const DashboardRoot = (props) => (
   <Container>
-    <Tabs tabs={[ARCHIVE, OVERVIEW, WALLET, EXCHANGE]} {...props} />
+    <Tabs tabs={TABS} {...props} />
     <PanesRoot
-      panes={PANE_COMPONENTS}
+      panes={PANES}
       paneType={props.activeTab}
       paneProps={props}
     />

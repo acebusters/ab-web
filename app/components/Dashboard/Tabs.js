@@ -1,17 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Tab, TabButton, TabsWrapper } from './styles';
+import {
+  Tab,
+  TabButton,
+  TabsWrapper,
+  TabIcon,
+  TabTitle,
+} from './styles';
 
 const Tabs = ({ activeTab, tabs, setActiveTab }) => (
   <TabsWrapper name="tabs">
     {tabs.map((tab) => (
-      <Tab active={tab === activeTab} name="tab" key={tab}>
+      <Tab name="tab" key={tab.title}>
         <TabButton
-          disabled={tab === activeTab}
-          onClick={() => setActiveTab(tab)}
+          disabled={tab.title === activeTab}
+          onClick={() => setActiveTab(tab.title)}
         >
-          {tab}
+          <TabIcon className={`fa ${tab.icon}`} />
+          <TabTitle>{tab.title}</TabTitle>
         </TabButton>
       </Tab>
     ))}

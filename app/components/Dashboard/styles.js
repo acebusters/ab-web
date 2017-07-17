@@ -15,7 +15,6 @@ export const Pane = styled.div`
 // Tabs
 export const TabsWrapper = styled.ul`
   display: flex;
-  min-height: 32px;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -28,15 +27,18 @@ export const Tab = styled.li`
   padding: 0;
   margin: 0;
   list-style-type: none;
-  font-weight: bold;
-  font-size: 14px;
+  font-size: 1em;
   line-height: 1.428571429;
 `;
 
 export const TabButton = styled(Button)`
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0.7em 1.2em;
   margin: 0;
   color: ${gray};
+  border-bottom: 2px solid transparent;
   &:hover {
     background-color: ${gray};
     color: white;
@@ -50,4 +52,16 @@ export const TabButton = styled(Button)`
     border-bottom: 2px solid ${baseColor};
     color: black;
   }
+`;
+
+export const TabIcon = styled.i`
+  padding-right: .6em;
+  &:before {
+    font-size: 1.3em;
+  }
+`;
+
+export const TabTitle = styled.span`
+  padding-bottom: 4px;
+  font-weight: 400;
 `;
