@@ -21,12 +21,12 @@ import H2 from '../../components/H2';
 import Alert from '../../components/Alert';
 import TransferDialog from '../TransferDialog';
 import ExchangeDialog from '../ExchangeDialog';
-import Container from '../../components/Container';
 import SubmitButton from '../../components/SubmitButton';
 import Blocky from '../../components/Blocky';
 import WithLoading from '../../components/WithLoading';
 
 import { Section, DBButton, Address } from './styles';
+import { Pane } from '../../components/Dashboard/styles';
 import { createDashboardTxsSelector } from './selectors';
 import { txnsToList } from './txnsToList';
 
@@ -263,9 +263,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     );
 
     return (
-      <Container>
-        <h1><FormattedMessage {...messages.header} /></h1>
-
+      <Pane>
         <Section>
           <Blocky blocky={createBlocky(this.props.signerAddr)} />
           <h3>Your address:</h3>
@@ -468,7 +466,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
             noDataMsg="No Transactions Yet"
           />
         </Section>
-      </Container>
+      </Pane>
     );
   }
 }

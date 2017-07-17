@@ -6,8 +6,11 @@ import { Tab, TabButton, TabsWrapper } from './styles';
 const Tabs = ({ activeTab, tabs, setActiveTab }) => (
   <TabsWrapper name="tabs">
     {tabs.map((tab) => (
-      <Tab name="tab" key={tab}>
-        <TabButton active={tab === activeTab} onClick={() => setActiveTab(tab)}>
+      <Tab active={tab === activeTab} name="tab" key={tab}>
+        <TabButton
+          disabled={tab === activeTab}
+          onClick={() => setActiveTab(tab)}
+        >
           {tab}
         </TabButton>
       </Tab>

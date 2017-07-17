@@ -14,7 +14,7 @@ import {
 import { getActiveTab } from './selectors';
 import Container from '../../components/Container';
 
-import Archive from '../../components/Dashboard/Archive';
+import Archive from './archive';
 import Overview from '../../components/Dashboard/Overview';
 import Wallet from '../../components/Dashboard/Wallet';
 import Exchange from '../../components/Dashboard/Exchange';
