@@ -45,12 +45,9 @@ export const Container = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  position: absolute;
   display: flex;
   align-items: center;
   height: 36px;
-  width: 420px;
-  max-width: 100%;
   padding: 0 10px 4px 16px;
   color: ${(props) => alertColor(props.type)};
   ${(props) => props.isNotTable ?
