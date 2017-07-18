@@ -182,12 +182,8 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     const events = accountFactory.AccountCreated({ signer }, { fromBlock: 'latest' });
 
     events.watch((err, ev) => {  // eslint-disable-line no-unused-vars
-      accountFactory.getAccount.call(signer, (e, res) => {
-        const proxy = res[0];
-        const controller = res[1];
-        const lastNonce = res[2].toNumber();
-
-        this.props.accountLoaded({ proxy, controller, lastNonce });
+      accountFactory.getAccount.call(signer, (e, [proxy, owner, isLocked]) => {
+        this.props.accountLoaded({ proxy, owner, isLocked });
       });
 
       events.stopWatching();

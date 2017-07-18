@@ -48,8 +48,7 @@ function accountProviderReducer(state = initialState, action) {
     case ACCOUNT_LOADED:
       return state.set('proxy', action.payload.proxy)
         .set('isLocked', action.payload.isLocked)
-        .set('controller', action.payload.controller)
-        .set('lastNonce', action.payload.lastNonce)
+        .set('owner', action.payload.owner)
         .set('blocky', action.payload.blocky)
         .set('nickName', action.payload.nickName)
         .set('signerAddr', action.payload.signer);
@@ -75,7 +74,7 @@ function accountProviderReducer(state = initialState, action) {
 
     case CONTRACT_TX_SUCCESS:
     case ETH_TRANSFER_SUCCESS:
-      return state.set('lastNonce', action.payload.nonce);
+      return state;
 
     case CONTRACT_EVENTS:
       return action.payload.reduce(handleEvent, state);
