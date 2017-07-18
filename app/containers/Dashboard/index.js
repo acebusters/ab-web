@@ -203,81 +203,78 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
     );
   }
 
-  handleNTZTransfer(amount, to) {
+  handleTxSubmit(txFn) {
     return new Promise((resolve, reject) => {
+      txFn((err, result) => {
+        this.props.modalDismiss();
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
+
+  handleNTZTransfer(amount, to) {
+    return this.handleTxSubmit((callback) => {
       this.token.transfer.sendTransaction(
         to,
         new BigNumber(amount).mul(NTZ_DECIMALS),
-        (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-            this.props.modalDismiss();
-          }
-        }
+        callback
       );
     });
   }
 
   handleNTZSell(amount) {
-    return new Promise((resolve, reject) => {
+    return this.handleTxSubmit((callback) => {
       this.token.transfer.sendTransaction(
         confParams.ntzAddr,
         new BigNumber(amount).mul(NTZ_DECIMALS),
         { from: this.props.account.proxy },
-        (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-            this.props.modalDismiss();
-          }
-        }
+        callback
       );
     });
   }
 
   handleNTZPurchase(amount) {
-    return new Promise((resolve, reject) => {
+    return this.handleTxSubmit((callback) => {
       this.props.transferETH({
         dest: confParams.ntzAddr,
         amount: new BigNumber(amount).mul(ETH_DECIMALS),
-        callback: (err) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-            this.props.modalDismiss();
-          }
-        },
+        callback,
       });
     });
   }
 
   handleETHTransfer(amount, dest) {
-    return new Promise((resolve, reject) => {
+    return this.handleTxSubmit((callback) => {
       this.props.transferETH({
         dest,
         amount: new BigNumber(amount).mul(ETH_DECIMALS),
-        callback: (err) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-            this.props.modalDismiss();
-          }
-        },
+        callback,
       });
     });
   }
 
   handlePowerUp(amount) {
-    return this.sendSecureTx('transfer', confParams.pwrAddr, new BigNumber(amount).mul(NTZ_DECIMALS));
+    return this.handleTxSubmit((callback) => {
+      this.token.transfer.sendTransaction(
+        confParams.pwrAddr,
+        new BigNumber(amount).mul(NTZ_DECIMALS),
+        callback
+      );
+    });
   }
 
   handlePowerDown(amount) {
-    return this.sendSecureTx('transfer', confParams.ntzAddr, new BigNumber(amount).mul(NTZ_DECIMALS));
+    return this.handleTxSubmit((callback) => {
+      this.power.transfer.sendTransaction(
+        confParams.ntzAddr,
+        new BigNumber(amount).mul(ABP_DECIMALS),
+        callback
+      );
+    });
   }
 
   render() {
