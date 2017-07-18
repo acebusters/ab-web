@@ -8,9 +8,10 @@ import { createStructuredSelector } from 'reselect';
 import SubmitButton from '../../components/SubmitButton';
 import H2 from '../../components/H2';
 import { makeSbSelector } from '../Table/selectors';
-import { makeSelectInjectedAccount } from '../AccountProvider/selectors';
+import { makeSelectInjectedAccount, makeSelectNetworkSupported } from '../AccountProvider/selectors';
 
 import NoWeb3Message from '../../components/NoWeb3Message';
+import UnsupportedNetworkMessage from '../../components/UnsupportedNetworkMessage';
 
 import messages from './messages';
 
@@ -41,7 +42,7 @@ export class RebuyDialog extends React.Component {
   }
 
   handleSubmit() {
-    this.props.handleRebuy(this.state.amount);
+    return this.props.handleRebuy(this.state.amount);
   }
 
   handleLeave() {
@@ -49,7 +50,7 @@ export class RebuyDialog extends React.Component {
   }
 
   render() {
-    const { injected, sb, balance, modalDismiss } = this.props;
+    const { injected, sb, balance, modalDismiss, submitting, networkSupported } = this.props;
     const min = sb * 40;
     const max = Math.min(balance, sb * 200);
     const { amount } = this.state;
@@ -88,6 +89,7 @@ export class RebuyDialog extends React.Component {
         <div>{amount}</div>
 
         {!injected && <NoWeb3Message />}
+        {!networkSupported && <UnsupportedNetworkMessage />}
 
         <ButtonContainer>
           <ButtonBox>
@@ -96,7 +98,11 @@ export class RebuyDialog extends React.Component {
             </SubmitButton>
           </ButtonBox>
           <ButtonBox>
-            <SubmitButton onClick={this.handleSubmit}>
+            <SubmitButton
+              onClick={this.handleSubmit}
+              disabled={!injected || !networkSupported}
+              submitting={submitting}
+            >
               <FormattedMessage {...messages.rebuy} />
             </SubmitButton>
           </ButtonBox>
@@ -109,10 +115,13 @@ export class RebuyDialog extends React.Component {
 const mapStateToProps = createStructuredSelector({
   sb: makeSbSelector(),
   injected: makeSelectInjectedAccount(),
+  networkSupported: makeSelectNetworkSupported(),
 });
 
 RebuyDialog.propTypes = {
   handleRebuy: PropTypes.func,
+  submitting: PropTypes.bool,
+  networkSupported: PropTypes.bool,
   handleLeave: PropTypes.func,
   modalDismiss: PropTypes.func,
   balance: React.PropTypes.number,

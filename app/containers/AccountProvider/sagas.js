@@ -25,6 +25,7 @@ import {
   SET_AUTH,
   WEB3_CONNECTED,
   ETH_TRANSFER,
+  NETWORK_SUPPORT_UPDATE,
   web3Error,
   web3Connected,
   web3Disconnected,
@@ -427,6 +428,23 @@ export function* injectedWeb3ListenerSaga() {
   }
 }
 
+function getFirstBlockHash() {
+  return new Promise((resolve, reject) => {
+    const web3 = getWeb3(true);
+    if (web3) {
+      web3.eth.getBlock(0, (err, block) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(block.hash);
+        }
+      });
+    } else {
+      reject('Smart contracts is not supported');
+    }
+  });
+}
+
 // The root saga is what is sent to Redux's middleware.
 export function* accountSaga() {
   yield takeLatest(WEB3_CONNECT, web3ConnectSaga);
@@ -438,6 +456,14 @@ export function* accountSaga() {
   yield fork(accountLoginSaga);
   yield fork(contractTransactionSendSaga);
   yield fork(injectedWeb3ListenerSaga);
+
+  try {
+    const hash = yield call(getFirstBlockHash);
+    yield put({
+      type: NETWORK_SUPPORT_UPDATE,
+      payload: hash === confParams.firstBlockHash,
+    });
+  } catch (err) {} // eslint-disable-line no-empty
 }
 
 export default [

@@ -15,6 +15,7 @@ import {
   ACCOUNT_LOADED,
   ACCOUNT_UNLOCKED,
   INJECT_ACCOUNT_UPDATE,
+  NETWORK_SUPPORT_UPDATE,
   READY_STATE,
 } from './actions';
 
@@ -25,6 +26,7 @@ const initialState = fromJS({
   nickName: null,
   signerAddr: null,
   web3ReadyState: READY_STATE.CONNECTING,
+  onSupportedNetwork: false,
   web3ErrMsg: null,
 });
 
@@ -44,6 +46,9 @@ function accountProviderReducer(state = initialState, action) {
 
     case INJECT_ACCOUNT_UPDATE:
       return state.set('injected', action.payload);
+
+    case NETWORK_SUPPORT_UPDATE:
+      return state.set('onSupportedNetwork', action.payload);
 
     case ACCOUNT_LOADED:
       return state.set('proxy', action.payload.proxy)

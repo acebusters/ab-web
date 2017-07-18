@@ -5,9 +5,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Field, reduxForm } from 'redux-form/immutable';
 
-import { makeSelectInjectedAccount } from '../../containers/AccountProvider/selectors';
+import { makeSelectAccountData } from '../../containers/AccountProvider/selectors';
 import { getWeb3 } from '../../containers/AccountProvider/utils';
 import NoWeb3Message from '../../components/NoWeb3Message';
+import UnsupportedNetworkMessage from '../../components/UnsupportedNetworkMessage';
 import SubmitButton from '../../components/SubmitButton';
 import FormGroup from '../../components/Form/FormGroup';
 import { CheckBox } from '../../components/Input';
@@ -58,18 +59,18 @@ class UpgradeDialog extends React.Component {
   }
 
   handleSubmit() {
-    const { account, injected } = this.props;
+    const { account } = this.props;
     const proxyContract = getWeb3(true).eth.contract(ABI_PROXY).at(account.proxy);
 
     // ToDo: extract LOCK_PRIV addr
     const receipt = new Receipt(proxyContract.address)
-                      .unlock(injected)
+                      .unlock(account.injected)
                       .sign('0x94890218f2b0d04296f30aeafd13655eba4c5bbf1770273276fee52cbe3f2cb4');
 
     return new Promise((resolve, reject) => {
       proxyContract.unlock(
         ...Receipt.parseToParams(receipt),
-        { from: injected },
+        { from: account.injected },
         (err, txHash) => {
           if (err) {
             reject(err);
@@ -87,17 +88,18 @@ class UpgradeDialog extends React.Component {
       submitting,
       handleSubmit,
       onSuccessButtonClick,
-      injected,
+      account,
     } = this.props;
 
     return (
       <div>
         <H2>Upgrade your account</H2>
 
-        {!injected && <NoWeb3Message />}
+        {!account.injected && <NoWeb3Message />}
+        {!account.onSupportedNetwork && <UnsupportedNetworkMessage />}
 
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          {injected && !submitting && !success &&
+          {account.injected && !submitting && !success &&
             <div>
               <p>This will upgrade your account</p>
               <Field
@@ -116,7 +118,10 @@ class UpgradeDialog extends React.Component {
           {success && <p>Account upgraded successful</p>}
 
           {!success &&
-            <SubmitButton disabled={!injected || invalid} submitting={submitting}>
+            <SubmitButton
+              disabled={!account.injected || invalid}
+              submitting={submitting}
+            >
               Upgrade
             </SubmitButton>
           }
@@ -133,7 +138,6 @@ class UpgradeDialog extends React.Component {
 
 UpgradeDialog.propTypes = {
   account: PropTypes.object,
-  injected: PropTypes.string,
   invalid: PropTypes.bool,
   submitting: PropTypes.bool,
   handleSubmit: PropTypes.func,
@@ -145,7 +149,7 @@ UpgradeDialog.defaultProps = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  injected: makeSelectInjectedAccount(),
+  account: makeSelectAccountData(),
 });
 
 export default connect(mapStateToProps, { accountUnlocked })(

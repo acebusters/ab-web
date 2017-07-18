@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { Form, reduxForm, formValueSelector } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
 
-import { makeSelectInjectedAccount } from '../../containers/AccountProvider/selectors';
+import { makeSelectInjectedAccount, makeSelectNetworkSupported } from '../../containers/AccountProvider/selectors';
 import NoWeb3Message from '../../components/NoWeb3Message';
+import UnsupportedNetworkMessage from '../../components/UnsupportedNetworkMessage';
 import SubmitButton from '../../components/SubmitButton';
 import FormField from '../../components/Form/FormField';
 import AmountField from '../../components/AmountField';
@@ -51,6 +52,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
       title,
       invalid,
       injected,
+      networkSupported,
     } = this.props;
     const expectedAmountUnit = amountUnit.toLowerCase() === 'ntz' ? 'eth' : 'ntz';
     const formatExpValue = expectedAmountUnit === 'ntz' ? formatNtz : formatEth;
@@ -81,9 +83,10 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
           />
 
           {!injected && <NoWeb3Message />}
+          {!networkSupported && <UnsupportedNetworkMessage />}
 
           <SubmitButton
-            disabled={invalid}
+            disabled={invalid || !injected || !networkSupported}
             submitting={submitting}
           >
             Submit
@@ -97,6 +100,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
 ExchangeDialog.propTypes = {
   submitting: PropTypes.bool,
   invalid: PropTypes.bool,
+  networkSupported: PropTypes.bool,
   injected: PropTypes.string,
   maxAmount: PropTypes.object, // BigNumber
   calcExpectedAmount: PropTypes.func,
@@ -112,6 +116,7 @@ const valueSelector = formValueSelector('exchange');
 const mapStateToProps = (state) => ({
   amount: valueSelector(state, 'amount'),
   injected: makeSelectInjectedAccount()(state),
+  networkSupported: makeSelectNetworkSupported(),
 });
 
 export default connect(mapStateToProps)(

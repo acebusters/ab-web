@@ -74,6 +74,11 @@ const makeSelectInjectedAccount = () => createSelector(
   (account) => account.get('injected')
 );
 
+const makeSelectNetworkSupported = () => createSelector(
+  selectAccount,
+  (account) => account.get('isLocked') || account.get('onSupportedNetwork'),
+);
+
 const makeSelectProxyAddr = () => createSelector(
   selectAccount,
   (account) => account.get('proxy')
@@ -96,4 +101,5 @@ export {
   makeSelectIsWeb3Connected,
   makeSelectWeb3ErrMsg,
   makeSelectInjectedAccount,
+  makeSelectNetworkSupported,
 };

@@ -6,9 +6,10 @@ import { createStructuredSelector } from 'reselect';
 import SubmitButton from '../../components/SubmitButton';
 import H2 from '../../components/H2';
 import NoWeb3Message from '../../components/NoWeb3Message';
+import UnsupportedNetworkMessage from '../../components/UnsupportedNetworkMessage';
 
 import { makeSbSelector } from '../Table/selectors';
-import { makeSelectProxyAddr, makeSelectInjectedAccount } from '../AccountProvider/selectors';
+import { makeSelectProxyAddr, makeSelectInjectedAccount, makeSelectNetworkSupported } from '../AccountProvider/selectors';
 import { formatNtz } from '../../utils/amountFormatter';
 
 export class JoinDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -17,6 +18,7 @@ export class JoinDialog extends React.Component { // eslint-disable-line react/p
     super(props);
     this.state = {
       amount: props.sb * 40,
+      submitting: false,
     };
     this.updateAmount = this.updateAmount.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,7 +34,8 @@ export class JoinDialog extends React.Component { // eslint-disable-line react/p
   }
 
   render() {
-    const { sb, injected, balance, modalDismiss } = this.props;
+    const { sb, injected, balance, modalDismiss, networkSupported } = this.props;
+    const { submitting } = this.state;
 
     const min = sb * 40;
     const tableMax = sb * 200;
@@ -61,8 +64,13 @@ export class JoinDialog extends React.Component { // eslint-disable-line react/p
         <div>{ (this.state) ? formatNtz(this.state.amount) : formatNtz(min) } NTZ</div>
 
         {!injected && <NoWeb3Message />}
+        {!networkSupported && <UnsupportedNetworkMessage />}
 
-        <SubmitButton onClick={this.handleSubmit} disabled={!injected}>
+        <SubmitButton
+          onClick={this.handleSubmit}
+          disabled={!injected || !networkSupported}
+          submitting={submitting}
+        >
           Join
         </SubmitButton>
       </div>
@@ -81,12 +89,14 @@ const mapStateToProps = createStructuredSelector({
   sb: makeSbSelector(),
   proxyAddr: makeSelectProxyAddr(),
   injected: makeSelectInjectedAccount(),
+  networkSupported: makeSelectNetworkSupported(),
 });
 
 JoinDialog.propTypes = {
   handleJoin: PropTypes.func,
   modalDismiss: PropTypes.func,
   injected: PropTypes.string,
+  networkSupported: PropTypes.bool,
   pos: PropTypes.any,
   sb: PropTypes.number,
   balance: React.PropTypes.number,

@@ -324,7 +324,6 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
                 onClick={() => this.props.modalAdd(
                   <UpgradeDialog
                     proxyContract={this.proxy}
-                    account={account}
                     onSuccessButtonClick={this.props.modalDismiss}
                   />
                 )}
