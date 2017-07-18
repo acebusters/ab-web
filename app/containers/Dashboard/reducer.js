@@ -11,7 +11,7 @@ import {
 
 import { MODAL_DISMISS } from '../App/actions';
 
-import { SET_ACTIVE_TAB, ARCHIVE } from './actions';
+import { SET_ACTIVE_TAB, WALLET } from './actions';
 
 import { composeReducers } from '../../utils/composeReducers';
 
@@ -35,7 +35,7 @@ const initialState = fromJS({
   proxy: null,
   failedTx: null,
   events: null,
-  activeTab: ARCHIVE,
+  activeTab: WALLET,
 });
 
 function dashboardReducer(state = initialState, action) {

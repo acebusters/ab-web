@@ -264,7 +264,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
 
     return (
       <Pane>
-        <Section>
+        <Section name="player-info">
           <Blocky blocky={createBlocky(this.props.signerAddr)} />
           <h3>Your address:</h3>
 
@@ -280,10 +280,9 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
               <FormattedMessage {...messages.ethAlert} />
             </Alert>
           </WithLoading>
-
         </Section>
 
-        <Section>
+        <Section name="nutz">
           <h2>Nutz</h2>
           <p>
             <span>Balance: </span>
@@ -354,7 +353,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           }
         </Section>
 
-        <Section>
+        <Section name="ether">
           <h2>Ether</h2>
           <p>
             <span>Balance: </span>
@@ -387,7 +386,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           }
         </Section>
 
-        <Section>
+        <Section name="power">
           <h2>Power</h2>
           <p>
             <span>Balance: </span>
@@ -443,7 +442,7 @@ export class Dashboard extends React.Component { // eslint-disable-line react/pr
           }
         </Section>
 
-        <Section>
+        <Section name="transaction-history">
           <h2><FormattedMessage {...messages.included} /></h2>
           <List
             items={listTxns}
