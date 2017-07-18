@@ -1,10 +1,11 @@
 import React from 'react';
 import { Receipt } from 'poker-helper';
+import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Field, reduxForm } from 'redux-form/immutable';
-import Web3 from 'web3';
 
+import { makeSelectInjectedAccount } from '../../containers/AccountProvider/selectors';
 import { getWeb3 } from '../../containers/AccountProvider/utils';
 import SubmitButton from '../../components/SubmitButton';
 import FormGroup from '../../components/Form/FormGroup';
@@ -42,11 +43,8 @@ class UpgradeDialog extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasWeb3: !!(window.web3 && window.web3.eth.accounts[0]),
       success: false,
     };
-
-    // ToDo: "listen" to window.web3 and window.web3.eth.accounts[0] (with interval)
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -59,19 +57,18 @@ class UpgradeDialog extends React.Component {
   }
 
   handleSubmit() {
-    const { account } = this.props;
-    const web3 = new Web3(window.web3.currentProvider);
-    const proxyContract = web3.eth.contract(ABI_PROXY).at(account.proxy);
+    const { account, injected } = this.props;
+    const proxyContract = getWeb3(true).eth.contract(ABI_PROXY).at(account.proxy);
 
     // ToDo: extract LOCK_PRIV addr
     const receipt = new Receipt(proxyContract.address)
-                      .unlock(window.web3.eth.accounts[0])
+                      .unlock(injected)
                       .sign('0x94890218f2b0d04296f30aeafd13655eba4c5bbf1770273276fee52cbe3f2cb4');
 
     return new Promise((resolve, reject) => {
       proxyContract.unlock(
         ...Receipt.parseToParams(receipt),
-        { from: window.web3.eth.accounts[0] },
+        { from: injected },
         (err, txHash) => {
           if (err) {
             reject(err);
@@ -83,14 +80,20 @@ class UpgradeDialog extends React.Component {
   }
 
   render() {
-    const { hasWeb3, success } = this.state;
-    const { invalid, submitting, handleSubmit, onSuccessButtonClick } = this.props;
+    const { success } = this.state;
+    const {
+      invalid,
+      submitting,
+      handleSubmit,
+      onSuccessButtonClick,
+      injected,
+    } = this.props;
 
     return (
       <div>
         <H2>Upgrade your account</H2>
 
-        {!hasWeb3 &&
+        {!injected &&
           <div>
             <p>Your browser does not support smart contracts</p>
             <p>Please install MetaMask chrome extension (and login to metamask account), or ethereum browser (mist, parity ...).</p>
@@ -98,7 +101,7 @@ class UpgradeDialog extends React.Component {
         }
 
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          {hasWeb3 && !submitting && !success &&
+          {injected && !submitting && !success &&
             <div>
               <p>This will upgrade your account</p>
               <Field
@@ -117,7 +120,7 @@ class UpgradeDialog extends React.Component {
           {success && <p>Account upgraded successful</p>}
 
           {!success &&
-            <SubmitButton disabled={!hasWeb3 || invalid} submitting={submitting}>
+            <SubmitButton disabled={!injected || invalid} submitting={submitting}>
               Upgrade
             </SubmitButton>
           }
@@ -134,6 +137,7 @@ class UpgradeDialog extends React.Component {
 
 UpgradeDialog.propTypes = {
   account: PropTypes.object,
+  injected: PropTypes.string,
   invalid: PropTypes.bool,
   submitting: PropTypes.bool,
   handleSubmit: PropTypes.func,
@@ -144,7 +148,11 @@ UpgradeDialog.propTypes = {
 UpgradeDialog.defaultProps = {
 };
 
-export default connect(null, { accountUnlocked })(
+const mapStateToProps = createStructuredSelector({
+  injected: makeSelectInjectedAccount(),
+});
+
+export default connect(mapStateToProps, { accountUnlocked })(
   reduxForm({
     form: 'upgrade',
     validate,

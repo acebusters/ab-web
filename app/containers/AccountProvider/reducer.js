@@ -14,6 +14,7 @@ import {
   CONTRACT_EVENTS,
   ACCOUNT_LOADED,
   ACCOUNT_UNLOCKED,
+  INJECT_ACCOUNT_UPDATE,
   READY_STATE,
 } from './actions';
 
@@ -40,6 +41,9 @@ function accountProviderReducer(state = initialState, action) {
 
     case ACCOUNT_UNLOCKED:
       return state.set('isLocked', false);
+
+    case INJECT_ACCOUNT_UPDATE:
+      return state.set('injected', action.payload);
 
     case ACCOUNT_LOADED:
       return state.set('proxy', action.payload.proxy)

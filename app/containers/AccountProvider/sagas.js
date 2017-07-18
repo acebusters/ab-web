@@ -39,6 +39,7 @@ import {
   contractEvents,
   transferETHSuccess,
   transferETHError,
+  updateInjectedAccount,
 } from './actions';
 
 export { getWeb3 } from './utils';
@@ -246,6 +247,7 @@ function* contractTransactionSecureSend(action) {
   const { data } = action.payload;
   const state = yield select();
   const proxyAddr = yield call([state, state.getIn], ['account', 'proxy']);
+  const injectedAddr = yield call([state, state.getIn], ['account', 'injected']);
   const web3 = yield call(getWeb3, true);
   const proxy = yield call([web3.eth, web3.eth.contract], ABI_PROXY);
   const proxyInstance = yield call([proxy, proxy.at], proxyAddr);
@@ -255,7 +257,7 @@ function* contractTransactionSecureSend(action) {
       confParams.ntzAddr,
       0,
       data,
-      { from: window.web3.eth.accounts[0], gas: 200000 },
+      { from: injectedAddr, gas: 200000 },
       (err, result) => {
         if (err) {
           reject(err);
@@ -302,6 +304,7 @@ function* secureTransferETH(action) {
   const { payload: { dest, amount } } = action;
   const state = yield select();
   const proxyAddr = yield call([state, state.getIn], ['account', 'proxy']);
+  const injectedAddr = yield call([state, state.getIn], ['account', 'injected']);
 
   const web3 = getWeb3(true);
   const proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
@@ -313,7 +316,7 @@ function* secureTransferETH(action) {
       dest,
       `0x${amount.toString(16)}`,
       data,
-      { from: window.web3.eth.accounts[0], gas: 200000 },
+      { from: injectedAddr, gas: 200000 },
       (err, result) => {
         if (err) {
           reject(err);
@@ -399,6 +402,19 @@ export function* ethEventListenerSaga(contract) {
   }
 }
 
+export function* injectedWeb3ListenerSaga() {
+  while (true) { // eslint-disable-line no-constant-condition
+    yield call(delay, 1000);
+    const state = yield select();
+    const prevInjected = yield call([state, state.getIn], ['account', 'injected']);
+    const injected = window.web3 && window.web3.eth.accounts[0];
+
+    if (prevInjected !== injected) {
+      yield put(updateInjectedAccount(injected));
+    }
+  }
+}
+
 // The root saga is what is sent to Redux's middleware.
 export function* accountSaga() {
   yield takeLatest(WEB3_CONNECT, web3ConnectSaga);
@@ -409,6 +425,7 @@ export function* accountSaga() {
   yield fork(transferETHSaga);
   yield fork(accountLoginSaga);
   yield fork(contractTransactionSendSaga);
+  yield fork(injectedWeb3ListenerSaga);
 }
 
 export default [
