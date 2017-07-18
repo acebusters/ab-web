@@ -12,6 +12,7 @@ import { Receipt } from 'poker-helper';
 
 // components and styles
 import TableDebug from '../../containers/TableDebug';
+import { getWeb3 } from '../../containers/AccountProvider/utils';
 
 import Card from '../../components/Card';
 import { BoardCardWrapper } from '../../components/Table/Board';
@@ -26,6 +27,7 @@ import { formatNtz } from '../../utils/amountFormatter';
 import {
   ABI_TABLE,
   ABI_TOKEN_CONTRACT,
+  ABI_PROXY,
   TIMEOUT_PERIOD,
   conf,
 } from '../../app.config';
@@ -236,17 +238,37 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   handleJoin(pos, amount) {
-    const { signerAddr } = this.props;
+    const { signerAddr, account } = this.props;
 
-    this.token.transData.sendTransaction(
-      this.tableAddr,
-      amount,
-      `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`
-    );
+    if (account.isLocked) {
+      this.token.transData.sendTransaction(
+        this.tableAddr,
+        amount,
+        `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`
+      );
+    } else {
+      const web3 = getWeb3(true);
+      const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
+      const proxy = web3.eth.contract(ABI_PROXY).at(account.proxy);
+      const data = token.transData.getData(
+        this.tableAddr,
+        amount,
+        `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`
+      );
+      proxy.forward(
+        token.address,
+        0,
+        data,
+        { from: window.web3.eth.accounts[0] },
+        (err, result) => {
+          console.log(result);
+        }
+      );
+    }
 
     const slides = (
       <div>
-        <JoinSlides></JoinSlides>
+        <JoinSlides />
         <Button size="large" onClick={this.props.modalDismiss}>
           <FormattedMessage {...messages.joinModal.buttonDismiss} />
         </Button>
