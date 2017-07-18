@@ -37,7 +37,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   handleSubmit(values) {
-    this.props.handleTransfer(
+    return this.props.handleTransfer(
       values.get('amount'),
       values.get('address'),
     );
@@ -53,6 +53,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
       hideAddress,
       title,
       description,
+      invalid,
     } = this.props;
 
     return (
@@ -78,7 +79,13 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <SubmitButton type="submit" disabled={submitting}>Submit</SubmitButton>
+          <SubmitButton
+            type="submit"
+            disabled={invalid}
+            submitting={submitting}
+          >
+            Submit
+          </SubmitButton>
         </Form>
       </div>
     );
@@ -89,6 +96,7 @@ TransferDialog.propTypes = {
   title: PropTypes.any,
   description: PropTypes.any,
   submitting: PropTypes.bool,
+  invalid: PropTypes.bool,
   hideAddress: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
   amountUnit: PropTypes.string,

@@ -36,7 +36,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   handleSubmit(values) {
-    this.props.handleExchange(values.get('amount'));
+    return this.props.handleExchange(values.get('amount'));
   }
 
   render() {
@@ -48,6 +48,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
       calcExpectedAmount,
       amountUnit,
       title,
+      invalid,
     } = this.props;
     const expectedAmountUnit = amountUnit.toLowerCase() === 'ntz' ? 'eth' : 'ntz';
     const formatExpValue = expectedAmountUnit === 'ntz' ? formatNtz : formatEth;
@@ -77,7 +78,12 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
             maxAmount={maxAmount}
           />
 
-          <SubmitButton disabled={submitting}>Submit</SubmitButton>
+          <SubmitButton
+            disabled={invalid}
+            submitting={submitting}
+          >
+            Submit
+          </SubmitButton>
         </Form>
       </div>
     );
@@ -86,6 +92,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
 
 ExchangeDialog.propTypes = {
   submitting: PropTypes.bool,
+  invalid: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
   calcExpectedAmount: PropTypes.func,
   handleSubmit: PropTypes.func,

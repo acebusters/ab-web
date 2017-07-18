@@ -117,7 +117,7 @@ class UpgradeDialog extends React.Component {
           {success && <p>Account upgraded successful</p>}
 
           {!success &&
-            <SubmitButton disabled={!hasWeb3 || invalid || submitting}>
+            <SubmitButton disabled={!hasWeb3 || invalid} submitting={submitting}>
               Upgrade
             </SubmitButton>
           }
