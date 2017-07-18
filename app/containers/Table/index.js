@@ -219,70 +219,101 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   handleRebuy(amount) {
-    this.table.rebuy.sendTransaction(amount);
+    const { account } = this.props;
 
-    const slides = (
-      <Slides width={600} height={400}>
-        <div>
-          <h1>Request for rebuy sent! Please wait!</h1>
-          <p>Here is the introduction to the online poker game</p>
-        </div>
-        <div>
-          <h1>FAQ</h1>
-        </div>
-      </Slides>
-    );
+    new Promise((resolve, reject) => {
+      if (account.isLocked) {
+        this.table.rebuy.sendTransaction(amount);
+      } else {
+        const web3 = getWeb3(true);
+        const table = web3.eth.contract(ABI_TABLE).at(this.tableAddr);
+        const proxy = web3.eth.contract(ABI_PROXY).at(account.proxy);
+        const data = table.rebuy.getData(amount);
+        proxy.forward(
+          conf().ntzAddr,
+          0,
+          data,
+          { from: window.web3.eth.accounts[0] },
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      }
+    }).then(() => {
+      const slides = (
+        <Slides width={600} height={400}>
+          <div>
+            <h1>Request for rebuy sent! Please wait!</h1>
+            <p>Here is the introduction to the online poker game</p>
+          </div>
+          <div>
+            <h1>FAQ</h1>
+          </div>
+        </Slides>
+      );
 
-    this.props.modalDismiss();
-    this.props.modalAdd(slides);
+      this.props.modalDismiss();
+      this.props.modalAdd(slides);
+    });
   }
 
   handleJoin(pos, amount) {
     const { signerAddr, account } = this.props;
 
-    if (account.isLocked) {
-      this.token.transData.sendTransaction(
-        this.tableAddr,
-        amount,
-        `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`
+    new Promise((resolve, reject) => {
+      if (account.isLocked) {
+        this.token.transData.sendTransaction(
+          this.tableAddr,
+          amount,
+          `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`
+        );
+        resolve();
+      } else {
+        const web3 = getWeb3(true);
+        const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
+        const proxy = web3.eth.contract(ABI_PROXY).at(account.proxy);
+        const data = token.transData.getData(
+          this.tableAddr,
+          amount,
+          `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`
+        );
+        proxy.forward(
+          token.address,
+          0,
+          data,
+          { from: window.web3.eth.accounts[0] },
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      }
+    }).then(() => {
+      const slides = (
+        <div>
+          <JoinSlides />
+          <Button size="large" onClick={this.props.modalDismiss}>
+            <FormattedMessage {...messages.joinModal.buttonDismiss} />
+          </Button>
+        </div>
       );
-    } else {
-      const web3 = getWeb3(true);
-      const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
-      const proxy = web3.eth.contract(ABI_PROXY).at(account.proxy);
-      const data = token.transData.getData(
-        this.tableAddr,
-        amount,
-        `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`
-      );
-      proxy.forward(
-        token.address,
-        0,
-        data,
-        { from: window.web3.eth.accounts[0] },
-        (err, result) => {
-          console.log(result);
-        }
-      );
-    }
 
-    const slides = (
-      <div>
-        <JoinSlides />
-        <Button size="large" onClick={this.props.modalDismiss}>
-          <FormattedMessage {...messages.joinModal.buttonDismiss} />
-        </Button>
-      </div>
-    );
-
-    this.props.modalDismiss();
-    this.props.modalAdd(slides);
-    this.props.setPending(
-      this.tableAddr,
-      this.props.params.handId,
-      pos,
-      { signerAddr: this.props.signerAddr, stackSize: amount }
-    );
+      this.props.modalDismiss();
+      this.props.modalAdd(slides);
+      this.props.setPending(
+        this.tableAddr,
+        this.props.params.handId,
+        pos,
+        { signerAddr: this.props.signerAddr, stackSize: amount }
+      );
+    });
   }
 
   isTaken(open, myPos, pending, pos) {
