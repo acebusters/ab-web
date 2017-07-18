@@ -277,33 +277,23 @@ function* contractTransactionSendSaga() {
     const isLocked = yield call([state, state.getIn], ['account', 'isLocked']);
     const nonce = yield call([state, state.getIn], ['account', 'lastNonce']) + 1;
 
-    if (isLocked) {
-      const controller = yield call([state, state.getIn], ['account', 'controller']);
-      const forwardReceipt = new Receipt(controller).forward(nonce, dest, 0, data).sign(privKey);
-      // send it.
-      try {
+    try {
+      let txHash;
+      if (isLocked) {
+        const controller = yield call([state, state.getIn], ['account', 'controller']);
+        const forwardReceipt = new Receipt(controller).forward(nonce, dest, 0, data).sign(privKey);
         const value = yield sendTx(forwardReceipt);
-        yield call(callback, null, value.txHash);
-        yield put(contractTxSuccess({ address: dest, nonce, txHash: value.txHash, key, args, methodName }));
-      } catch (err) {
-        const error = err.message || err;
-        yield call(callback, error);
-        yield put(contractTxError({ address: dest, nonce, error, args, methodName, action }));
-      }
-    } else {
-      try {
+        txHash = value.txHash;
+      } else {
         // two yields to wait for returned promise
-        const txHash = yield yield call(contractTransactionSecureSend, action);
-        if (callback) {
-          yield call(callback, null, txHash);
-        }
-        yield put(contractTxSuccess({ address: dest, nonce, txHash, key, args, methodName }));
-      } catch (error) {
-        if (callback) {
-          yield call(callback, error);
-        }
-        yield put(contractTxError({ address: dest, nonce, error, args, methodName, action }));
+        txHash = yield yield call(contractTransactionSecureSend, action);
       }
+      yield call(callback, null, txHash);
+      yield put(contractTxSuccess({ address: dest, nonce, txHash, key, args, methodName }));
+    } catch (err) {
+      const error = err.message || err;
+      yield call(callback, error);
+      yield put(contractTxError({ address: dest, nonce, error, args, methodName, action }));
     }
   }
 }
@@ -344,29 +334,24 @@ function* transferETHSaga() {
     const isLocked = yield call([state, state.getIn], ['account', 'isLocked']);
     const nonce = yield call([state, state.getIn], ['account', 'lastNonce']) + 1;
 
-    if (isLocked) {
-      const controller = yield call([state, state.getIn], ['account', 'controller']);
-      const privKey = state.get('account').get('privKey');
-      const receipt = new Receipt(controller).forward(nonce, dest, amount, '').sign(privKey);
-
-      try {
+    try {
+      let txHash;
+      if (isLocked) {
+        const controller = yield call([state, state.getIn], ['account', 'controller']);
+        const privKey = state.get('account').get('privKey');
+        const receipt = new Receipt(controller).forward(nonce, dest, amount, '').sign(privKey);
         const value = yield call(sendTx, receipt);
-        yield call(callback, null, value.txHash);
-        yield put(transferETHSuccess({ address: dest, nonce, amount, txHash: value.txHash }));
-      } catch (err) {
-        const error = (err.message) ? err.message : err;
-        yield call(callback, error);
-        yield put(transferETHError({ address: dest, amount, nonce, error }));
+        txHash = value.txHash;
+      } else {
+        txHash = yield yield call(secureTransferETH, action);
       }
-    } else {
-      try {
-        const txHash = yield yield call(secureTransferETH, action);
-        yield call(callback, null, txHash);
-        yield put(transferETHSuccess({ address: dest, nonce, amount, txHash }));
-      } catch (error) {
-        yield call(callback, error);
-        yield put(transferETHError({ address: dest, amount, error, nonce }));
-      }
+
+      yield call(callback, null, txHash);
+      yield put(transferETHSuccess({ address: dest, nonce, amount, txHash }));
+    } catch (err) {
+      const error = (err.message) ? err.message : err;
+      yield call(callback, error);
+      yield put(transferETHError({ address: dest, amount, nonce, error }));
     }
   }
 }
