@@ -17,6 +17,7 @@ import {
 } from '../../app.config';
 
 import { addEventsDate, getWeb3, isUserEvent } from './utils';
+import { waitForTx } from '../../utils/waitForTx';
 
 import {
   WEB3_CONNECT,
@@ -249,20 +250,36 @@ function* contractTransactionSecureSend(action) {
   const proxyAddr = yield call([state, state.getIn], ['account', 'proxy']);
   const injectedAddr = yield call([state, state.getIn], ['account', 'injected']);
   const web3 = yield call(getWeb3, true);
-  const proxy = yield call([web3.eth, web3.eth.contract], ABI_PROXY);
-  const proxyInstance = yield call([proxy, proxy.at], proxyAddr);
+  const proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
 
   return new Promise((resolve, reject) => {
-    proxyInstance.forward(
+    proxy.forward.estimateGas(
       confParams.ntzAddr,
       0,
       data,
-      { from: injectedAddr, gas: 200000 },
-      (err, result) => {
-        if (err) {
-          reject(err);
+      { from: injectedAddr },
+      (gasErr, gas) => {
+        if (gasErr) {
+          reject(gasErr);
         } else {
-          resolve(result);
+          proxy.forward(
+            confParams.ntzAddr,
+            0,
+            data,
+            { from: injectedAddr, gas: Math.round(gas * 1.9) },
+            (forwardErr, result) => {
+              if (forwardErr) {
+                reject(forwardErr);
+              } else {
+                resolve(result);
+                console.log('wait', result);
+                waitForTx(getWeb3(), result).then(
+                  () => console.log('done!', result),
+                  (err) => console.error(err),
+                );
+              }
+            }
+          );
         }
       }
     );
@@ -312,17 +329,25 @@ function* secureTransferETH(action) {
   const data = token.transfer.getData(dest, amount);
 
   return new Promise((resolve, reject) => {
-    proxy.forward.sendTransaction(
+    proxy.forward.estimateGas(
       dest,
       `0x${amount.toString(16)}`,
       data,
-      { from: injectedAddr, gas: 200000 },
-      (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
+      { from: injectedAddr },
+      (gasErr, gas) => {
+        proxy.forward.sendTransaction(
+          dest,
+          `0x${amount.toString(16)}`,
+          data,
+          { from: injectedAddr, gas: gas * 1.8 },
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
       }
     );
   });
