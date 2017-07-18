@@ -17,7 +17,6 @@ import {
 } from '../../app.config';
 
 import { addEventsDate, getWeb3, isUserEvent } from './utils';
-import { waitForTx } from '../../utils/waitForTx';
 
 import {
   WEB3_CONNECT,
@@ -272,11 +271,6 @@ function* contractTransactionSecureSend(action) {
                 reject(forwardErr);
               } else {
                 resolve(result);
-                console.log('wait', result);
-                waitForTx(getWeb3(), result).then(
-                  () => console.log('done!', result),
-                  (err) => console.error(err),
-                );
               }
             }
           );
@@ -339,7 +333,7 @@ function* secureTransferETH(action) {
           dest,
           `0x${amount.toString(16)}`,
           data,
-          { from: injectedAddr, gas: gas * 1.8 },
+          { from: injectedAddr, gas: gas * 1.9 },
           (err, result) => {
             if (err) {
               reject(err);
