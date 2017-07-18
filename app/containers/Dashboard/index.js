@@ -30,13 +30,11 @@ import { getActiveTab, createDashboardTxsSelector } from './selectors';
 import { Section, DBButton } from './styles';
 import { txnsToList } from './txnsToList';
 import TransferDialog from '../TransferDialog';
-import ExchangeDialog from '../ExchangeDialog';
 
 import Blocky from '../../components/Blocky';
 import Container from '../../components/Container';
 import H2 from '../../components/H2';
 import Overview from '../../components/Dashboard/Overview';
-import List from '../../components/List';
 import Wallet from '../../components/Dashboard/Wallet';
 import Exchange from '../../components/Dashboard/Exchange';
 import SubmitButton from '../../components/SubmitButton';
@@ -304,7 +302,19 @@ class DashboardRoot extends React.Component {
         <PanesRoot
           panes={PANES}
           paneType={this.props.activeTab}
-          paneProps={{ weiBalance, floor, ceiling, babzBalance, pwrBalance, listTxns, ...this.props }}
+          paneProps={{
+            weiBalance,
+            floor,
+            ceiling,
+            babzBalance,
+            pwrBalance,
+            listTxns,
+            handleNTZSell: this.handleNTZSell,
+            handleNTZPurchase: this.handleNTZPurchase,
+            handlePowerDown: this.handlePowerDown,
+            handlePowerUp: this.handlePowerUp,
+            ...this.props,
+          }}
         />
         <Section name="player-info">
           <Blocky blocky={createBlocky(this.props.signerAddr)} />
@@ -339,44 +349,6 @@ class DashboardRoot extends React.Component {
               icon="fa fa-money"
             >
               Transfer
-            </DBButton>
-          }
-          {babzBalance && floor &&
-            <DBButton
-              onClick={() => {
-                this.props.modalAdd(
-                  <ExchangeDialog
-                    title={<FormattedMessage {...messages.sellTitle} />}
-                    amountUnit="ntz"
-                    calcExpectedAmount={(amount) => new BigNumber(amount).div(floor)}
-                    handleExchange={this.handleNTZSell}
-                    maxAmount={babzBalance.div(NTZ_DECIMALS)}
-                  />
-                );
-              }}
-              size="medium"
-              icon="fa fa-money"
-            >
-              Sell
-            </DBButton>
-          }
-          {weiBalance && ceiling &&
-            <DBButton
-              onClick={() => {
-                this.props.modalAdd(
-                  <ExchangeDialog
-                    title={<FormattedMessage {...messages.purchaseTitle} />}
-                    amountUnit="eth"
-                    calcExpectedAmount={(amount) => ceiling.mul(amount)}
-                    handleExchange={this.handleNTZPurchase}
-                    maxAmount={weiBalance.div(ETH_DECIMALS)}
-                  />
-                );
-              }}
-              size="medium"
-              icon="fa fa-money"
-            >
-              Purchase
             </DBButton>
           }
         </Section>
@@ -427,71 +399,6 @@ class DashboardRoot extends React.Component {
               <span>{pwrBalance && formatAbp(pwrBalance)} ABP</span>
             </WithLoading>
           </p>
-
-          {babzBalance &&
-            <DBButton
-              onClick={() => {
-                this.props.modalAdd(
-                  <TransferDialog
-                    handleTransfer={this.handlePowerUp}
-                    maxAmount={babzBalance.div(NTZ_DECIMALS)}
-                    hideAddress
-                    title={<FormattedMessage {...messages.powerUpTitle} />}
-                    amountUnit="NTZ"
-                  />
-                );
-              }}
-              size="medium"
-              icon="fa fa-money"
-            >
-              Power Up
-            </DBButton>
-          }
-
-          {pwrBalance &&
-            <DBButton
-              onClick={() => {
-                this.props.modalAdd(
-                  <TransferDialog
-                    title={<FormattedMessage {...messages.powerDownTitle} />}
-                    description="Power Down will convert ABP back to NTZ over a period of 3 month"
-                    handleTransfer={this.handlePowerDown}
-                    maxAmount={pwrBalance.div(ABP_DECIMALS)}
-                    hideAddress
-                    amountUnit="ABP"
-                  />
-                );
-              }}
-              size="medium"
-              icon="fa fa-money"
-            >
-              Power Down
-            </DBButton>
-          }
-        </Section>
-
-        <Section name="transaction-history">
-          <h2><FormattedMessage {...messages.included} /></h2>
-          <List
-            items={listTxns}
-            headers={[
-              '',
-              'Address',
-              'Date',
-              '',
-              'Amount',
-              '',
-            ]}
-            columnsStyle={{
-              0: { width: 20 },
-              1: { textAlign: 'left', width: 10, whiteSpace: 'nowrap' },
-              2: { width: 20 },
-              3: { textAlign: 'left', whiteSpace: 'nowrap' },
-              4: { textAlign: 'right', whiteSpace: 'nowrap' },
-              5: { width: '100%', textAlign: 'left' },
-            }}
-            noDataMsg="No Transactions Yet"
-          />
         </Section>
       </Container>
     );
