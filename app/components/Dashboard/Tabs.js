@@ -12,10 +12,10 @@ import {
 const Tabs = ({ activeTab, tabs, setActiveTab }) => (
   <TabsWrapper name="tabs">
     {tabs.map((tab) => (
-      <Tab name="tab" key={tab.title}>
+      <Tab name="tab" key={tab.name}>
         <TabButton
-          disabled={tab.title === activeTab}
-          onClick={() => setActiveTab(tab.title)}
+          disabled={tab.name === activeTab}
+          onClick={() => setActiveTab(tab.name)}
         >
           <TabIcon className={`fa ${tab.icon}`} />
           <TabTitle>{tab.title}</TabTitle>

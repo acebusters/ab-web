@@ -19,7 +19,6 @@ import {
 import { modalAdd, modalDismiss } from '../App/actions';
 import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
 import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
-
 import {
   OVERVIEW,
   WALLET,
@@ -60,15 +59,18 @@ const PANES = {
 
 const TABS = [
   {
-    title: OVERVIEW,
+    name: OVERVIEW,
+    title: <FormattedMessage {...messages[OVERVIEW]} />,
     icon: 'fa-tachometer',
   },
   {
-    title: WALLET,
+    name: WALLET,
+    title: <FormattedMessage {...messages[WALLET]} />,
     icon: 'fa-money',
   },
   {
-    title: EXCHANGE,
+    name: EXCHANGE,
+    title: <FormattedMessage {...messages[EXCHANGE]} />,
     icon: 'fa-exchange',
   },
 ];
