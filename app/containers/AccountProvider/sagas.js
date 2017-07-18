@@ -242,10 +242,19 @@ function sendTx(forwardReceipt) {
   });
 }
 
-function contractMethodTx(contract, methodName, ...args) {
+function* contractTransactionSecureSend(action) {
+  const { data } = action.payload;
+  const state = yield select();
+  const proxyAddr = yield call([state, state.getIn], ['account', 'proxy']);
+  const web3 = yield call(getWeb3, true);
+  const proxy = yield call([web3.eth, web3.eth.contract], ABI_PROXY);
+  const proxyInstance = yield call([proxy, proxy.at], proxyAddr);
+
   return new Promise((resolve, reject) => {
-    contract[methodName].sendTransaction(
-      ...args,
+    proxyInstance.forward(
+      confParams.ntzAddr,
+      0,
+      data,
       { from: window.web3.eth.accounts[0], gas: 200000 },
       (err, result) => {
         if (err) {
@@ -258,91 +267,106 @@ function contractMethodTx(contract, methodName, ...args) {
   });
 }
 
-function* contractSecureTransactionSendSaga(action) {
-  const { dest, key, data, callback, args, methodName } = action.payload;
-  const state = yield select();
-  const proxyAddr = yield call([state, state.getIn], ['account', 'proxy']);
-  const web3 = yield call(getWeb3, true);
-  const proxy = yield call([web3.eth, web3.eth.contract], ABI_PROXY);
-  const proxyInstance = yield call([proxy, proxy.at], proxyAddr);
-
-  try {
-    const txHash = yield call(
-      contractMethodTx,
-      proxyInstance,
-      'forward',
-      confParams.ntzAddr,
-      0,
-      data
-    );
-    yield put(contractTxSuccess({
-      args,
-      key,
-      methodName,
-      address: dest,
-      txHash,
-    }));
-    callback(null, txHash);
-  } catch (e) {
-    yield put(contractTxError({
-      action,
-      args,
-      key,
-      methodName,
-      address: dest,
-    }));
-    callback(e);
-  }
-}
-
 function* contractTransactionSendSaga() {
   const txChan = yield actionChannel(CONTRACT_TX_SEND);
   while (true) { // eslint-disable-line no-constant-condition
     const action = yield take(txChan);
+    const { dest, key, data, privKey, callback = (() => null), args, methodName } = action.payload;
+
     const state = yield select();
     const isLocked = yield call([state, state.getIn], ['account', 'isLocked']);
+    const nonce = yield call([state, state.getIn], ['account', 'lastNonce']) + 1;
 
     if (isLocked) {
-      const { dest, key, data, privKey, callback, args, methodName } = action.payload;
-      const nonce = yield call([state, state.getIn], ['account', 'lastNonce']) + 1;
       const controller = yield call([state, state.getIn], ['account', 'controller']);
       const forwardReceipt = new Receipt(controller).forward(nonce, dest, 0, data).sign(privKey);
       // send it.
       try {
         const value = yield sendTx(forwardReceipt);
-        if (callback) {
-          yield call(callback, null, value.txHash);
-        }
+        yield call(callback, null, value.txHash);
         yield put(contractTxSuccess({ address: dest, nonce, txHash: value.txHash, key, args, methodName }));
       } catch (err) {
         const error = err.message || err;
+        yield call(callback, error);
+        yield put(contractTxError({ address: dest, nonce, error, args, methodName, action }));
+      }
+    } else {
+      try {
+        // two yields to wait for returned promise
+        const txHash = yield yield call(contractTransactionSecureSend, action);
+        if (callback) {
+          yield call(callback, null, txHash);
+        }
+        yield put(contractTxSuccess({ address: dest, nonce, txHash, key, args, methodName }));
+      } catch (error) {
         if (callback) {
           yield call(callback, error);
         }
         yield put(contractTxError({ address: dest, nonce, error, args, methodName, action }));
       }
-    } else {
-      yield fork(contractSecureTransactionSendSaga, action);
     }
   }
+}
+
+function* secureTransferETH(action) {
+  const { payload: { dest, amount } } = action;
+  const state = yield select();
+  const proxyAddr = yield call([state, state.getIn], ['account', 'proxy']);
+
+  const web3 = getWeb3(true);
+  const proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
+  const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
+  const data = token.transfer.getData(dest, amount);
+
+  return new Promise((resolve, reject) => {
+    proxy.forward.sendTransaction(
+      dest,
+      `0x${amount.toString(16)}`,
+      data,
+      { from: window.web3.eth.accounts[0], gas: 200000 },
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+  });
 }
 
 function* transferETHSaga() {
   const transferChan = yield actionChannel(ETH_TRANSFER);
   while (true) { // eslint-disable-line no-constant-condition
-    const { payload: { dest, amount } } = yield take(transferChan);
+    const action = yield take(transferChan);
+    const { payload: { dest, amount, callback = (() => null) } } = action;
     const state = yield select();
-    const nonce = state.get('account').get('lastNonce') + 1;
-    const controller = state.get('account').get('controller');
-    const privKey = state.get('account').get('privKey');
-    const receipt = new Receipt(controller).forward(nonce, dest, amount, '').sign(privKey);
+    const isLocked = yield call([state, state.getIn], ['account', 'isLocked']);
+    const nonce = yield call([state, state.getIn], ['account', 'lastNonce']) + 1;
 
-    try {
-      const value = yield sendTx(receipt);
-      yield put(transferETHSuccess({ address: dest, nonce, amount, txHash: value.txHash }));
-    } catch (err) {
-      const error = (err.message) ? err.message : err;
-      yield put(transferETHError({ address: dest, amount, nonce, error }));
+    if (isLocked) {
+      const controller = yield call([state, state.getIn], ['account', 'controller']);
+      const privKey = state.get('account').get('privKey');
+      const receipt = new Receipt(controller).forward(nonce, dest, amount, '').sign(privKey);
+
+      try {
+        const value = yield call(sendTx, receipt);
+        yield call(callback, null, value.txHash);
+        yield put(transferETHSuccess({ address: dest, nonce, amount, txHash: value.txHash }));
+      } catch (err) {
+        const error = (err.message) ? err.message : err;
+        yield call(callback, error);
+        yield put(transferETHError({ address: dest, amount, nonce, error }));
+      }
+    } else {
+      try {
+        const txHash = yield yield call(secureTransferETH, action);
+        yield call(callback, null, txHash);
+        yield put(transferETHSuccess({ address: dest, nonce, amount, txHash }));
+      } catch (error) {
+        yield call(callback, error);
+        yield put(transferETHError({ address: dest, amount, error, nonce }));
+      }
     }
   }
 }
