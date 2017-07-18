@@ -1,8 +1,11 @@
 import React, { PropTypes } from 'react';
+import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 import { Form, Field, reduxForm } from 'redux-form/immutable';
 
+import { makeSelectInjectedAccount } from '../../containers/AccountProvider/selectors';
+import NoWeb3Message from '../../components/NoWeb3Message';
 import { ErrorMessage } from '../../components/FormMessages';
 import SubmitButton from '../../components/SubmitButton';
 import FormField from '../../components/Form/FormField';
@@ -54,6 +57,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
       title,
       description,
       invalid,
+      injected,
     } = this.props;
 
     return (
@@ -79,9 +83,11 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
+          {!injected && <NoWeb3Message />}
+
           <SubmitButton
             type="submit"
-            disabled={invalid}
+            disabled={invalid || !injected}
             submitting={submitting}
           >
             Submit
@@ -95,6 +101,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
 TransferDialog.propTypes = {
   title: PropTypes.any,
   description: PropTypes.any,
+  injected: PropTypes.string,
   submitting: PropTypes.bool,
   invalid: PropTypes.bool,
   hideAddress: PropTypes.bool,
@@ -109,7 +116,11 @@ TransferDialog.defaultProps = {
   hideAddress: false,
 };
 
-export default connect()(
+const mapStateToProps = createStructuredSelector({
+  injected: makeSelectInjectedAccount(),
+});
+
+export default connect(mapStateToProps)(
   reduxForm({
     form: 'transfer',
     validate,

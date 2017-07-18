@@ -1,4 +1,3 @@
-
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -9,6 +8,9 @@ import { createStructuredSelector } from 'reselect';
 import SubmitButton from '../../components/SubmitButton';
 import H2 from '../../components/H2';
 import { makeSbSelector } from '../Table/selectors';
+import { makeSelectInjectedAccount } from '../AccountProvider/selectors';
+
+import NoWeb3Message from '../../components/NoWeb3Message';
 
 import messages from './messages';
 
@@ -47,11 +49,12 @@ export class RebuyDialog extends React.Component {
   }
 
   render() {
-    const min = this.props.sb * 40;
-    const max = Math.min(this.props.balance, this.props.sb * 200);
+    const { injected, sb, balance, modalDismiss } = this.props;
+    const min = sb * 40;
+    const max = Math.min(balance, sb * 200);
     const { amount } = this.state;
 
-    if (this.props.balance < min) {
+    if (balance < min) {
       return (
         <div style={{ minWidth: '20em' }}>
           <H2>
@@ -60,12 +63,13 @@ export class RebuyDialog extends React.Component {
           <p>
             <FormattedMessage {...messages.balanceOut} />
           </p>
-          <SubmitButton onClick={this.props.modalDismiss}>
+          <SubmitButton onClick={modalDismiss}>
             <FormattedMessage {...messages.ok} />
           </SubmitButton>
         </div>
       );
     }
+
     return (
       <div style={{ minWidth: '20em' }}>
         <Slider
@@ -76,13 +80,15 @@ export class RebuyDialog extends React.Component {
           max={max}
           step={1}
           onChange={this.updateAmount}
-        >
-        </Slider>
+        />
         <div>
           <FormattedMessage {...messages.max} />
           <span>{max}</span>
         </div>
         <div>{amount}</div>
+
+        {!injected && <NoWeb3Message />}
+
         <ButtonContainer>
           <ButtonBox>
             <SubmitButton onClick={this.handleLeave}>
@@ -102,6 +108,7 @@ export class RebuyDialog extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   sb: makeSbSelector(),
+  injected: makeSelectInjectedAccount(),
 });
 
 RebuyDialog.propTypes = {
@@ -109,6 +116,7 @@ RebuyDialog.propTypes = {
   handleLeave: PropTypes.func,
   modalDismiss: PropTypes.func,
   balance: React.PropTypes.number,
+  injected: React.PropTypes.string,
   sb: PropTypes.number,
 };
 

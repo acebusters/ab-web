@@ -5,9 +5,10 @@ import 'react-rangeslider/lib/index.css';
 import { createStructuredSelector } from 'reselect';
 import SubmitButton from '../../components/SubmitButton';
 import H2 from '../../components/H2';
+import NoWeb3Message from '../../components/NoWeb3Message';
 
 import { makeSbSelector } from '../Table/selectors';
-import { makeSelectProxyAddr } from '../AccountProvider/selectors';
+import { makeSelectProxyAddr, makeSelectInjectedAccount } from '../AccountProvider/selectors';
 import { formatNtz } from '../../utils/amountFormatter';
 
 export class JoinDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -31,15 +32,17 @@ export class JoinDialog extends React.Component { // eslint-disable-line react/p
   }
 
   render() {
-    const min = this.props.sb * 40;
-    const tableMax = this.props.sb * 200;
-    const max = (this.props.balance < tableMax) ? this.props.balance - (this.props.balance % this.props.sb) : tableMax;
-    if (this.props.balance < min) {
+    const { sb, injected, balance, modalDismiss } = this.props;
+
+    const min = sb * 40;
+    const tableMax = sb * 200;
+    const max = (balance < tableMax) ? balance - (balance % sb) : tableMax;
+    if (balance < min) {
       return (
         <div style={{ minWidth: '20em' }}>
           <H2>Sorry!</H2>
           <p>Your balance is not sufficient to join this table!</p>
-          <SubmitButton onClick={this.props.modalDismiss}>OK</SubmitButton>
+          <SubmitButton onClick={modalDismiss}>OK</SubmitButton>
         </div>
       );
     }
@@ -51,13 +54,17 @@ export class JoinDialog extends React.Component { // eslint-disable-line react/p
           tooltip={false}
           min={min}
           max={max}
-          step={this.props.sb}
+          step={sb}
           onChange={this.updateAmount}
-        >
-        </Slider>
+        />
         <div>Max: {formatNtz(max)} NTZ</div>
         <div>{ (this.state) ? formatNtz(this.state.amount) : formatNtz(min) } NTZ</div>
-        <SubmitButton onClick={this.handleSubmit}>Join</SubmitButton>
+
+        {!injected && <NoWeb3Message />}
+
+        <SubmitButton onClick={this.handleSubmit} disabled={!injected}>
+          Join
+        </SubmitButton>
       </div>
     );
   }
@@ -73,11 +80,13 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   sb: makeSbSelector(),
   proxyAddr: makeSelectProxyAddr(),
+  injected: makeSelectInjectedAccount(),
 });
 
 JoinDialog.propTypes = {
   handleJoin: PropTypes.func,
   modalDismiss: PropTypes.func,
+  injected: PropTypes.string,
   pos: PropTypes.any,
   sb: PropTypes.number,
   balance: React.PropTypes.number,

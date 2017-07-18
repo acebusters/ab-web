@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-// import BigNumber from 'bignumber.js';
 
 import { Form, reduxForm, formValueSelector } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
 
+import { makeSelectInjectedAccount } from '../../containers/AccountProvider/selectors';
+import NoWeb3Message from '../../components/NoWeb3Message';
 import SubmitButton from '../../components/SubmitButton';
 import FormField from '../../components/Form/FormField';
 import AmountField from '../../components/AmountField';
@@ -49,6 +50,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
       amountUnit,
       title,
       invalid,
+      injected,
     } = this.props;
     const expectedAmountUnit = amountUnit.toLowerCase() === 'ntz' ? 'eth' : 'ntz';
     const formatExpValue = expectedAmountUnit === 'ntz' ? formatNtz : formatEth;
@@ -78,6 +80,8 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
             maxAmount={maxAmount}
           />
 
+          {!injected && <NoWeb3Message />}
+
           <SubmitButton
             disabled={invalid}
             submitting={submitting}
@@ -93,6 +97,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
 ExchangeDialog.propTypes = {
   submitting: PropTypes.bool,
   invalid: PropTypes.bool,
+  injected: PropTypes.string,
   maxAmount: PropTypes.object, // BigNumber
   calcExpectedAmount: PropTypes.func,
   handleSubmit: PropTypes.func,
@@ -106,6 +111,7 @@ const valueSelector = formValueSelector('exchange');
 
 const mapStateToProps = (state) => ({
   amount: valueSelector(state, 'amount'),
+  injected: makeSelectInjectedAccount()(state),
 });
 
 export default connect(mapStateToProps)(

@@ -7,6 +7,7 @@ import { Form, Field, reduxForm } from 'redux-form/immutable';
 
 import { makeSelectInjectedAccount } from '../../containers/AccountProvider/selectors';
 import { getWeb3 } from '../../containers/AccountProvider/utils';
+import NoWeb3Message from '../../components/NoWeb3Message';
 import SubmitButton from '../../components/SubmitButton';
 import FormGroup from '../../components/Form/FormGroup';
 import { CheckBox } from '../../components/Input';
@@ -93,12 +94,7 @@ class UpgradeDialog extends React.Component {
       <div>
         <H2>Upgrade your account</H2>
 
-        {!injected &&
-          <div>
-            <p>Your browser does not support smart contracts</p>
-            <p>Please install MetaMask chrome extension (and login to metamask account), or ethereum browser (mist, parity ...).</p>
-          </div>
-        }
+        {!injected && <NoWeb3Message />}
 
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           {injected && !submitting && !success &&
