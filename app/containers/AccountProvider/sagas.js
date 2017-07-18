@@ -242,28 +242,87 @@ function sendTx(forwardReceipt) {
   });
 }
 
+function contractMethodTx(contract, methodName, ...args) {
+  return new Promise((resolve, reject) => {
+    contract[methodName].sendTransaction(
+      ...args,
+      { from: window.web3.eth.accounts[0], gas: 200000 },
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+  });
+}
+
+function* contractSecureTransactionSendSaga(action) {
+  const { dest, key, data, callback, args, methodName } = action.payload;
+  const state = yield select();
+  const proxyAddr = yield call([state, state.getIn], ['account', 'proxy']);
+  const web3 = yield call(getWeb3, true);
+  const proxy = yield call([web3.eth, web3.eth.contract], ABI_PROXY);
+  const proxyInstance = yield call([proxy, proxy.at], proxyAddr);
+
+  try {
+    const txHash = yield call(
+      contractMethodTx,
+      proxyInstance,
+      'forward',
+      confParams.ntzAddr,
+      0,
+      data
+    );
+    yield put(contractTxSuccess({
+      args,
+      key,
+      methodName,
+      address: dest,
+      txHash,
+    }));
+    callback(null, txHash);
+  } catch (e) {
+    yield put(contractTxError({
+      action,
+      args,
+      key,
+      methodName,
+      address: dest,
+    }));
+    callback(e);
+  }
+}
+
 function* contractTransactionSendSaga() {
   const txChan = yield actionChannel(CONTRACT_TX_SEND);
   while (true) { // eslint-disable-line no-constant-condition
     const action = yield take(txChan);
-    const { dest, key, data, privKey, callback, args, methodName } = action.payload;
     const state = yield select();
-    const nonce = state.get('account').get('lastNonce') + 1;
-    const controller = state.get('account').get('controller');
-    const forwardReceipt = new Receipt(controller).forward(nonce, dest, 0, data).sign(privKey);
-    // send it.
-    try {
-      const value = yield sendTx(forwardReceipt);
-      if (callback) {
-        yield call(callback, null, value.txHash);
+    const isLocked = yield call([state, state.getIn], ['account', 'isLocked']);
+
+    if (isLocked) {
+      const { dest, key, data, privKey, callback, args, methodName } = action.payload;
+      const nonce = yield call([state, state.getIn], ['account', 'lastNonce']) + 1;
+      const controller = yield call([state, state.getIn], ['account', 'controller']);
+      const forwardReceipt = new Receipt(controller).forward(nonce, dest, 0, data).sign(privKey);
+      // send it.
+      try {
+        const value = yield sendTx(forwardReceipt);
+        if (callback) {
+          yield call(callback, null, value.txHash);
+        }
+        yield put(contractTxSuccess({ address: dest, nonce, txHash: value.txHash, key, args, methodName }));
+      } catch (err) {
+        const error = err.message || err;
+        if (callback) {
+          yield call(callback, error);
+        }
+        yield put(contractTxError({ address: dest, nonce, error, args, methodName, action }));
       }
-      yield put(contractTxSuccess({ address: dest, nonce, txHash: value.txHash, key, args, methodName }));
-    } catch (err) {
-      const error = err.message || err;
-      if (callback) {
-        yield call(callback, error);
-      }
-      yield put(contractTxError({ address: dest, nonce, error, args, methodName, action }));
+    } else {
+      yield fork(contractSecureTransactionSendSaga, action);
     }
   }
 }

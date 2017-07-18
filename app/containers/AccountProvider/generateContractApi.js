@@ -18,7 +18,8 @@ export function getMethodKey({ groupName, methodName, args }) {
 function generateContractInstanceApi({ abi, address, getState, dispatch }) {
   // cached version doesn't exist, create it
   const contractInstance = getWeb3().eth.contract(abi).at(address);
-  // // reduce the abi into the redux methods
+
+  // reduce the abi into the redux methods
   const api = abi.reduce((o, definition) => {
     // skip if we're not dealing with a function
     if (definition.type !== 'function') { return o; }
