@@ -1,6 +1,11 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import { Section } from '../../containers/Dashboard/styles';
+import { FormattedMessage } from 'react-intl';
+import PropTypes from 'prop-types';
+import QRCode from 'qrcode.react';
+
+import { Section, Address } from '../../containers/Dashboard/styles';
+import Alert from '../Alert';
+import WithLoading from '../WithLoading';
 import Input from '../Input';
 import {
   Pane,
@@ -10,6 +15,7 @@ import {
   TabIcon as ModeIcon,
   TabTitle as ModeTitle,
 } from './styles';
+import messages from '../../containers/Dashboard/messages';
 
 class Wallet extends React.Component {
   constructor(props) {
@@ -33,6 +39,7 @@ class Wallet extends React.Component {
   }
 
   render() {
+    const qrUrl = `ether:${this.props.account.proxy}`;
     return (
       <Pane name="dashboard-wallet">
         <ModeWrapper name="wallet-select">
@@ -84,8 +91,19 @@ class Wallet extends React.Component {
           </Section>
         :
           <Section name="wallet-receive">
-            <h3>QR Code</h3>
-            <h3>ETH Address</h3>
+            <h3>Your Address</h3>
+            <WithLoading
+              isLoading={!this.props.account.proxy || this.props.account.proxy === '0x'}
+              loadingSize="40px"
+              styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
+            >
+              <Address>{this.props.account.proxy}</Address>
+              <QRCode value={qrUrl} size={120} />
+
+              <Alert theme="danger">
+                <FormattedMessage {...messages.ethAlert} />
+              </Alert>
+            </WithLoading>
             <ConfirmButton>
               <ModeIcon className="fa fa-copy" />
               <ModeTitle>Copy to Clipboard</ModeTitle>
@@ -96,8 +114,8 @@ class Wallet extends React.Component {
     );
   }
 }
-// Wallet.propTypes = {
-//   signerAddr: PropTypes.string,
-// };
+Wallet.propTypes = {
+  account: PropTypes.object,
+};
 
 export default Wallet;

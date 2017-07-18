@@ -2,7 +2,6 @@
 export const OVERVIEW = 'overview';
 export const WALLET = 'wallet';
 export const EXCHANGE = 'exchange';
-export const ARCHIVE = 'archive';
 
 // actions
 export const SET_ACTIVE_TAB = 'acebusters/Dashboard/SET_ACTIVE_TAB';
