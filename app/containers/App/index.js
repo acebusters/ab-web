@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { ModalContainer, ModalDialog } from 'kd-react-modal-dialog';
 import { browserHistory } from 'react-router';
 import Footer from 'components/Footer';
 import Content from 'components/Content';
 import withProgressBar from 'components/ProgressBar';
+import { ModalContainer, ModalDialog } from 'components/Modal';
 import Header from '../Header';
 import Notifications from '../../containers/Notifications';
+
 
 import {
   makeSelectProgress,
@@ -87,7 +88,7 @@ export function App(props) {
       }
 
       {props.modalStack.length > 0 &&
-        <ModalContainer zIndex={7}>
+        <ModalContainer style={{ zIndex: 7 }}>
           <ModalDialog
             onClose={props.modalDismiss}
             dismissOnBackgroundClick={false}
