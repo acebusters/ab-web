@@ -116,7 +116,7 @@ const valueSelector = formValueSelector('exchange');
 const mapStateToProps = (state) => ({
   amount: valueSelector(state, 'amount'),
   injected: makeSelectInjectedAccount()(state),
-  networkSupported: makeSelectNetworkSupported(),
+  networkSupported: makeSelectNetworkSupported()(state),
 });
 
 export default connect(mapStateToProps)(
