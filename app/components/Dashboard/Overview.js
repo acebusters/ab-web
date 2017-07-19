@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import QRCode from 'qrcode.react';
 
 import { createBlocky } from '../../services/blockies';
 import {
@@ -21,12 +22,13 @@ import H2 from '../H2';
 import List from '../List';
 
 import {
+  Address,
   BalanceSection,
   BalanceWrapper,
   Pane,
   Section,
+  WalletContainer,
 } from './styles';
-
 
 const Overview = ({
   ETH_FISH_LIMIT,
@@ -41,11 +43,27 @@ const Overview = ({
   pwrBalance,
   signerAddr,
   weiBalance,
+  qrUrl,
 }) => (
   <Pane name="dashboard-overview">
-    <Section name="player-info">
+    <Section name="wallet-receive">
       <Blocky blocky={createBlocky(signerAddr)} />
+      <WithLoading
+        isLoading={!account.proxy || account.proxy === '0x'}
+        loadingSize="40px"
+        styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
+      >
+        <WalletContainer>
+          <QRCode value={qrUrl} size={140} />
+          <Address>{account.proxy}</Address>
+
+          <Alert theme="danger">
+            <FormattedMessage {...messages.ethAlert} />
+          </Alert>
+        </WalletContainer>
+      </WithLoading>
     </Section>
+
 
     {account.isLocked &&
       <Section>
@@ -159,6 +177,7 @@ Overview.propTypes = {
   modalDismiss: PropTypes.func,
   pwrBalance: PropTypes.object,
   signerAddr: PropTypes.string,
+  qrUrl: PropTypes.string,
   weiBalance: PropTypes.object,
 };
 
