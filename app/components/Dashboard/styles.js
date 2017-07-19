@@ -35,6 +35,13 @@ export const Address = styled.p`
 `;
 
 
+// Exchange
+export const ExchangeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 // Tabs
 export const TabsWrapper = styled.ul`
   display: flex;
