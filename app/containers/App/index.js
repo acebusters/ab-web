@@ -8,6 +8,7 @@ import Footer from 'components/Footer';
 import Content from 'components/Content';
 import withProgressBar from 'components/ProgressBar';
 import { ModalContainer, ModalDialog } from 'components/Modal';
+import { ModalsTransitionGroup } from 'components/Modal/ModalsTransitionGroup';
 import Header from '../Header';
 import Notifications from '../../containers/Notifications';
 
@@ -87,13 +88,15 @@ export function App(props) {
         <Footer />
       }
 
-      {props.modalStack.length > 0 &&
-        <ModalContainer style={{ zIndex: 7 }}>
-          <ModalDialog onClose={props.modalDismiss} key={props.modalStack.length}>
-            {props.modalStack[props.modalStack.length - 1]}
-          </ModalDialog>
-        </ModalContainer>
-      }
+      <ModalsTransitionGroup>
+        {props.modalStack.length > 0 &&
+          <ModalContainer style={{ zIndex: 7 }}>
+            <ModalDialog onClose={props.modalDismiss}>
+              {props.modalStack[props.modalStack.length - 1]}
+            </ModalDialog>
+          </ModalContainer>
+        }
+      </ModalsTransitionGroup>
     </div>
   );
 }
