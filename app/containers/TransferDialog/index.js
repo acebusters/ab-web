@@ -72,6 +72,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
             type="number"
             label={`Amount (${amountUnit})`}
             normalize={maxAmount && limitAmount}
+            autoFocus
           />
 
           {!hideAddress &&
