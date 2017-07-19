@@ -38,6 +38,14 @@ const initialState = fromJS({
   activeTab: WALLET,
 });
 
+function formatTxErrorMessage(error) {
+  if (typeof error === 'string' && error.indexOf('Error: MetaMask Tx Signature') > -1) {
+    return 'Transaction denied';
+  }
+
+  return error;
+}
+
 function dashboardReducer(state = initialState, action) {
   const { payload, meta = {} } = action;
 
@@ -46,7 +54,7 @@ function dashboardReducer(state = initialState, action) {
       return state.set('activeTab', action.whichTab);
 
     case ACCOUNT_LOADED:
-      return state.set('proxy', action.data.proxy);
+      return state.set('proxy', action.payload.proxy);
 
     case CONTRACT_TX_SUCCESS:
       return addNTZPending(
@@ -61,7 +69,10 @@ function dashboardReducer(state = initialState, action) {
       );
 
     case CONTRACT_TX_ERROR:
-      return state.set('failedTx', fromJS(payload));
+      return state.set('failedTx', fromJS({
+        ...payload,
+        error: formatTxErrorMessage(payload.error),
+      }));
 
     case MODAL_DISMISS:
       return state.set('failedTx', null);

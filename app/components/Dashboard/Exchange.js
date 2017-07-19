@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import BigNumber from 'bignumber.js';
 
 import {
-  ETH_DECIMALS,
   NTZ_DECIMALS,
   ABP_DECIMALS,
 } from '../../utils/amountFormatter';
@@ -18,7 +17,13 @@ import H2 from '../H2';
 import { Pane, Section, ExchangeContainer } from './styles';
 
 const Exchange = ({
+  ETH_FISH_LIMIT,
+  account,
   babzBalance,
+  ethBalance,
+  calcETHAmount,
+  calcNTZAmount,
+  nutzBalance,
   ceiling,
   floor,
   handleNTZSell,
@@ -40,14 +45,18 @@ const Exchange = ({
                 <ExchangeDialog
                   title={<FormattedMessage {...messages.sellTitle} />}
                   amountUnit="ntz"
-                  calcExpectedAmount={(amount) => new BigNumber(amount).div(floor)}
+                  calcExpectedAmount={calcETHAmount}
                   handleExchange={handleNTZSell}
-                  maxAmount={babzBalance.div(NTZ_DECIMALS)}
+                  maxAmount={BigNumber.min(
+                    account.isLocked
+                      ? BigNumber.max(ETH_FISH_LIMIT.sub(ethBalance), 0).mul(floor)
+                      : nutzBalance,
+                    nutzBalance
+                  )}
                 />
               );
             }}
             size="medium"
-            icon="fa fa-money"
           >
             Sell
           </DBButton>
@@ -59,20 +68,25 @@ const Exchange = ({
                 <ExchangeDialog
                   title={<FormattedMessage {...messages.purchaseTitle} />}
                   amountUnit="eth"
-                  calcExpectedAmount={(amount) => ceiling.mul(amount)}
+                  calcExpectedAmount={calcNTZAmount}
                   handleExchange={handleNTZPurchase}
-                  maxAmount={weiBalance.div(ETH_DECIMALS)}
+                  maxAmount={BigNumber.min(
+                    account.isLocked
+                      ? BigNumber.max(ETH_FISH_LIMIT.sub(calcETHAmount(nutzBalance)), 0)
+                      : ethBalance,
+                    ethBalance
+                  )}
                 />
               );
             }}
             size="medium"
-            icon="fa fa-money"
           >
             Purchase
           </DBButton>
         }
       </ExchangeContainer>
     </Section>
+
     <Section>
       <H2>Acebuster Power &lt;&gt; Nutz</H2>
       <ExchangeContainer>
@@ -90,7 +104,7 @@ const Exchange = ({
               );
             }}
             size="medium"
-            icon="fa fa-money"
+            disabled={account.isLocked}
           >
             Power Up
           </DBButton>
@@ -111,7 +125,7 @@ const Exchange = ({
               );
             }}
             size="medium"
-            icon="fa fa-money"
+            disabled={account.isLocked}
           >
             Power Down
           </DBButton>
@@ -121,7 +135,13 @@ const Exchange = ({
   </Pane>
 );
 Exchange.propTypes = {
+  ETH_FISH_LIMIT: PropTypes.object,
+  account: PropTypes.object,
   babzBalance: PropTypes.object,
+  ethBalance: PropTypes.object,
+  calcETHAmount: PropTypes.func,
+  calcNTZAmount: PropTypes.func,
+  nutzBalance: PropTypes.object,
   ceiling: PropTypes.object,
   floor: PropTypes.object,
   handleNTZSell: PropTypes.func,

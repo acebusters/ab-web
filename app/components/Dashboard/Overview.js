@@ -9,11 +9,16 @@ import {
   formatAbp,
 } from '../../utils/amountFormatter';
 
+import messages from '../../containers/Dashboard/messages';
+import UpgradeDialog from '../../containers/UpgradeDialog';
+import AccountProgress from '../../containers/Dashboard/AccountProgress';
+
+import Alert from '../Alert';
+import Button from '../Button';
+import Blocky from '../Blocky';
+import WithLoading from '../WithLoading';
 import H2 from '../H2';
 import List from '../List';
-import WithLoading from '../WithLoading';
-import Blocky from '../Blocky';
-import messages from '../../containers/Dashboard/messages';
 
 import {
   BalanceSection,
@@ -22,8 +27,14 @@ import {
   Section,
 } from './styles';
 
+
 const Overview = ({
+  ETH_FISH_LIMIT,
+  account,
   babzBalance,
+  ethBalance,
+  nutzBalance,
+  floor,
   listTxns,
   pwrBalance,
   signerAddr,
@@ -33,6 +44,34 @@ const Overview = ({
     <Section name="player-info">
       <Blocky blocky={createBlocky(signerAddr)} />
     </Section>
+
+    {account.isLocked &&
+      <Section>
+        <Alert theme="warning">
+          Warning: account limit {ETH_FISH_LIMIT.toString()} ETH<br />
+          <Button
+            size="link"
+            onClick={() => this.props.modalAdd(
+              <UpgradeDialog
+                proxyContract={this.proxy}
+                onSuccessButtonClick={this.props.modalDismiss}
+              />
+            )}
+          >
+            Upgrade to shark account
+          </Button> to deposit more
+        </Alert>
+
+        {ethBalance && nutzBalance && floor &&
+          <AccountProgress
+            ethBalance={ethBalance}
+            nutzBalance={nutzBalance}
+            floor={floor}
+            ethLimit={ETH_FISH_LIMIT}
+          />
+        }
+      </Section>
+    }
 
     <Section>
       <H2>Balances</H2>
@@ -107,7 +146,12 @@ const Overview = ({
   </Pane>
 );
 Overview.propTypes = {
+  ETH_FISH_LIMIT: PropTypes.object,
+  account: PropTypes.object,
   babzBalance: PropTypes.object,
+  ethBalance: PropTypes.object,
+  nutzBalance: PropTypes.object,
+  floor: PropTypes.object,
   listTxns: PropTypes.array,
   pwrBalance: PropTypes.object,
   signerAddr: PropTypes.string,

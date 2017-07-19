@@ -4,6 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import { FormattedMessage } from 'react-intl';
 import ethUtil from 'ethereumjs-util';
 import BigNumber from 'bignumber.js';
+
 import web3Connect from '../AccountProvider/web3Connect';
 import { getWeb3 } from '../AccountProvider/sagas';
 import { addEventsDate, isUserEvent } from '../AccountProvider/utils';
@@ -27,9 +28,8 @@ import {
   setActiveTab,
 } from './actions';
 import messages from './messages';
-import { getActiveTab, createDashboardTxsSelector } from './selectors';
 import { txnsToList } from './txnsToList';
-
+import { getActiveTab, createDashboardTxsSelector } from './selectors';
 import Container from '../../components/Container';
 import H2 from '../../components/H2';
 import Overview from '../../components/Dashboard/Overview';
@@ -42,9 +42,12 @@ import Tabs from '../../components/Dashboard/Tabs';
 
 import { ABI_TOKEN_CONTRACT, ABI_POWER_CONTRACT, ABI_ACCOUNT_FACTORY, ABI_PROXY, ABI_TABLE_FACTORY, conf } from '../../app.config';
 
+// import { waitForTx } from '../../utils/waitForTx';
+
 const confParams = conf();
 
 const LOOK_BEHIND_PERIOD = 4 * 60 * 24;
+const ETH_FISH_LIMIT = new BigNumber(0.1);
 
 const PANES = {
   [OVERVIEW]: Overview,
@@ -185,12 +188,7 @@ class DashboardRoot extends React.Component {
         const { pendingSell = [] } = this.props.dashboardTxs;
 
         if (pendingSell.indexOf(event.transactionHash) > -1) {
-          this.token.transferFrom.sendTransaction(
-            confParams.ntzAddr,
-            proxyAddr,
-            0,
-            { from: proxyAddr }
-          );
+          this.handleETHClaim(proxyAddr);
         }
       }
     });
@@ -201,12 +199,7 @@ class DashboardRoot extends React.Component {
       proxyAddr,
     ).then((value) => {
       if (!value.eq(0)) {
-        this.token.transferFrom.sendTransaction(
-          confParams.ntzAddr,
-          proxyAddr,
-          0,
-          { from: proxyAddr }
-        );
+        this.handleETHClaim(proxyAddr);
       }
     });
   }
@@ -220,78 +213,114 @@ class DashboardRoot extends React.Component {
     const events = accountFactory.AccountCreated({ signer }, { fromBlock: 'latest' });
 
     events.watch((err, ev) => {  // eslint-disable-line no-unused-vars
-      accountFactory.getAccount.call(signer, (e, res) => {
-        const proxy = res[0];
-        const controller = res[1];
-        const lastNonce = res[2].toNumber();
-
-        this.props.accountLoaded({ proxy, controller, lastNonce });
+      accountFactory.getAccount.call(signer, (e, [proxy, owner, isLocked]) => {
+        this.props.accountLoaded({ proxy, owner, isLocked });
       });
 
       events.stopWatching();
     });
   }
 
-  handleNTZTransfer(amount, to) {
-    this.token.transfer.sendTransaction(
-      to,
-      new BigNumber(amount).mul(NTZ_DECIMALS)
+  handleETHClaim(proxyAddr) {
+    this.token.transferFrom.sendTransaction(
+      confParams.ntzAddr,
+      proxyAddr,
+      0,
+      { from: proxyAddr }
     );
-    this.props.modalDismiss();
   }
 
-  handleNTZPurchase(amount) {
-    this.props.transferETH({
-      dest: confParams.ntzAddr,
-      amount: new BigNumber(amount).mul(ETH_DECIMALS),
+  handleTxSubmit(txFn) {
+    return new Promise((resolve, reject) => {
+      txFn((err, result) => {
+        this.props.modalDismiss();
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
     });
-    this.props.modalDismiss();
+  }
+
+  handleNTZTransfer(amount, to) {
+    return this.handleTxSubmit((callback) => {
+      this.token.transfer.sendTransaction(
+        to,
+        new BigNumber(amount).mul(NTZ_DECIMALS),
+        callback
+      );
+    });
   }
 
   handleNTZSell(amount) {
-    this.token.transfer.sendTransaction(
-      confParams.ntzAddr,
-      new BigNumber(amount).mul(NTZ_DECIMALS),
-      { from: this.props.account.proxy }
-    );
-    this.props.modalDismiss();
+    return this.handleTxSubmit((callback) => {
+      this.token.transfer.sendTransaction(
+        confParams.ntzAddr,
+        new BigNumber(amount).mul(NTZ_DECIMALS),
+        { from: this.props.account.proxy },
+        callback
+      );
+    });
+  }
+
+  handleNTZPurchase(amount) {
+    return this.handleTxSubmit((callback) => {
+      this.props.transferETH({
+        dest: confParams.ntzAddr,
+        amount: new BigNumber(amount).mul(ETH_DECIMALS),
+        callback,
+      });
+    });
   }
 
   handleETHTransfer(amount, dest) {
-    this.props.transferETH({
-      dest,
-      amount: new BigNumber(amount).mul(ETH_DECIMALS),
+    return this.handleTxSubmit((callback) => {
+      this.props.transferETH({
+        dest,
+        amount: new BigNumber(amount).mul(ETH_DECIMALS),
+        callback,
+      });
     });
-    this.props.modalDismiss();
   }
 
   handlePowerUp(amount) {
-    this.token.transfer.sendTransaction(
-      confParams.pwrAddr,
-      new BigNumber(amount).mul(NTZ_DECIMALS)
-    );
-    this.props.modalDismiss();
+    return this.handleTxSubmit((callback) => {
+      this.token.transfer.sendTransaction(
+        confParams.pwrAddr,
+        new BigNumber(amount).mul(NTZ_DECIMALS),
+        callback
+      );
+    });
   }
 
   handlePowerDown(amount) {
-    this.power.transfer.sendTransaction(
-      confParams.ntzAddr,
-      new BigNumber(amount).mul(ABP_DECIMALS)
-    );
-    this.props.modalDismiss();
+    return this.handleTxSubmit((callback) => {
+      this.power.transfer.sendTransaction(
+        confParams.ntzAddr,
+        new BigNumber(amount).mul(ABP_DECIMALS),
+        callback
+      );
+    });
   }
   render() {
-    const weiBalance = this.web3.eth.balance(this.props.account.proxy);
+    const { account } = this.props;
+    const qrUrl = `ether:${account.proxy}`;
+    const weiBalance = this.web3.eth.balance(account.proxy);
+    const ethBalance = weiBalance && weiBalance.div(ETH_DECIMALS);
+    const babzBalance = this.token.balanceOf(account.proxy);
+    const nutzBalance = babzBalance && babzBalance.div(NTZ_DECIMALS);
+    const pwrBalance = this.power.balanceOf(account.proxy);
     const floor = this.token.floor();
     const ceiling = this.token.ceiling();
-    const babzBalance = this.token.balanceOf(this.props.account.proxy);
-    const pwrBalance = this.power.balanceOf(this.props.account.proxy);
     const tables = this.tableFactory.getTables();
+    const calcETHAmount = (ntz) => new BigNumber(ntz).div(floor);
+    const calcNTZAmount = (eth) => ceiling.mul(eth);
 
     const listTxns = txnsToList(
       this.props.dashboardTxs.dashboardEvents,
       tables,
-      this.props.account.proxy
+      account.proxy
     );
     return (
       <Container>
@@ -300,12 +329,18 @@ class DashboardRoot extends React.Component {
           panes={PANES}
           paneType={this.props.activeTab}
           paneProps={{
+            ETH_FISH_LIMIT,
+            calcETHAmount,
+            calcNTZAmount,
             weiBalance,
             floor,
             ceiling,
             babzBalance,
+            ethBalance,
             pwrBalance,
+            nutzBalance,
             listTxns,
+            qrUrl,
             handleNTZSell: this.handleNTZSell,
             handleNTZPurchase: this.handleNTZPurchase,
             handlePowerDown: this.handlePowerDown,
