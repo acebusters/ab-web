@@ -14,7 +14,12 @@ import {
 } from '../../utils/amountFormatter';
 import { modalAdd, modalDismiss } from '../App/actions';
 import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
-import makeSelectAccountData, { makeSignerAddrSelector, makeSelectPrivKey } from '../AccountProvider/selectors';
+import makeSelectAccountData, {
+  makeSignerAddrSelector,
+  makeSelectPrivKey,
+  makeBlockySelector,
+  makeNickNameSelector,
+} from '../AccountProvider/selectors';
 import {
   OVERVIEW,
   WALLET,
@@ -340,7 +345,9 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = createStructuredSelector({
   activeTab: getActiveTab(),
   account: makeSelectAccountData(),
+  blocky: makeBlockySelector(),
   dashboardTxs: createDashboardTxsSelector(),
+  nickName: makeNickNameSelector(),
   signerAddr: makeSignerAddrSelector(),
   privKey: makeSelectPrivKey(),
 });

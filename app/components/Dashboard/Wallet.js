@@ -20,6 +20,7 @@ import {
   Address,
   Pane,
   Section,
+  SendContainer,
   TabIcon as ModeIcon,
   WalletContainer,
 } from './styles';
@@ -55,7 +56,7 @@ const Wallet = ({
 
       <Section name="wallet-send">
         <H2><ModeIcon className="fa fa-send" />Transfer</H2>
-        <WalletContainer>
+        <SendContainer>
           <DBButton
             onClick={() => {
               modalAdd(
@@ -88,7 +89,7 @@ const Wallet = ({
           >
             Ether
           </DBButton>
-        </WalletContainer>
+        </SendContainer>
       </Section>
 
     </Pane>

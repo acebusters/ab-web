@@ -28,18 +28,38 @@ export const WalletContainer = styled.div`
   align-items: center;
 `;
 
+export const SendContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 export const Address = styled.p`
   overflow-y: auto;
   padding: 10px 0;
   margin: 10px -30px 0 0;
 `;
 
-
 // Exchange
 export const ExchangeContainer = styled.div`
   display: flex;
+  justify-content: center;
+`;
+
+// Overview
+export const BalanceSection = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+export const BalanceWrapper = styled.div`
+  display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  padding: 20px;
+  min-width: 150px;
+  border: 1px solid gray;
+  border-radius: 10px;
 `;
 
 // Tabs
