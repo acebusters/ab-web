@@ -244,6 +244,7 @@
     "raven-js": "^3.13.1",
     "rc-slider": "^8.1.2",
     "react": "15.6.1",
+    "react-addons-css-transition-group": "^15.6.0",
     "react-dom": "15.6.1",
     "react-ga": "^2.2.0",
     "react-google-recaptcha": "^0.5.4",

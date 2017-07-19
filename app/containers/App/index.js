@@ -89,11 +89,7 @@ export function App(props) {
 
       {props.modalStack.length > 0 &&
         <ModalContainer style={{ zIndex: 7 }}>
-          <ModalDialog
-            onClose={props.modalDismiss}
-            dismissOnBackgroundClick={false}
-            closeButtonParam={{ margin: 5 }}
-          >
+          <ModalDialog onClose={props.modalDismiss} key={props.modalStack.length}>
             {props.modalStack[props.modalStack.length - 1]}
           </ModalDialog>
         </ModalContainer>

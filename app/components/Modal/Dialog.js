@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  position: relative;
+  position: absolute;
 
   box-sizing: border-box;
   width: auto;
@@ -14,8 +14,6 @@ const Wrapper = styled.div`
   background: white;
   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.4);
   border-radius: 10px;
-
-  transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 `;
 
 const CloseButton = styled.a`

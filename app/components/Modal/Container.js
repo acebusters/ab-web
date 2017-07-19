@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import { DialogTransitionGroup } from './DialogTransitionGroup';
+import { ContainerTransitionGroup } from './ContainerTransitionGroup';
+
 const Wrapper = styled.div`
   position: fixed;
   top: 0;
@@ -43,12 +46,12 @@ const Modals = styled.div`
 `;
 
 const ModalContainer = ({ children, ...props }) => (
-  <Wrapper {...props}>
+  <ContainerTransitionGroup component={Wrapper} {...props}>
     <Background />
-    <Modals>
+    <DialogTransitionGroup component={Modals}>
       {children}
-    </Modals>
-  </Wrapper>
+    </DialogTransitionGroup>
+  </ContainerTransitionGroup>
 );
 
 ModalContainer.propTypes = {
