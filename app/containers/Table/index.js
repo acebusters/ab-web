@@ -261,25 +261,28 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.token.transData.sendTransaction(
       this.tableAddr,
       amount,
-      `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`
-    );
+      `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`,
+      (err) => {
+        if (!err) {
+          const slides = (
+            <div>
+              <JoinSlides />
+              <Button size="large" onClick={this.props.modalDismiss}>
+                <FormattedMessage {...messages.joinModal.buttonDismiss} />
+              </Button>
+            </div>
+          );
 
-    const slides = (
-      <div>
-        <JoinSlides></JoinSlides>
-        <Button size="large" onClick={this.props.modalDismiss}>
-          <FormattedMessage {...messages.joinModal.buttonDismiss} />
-        </Button>
-      </div>
-    );
-
-    this.props.modalDismiss();
-    this.props.modalAdd(slides);
-    this.props.setPending(
-      this.tableAddr,
-      this.props.params.handId,
-      pos,
-      { signerAddr: this.props.signerAddr, stackSize: amount }
+          this.props.modalDismiss();
+          this.props.modalAdd(slides);
+          this.props.setPending(
+            this.tableAddr,
+            this.props.params.handId,
+            pos,
+            { signerAddr: this.props.signerAddr, stackSize: amount }
+          );
+        }
+      }
     );
   }
 
