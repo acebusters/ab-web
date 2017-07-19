@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  position: absolute;
+  position: relative;
 
   box-sizing: border-box;
   width: auto;
