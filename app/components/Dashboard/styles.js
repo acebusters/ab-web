@@ -7,10 +7,33 @@ import {
 } from '../../variables';
 
 export const Pane = styled.div`
-  display: block;
+  display: flex;
+  flex-direction: column;
   margin: 0;
   padding-top: 20px;
 `;
+
+export const Section = styled.div`
+  padding-bottom: 20px;
+
+  & + & {
+    border-top: 1px solid #ccc;
+  }
+`;
+
+// Wallet
+export const WalletContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const Address = styled.p`
+  overflow-y: auto;
+  padding: 10px 0;
+  margin: 10px -30px 0 0;
+`;
+
 
 // Tabs
 export const TabsWrapper = styled.ul`

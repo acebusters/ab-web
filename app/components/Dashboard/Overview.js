@@ -4,8 +4,6 @@ import { FormattedMessage } from 'react-intl';
 
 import { createBlocky } from '../../services/blockies';
 import {
-  ETH_DECIMALS,
-  NTZ_DECIMALS,
   formatEth,
   formatNtz,
   formatAbp,
@@ -15,11 +13,9 @@ import H2 from '../H2';
 import List from '../List';
 import WithLoading from '../WithLoading';
 import Blocky from '../Blocky';
-import { Section, DBButton } from '../../containers/Dashboard/styles';
 import messages from '../../containers/Dashboard/messages';
-import TransferDialog from '../../containers/TransferDialog';
 
-import { Pane } from './styles';
+import { Pane, Section } from './styles';
 
 const Overview = ({
   babzBalance,
@@ -46,24 +42,6 @@ const Overview = ({
             <span>{babzBalance && formatNtz(babzBalance)} NTZ</span>
           </WithLoading>
         </p>
-        {babzBalance &&
-          <DBButton
-            onClick={() => {
-              this.props.modalAdd(
-                <TransferDialog
-                  title={<FormattedMessage {...messages.ntzTransferTitle} />}
-                  handleTransfer={this.handleNTZTransfer}
-                  maxAmount={babzBalance.div(NTZ_DECIMALS)}
-                  amountUnit="NTZ"
-                />
-              );
-            }}
-            size="medium"
-            icon="fa fa-money"
-          >
-            Transfer
-          </DBButton>
-        }
       </Section>
 
       <Section name="ether">
@@ -79,24 +57,6 @@ const Overview = ({
             <span>{weiBalance && formatEth(weiBalance)} ETH</span>
           </WithLoading>
         </p>
-        {weiBalance &&
-          <DBButton
-            onClick={() => {
-              this.props.modalAdd(
-                <TransferDialog
-                  title={<FormattedMessage {...messages.ethTransferTitle} />}
-                  handleTransfer={this.handleETHTransfer}
-                  maxAmount={weiBalance.div(ETH_DECIMALS)}
-                  amountUnit="ETH"
-                />
-              );
-            }}
-            size="medium"
-            icon="fa fa-money"
-          >
-            Transfer
-          </DBButton>
-        }
       </Section>
 
       <Section name="power">

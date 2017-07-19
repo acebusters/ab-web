@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import BigNumber from 'bignumber.js';
 
-import H2 from '../H2';
 import ExchangeDialog from '../../containers/ExchangeDialog';
 import TransferDialog from '../../containers/TransferDialog';
 import messages from '../../containers/Dashboard/messages';
 
-import { Pane } from './styles';
-import { Section, DBButton } from '../../containers/Dashboard/styles';
+import { Pane, Section } from './styles';
+import { DBButton } from '../../containers/Dashboard/styles';
 import {
   ETH_DECIMALS,
   NTZ_DECIMALS,
@@ -30,7 +29,7 @@ const Exchange = ({
 }) => (
   <Pane name="dashboard-exchange" >
     <Section>
-      <H2>Ether &lt;&gt; Acebuster Nutz</H2>
+      <h3>Ether &lt;&gt; Acebuster Nutz</h3>
       {babzBalance && floor &&
         <DBButton
           onClick={() => {
@@ -71,7 +70,7 @@ const Exchange = ({
       }
     </Section>
     <Section>
-      <H2>Acebuster Power &lt;&gt; Nutz</H2>
+      <h3>Acebuster Power &lt;&gt; Nutz</h3>
       {babzBalance &&
         <DBButton
           onClick={() => {

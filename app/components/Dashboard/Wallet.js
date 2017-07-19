@@ -3,119 +3,104 @@ import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import QRCode from 'qrcode.react';
 
-import { Section, Address } from '../../containers/Dashboard/styles';
+import {
+  ETH_DECIMALS,
+  NTZ_DECIMALS,
+} from '../../utils/amountFormatter';
+
+import { DBButton } from '../../containers/Dashboard/styles';
+import messages from '../../containers/Dashboard/messages';
+import TransferDialog from '../../containers/TransferDialog';
+
+import H2 from '../H2';
 import Alert from '../Alert';
 import WithLoading from '../WithLoading';
-import Input from '../Input';
+
 import {
+  Address,
   Pane,
-  ConfirmButton,
-  TabButton as ModeButton,
-  TabsWrapper as ModeWrapper,
+  Section,
   TabIcon as ModeIcon,
-  TabTitle as ModeTitle,
+  WalletContainer,
 } from './styles';
-import messages from '../../containers/Dashboard/messages';
 
-class Wallet extends React.Component {
-  constructor(props) {
-    super(props);
-    this.toggleMode = this.toggleMode.bind(this);
-    this.toggleWallet = this.toggleWallet.bind(this);
-    this.state = {
-      mode: 'send',
-      wallet: 'ethereum',
-    };
-  }
+const Wallet = ({
+  account,
+  babzBalance,
+  handleNTZTransfer,
+  handleETHTransfer,
+  modalAdd,
+  weiBalance,
+}) => {
+  const qrUrl = `ether:${account.proxy}`;
+  return (
+    <Pane name="dashboard-wallet">
+      <Section name="wallet-receive">
+        <H2><ModeIcon className="fa fa-inbox" />Receive</H2>
+        <WithLoading
+          isLoading={!account.proxy || account.proxy === '0x'}
+          loadingSize="40px"
+          styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
+        >
+          <WalletContainer>
+            <QRCode value={qrUrl} size={180} />
+            <Address>{account.proxy}</Address>
 
-  toggleMode() {
-    const newState = this.state.mode === 'receive' ? 'send' : 'receive';
-    this.setState({ mode: newState });
-  }
+            <Alert theme="danger">
+              <FormattedMessage {...messages.ethAlert} />
+            </Alert>
+          </WalletContainer>
+        </WithLoading>
+      </Section>
 
-  toggleWallet() {
-    const newState = this.state.wallet === 'ethereum' ? 'nutz' : 'ethereum';
-    this.setState({ wallet: newState, mode: 'send' });
-  }
-
-  render() {
-    const qrUrl = `ether:${this.props.account.proxy}`;
-    return (
-      <Pane name="dashboard-wallet">
-        <ModeWrapper name="wallet-select">
-          <ModeButton
-            disabled={this.state.wallet === 'ethereum'}
-            onClick={this.toggleWallet}
+      <Section name="wallet-send">
+        <H2><ModeIcon className="fa fa-send" />Transfer</H2>
+        <WalletContainer>
+          <DBButton
+            onClick={() => {
+              modalAdd(
+                <TransferDialog
+                  title={<FormattedMessage {...messages.ntzTransferTitle} />}
+                  handleTransfer={handleNTZTransfer}
+                  maxAmount={babzBalance.div(NTZ_DECIMALS)}
+                  amountUnit="NTZ"
+                />
+              );
+            }}
+            size="medium"
+            icon="fa fa-money"
           >
-            <ModeTitle>Ethereum</ModeTitle>
-          </ModeButton>
-          <ModeButton
-            disabled={this.state.wallet === 'nutz'}
-            onClick={this.toggleWallet}
+            Nutz
+          </DBButton>
+          <DBButton
+            onClick={() => {
+              modalAdd(
+                <TransferDialog
+                  title={<FormattedMessage {...messages.ethTransferTitle} />}
+                  handleTransfer={handleETHTransfer}
+                  maxAmount={weiBalance.div(ETH_DECIMALS)}
+                  amountUnit="ETH"
+                />
+              );
+            }}
+            size="medium"
+            icon="fa fa-money"
           >
-            <ModeTitle>Nutz</ModeTitle>
-          </ModeButton>
-        </ModeWrapper>
+            Ether
+          </DBButton>
+        </WalletContainer>
+      </Section>
 
-        <ModeWrapper name="mode-select">
-          <ModeButton
-            disabled={this.state.mode === 'receive'}
-            onClick={this.toggleMode}
-          >
-            <ModeIcon className="fa fa-inbox" />
-            <ModeTitle>Receive</ModeTitle>
-          </ModeButton>
-          <ModeButton
-            disabled={this.state.mode === 'send'}
-            onClick={this.toggleMode}
-          >
-            <ModeIcon className="fa fa-send" />
-            <ModeTitle>Send</ModeTitle>
-          </ModeButton>
-        </ModeWrapper>
-
-        {this.state.mode === 'send' ?
-          <Section name="wallet-send">
-            <h3>From </h3>
-            <div style={{ height: 50, width: '100%', margin: 8 }}>
-                0x0ddkjsh32ijfioj3i9gh0jhgiflsfjdlsjo23joihhgoikkxnlkdl
-            </div>
-            <h3>To (Ethereum Address)</h3>
-            <Input />
-            <h3>Amount</h3>
-            <Input />
-            <ConfirmButton>
-              <ModeIcon className="fa fa-check-square-o" />
-              <ModeTitle>Confirm</ModeTitle>
-            </ConfirmButton>
-          </Section>
-        :
-          <Section name="wallet-receive">
-            <h3>Your Address</h3>
-            <WithLoading
-              isLoading={!this.props.account.proxy || this.props.account.proxy === '0x'}
-              loadingSize="40px"
-              styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
-            >
-              <Address>{this.props.account.proxy}</Address>
-              <QRCode value={qrUrl} size={120} />
-
-              <Alert theme="danger">
-                <FormattedMessage {...messages.ethAlert} />
-              </Alert>
-            </WithLoading>
-            <ConfirmButton>
-              <ModeIcon className="fa fa-copy" />
-              <ModeTitle>Copy to Clipboard</ModeTitle>
-            </ConfirmButton>
-          </Section>
-        }
-      </Pane>
-    );
-  }
-}
+    </Pane>
+  );
+};
 Wallet.propTypes = {
   account: PropTypes.object,
+  babzBalance: PropTypes.object,
+  handleNTZTransfer: PropTypes.func,
+  handleETHTransfer: PropTypes.func,
+  modalAdd: PropTypes.func,
+  weiBalance: PropTypes.object,
 };
 
 export default Wallet;
