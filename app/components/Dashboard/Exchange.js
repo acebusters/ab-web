@@ -71,7 +71,7 @@ const Exchange = ({
       }
     </Section>
     <Section>
-      <H2>Acebuster Power</H2>
+      <H2>Acebuster Power &lt;&gt; Nutz</H2>
       {babzBalance &&
         <DBButton
           onClick={() => {

@@ -7,14 +7,10 @@ import BigNumber from 'bignumber.js';
 import web3Connect from '../AccountProvider/web3Connect';
 import { getWeb3 } from '../AccountProvider/sagas';
 import { addEventsDate, isUserEvent } from '../AccountProvider/utils';
-import { createBlocky } from '../../services/blockies';
 import {
   ETH_DECIMALS,
   NTZ_DECIMALS,
   ABP_DECIMALS,
-  formatEth,
-  formatNtz,
-  formatAbp,
 } from '../../utils/amountFormatter';
 import { modalAdd, modalDismiss } from '../App/actions';
 import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
@@ -27,18 +23,14 @@ import {
 } from './actions';
 import messages from './messages';
 import { getActiveTab, createDashboardTxsSelector } from './selectors';
-import { Section, DBButton } from './styles';
 import { txnsToList } from './txnsToList';
-import TransferDialog from '../TransferDialog';
 
-import Blocky from '../../components/Blocky';
 import Container from '../../components/Container';
 import H2 from '../../components/H2';
 import Overview from '../../components/Dashboard/Overview';
 import Wallet from '../../components/Dashboard/Wallet';
 import Exchange from '../../components/Dashboard/Exchange';
 import SubmitButton from '../../components/SubmitButton';
-import WithLoading from '../../components/WithLoading';
 
 import PanesRoot from '../../components/Dashboard/PanesRoot';
 import Tabs from '../../components/Dashboard/Tabs';
@@ -316,90 +308,6 @@ class DashboardRoot extends React.Component {
             ...this.props,
           }}
         />
-        <Section name="player-info">
-          <Blocky blocky={createBlocky(this.props.signerAddr)} />
-        </Section>
-
-        <Section name="nutz">
-          <h2>Nutz</h2>
-          <p>
-            <span>Balance: </span>
-            <WithLoading
-              isLoading={!babzBalance}
-              loadingSize="14px"
-              type="inline"
-              styles={{ layout: { marginLeft: '15px' } }}
-            >
-              <span>{babzBalance && formatNtz(babzBalance)} NTZ</span>
-            </WithLoading>
-          </p>
-          {babzBalance &&
-            <DBButton
-              onClick={() => {
-                this.props.modalAdd(
-                  <TransferDialog
-                    title={<FormattedMessage {...messages.ntzTransferTitle} />}
-                    handleTransfer={this.handleNTZTransfer}
-                    maxAmount={babzBalance.div(NTZ_DECIMALS)}
-                    amountUnit="NTZ"
-                  />
-                );
-              }}
-              size="medium"
-              icon="fa fa-money"
-            >
-              Transfer
-            </DBButton>
-          }
-        </Section>
-
-        <Section name="ether">
-          <h2>Ether</h2>
-          <p>
-            <span>Balance: </span>
-            <WithLoading
-              isLoading={!weiBalance}
-              loadingSize="14px"
-              type="inline"
-              styles={{ layout: { marginLeft: '15px' } }}
-            >
-              <span>{weiBalance && formatEth(weiBalance)} ETH</span>
-            </WithLoading>
-          </p>
-          {weiBalance &&
-            <DBButton
-              onClick={() => {
-                this.props.modalAdd(
-                  <TransferDialog
-                    title={<FormattedMessage {...messages.ethTransferTitle} />}
-                    handleTransfer={this.handleETHTransfer}
-                    maxAmount={weiBalance.div(ETH_DECIMALS)}
-                    amountUnit="ETH"
-                  />
-                );
-              }}
-              size="medium"
-              icon="fa fa-money"
-            >
-              Transfer
-            </DBButton>
-          }
-        </Section>
-
-        <Section name="power">
-          <h2>Power</h2>
-          <p>
-            <span>Balance: </span>
-            <WithLoading
-              isLoading={!pwrBalance}
-              loadingSize="14px"
-              type="inline"
-              styles={{ layout: { marginLeft: '15px' } }}
-            >
-              <span>{pwrBalance && formatAbp(pwrBalance)} ABP</span>
-            </WithLoading>
-          </p>
-        </Section>
       </Container>
     );
   }
@@ -416,7 +324,6 @@ DashboardRoot.propTypes = {
   privKey: PropTypes.string,
   proxyEvents: PropTypes.func,
   transferETH: PropTypes.func,
-  signerAddr: PropTypes.string,
   web3Redux: PropTypes.any,
 };
 
