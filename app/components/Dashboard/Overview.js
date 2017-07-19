@@ -36,6 +36,8 @@ const Overview = ({
   nutzBalance,
   floor,
   listTxns,
+  modalDismiss,
+  modalAdd,
   pwrBalance,
   signerAddr,
   weiBalance,
@@ -51,10 +53,10 @@ const Overview = ({
           Warning: account limit {ETH_FISH_LIMIT.toString()} ETH<br />
           <Button
             size="link"
-            onClick={() => this.props.modalAdd(
+            onClick={() => modalAdd(
               <UpgradeDialog
                 proxyContract={this.proxy}
-                onSuccessButtonClick={this.props.modalDismiss}
+                onSuccessButtonClick={modalDismiss}
               />
             )}
           >
@@ -153,6 +155,8 @@ Overview.propTypes = {
   nutzBalance: PropTypes.object,
   floor: PropTypes.object,
   listTxns: PropTypes.array,
+  modalAdd: PropTypes.func,
+  modalDismiss: PropTypes.func,
   pwrBalance: PropTypes.object,
   signerAddr: PropTypes.string,
   weiBalance: PropTypes.object,

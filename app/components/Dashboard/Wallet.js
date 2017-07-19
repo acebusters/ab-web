@@ -22,12 +22,14 @@ import {
 
 const Wallet = ({
   account,
+  babzBalance,
   ethBalance,
   nutzBalance,
   handleNTZTransfer,
   handleETHTransfer,
   modalAdd,
   qrUrl,
+  weiBalance,
 }) => (
   <Pane name="dashboard-wallet">
     <Section name="wallet-receive">
@@ -51,38 +53,36 @@ const Wallet = ({
     <Section name="wallet-send">
       <H2><ModeIcon className="fa fa-send" />Transfer</H2>
       <SendContainer>
-        <DBButton
-          onClick={() => {
-            modalAdd(
+        {babzBalance &&
+          <DBButton
+            onClick={() => modalAdd(
               <TransferDialog
                 title={<FormattedMessage {...messages.ntzTransferTitle} />}
                 handleTransfer={handleNTZTransfer}
                 maxAmount={nutzBalance}
                 amountUnit="NTZ"
               />
-            );
-          }}
-          size="medium"
-          icon="fa fa-money"
-        >
-          Nutz
-        </DBButton>
-        <DBButton
-          onClick={() => {
-            modalAdd(
+            )}
+            size="medium"
+          >
+            Nutz
+          </DBButton>
+        }
+        {weiBalance &&
+          <DBButton
+            onClick={() => modalAdd(
               <TransferDialog
                 title={<FormattedMessage {...messages.ethTransferTitle} />}
                 handleTransfer={handleETHTransfer}
                 maxAmount={ethBalance}
                 amountUnit="ETH"
               />
-            );
-          }}
-          size="medium"
-          icon="fa fa-money"
-        >
-          Ether
-        </DBButton>
+            )}
+            size="medium"
+          >
+            Ether
+          </DBButton>
+        }
       </SendContainer>
     </Section>
 
@@ -90,12 +90,14 @@ const Wallet = ({
 );
 Wallet.propTypes = {
   account: PropTypes.object,
+  babzBalance: PropTypes.object,
   ethBalance: PropTypes.object,
   nutzBalance: PropTypes.object,
   handleNTZTransfer: PropTypes.func,
   handleETHTransfer: PropTypes.func,
   modalAdd: PropTypes.func,
   qrUrl: PropTypes.string,
+  weiBalance: PropTypes.object,
 };
 
 export default Wallet;
