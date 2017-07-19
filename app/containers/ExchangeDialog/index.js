@@ -5,8 +5,8 @@ import { Form, reduxForm, formValueSelector } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
 
 import { makeSelectInjectedAccount, makeSelectNetworkSupported } from '../../containers/AccountProvider/selectors';
-import NoWeb3Message from '../../components/NoWeb3Message';
-import UnsupportedNetworkMessage from '../../components/UnsupportedNetworkMessage';
+import NoWeb3Message from '../../components/Web3Alerts/NoWeb3';
+import UnsupportedNetworkMessage from '../../components/Web3Alerts/UnsupportedNetwork';
 import SubmitButton from '../../components/SubmitButton';
 import FormField from '../../components/Form/FormField';
 import AmountField from '../../components/AmountField';

@@ -10,8 +10,8 @@ import H2 from '../../components/H2';
 import { makeSbSelector } from '../Table/selectors';
 import { makeSelectInjectedAccount, makeSelectNetworkSupported } from '../AccountProvider/selectors';
 
-import NoWeb3Message from '../../components/NoWeb3Message';
-import UnsupportedNetworkMessage from '../../components/UnsupportedNetworkMessage';
+import NoWeb3Message from '../../components/Web3Alerts/NoWeb3';
+import UnsupportedNetworkMessage from '../../components/Web3Alerts/UnsupportedNetwork';
 
 import messages from './messages';
 

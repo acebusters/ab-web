@@ -5,8 +5,8 @@ import 'react-rangeslider/lib/index.css';
 import { createStructuredSelector } from 'reselect';
 import SubmitButton from '../../components/SubmitButton';
 import H2 from '../../components/H2';
-import NoWeb3Message from '../../components/NoWeb3Message';
-import UnsupportedNetworkMessage from '../../components/UnsupportedNetworkMessage';
+import NoWeb3Message from '../../components/Web3Alerts/NoWeb3';
+import UnsupportedNetworkMessage from '../../components/Web3Alerts/UnsupportedNetwork';
 
 import { makeSbSelector } from '../Table/selectors';
 import { makeSelectProxyAddr, makeSelectInjectedAccount, makeSelectNetworkSupported } from '../AccountProvider/selectors';

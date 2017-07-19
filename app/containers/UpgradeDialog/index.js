@@ -7,8 +7,8 @@ import { Form, Field, reduxForm } from 'redux-form/immutable';
 
 import { makeSelectAccountData } from '../../containers/AccountProvider/selectors';
 import { getWeb3 } from '../../containers/AccountProvider/utils';
-import NoWeb3Message from '../../components/NoWeb3Message';
-import UnsupportedNetworkMessage from '../../components/UnsupportedNetworkMessage';
+import NoWeb3Message from '../../components/Web3Alerts/NoWeb3';
+import UnsupportedNetworkMessage from '../../components/Web3Alerts/UnsupportedNetwork';
 import SubmitButton from '../../components/SubmitButton';
 import FormGroup from '../../components/Form/FormGroup';
 import { CheckBox } from '../../components/Input';
