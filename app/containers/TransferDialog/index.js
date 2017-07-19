@@ -1,12 +1,16 @@
 import React, { PropTypes } from 'react';
+import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 import { Form, Field, reduxForm } from 'redux-form/immutable';
-import BigNumber from 'bignumber.js';
 
+import { makeSelectInjectedAccount, makeSelectNetworkSupported } from '../../containers/AccountProvider/selectors';
+import NoWeb3Message from '../../components/Web3Alerts/NoWeb3';
+import UnsupportedNetworkMessage from '../../components/Web3Alerts/UnsupportedNetwork';
 import { ErrorMessage } from '../../components/FormMessages';
 import SubmitButton from '../../components/SubmitButton';
 import FormField from '../../components/Form/FormField';
+import AmountField from '../../components/AmountField';
 import H2 from '../../components/H2';
 
 import { isEthereumAddress } from './isEthereumAddress';
@@ -37,7 +41,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   handleSubmit(values) {
-    this.props.handleTransfer(
+    return this.props.handleTransfer(
       values.get('amount'),
       values.get('address'),
     );
@@ -53,26 +57,22 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
       hideAddress,
       title,
       description,
+      invalid,
+      injected,
+      networkSupported,
     } = this.props;
-
-    const limitAmount = (value) => {
-      const numValue = Math.max(0, Number(value));
-
-      return maxAmount.gte(new BigNumber(numValue)) ? numValue : maxAmount.toNumber();
-    };
 
     return (
       <div>
         {title && <H2>{title}</H2>}
         {description && <p>{description}</p>}
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          <Field
+          <AmountField
             name="amount"
             component={FormField}
-            type="number"
             label={`Amount (${amountUnit})`}
-            normalize={maxAmount && limitAmount}
             autoFocus
+            maxAmount={maxAmount}
           />
 
           {!hideAddress &&
@@ -86,7 +86,16 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <SubmitButton type="submit" disabled={submitting}>Submit</SubmitButton>
+          {!injected && <NoWeb3Message />}
+          {!networkSupported && <UnsupportedNetworkMessage />}
+
+          <SubmitButton
+            type="submit"
+            disabled={invalid || !injected || !networkSupported}
+            submitting={submitting}
+          >
+            Submit
+          </SubmitButton>
         </Form>
       </div>
     );
@@ -96,7 +105,10 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
 TransferDialog.propTypes = {
   title: PropTypes.any,
   description: PropTypes.any,
+  injected: PropTypes.string,
+  networkSupported: PropTypes.bool,
   submitting: PropTypes.bool,
+  invalid: PropTypes.bool,
   hideAddress: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
   amountUnit: PropTypes.string,
@@ -109,17 +121,12 @@ TransferDialog.defaultProps = {
   hideAddress: false,
 };
 
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-const mapStateToProps = () => ({
+const mapStateToProps = createStructuredSelector({
+  injected: makeSelectInjectedAccount(),
+  networkSupported: makeSelectNetworkSupported(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect(mapStateToProps)(
   reduxForm({
     form: 'transfer',
     validate,
