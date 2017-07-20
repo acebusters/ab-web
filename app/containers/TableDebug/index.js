@@ -1,12 +1,16 @@
 import React from 'react';
+import { createStructuredSelector } from 'reselect';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import { Receipt } from 'poker-helper';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import { getWeb3 } from '../../containers/AccountProvider/utils';
 
 import { formatNtz } from '../../utils/amountFormatter';
 import { ABI_TABLE } from '../../app.config';
+
+import { makeHandsSelector } from '../Table/selectors';
 
 const EMPTY_ADDR = '0x0000000000000000000000000000000000000000';
 
@@ -63,12 +67,16 @@ const Table = styled.table`
   tbody th {
     border-right: 1px solid #ccc;
   }
+
+  tfoot tr:first-child {
+    border-top: 1px solid #ccc;
+  }
 `;
 
 window.enableTableDebug = () => null;
 window.disableTableDebug = () => null;
 
-export default class TableDebug extends React.Component {
+class TableDebug extends React.Component {
 
   constructor(props) {
     super(props);
@@ -117,13 +125,6 @@ export default class TableDebug extends React.Component {
   }
 
   handleRefresh() {
-    const { tableService } = this.props;
-    tableService.debug().then((response) => {
-      this.setState({
-        data: response,
-      });
-    });
-
     loadContractData(this.table).then((contractData) => {
       this.setState({ contractData });
     });
@@ -169,11 +170,11 @@ export default class TableDebug extends React.Component {
                 <td>{handId}</td>
                 {contractData.lineup.reduce((memo, _, i) => memo.concat([
                   <td key={i * 2}>
-                    {formatNtz(contractData.hands[handId].ins[i])}
+                    {renderNtz(contractData.hands[handId].ins[i])}
                   </td>,
                   <td key={(i * 2) + 1}>
-                    {contractData.hands[handId].outs[i] &&
-                      formatNtz(contractData.hands[handId].outs[i].out)}
+                    {renderNtz(contractData.hands[handId].outs[i] &&
+                      contractData.hands[handId].outs[i].out)}
                   </td>,
                 ]), [])}
               </tr>
@@ -183,7 +184,7 @@ export default class TableDebug extends React.Component {
             <tr>
               <th>Bal.</th>
               {contractData.lineup.map((seat, i) =>
-                <td key={i} colSpan={2}>{formatNtz(seat.amount)}</td>)}
+                <td key={i} colSpan={2}>{renderNtz(seat.amount)}</td>)}
             </tr>
             <tr>
               <th>Exit hand</th>
@@ -249,8 +250,8 @@ export default class TableDebug extends React.Component {
     );
   }
 
-  renderData(data, contractData) {
-    if (!data && !contractData) {
+  renderData(hands, contractData) {
+    if (!hands && !contractData) {
       return null;
     }
 
@@ -263,10 +264,10 @@ export default class TableDebug extends React.Component {
               {this.renderContractData(contractData)}
             </Column>
           }
-          {data && data.db &&
+          {hands &&
             <Column>
               <h2>Db</h2>
-              {this.renderDbHands(data.db)}
+              {this.renderDbHands(hands)}
             </Column>
           }
         </Columns>
@@ -275,7 +276,8 @@ export default class TableDebug extends React.Component {
   }
 
   render() {
-    const { visible, expanded, data, contractData } = this.state;
+    const { visible, expanded, contractData } = this.state;
+    const { hands } = this.props;
 
     if (!visible) {
       return null;
@@ -293,7 +295,7 @@ export default class TableDebug extends React.Component {
             </button>
             <hr />
 
-            {this.renderData(data, contractData)}
+            {this.renderData(hands, contractData)}
           </div>
         }
       </Wrapper>
@@ -304,8 +306,14 @@ export default class TableDebug extends React.Component {
 
 TableDebug.propTypes = {
   contract: PropTypes.object.isRequired,
-  tableService: PropTypes.object.isRequired,
+  hands: PropTypes.array.isRequired,
 };
+
+const mapStateToProps = createStructuredSelector({
+  hands: makeHandsSelector(),
+});
+
+export default connect(mapStateToProps)(TableDebug);
 
 function parseDistribution(distribution, lineup) {
   if (!distribution) {
@@ -330,7 +338,7 @@ function parseLastReceiptAmount(receipt) {
 
 function renderNtz(amount) {
   if (amount) {
-    return `${formatNtz(amount, 1)} NTZ`;
+    return formatNtz(amount, 1);
   }
 
   return (amount === null || amount === undefined) ? '-' : amount;
