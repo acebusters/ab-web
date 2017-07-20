@@ -102,8 +102,7 @@ module.exports = (options) => ({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       },
-      __VERSION__: JSON.stringify(packagejs.version),
-      __TIMESTAMP__: JSON.stringify(Date.now()),
+      __VERSION__: JSON.stringify(`v${packagejs.version}_${Date.now()}`),
       // __GIT_TAG__: JSON.stringify(childProcess.execSync('git describe --tags $(git rev-list --tags --max-count=1)').toString()),
       // __GIT_HASH__: JSON.stringify(childProcess.execSync('git rev-parse --short HEAD').toString()),
     }),

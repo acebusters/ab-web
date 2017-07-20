@@ -79,7 +79,7 @@ function Footer() {
         </CenterDiv>
         <CenterDiv>
           {// eslint-disable-next-line no-undef
-            `v${__VERSION__}_${__TIMESTAMP__}`
+            __VERSION__
           }
         </CenterDiv>
       </div>
