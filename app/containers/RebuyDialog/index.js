@@ -9,6 +9,7 @@ import SubmitButton from '../../components/SubmitButton';
 import H2 from '../../components/H2';
 import { makeSbSelector } from '../Table/selectors';
 import { makeSelectHasWeb3, makeSelectNetworkSupported } from '../AccountProvider/selectors';
+import { formatNtz } from '../../utils/amountFormatter';
 
 import NoWeb3Message from '../../components/Web3Alerts/NoWeb3';
 import UnsupportedNetworkMessage from '../../components/Web3Alerts/UnsupportedNetwork';
@@ -84,9 +85,9 @@ export class RebuyDialog extends React.Component {
         />
         <div>
           <FormattedMessage {...messages.max} />
-          <span>{max}</span>
+          <span>{formatNtz(max)} NTZ</span>
         </div>
-        <div>{amount}</div>
+        <div>{formatNtz(amount)} NTZ</div>
 
         {!hasWeb3 && <NoWeb3Message />}
         {!networkSupported && <UnsupportedNetworkMessage />}
