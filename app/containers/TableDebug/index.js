@@ -3,8 +3,12 @@ import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Receipt } from 'poker-helper';
 import { FormattedDate, FormattedTime } from 'react-intl';
+import { getWeb3 } from '../../containers/AccountProvider/utils';
 
 import { formatNtz } from '../../utils/amountFormatter';
+import { ABI_TABLE } from '../../app.config';
+
+const EMPTY_ADDR = '0x0000000000000000000000000000000000000000';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -73,9 +77,12 @@ export default class TableDebug extends React.Component {
 
     this.state = {
       data: null,
+      contractData: null,
       visible,
       expanded: false,
     };
+
+    this.table = getWeb3().eth.contract(ABI_TABLE).at(props.contract.address);
 
     this.handleRefresh = this.handleRefresh.bind(this);
     this.handleExpandedToggle = this.handleExpandedToggle.bind(this);
@@ -116,20 +123,25 @@ export default class TableDebug extends React.Component {
         data: response,
       });
     });
+
+    loadContractData(this.table).then((contractData) => {
+      this.setState({ contractData });
+    });
   }
 
   renderContractData(contractData) {
     const lastNettingRequestTime = new Date(contractData.lastNettingRequestTime * 1000);
+
     return (
       <div>
         <ul>
           <li>
             <strong>lastHandNetted: </strong>
-            {contractData.lastHandNetted}
+            {contractData.lastHandNetted.toString()}
           </li>
           <li>
             <strong>lastNettingRequestHandId: </strong>
-            {contractData.lastNettingRequestHandId}
+            {contractData.lastNettingRequestHandId.toString()}
           </li>
           <li>
             <strong>lastNettingRequestTime: </strong>
@@ -157,11 +169,11 @@ export default class TableDebug extends React.Component {
                 <td>{handId}</td>
                 {contractData.lineup.reduce((memo, _, i) => memo.concat([
                   <td key={i * 2}>
-                    {contractData.hands[handId].ins[i]}
+                    {formatNtz(contractData.hands[handId].ins[i])}
                   </td>,
                   <td key={(i * 2) + 1}>
                     {contractData.hands[handId].outs[i] &&
-                      contractData.hands[handId].outs[i].out}
+                      formatNtz(contractData.hands[handId].outs[i].out)}
                   </td>,
                 ]), [])}
               </tr>
@@ -171,12 +183,12 @@ export default class TableDebug extends React.Component {
             <tr>
               <th>Bal.</th>
               {contractData.lineup.map((seat, i) =>
-                <td key={i} colSpan={2}>{seat.amount}</td>)}
+                <td key={i} colSpan={2}>{formatNtz(seat.amount)}</td>)}
             </tr>
             <tr>
               <th>Exit hand</th>
               {contractData.lineup.map((seat, i) =>
-                <td key={i} colSpan={2}>{seat.exitHand}</td>)}
+                <td key={i} colSpan={2}>{seat.exitHand && seat.exitHand.toString()}</td>)}
             </tr>
           </tfoot>
         </Table>
@@ -237,30 +249,33 @@ export default class TableDebug extends React.Component {
     );
   }
 
-  renderData(data) {
-    if (!data) {
+  renderData(data, contractData) {
+    if (!data && !contractData) {
       return null;
     }
 
     return (
       <div>
-
         <Columns>
-          <Column>
-            <h2>Contract</h2>
-            {this.renderContractData(data.contract)}
-          </Column>
-          <Column>
-            <h2>Db</h2>
-            {this.renderDbHands(data.db)}
-          </Column>
+          {contractData &&
+            <Column>
+              <h2>Contract</h2>
+              {this.renderContractData(contractData)}
+            </Column>
+          }
+          {data && data.db &&
+            <Column>
+              <h2>Db</h2>
+              {this.renderDbHands(data.db)}
+            </Column>
+          }
         </Columns>
       </div>
     );
   }
 
   render() {
-    const { visible, expanded, data } = this.state;
+    const { visible, expanded, data, contractData } = this.state;
 
     if (!visible) {
       return null;
@@ -278,7 +293,7 @@ export default class TableDebug extends React.Component {
             </button>
             <hr />
 
-            {this.renderData(data)}
+            {this.renderData(data, contractData)}
           </div>
         }
       </Wrapper>
@@ -319,4 +334,111 @@ function renderNtz(amount) {
   }
 
   return (amount === null || amount === undefined) ? '-' : amount;
+}
+
+function promisifyContractCall(contract, method) {
+  return (...args) => new Promise((resolve, reject) => {
+    contract[method].call(
+      ...args,
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+  });
+}
+
+function getLineup(contract) {
+  return promisifyContractCall(contract, 'getLineup')().then((lineup) => {
+    const rv = [];
+    for (let i = 0; i < lineup[1].length; i += 1) {
+      rv.push({
+        address: lineup[1][i],
+        amount: lineup[2][i],
+      });
+      if (lineup[3][i] > 0) {
+        rv[i].exitHand = lineup[3][i];
+      }
+    }
+    return {
+      lastHandNetted: lineup[0],
+      lineup: rv,
+    };
+  });
+}
+
+function getIns(contract, handId, lineup) {
+  const getIn = promisifyContractCall(contract, 'getIn');
+  return Promise.all(lineup.map(({ address }) => {
+    if (address === EMPTY_ADDR) {
+      return Promise.resolve(null);
+    }
+
+    return getIn(handId, address);
+  }));
+}
+
+function getOuts(contract, handId, lineup) {
+  const getOut = promisifyContractCall(contract, 'getOut');
+  return Promise.all(lineup.map(({ address }) => {
+    if (address === EMPTY_ADDR) {
+      return Promise.resolve(null);
+    }
+
+    return getOut(handId, address).then(([claimCount, out]) => ({ claimCount, out }));
+  }));
+}
+
+function getLastNettingRequestHandId(contract) {
+  return promisifyContractCall(contract, 'lastNettingRequestHandId')();
+}
+
+function getLastNettingRequestTime(contract) {
+  return promisifyContractCall(contract, 'lastNettingRequestTime')();
+}
+
+function handsRange(handA, handB) {
+  const start = Math.min(handA, handB);
+  const end = Math.max(handA, handB);
+  const range = [];
+
+  for (let i = start; i <= end; i += 1) {
+    range.push(i);
+  }
+
+  return range;
+}
+
+function loadContractData(contract) {
+  return Promise.all([
+    getLineup(contract),
+    getLastNettingRequestHandId(contract),
+    getLastNettingRequestTime(contract),
+  ]).then(([
+    { lineup, lastHandNetted },
+    lastNettingRequestHandId,
+    lastNettingRequestTime,
+  ]) => {
+    const hands = handsRange(lastHandNetted, lastNettingRequestHandId);
+    const promises = hands.reduce((memo, handId) => [
+      ...memo,
+      getIns(contract, handId, lineup),
+      getOuts(contract, handId, lineup),
+    ], []);
+
+    return Promise.all(promises)
+      .then((results) => ({
+        lineup,
+        hands: hands.reduce((memo, handId, i) => ({
+          ...memo,
+          [handId]: { ins: results[i * 2], outs: results[(i * 2) + 1] },
+        }), {}),
+        lastHandNetted,
+        lastNettingRequestHandId,
+        lastNettingRequestTime,
+      }));
+  });
 }
