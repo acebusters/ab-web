@@ -343,6 +343,8 @@ class DashboardRoot extends React.Component {
             qrUrl,
             handleNTZSell: this.handleNTZSell,
             handleNTZPurchase: this.handleNTZPurchase,
+            handleNTZTransfer: this.handleNTZTransfer,
+            handleETHTransfer: this.handleETHTransfer,
             handlePowerDown: this.handlePowerDown,
             handlePowerUp: this.handlePowerUp,
             ...this.props,
