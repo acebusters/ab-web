@@ -39,7 +39,7 @@ function getOuts(contract, handId, lineup) {
       return Promise.resolve(null);
     }
 
-    return getOut(handId, address).then(([claimCount, out]) => ({ claimCount, out }));
+    return getOut(handId, address).then(([out, claimCount]) => ({ claimCount, out }));
   }));
 }
 
