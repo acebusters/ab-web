@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import QRCode from 'qrcode.react';
 
-import { createBlocky } from '../../services/blockies';
 import {
   formatEth,
   formatNtz,
@@ -16,7 +15,6 @@ import AccountProgress from '../../containers/Dashboard/AccountProgress';
 
 import Alert from '../Alert';
 import Button from '../Button';
-import Blocky from '../Blocky';
 import WithLoading from '../WithLoading';
 import H2 from '../H2';
 import List from '../List';
@@ -27,7 +25,8 @@ import {
   BalanceWrapper,
   Pane,
   Section,
-  WalletContainer,
+  ReceiveWrapper,
+  ReceiveSection,
 } from './styles';
 
 const Overview = ({
@@ -41,57 +40,74 @@ const Overview = ({
   modalDismiss,
   modalAdd,
   pwrBalance,
-  signerAddr,
   weiBalance,
   qrUrl,
 }) => (
   <Pane name="dashboard-overview">
     <Section name="wallet-receive">
-      <Blocky blocky={createBlocky(signerAddr)} />
-      <WithLoading
-        isLoading={!account.proxy || account.proxy === '0x'}
-        loadingSize="40px"
-        styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
-      >
-        <WalletContainer>
-          <QRCode value={qrUrl} size={140} />
-          <Address>{account.proxy}</Address>
+      <ReceiveSection>
+        <ReceiveWrapper
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            margin: '0 10px 0 0',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <WithLoading
+            isLoading={!account.proxy || account.proxy === '0x'}
+            loadingSize="40px"
+            styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
+          >
+            <QRCode
+              value={qrUrl}
+              size={100}
+            />
+          </WithLoading>
+          <WithLoading
+            isLoading={!account.proxy || account.proxy === '0x'}
+            loadingSize="40px"
+            styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
+          >
+            <Alert style={{ width: 220, marginBottom: 0 }} theme="success">
+              <Address>{account.proxy}</Address>
+            </Alert>
+          </WithLoading>
+        </ReceiveWrapper>
 
+        <ReceiveWrapper>
           <Alert theme="danger">
             <FormattedMessage {...messages.ethAlert} />
           </Alert>
-        </WalletContainer>
-      </WithLoading>
-    </Section>
 
+          <Alert theme="warning">
+            Warning: account limit {ETH_FISH_LIMIT.toString()} ETH<br />
+            <Button
+              size="link"
+              onClick={() => modalAdd(
+                <UpgradeDialog
+                  proxyContract={this.proxy}
+                  onSuccessButtonClick={modalDismiss}
+                />
+              )}
+            >
+              Upgrade to shark account
+            </Button> to deposit more
+          </Alert>
 
-    {account.isLocked &&
-      <Section>
-        <Alert theme="warning">
-          Warning: account limit {ETH_FISH_LIMIT.toString()} ETH<br />
-          <Button
-            size="link"
-            onClick={() => modalAdd(
-              <UpgradeDialog
-                proxyContract={this.proxy}
-                onSuccessButtonClick={modalDismiss}
+          {account.isLocked &&
+            ethBalance && nutzBalance && floor &&
+              <AccountProgress
+                ethBalance={ethBalance}
+                nutzBalance={nutzBalance}
+                floor={floor}
+                ethLimit={ETH_FISH_LIMIT}
               />
-            )}
-          >
-            Upgrade to shark account
-          </Button> to deposit more
-        </Alert>
-
-        {ethBalance && nutzBalance && floor &&
-          <AccountProgress
-            ethBalance={ethBalance}
-            nutzBalance={nutzBalance}
-            floor={floor}
-            ethLimit={ETH_FISH_LIMIT}
-          />
-        }
-      </Section>
-    }
+          }
+        </ReceiveWrapper>
+      </ReceiveSection>
+    </Section>
 
     <Section>
       <H2>Balances</H2>
@@ -176,7 +192,6 @@ Overview.propTypes = {
   modalAdd: PropTypes.func,
   modalDismiss: PropTypes.func,
   pwrBalance: PropTypes.object,
-  signerAddr: PropTypes.string,
   qrUrl: PropTypes.string,
   weiBalance: PropTypes.object,
 };

@@ -34,9 +34,15 @@ export const SendContainer = styled.div`
 `;
 
 export const Address = styled.p`
-  overflow-y: auto;
-  padding: 10px 0;
-  margin: 10px -30px 0 0;
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  margin: 0 0;
 `;
 
 // Exchange
@@ -46,6 +52,12 @@ export const ExchangeContainer = styled.div`
 `;
 
 // Overview
+export const ReceiveSection = styled.div`
+  display: flex;
+`;
+
+export const ReceiveWrapper = styled.div``;
+
 export const BalanceSection = styled.div`
   display: flex;
   justify-content: center;
