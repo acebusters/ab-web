@@ -99,8 +99,8 @@ describe('handsSelector', () => {
       },
     });
     expect(makeHandsSelector()(mockedState, PROPS)).toEqual([
-      { handId: '0', lineup: [] },
-      { handId: '1', lineup: [] },
+      { handId: 0, lineup: [] },
+      { handId: 1, lineup: [] },
     ]);
   });
 });

@@ -258,7 +258,8 @@ function getHands(table) {
   return (
     table
       .filter((_, key) => !isNaN(Number(key)))
-      .reduce((memo, item, handId) => memo.push(item.set('handId', handId)), fromJS([]))
+      .reduce((memo, item, handId) => memo.push(item.set('handId', Number(handId))), fromJS([]))
+      .sort((a, b) => a.get('handId') - b.get('handId'))
       .toJS()
   );
 }
