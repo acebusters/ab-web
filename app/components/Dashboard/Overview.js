@@ -87,7 +87,7 @@ const Overview = ({
               size="link"
               onClick={() => modalAdd(
                 <UpgradeDialog
-                  proxyContract={this.proxy}
+                  proxyContract={account.proxy}
                   onSuccessButtonClick={modalDismiss}
                 />
               )}
