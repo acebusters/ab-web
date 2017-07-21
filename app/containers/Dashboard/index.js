@@ -326,14 +326,12 @@ class DashboardRoot extends React.Component {
     );
     return (
       <Container>
-        <div>
-          <Tabs tabs={TABS} {...this.props} />
-          <Balances
-            babzBalance={babzBalance}
-            pwrBalance={pwrBalance}
-            weiBalance={weiBalance}
-          />
-        </div>
+        <Tabs tabs={TABS} {...this.props} />
+        <Balances
+          babzBalance={babzBalance}
+          pwrBalance={pwrBalance}
+          weiBalance={weiBalance}
+        />
         <PanesRoot
           panes={PANES}
           paneType={this.props.activeTab}

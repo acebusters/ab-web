@@ -9,10 +9,7 @@ import {
 
 import WithLoading from '../WithLoading';
 
-import {
-  BalanceSection,
-  BalanceWrapper,
-} from './styles';
+import { Bold, BalanceSection, BalanceWrapper } from './styles';
 
 const Balances = ({
   babzBalance,
@@ -20,46 +17,41 @@ const Balances = ({
   weiBalance,
 }) => (
   <BalanceSection name="wallet-overview">
+    <BalanceWrapper name="header">
+      <Bold>Account Balances:</Bold>
+    </BalanceWrapper>
+
     <BalanceWrapper name="nutz">
-      <h2>Nutz</h2>
-      <p>
-        <WithLoading
-          isLoading={!babzBalance}
-          loadingSize="14px"
-          type="inline"
-          styles={{ layout: { marginLeft: '15px' } }}
-        >
-          <span>{babzBalance && formatNtz(babzBalance)} NTZ</span>
-        </WithLoading>
-      </p>
+      <WithLoading
+        isLoading={!babzBalance}
+        loadingSize="14px"
+        type="inline"
+        styles={{ layout: { marginLeft: '15px' } }}
+      >
+        {babzBalance && formatNtz(babzBalance)} <Bold>NTZ</Bold>
+      </WithLoading>
     </BalanceWrapper>
 
     <BalanceWrapper name="ether">
-      <h2>Ether</h2>
-      <p>
-        <WithLoading
-          isLoading={!weiBalance}
-          loadingSize="14px"
-          type="inline"
-          styles={{ layout: { marginLeft: '15px' } }}
-        >
-          <span>{weiBalance && formatEth(weiBalance)} ETH</span>
-        </WithLoading>
-      </p>
+      <WithLoading
+        isLoading={!weiBalance}
+        loadingSize="14px"
+        type="inline"
+        styles={{ layout: { marginLeft: '15px' } }}
+      >
+        {weiBalance && formatEth(weiBalance)} <Bold>ETH</Bold>
+      </WithLoading>
     </BalanceWrapper>
 
     <BalanceWrapper name="power">
-      <h2>Power</h2>
-      <p>
-        <WithLoading
-          isLoading={!pwrBalance}
-          loadingSize="14px"
-          type="inline"
-          styles={{ layout: { marginLeft: '15px' } }}
-        >
-          <span>{pwrBalance && formatAbp(pwrBalance)} ABP</span>
-        </WithLoading>
-      </p>
+      <WithLoading
+        isLoading={!pwrBalance}
+        loadingSize="14px"
+        type="inline"
+        styles={{ layout: { marginLeft: '15px' } }}
+      >
+        {pwrBalance && formatAbp(pwrBalance)} <Bold>ABP</Bold>
+      </WithLoading>
     </BalanceWrapper>
   </BalanceSection>
 );

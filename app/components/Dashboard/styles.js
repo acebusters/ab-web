@@ -58,20 +58,25 @@ export const ReceiveSection = styled.div`
 
 export const ReceiveWrapper = styled.div``;
 
+// Balances
 export const BalanceSection = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  background-color: #f2f2f2;
+  font-size: 1.0em;
+  color: #383838;
 `;
 
 export const BalanceWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 10px;
-  padding: 20px;
-  min-width: 150px;
-  border: 1px solid gray;
-  border-radius: 10px;
+  margin-left: 10px;
+  padding: 5px 5px;
+  &:nth-child(2) {
+    margin-left: 7px;
+  }
+`;
+
+export const Bold = styled.span`
+  font-weight: 500;
 `;
 
 // Tabs
