@@ -253,7 +253,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       `0x0${(myPos).toString(16)}${signerAddr.replace('0x', '')}`
     );
 
-    Promise.resolve(account.isLocked ? null : promise).then(() => {
+    return Promise.resolve(account.isLocked ? null : promise).then(() => {
       this.props.modalDismiss();
     });
   }
@@ -267,7 +267,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`,
     );
 
-    Promise.resolve(account.isLocked ? null : promise).then(() => {
+    return Promise.resolve(account.isLocked ? null : promise).then(() => {
       const slides = (
         <div>
           <JoinSlides />
