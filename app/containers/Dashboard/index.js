@@ -30,12 +30,14 @@ import {
 import messages from './messages';
 import { txnsToList } from './txnsToList';
 import { getActiveTab, createDashboardTxsSelector } from './selectors';
+
 import Container from '../../components/Container';
 import H2 from '../../components/H2';
 import Overview from '../../components/Dashboard/Overview';
 import Wallet from '../../components/Dashboard/Wallet';
 import Exchange from '../../components/Dashboard/Exchange';
 import SubmitButton from '../../components/SubmitButton';
+import Balances from '../../components/Dashboard/Balances';
 
 import PanesRoot from '../../components/Dashboard/PanesRoot';
 import Tabs from '../../components/Dashboard/Tabs';
@@ -324,7 +326,14 @@ class DashboardRoot extends React.Component {
     );
     return (
       <Container>
-        <Tabs tabs={TABS} {...this.props} />
+        <div>
+          <Tabs tabs={TABS} {...this.props} />
+          <Balances
+            babzBalance={babzBalance}
+            pwrBalance={pwrBalance}
+            weiBalance={weiBalance}
+          />
+        </div>
         <PanesRoot
           panes={PANES}
           paneType={this.props.activeTab}
