@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import messages from '../../containers/Dashboard/messages';
 import H2 from '../H2';
 import List from '../List';
+import Dropdown from '../Dropdown';
 
 import { AccountIsLocked, AccountNotLocked } from './SectionReceive';
 import {
@@ -16,6 +17,7 @@ const Overview = (props) => {
   const { account, listTxns } = props;
   return (
     <Pane name="dashboard-overview">
+      <Dropdown />
       <Section name="wallet-receive">
         <H2>Deposit</H2>
         {account.isLocked ?
