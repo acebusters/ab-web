@@ -10,6 +10,7 @@ export const Container = styled.div`
 `;
 
 export const Button = styled(ButtonBase)`
+  display: flex;
   height: 58px;
   background-color: white;
   border-radius: 6px;
@@ -22,3 +23,27 @@ export const Button = styled(ButtonBase)`
     background-color: lavender;
   }
 `;
+
+export const Caret = styled.i`
+  align-items: flex-end;
+`;
+
+// Token Button
+export const TokenContainer = styled.div`
+  display: flex;
+`;
+
+export const TokenWrapperLeft = styled.div``;
+
+export const TokenIcon = styled.i``;
+
+export const TokenName = styled.div``;
+
+export const TokenWrapperRight = styled.div`
+  margin-left: auto 0;
+  min-width: 100px;
+`;
+
+export const TokenAmount = styled.div``;
+
+export const TokenUnit = styled.div``;

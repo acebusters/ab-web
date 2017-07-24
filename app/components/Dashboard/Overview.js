@@ -17,7 +17,9 @@ const Overview = (props) => {
   const { account, listTxns } = props;
   return (
     <Pane name="dashboard-overview">
-      <Dropdown />
+
+      <Dropdown {...props} />
+
       <Section name="wallet-receive">
         <H2>Deposit</H2>
         {account.isLocked ?
