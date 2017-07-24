@@ -113,7 +113,7 @@ function* tableNotifications(sendAction) {
     };
 
     if (isLocked) { // do not need to show notification for shark account here
-      yield call(createPersistNotification(pendingNotification));
+      yield* createPersistNotification(pendingNotification);
     }
 
     while (true) { // eslint-disable-line no-constant-condition
