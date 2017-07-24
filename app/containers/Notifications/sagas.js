@@ -1,6 +1,7 @@
 import { put, takeEvery, take, select, call } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuid from 'uuid/v4';
+import * as storageService from '../../services/sessionStorage';
 
 import {
   NOTIFY_CREATE,
@@ -18,6 +19,8 @@ import {
   CONTRACT_TX_SUCCESS,
   CONTRACT_TX_ERROR,
 } from '../AccountProvider/actions';
+
+import { makeLatestHandSelector } from '../Table/selectors';
 
 import { getWeb3 } from '../AccountProvider/utils';
 
@@ -86,16 +89,23 @@ function* injectedWeb3NotificationDismiss({ payload: injected }) {
   }
 }
 
-function* tableJoinNotification(sendAction) {
+function getIsRebuy(tableAddr, handId) {
+  return !!storageService.getItem(`rebuyModal[${tableAddr}${handId}]`);
+}
+
+function* tableNotifications(sendAction) {
   const state = yield select();
   const table = yield call([state, state.get], 'table');
   const isLocked = yield call([state, state.getIn], ['account', 'isLocked']);
   const tableAddr = sendAction.payload.args[0];
 
   if (table.has(tableAddr) && sendAction.payload.methodName === 'transData') {
+    const handId = yield call(makeLatestHandSelector(), state, { params: { tableAddr } });
+    const isRebuy = yield call(getIsRebuy, tableAddr, handId);
+
     const pendingNotification = {
       txId: tableAddr,
-      category: 'Table joining',
+      category: isRebuy ? 'Rebuy' : 'Table joining',
       details: tableAddr,
       dismissable: true,
       date: new Date(),
@@ -120,7 +130,7 @@ function* tableJoinNotification(sendAction) {
             yield* removeNotification({ txId: tableAddr });
             yield* createTempNotification({
               txId: tableAddr,
-              category: 'You are joined table',
+              category: isRebuy ? 'Successful rebuy' : 'You are joined table',
               details: 'Good luck!',
               dismissable: true,
               date: new Date(),
@@ -139,7 +149,7 @@ function* tableJoinNotification(sendAction) {
           dismissable: true,
           date: new Date(),
           type: 'danger',
-          category: 'Table joining',
+          category: isRebuy ? 'Rebuy' : 'Table joining',
           details: 'Something goes wrong, try again',
         };
 
@@ -163,7 +173,7 @@ export function* notificationsSaga() {
   yield takeEvery(INJECT_ACCOUNT_UPDATE, injectedWeb3NotificationDismiss);
   yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
-  yield takeEvery(CONTRACT_TX_SEND, tableJoinNotification);
+  yield takeEvery(CONTRACT_TX_SEND, tableNotifications);
 }
 
 export default [
