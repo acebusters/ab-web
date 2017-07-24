@@ -5,7 +5,7 @@
 import { createSelector } from 'reselect';
 import { formValueSelector } from 'redux-form/immutable';
 
-const selectGlobal = (state) => state.get('global');
+export const selectGlobal = (state) => state.get('global');
 
 const formSelector = formValueSelector('login');
 export const selectWorkerProgress = (state) => formSelector(state, 'workerProgress');
