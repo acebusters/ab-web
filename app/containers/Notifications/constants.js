@@ -1,5 +1,18 @@
+import React from 'react';
+
 export const PERSIST = 'persist';
 export const TEMP = 'temp';
+
+export const accountCreating = {
+  txId: 'ACCOUNT_CREATING',
+  notifyType: 'ACCOUNT_CREATING',
+  category: 'Creating your account:',
+  details: <span><i className="fa fa-spin fa-spinner" /> Please be patient</span>,
+  removing: false,
+  dismissable: false,
+  date: new Date(),
+  type: 'danger',
+};
 
 export const loggedInSuccess = {
   txId: 'AUTH_LOGGED_IN',

@@ -16,8 +16,9 @@ const notLoggedIn = {
 };
 
 const Tester = (props) => {
-  const { notifications, loggedIn } = props;
-  if (loggedIn) {
+  const { pathname, notifications, loggedIn } = props;
+  const isAuthPage = pathname.match(/login|register|confirm/);
+  if (loggedIn || pathname.match(/generate/)) {
     return (
       <div>
         {notifications.length !== 0 &&
@@ -28,9 +29,13 @@ const Tester = (props) => {
       </div>
     );
   }
+  // if auth page (/login /register/confirm), do not show notifications
+  if (isAuthPage) return null;
+  // else not logged in
   return <Center {...notLoggedIn} {...props} />;
 };
 Tester.propTypes = {
+  pathname: PropTypes.string,
   loggedIn: PropTypes.bool,
   notifications: PropTypes.array,
 };

@@ -2,6 +2,9 @@ import { put, takeEvery, select, call } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuid from 'uuid/v4';
 
+import { SET_AUTH, ACCOUNT_LOADED, INJECT_ACCOUNT_UPDATE } from '../AccountProvider/actions';
+import { register } from '../GeneratePage/actions';
+
 import {
   NOTIFY_CREATE,
   NOTIFY_REMOVE,
@@ -10,10 +13,9 @@ import {
   notifyRemoving,
 } from './actions';
 
-import { SET_AUTH, ACCOUNT_LOADED, INJECT_ACCOUNT_UPDATE } from '../AccountProvider/actions';
-
 import {
   TEMP,
+  accountCreating,
   loggedInSuccess,
   noWeb3Danger,
   temp,
@@ -75,12 +77,18 @@ function* injectedWeb3NotificationDismiss({ payload: injected }) {
   }
 }
 
+function* registrationNotification() {
+  yield* createPersistNotification(accountCreating);
+}
+
 export function* notificationsSaga() {
   yield takeEvery(SET_AUTH, authNotification);
   yield takeEvery(ACCOUNT_LOADED, injectedWeb3Notification);
   yield takeEvery(INJECT_ACCOUNT_UPDATE, injectedWeb3NotificationDismiss);
   yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
+  // account registration
+  yield takeEvery(register.SUCCESS, registrationNotification);
 }
 
 export default [
