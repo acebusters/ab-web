@@ -1,24 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Token from './Token';
 import {
   Button,
   Caret,
   Container,
 } from './styles';
-
-const tokens = [{
-  name: 'ethereum',
-  amount: 0.13,
-  unit: 'ETH',
-  icon: 'url',
-}, {
-  name: 'nutz',
-  amount: 1000,
-  unit: 'NTZ',
-  icon: 'url',
-}];
 
 class Dropdown extends React.Component {
   constructor(props) {
@@ -28,30 +15,31 @@ class Dropdown extends React.Component {
     this.handleSelectButton = this.handleSelectButton.bind(this);
   }
 
-  handleSelectButton(name) {
-    this.setState({ selected: name });
+  handleSelectButton(index) {
+    this.setState({ selected: index });
     this.props.modalDismiss();
   }
 
   handleToggle() {
     this.props.modalAdd(
-      <Container>
-        {tokens.map((token, index) => (
+      <div>
+        {this.props.options.map((option, index) => (
           <Button key={index} onClick={() => this.handleSelectButton(index)}>
-            <Token token={token} />
+            {option.node({ ...option.props })}
           </Button>
           ))
         }
-      </Container>
+      </div>
     );
   }
 
   render() {
     const { selected } = this.state;
+    const { options } = this.props;
     return (
       <Container>
         <Button onClick={this.handleToggle}>
-          <Token token={tokens[selected]} />
+          {options[selected].node({ ...options[selected].props })}
           <Caret className="fa fa-caret-down" />
         </Button>
       </Container>
@@ -61,6 +49,7 @@ class Dropdown extends React.Component {
 Dropdown.propTypes = {
   modalAdd: PropTypes.func.isRequired,
   modalDismiss: PropTypes.func.isRequired,
+  options: PropTypes.array.isRequired,
 };
 
 export default Dropdown;

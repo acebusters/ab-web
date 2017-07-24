@@ -8,17 +8,36 @@ import List from '../List';
 import Dropdown from '../Dropdown';
 
 import { AccountIsLocked, AccountNotLocked } from './SectionReceive';
+import Token from '../Dropdown/Token';
 import {
   Pane,
   Section,
 } from './styles';
+
+const tokens = [{
+  node: Token,
+  props: {
+    name: 'ethereum',
+    amount: 0.13,
+    unit: 'ETH',
+    icon: 'url',
+  },
+}, {
+  node: Token,
+  props: {
+    name: 'nutz',
+    amount: 1000,
+    unit: 'NTZ',
+    icon: 'url',
+  },
+}];
 
 const Overview = (props) => {
   const { account, listTxns } = props;
   return (
     <Pane name="dashboard-overview">
 
-      <Dropdown {...props} />
+      <Dropdown options={tokens} {...props} />
 
       <Section name="wallet-receive">
         <H2>Deposit</H2>

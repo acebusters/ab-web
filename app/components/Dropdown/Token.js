@@ -11,20 +11,28 @@ import {
   TokenWrapperRight,
 } from './styles';
 
-const Token = ({ token }) => (
+const Token = ({
+  amount,
+  name,
+  unit,
+  url,
+}) => (
   <TokenContainer>
     <TokenWrapperLeft name="left">
-      <TokenIcon url={token.url} className="fa fa-square" />
-      <TokenName>{token.name}</TokenName>
+      <TokenIcon url={url} className="fa fa-square" />
+      <TokenName>{name}</TokenName>
     </TokenWrapperLeft>
     <TokenWrapperRight>
-      <TokenAmount>{token.amount}</TokenAmount>
-      <TokenUnit>{token.unit}</TokenUnit>
+      <TokenAmount>{amount}</TokenAmount>
+      <TokenUnit>{unit}</TokenUnit>
     </TokenWrapperRight>
   </TokenContainer>
 );
 Token.propTypes = {
-  token: PropTypes.object.isRequired,
+  amount: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  unit: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 export default Token;
