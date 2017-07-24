@@ -39,7 +39,7 @@ const Version = styled.div`
   font-size: 10px;
 `;
 
-const A = styled.a`
+export const A = styled.a`
   color: ${baseColor};
   text-decoration: none !important;
   cursor: pointer;
