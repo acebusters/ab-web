@@ -16,7 +16,7 @@ import {
   INJECT_ACCOUNT_UPDATE,
   CONTRACT_TX_SEND,
   CONTRACT_TX_SUCCESS,
-  CONTRACT_TX_FAIL,
+  CONTRACT_TX_ERROR,
 } from '../AccountProvider/actions';
 
 import { getWeb3 } from '../AccountProvider/utils';
@@ -90,37 +90,68 @@ function* tableJoinNotification(sendAction) {
   const state = yield select();
   const table = yield call([state, state.get], 'table');
   const isLocked = yield call([state, state.getIn], ['account', 'isLocked']);
+  const tableAddr = sendAction.payload.args[0];
 
-  console.log('checking if address is tableAddr', table.toJS(), sendAction.payload.args[0], sendAction.payload);
+  if (table.has(tableAddr) && sendAction.payload.methodName === 'transData') {
+    const pendingNotification = {
+      txId: tableAddr,
+      category: 'Table joining',
+      details: tableAddr,
+      dismissable: true,
+      date: new Date(),
+      type: 'info',
+    };
 
-  if (isLocked) { // do not need to show notification for shark account here
-    console.log('show pending table notification');
-  }
+    if (isLocked) { // do not need to show notification for shark account here
+      yield call(createPersistNotification(pendingNotification));
+    }
 
-  if (table.has(sendAction.payload.args[0])) {
     while (true) { // eslint-disable-line no-constant-condition
-      const finalAction = yield take([CONTRACT_TX_FAIL, CONTRACT_TX_SUCCESS]);
+      const finalAction = yield take([CONTRACT_TX_ERROR, CONTRACT_TX_SUCCESS]);
       try {
-        if (sendAction.payload.args[0] === finalAction.payload.args[0]) {
-          if (finalAction === CONTRACT_TX_SUCCESS) {
+        if (tableAddr === finalAction.payload.args[0]) {
+          if (finalAction.type === CONTRACT_TX_SUCCESS) {
             if (!isLocked) { // show notification for sharks (after submitting tx in metamask)
-              console.log('show pending table notification');
+              yield* createPersistNotification(pendingNotification);
             }
 
             const web3 = yield call(getWeb3);
-            console.log('waitForTx', finalAction.payload.txHash);
             yield call(waitForTx, web3, finalAction.payload.txHash);
-            console.log('show success table notification');
+            yield* removeNotification({ txId: tableAddr });
+            yield* createTempNotification({
+              txId: tableAddr,
+              category: 'You are joined table',
+              details: 'Good luck!',
+              dismissable: true,
+              date: new Date(),
+              type: 'success',
+            });
           } else {
-            console.warn('fail');
             throw finalAction;
           }
         }
-      } catch (e) {
-        console.log(e);
-        console.log('show error table notification');
-      } finally {
-        console.log('remove table notification');
+      } catch (errorAction) {
+        const { payload: { error } } = errorAction;
+        yield* removeNotification({ txId: tableAddr });
+
+        const errorNotification = {
+          txId: tableAddr,
+          dismissable: true,
+          date: new Date(),
+          type: 'danger',
+          category: 'Table joining',
+          details: 'Something goes wrong, try again',
+        };
+
+        if (typeof error === 'string' && error.indexOf('MetaMask Tx Signature: User denied') > -1) {
+          yield* createTempNotification({
+            ...errorNotification,
+            category: 'Denied by user',
+            details: '',
+          });
+        } else {
+          yield* createTempNotification(errorNotification);
+        }
       }
     }
   }
