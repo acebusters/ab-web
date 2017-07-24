@@ -1,7 +1,11 @@
+import React from 'react';
+
 import { put, takeEvery, take, select, call } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuid from 'uuid/v4';
 import * as storageService from '../../services/sessionStorage';
+
+import WithLoading from '../../components/WithLoading';
 
 import {
   NOTIFY_CREATE,
@@ -106,7 +110,7 @@ function* tableNotifications(sendAction) {
     const pendingNotification = {
       txId: tableAddr,
       category: isRebuy ? 'Rebuy' : 'Table joining',
-      details: tableAddr,
+      details: <span><WithLoading isLoading loadingSize="14px" type="inline" /> {tableAddr.substring(2, 8)}</span>,
       dismissable: true,
       date: new Date(),
       type: 'info',
