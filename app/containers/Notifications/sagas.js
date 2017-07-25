@@ -73,8 +73,10 @@ function* removeNotification({ txId }) {
 }
 
 function* authNotification({ newAuthState }) {
+  console.log('setauth');
   const { loggedIn } = newAuthState;
   if (loggedIn) {
+    yield* removeNotification({ txId: notLoggedIn.txId });
     yield* removeNotification({ txId: firstLogin.txId });
     yield* createTempNotification(loggedInSuccess);
   }
@@ -176,25 +178,31 @@ function* tableNotifications(sendAction) {
 
 function* visitorModeNotification({ payload: { pathname = '' } }) {
   const state = yield select();
-  const loggedIn = yield call([state, state.getIn], ['account', loggedIn]);
+  const loggedIn = yield call([state, state.getIn], ['account', 'loggedIn']);
   if (!loggedIn) {
     const isNotificationVisible = !pathname.match(/register|login/);
     if (isNotificationVisible) {
       yield* createPersistNotification(notLoggedIn);
     } else {
-      yield* removeNotification(notLoggedIn.txId);
+      yield* removeNotification({ txId: notLoggedIn.txId });
     }
   }
 }
 
 export function* notificationsSaga() {
+  yield takeEvery(LOCATION_CHANGE, visitorModeNotification);
   yield takeEvery(SET_AUTH, authNotification);
   yield takeEvery(ACCOUNT_LOADED, injectedWeb3Notification);
   yield takeEvery(INJECT_ACCOUNT_UPDATE, injectedWeb3NotificationDismiss);
   yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
   yield takeEvery(CONTRACT_TX_SEND, tableNotifications);
-  yield takeEvery(LOCATION_CHANGE, visitorModeNotification);
+
+  yield call(visitorModeNotification, {
+    payload: {
+      pathname: window.location.pathname,
+    },
+  });
 }
 
 export default [
