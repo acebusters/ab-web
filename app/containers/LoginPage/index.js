@@ -12,10 +12,12 @@ import account from '../../services/account';
 import { workerError, walletImported, login } from './actions';
 import { modalAdd, modalDismiss, setProgress } from '../App/actions';
 import { setAuthState } from '../AccountProvider/actions';
+import { notifyAdd } from '../Notifications/actions';
 import { selectAccount } from '../AccountProvider/selectors';
 import { getWeb3 } from '../AccountProvider/utils';
 import { waitForTx } from '../../utils/waitForTx';
 import H1 from '../../components/H1';
+import { firstLogin } from '../Notifications/constants';
 
 import { ForgotField } from './styles';
 
@@ -75,15 +77,15 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
         .then((data) => {
           // if user just created account, we need to ensure that proxy contract is deployed before continue login process
           const proxyTxHash = this.props.account.get('proxyTxHash');
-          console.log('preTx', proxyTxHash);
           if (proxyTxHash) {
-            console.log('waitForTx', proxyTxHash);
-            return waitForTx(getWeb3(), proxyTxHash).then(() => {
-              console.log('tx done', proxyTxHash);
-              return data;
-            }, () => {
-              console.log('tx failed need to show submission error', proxyTxHash);
-            });
+            this.props.notifyAdd(firstLogin);
+            return waitForTx(getWeb3(), proxyTxHash)
+              .then(
+                () => data,
+                () => {
+                  throw new SubmissionError({ _error: `Login failed. Account tx failed, tx has was: ${proxyTxHash}` });
+                }
+              );
           }
 
           return data;
@@ -103,7 +105,7 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
             login(values, dispatch)
               .catch((workerErr) => {
                 // If worker failed, ...
-                throw new SubmissionError({ _error: `error, Login failed due to worker error: ${workerErr}` });
+                throw new SubmissionError({ _error: `Error: login failed due to worker error: ${workerErr}` });
               })
               .then((workerRsp) => {
                 // If worker success, ...
@@ -208,8 +210,8 @@ LoginPage.propTypes = {
   isWorkerInitialized: React.PropTypes.bool,
   progress: React.PropTypes.any,
   modalAdd: React.PropTypes.func,
+  notifyAdd: React.PropTypes.func,
   setProgress: React.PropTypes.func,
-  modalStack: React.PropTypes.array,
 };
 
 
@@ -219,6 +221,7 @@ function mapDispatchToProps(dispatch) {
     onWorkerInitialized: () => dispatch(change('login', 'isWorkerInitialized', true)),
     onWalletImported: (data) => dispatch(walletImported(data)),
     modalAdd: (node) => dispatch(modalAdd(node)),
+    notifyAdd: (notification) => dispatch(notifyAdd(notification)),
     modalDismiss: () => dispatch(modalDismiss()),
     setProgress: (percent) => dispatch(setProgress(percent)),
   };
