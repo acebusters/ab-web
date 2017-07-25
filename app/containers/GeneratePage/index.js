@@ -22,7 +22,7 @@ import * as storageService from '../../services/localStorage';
 // import { getWeb3 } from '../../containers/AccountProvider/utils';
 // import { waitForTx } from '../../utils/waitForTx';
 
-import { workerError, walletExported, register } from './actions';
+import { workerError, walletExported, register, accountTxHashReceived } from './actions';
 
 
 const validate = (values) => {
@@ -154,7 +154,7 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
     }).then((workerRsp) => {
       // If worker success, ...
       waitForAccountTxHash(workerRsp.data.wallet.address)
-        .then((txHash) => console.log(txHash));
+        .then(this.props.onAccountTxHashReceived);
       return request(confCode, workerRsp.data.wallet)
         .catch((err) => {
           // If store account failed...
@@ -242,11 +242,13 @@ GeneratePage.propTypes = {
   onWorkerInitialized: PropTypes.func,
   onWorkerProgress: PropTypes.func,
   onWalletExported: PropTypes.func,
+  onAccountTxHashReceived: PropTypes.func,
   input: PropTypes.any,
 };
 
 function mapDispatchToProps(dispatch) {
   return {
+    onAccountTxHashReceived: (txHash) => dispatch(accountTxHashReceived(txHash)),
     onWorkerError: (event) => dispatch(workerError(event)),
     onWorkerInitialized: () => dispatch(change('register', 'isWorkerInitialized', true)),
     onWorkerProgress: (percent) => dispatch(change('register', 'workerProgress', percent)),
