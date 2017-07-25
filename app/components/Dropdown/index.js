@@ -5,6 +5,7 @@ import {
   Button,
   Caret,
   Container,
+  ModalButton,
 } from './styles';
 
 class Dropdown extends React.Component {
@@ -22,14 +23,14 @@ class Dropdown extends React.Component {
 
   handleToggle() {
     this.props.modalAdd(
-      <div>
+      <Container>
         {this.props.options.map((option, index) => (
-          <Button key={index} onClick={() => this.handleSelectButton(index)}>
+          <ModalButton key={index} onClick={() => this.handleSelectButton(index)}>
             {option.node({ ...option.props })}
-          </Button>
+          </ModalButton>
           ))
         }
-      </div>
+      </Container>
     );
   }
 
@@ -37,7 +38,7 @@ class Dropdown extends React.Component {
     const { selected } = this.state;
     const { options } = this.props;
     return (
-      <Container>
+      <Container name="dropdown-button">
         <Button onClick={this.handleToggle}>
           {options[selected].node({ ...options[selected].props })}
           <Caret className="fa fa-caret-down" />

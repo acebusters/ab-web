@@ -45,10 +45,48 @@ export const Address = styled.p`
   margin: 0 0;
 `;
 
+export const ConfirmButton = styled(Button)`
+  display: flex;
+  justify-content: center;
+  margin: 30px auto;
+  padding: 10px;
+  min-width: 260px;
+  border: 1px solid ${gray};
+  border-radius: 4px;
+  &:hover {
+    background-color: ${gray};
+  }
+  &:active {
+    background-color: ${gray};
+    color: white;
+  }
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  border: 1px solid ${gray};
+  border-radius: 4px;
+`;
+
 // Exchange
 export const ExchangeContainer = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+// Controller
+export const ControlWrapper = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+export const ControlDropdown = styled.div`
+  flex-grow: 3;
+`;
+
+export const ControlToggle = styled.div`
+  margin-left: 6px;
+  flex-grow: 1;
 `;
 
 // Overview
@@ -131,28 +169,4 @@ export const TabIcon = styled.i`
 export const TabTitle = styled.span`
   padding-bottom: 4px;
   font-weight: 400;
-`;
-
-// Wallet
-export const ConfirmButton = styled(Button)`
-  display: flex;
-  justify-content: center;
-  margin: 30px auto;
-  padding: 10px;
-  min-width: 260px;
-  border: 1px solid ${gray};
-  border-radius: 4px;
-  &:hover {
-    background-color: ${gray};
-  }
-  &:active {
-    background-color: ${gray};
-    color: white;
-  }
-`;
-
-export const Input = styled.input`
-  width: 100%;
-  border: 1px solid ${gray};
-  border-radius: 4px;
 `;

@@ -11,15 +11,18 @@ import {
   TokenWrapperRight,
 } from './styles';
 
+
 const Token = ({
   amount,
+  icon,
   name,
   unit,
-  url,
 }) => (
   <TokenContainer>
     <TokenWrapperLeft name="left">
-      <TokenIcon url={url} className="fa fa-square" />
+      <TokenIcon>
+        {icon}
+      </TokenIcon>
       <TokenName>{name}</TokenName>
     </TokenWrapperLeft>
     <TokenWrapperRight>
@@ -30,9 +33,9 @@ const Token = ({
 );
 Token.propTypes = {
   amount: PropTypes.number.isRequired,
+  icon: PropTypes.node.isRequired,
   name: PropTypes.string.isRequired,
   unit: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
 };
 
 export default Token;

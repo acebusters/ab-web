@@ -6,6 +6,22 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  send: {
+    id: 'app.containers.Dashboard.send',
+    defaultMessage: 'Send',
+  },
+  receive: {
+    id: 'app.containers.Dashboard.receive',
+    defaultMessage: 'Receive',
+  },
+  ethereum: {
+    id: 'app.containers.Dashboard.ethereum',
+    defaultMessage: 'Ethereum',
+  },
+  nutz: {
+    id: 'app.containers.Dashboard.nutz',
+    defaultMessage: 'Nutz',
+  },
   overview: {
     id: 'app.containers.Dashboard.overview',
     defaultMessage: 'Overview',
