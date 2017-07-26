@@ -20,6 +20,9 @@ import account from '../../services/account';
 import * as storageService from '../../services/localStorage';
 import { getWeb3 } from '../../containers/AccountProvider/utils';
 import { waitForTx } from '../../utils/waitForTx';
+import { promisifyContractCall } from '../../utils/promisifyContractCall';
+import { conf, ABI_ACCOUNT_FACTORY } from '../../app.config';
+import { sendTx } from '../../services/transactions';
 
 import { workerError, walletExported, register } from './actions';
 
@@ -60,6 +63,42 @@ function waitForAccountTx(signerAddr) {
       }
     });
   });
+}
+
+const requests = {
+  [Type.CREATE_CONF]: account.addWallet,
+  [Type.RESET_CONF]: account.resetWallet,
+};
+
+function handleRecoveryTx(accountId, newSignerAddr) {
+  const factory = getWeb3(true).eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
+  const getAccount = promisifyContractCall(factory.getAccount);
+  const handleRecovery = promisifyContractCall(factory.handleRecovery.sendTransaction);
+  console.log('handleRecoveryTx', accountId, newSignerAddr);
+  return (
+    account.getAccount(accountId)
+      .then((acc) => {
+        console.log('backend account', acc);
+        const wallet = JSON.parse(acc.wallet);
+        return getAccount(wallet.address);
+      }, (err) => console.error(err))
+      .then((acc) => {
+        console.log('getAccount', acc);
+        const isLocked = acc[2];
+
+        if (isLocked) {
+          const receipt = new Receipt().resetConf(accountId).sign(newSignerAddr);
+          console.log('sendTx', receipt);
+          return sendTx(receipt);
+        }
+
+        console.log('handleRecovery', newSignerAddr, { from: window.web3.eth.accounts[0] });
+        return handleRecovery(
+          newSignerAddr,
+          { from: window.web3.eth.accounts[0] }
+        );
+      })
+  );
 }
 
 export class GeneratePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -124,18 +163,14 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
     }
     confCode = decodeURIComponent(confCode);
     const receipt = Receipt.parse(confCode);
-    let request;
-    if (receipt.type === Type.CREATE_CONF) {
-      request = account.addWallet;
-    } else if (receipt.type === Type.RESET_CONF) {
-      request = account.resetWallet;
-    } else {
+    const request = requests[receipt.type];
+    if (!request) {
       throw new SubmissionError({ _error: `Error: unknown session type ${receipt.type}.` });
     }
 
     const entropy = JSON.parse(values.get('entropy'));
-    const seed    = Buffer.from(entropy.slice(0, 32));
-    const secret  = Buffer.from(entropy.slice(32));
+    const seed = Buffer.from(entropy.slice(0, 32));
+    const secret = Buffer.from(entropy.slice(32));
 
     // Strating the worker here.
     // Worker will encrypt seed with password in many rounds of crypt.
@@ -147,26 +182,25 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
     }, '*');
     // Register saga is called, we return the promise here,
     // so we can display form errors if any of the async ops fail.
-    return register(values, dispatch).catch((workerErr) => {
-      // If worker failed, ...
-      throw new SubmissionError({ _error: `error, Registration failed due to worker error: ${workerErr}` });
-    }).then((workerRsp) => (
-      // If worker success, ...
-      request(confCode, workerRsp.data.wallet)
-        .catch((err) => {
-          // If store account failed...
-          if (err === 409) {
-            throw new SubmissionError({ email: 'Email taken.', _error: 'Registration failed!' });
-          } else {
-            throw new SubmissionError({ _error: `Registration failed with error code ${err}` });
-          }
-        })
-        .then(() => waitForAccountTx(workerRsp.data.wallet.address))
-        .catch((err) => {
-          throw new SubmissionError({ _error: `Registration failed with message: ${err}` });
-        })
-        .then(() => browserHistory.push('/login'))
-    ));
+    return (
+      register(values, dispatch)
+        .catch(throwWorkerError)
+        .then((workerRsp) => (
+          // If worker success, ...
+          (receipt.type === Type.RESET_CONF
+            ? handleRecoveryTx(
+                receipt.accountId,
+                workerRsp.data.wallet.address
+              )
+            : Promise.resolve()
+          )
+            .then(() => request(confCode, workerRsp.data.wallet))
+            .catch(throwSubmitError)
+            .then(() => waitForAccountTx(workerRsp.data.wallet.address))
+            .catch(throwTxError)
+            .then(() => browserHistory.push('/login'))
+        ))
+    );
   }
 
   updateEntropy(data) {
@@ -241,6 +275,23 @@ GeneratePage.propTypes = {
   onWorkerProgress: PropTypes.func,
   onWalletExported: PropTypes.func,
   input: PropTypes.any,
+};
+
+const throwWorkerError = (workerErr) => {
+  throw new SubmissionError({ _error: `error, Registration failed due to worker error: ${workerErr}` });
+};
+
+const throwSubmitError = (err) => {
+  // If store account failed...
+  if (err === 409) {
+    throw new SubmissionError({ email: 'Email taken.', _error: 'Registration failed!' });
+  } else {
+    throw new SubmissionError({ _error: `Registration failed with error code ${err}` });
+  }
+};
+
+const throwTxError = (err) => {
+  throw new SubmissionError({ _error: `Registration failed with message: ${err}` });
 };
 
 function mapDispatchToProps(dispatch) {

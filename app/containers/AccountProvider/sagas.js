@@ -1,7 +1,6 @@
 import ethUtil from 'ethereumjs-util';
 import { takeLatest, select, actionChannel, put, fork, take, takeEvery, call } from 'redux-saga/effects';
 import { delay, eventChannel, END } from 'redux-saga';
-import fetch from 'isomorphic-fetch';
 import Raven from 'raven-js';
 import { Receipt } from 'poker-helper';
 import * as storageService from '../../services/localStorage';
@@ -15,6 +14,7 @@ import {
   ABI_PROXY,
 } from '../../app.config';
 import { promisifyContractCall } from '../../utils/promisifyContractCall';
+import { sendTx } from '../../services/transactions';
 
 import { addEventsDate, getWeb3, isUserEvent } from './utils';
 
@@ -213,32 +213,6 @@ function* accountLoginSaga() {
       yield fork(ethEventListenerSaga, accFactoryContract);
     }
   }
-}
-
-function sendTx(forwardReceipt) {
-  return new Promise((resolve, reject) => {
-    fetch(`${confParams.txUrl}/forward`, {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: `{ "forwardReceipt" : "${forwardReceipt}" }`,
-    }).then((rsp) => {
-      rsp.json().then((response) => {
-        if (rsp.status >= 200 && rsp.status < 300) {
-          resolve(response);
-        } else {
-          reject({
-            status: rsp.status,
-            message: response,
-          });
-        }
-      });
-    }).catch((error) => {
-      reject(error);
-    });
-  });
 }
 
 function* getInjectedAddr() {
