@@ -14,6 +14,7 @@ import {
   ABI_ACCOUNT_FACTORY,
   ABI_PROXY,
 } from '../../app.config';
+import { promisifyContractCall } from '../../utils/promisifyContractCall';
 
 import { addEventsDate, getWeb3, isUserEvent } from './utils';
 
@@ -26,6 +27,7 @@ import {
   WEB3_CONNECTED,
   ETH_TRANSFER,
   NETWORK_SUPPORT_UPDATE,
+  INJECT_ACCOUNT_UPDATE,
   web3Error,
   web3Connected,
   web3Disconnected,
@@ -239,11 +241,23 @@ function sendTx(forwardReceipt) {
   });
 }
 
+function* getInjectedAddr() {
+  const state = yield select();
+  const injectedAddr = yield call([state, state.getIn], ['account', 'injected']);
+  if (!injectedAddr) {
+    // wait for metamask loading
+    const action = yield take(INJECT_ACCOUNT_UPDATE);
+    return action.payload;
+  }
+
+  return injectedAddr;
+}
+
 function* contractTransactionSecureSend(action) {
   const { data } = action.payload;
+  const injectedAddr = yield call(getInjectedAddr);
   const state = yield select();
   const proxyAddr = yield call([state, state.getIn], ['account', 'proxy']);
-  const injectedAddr = yield call([state, state.getIn], ['account', 'injected']);
   const web3 = yield call(getWeb3, true);
   const proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
 
@@ -308,9 +322,9 @@ function* contractTransactionSendSaga() {
 
 function* secureTransferETH(action) {
   const { payload: { dest, amount } } = action;
+  const injectedAddr = yield call(getInjectedAddr);
   const state = yield select();
   const proxyAddr = yield call([state, state.getIn], ['account', 'proxy']);
-  const injectedAddr = yield call([state, state.getIn], ['account', 'injected']);
 
   const web3 = getWeb3(true);
   const proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
@@ -417,14 +431,18 @@ export function* ethEventListenerSaga(contract) {
 
 export function* injectedWeb3ListenerSaga() {
   while (true) { // eslint-disable-line no-constant-condition
-    yield call(delay, 1000);
-    const state = yield select();
-    const prevInjected = yield call([state, state.getIn], ['account', 'injected']);
-    const injected = window.web3 && window.web3.eth.accounts[0];
-
-    if (prevInjected !== injected) {
-      yield put(updateInjectedAccount(injected));
+    if (window.web3) {
+      const state = yield select();
+      const prevInjected = yield call([state, state.getIn], ['account', 'injected']);
+      const getInjectedAccounts = yield call(promisifyContractCall, window.web3.eth.getAccounts);
+      try {
+        const [injected] = yield call(getInjectedAccounts);
+        if (prevInjected !== injected) {
+          yield put(updateInjectedAccount(injected));
+        }
+      } catch (e) {} // eslint-disable-line no-empty
     }
+    yield call(delay, 5000);
   }
 }
 
