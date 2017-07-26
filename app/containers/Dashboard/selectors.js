@@ -27,7 +27,7 @@ export const getActiveTab = () => createSelector(
   (dashboard) => dashboard.get('activeTab'),
 );
 
-export const getUnit = () => createSelector(
+export const getAmountUnit = () => createSelector(
   selectDashboard,
-  (dashboard) => dashboard.get('unit'),
+  (dashboard) => dashboard.get('amountUnit'),
 );

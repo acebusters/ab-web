@@ -11,7 +11,7 @@ describe('dashboard reducer tests', () => {
       proxy: null,
       failedTx: null,
       events: null,
-      unit: NTZ,
+      amountUnit: NTZ,
     });
   });
 

@@ -14,9 +14,9 @@ import {
 
 const Token = ({
   amount,
+  amountUnit,
   icon,
   name,
-  unit,
 }) => (
   <TokenContainer>
     <TokenWrapperLeft name="left">
@@ -27,15 +27,15 @@ const Token = ({
     </TokenWrapperLeft>
     <TokenWrapperRight>
       <TokenAmount>{amount}</TokenAmount>
-      <TokenUnit>{unit}</TokenUnit>
+      <TokenUnit>{amountUnit}</TokenUnit>
     </TokenWrapperRight>
   </TokenContainer>
 );
 Token.propTypes = {
   amount: PropTypes.number.isRequired,
+  amountUnit: PropTypes.string.isRequired,
   icon: PropTypes.node.isRequired,
   name: PropTypes.string.isRequired,
-  unit: PropTypes.string.isRequired,
 };
 
 export default Token;

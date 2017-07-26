@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import find from 'lodash/find';
 
 import {
   Button,
@@ -8,50 +9,53 @@ import {
   ModalButton,
 } from './styles';
 
-class Dropdown extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { selected: this.props.selected };
-    this.handleToggle = this.handleToggle.bind(this);
-    this.handleSelectButton = this.handleSelectButton.bind(this);
-  }
+const Dropdown = ({
+  options,
+  selected,
+  onSelect,
+  modalAdd,
+  modalDismiss,
+}) => {
+  const handleSelectButton = (id) => {
+    onSelect(id);
+    modalDismiss();
+  };
 
-  handleSelectButton(index) {
-    this.setState({ selected: index });
-    this.props.modalDismiss();
-  }
-
-  handleToggle() {
-    this.props.modalAdd(
+  const handleToggle = () => {
+    modalAdd(
       <Container>
-        {this.props.options.map((option, index) => (
-          <ModalButton key={index} onClick={() => this.handleSelectButton(index)}>
+        {options.map((option, index) => (
+          <ModalButton key={index} onClick={() => handleSelectButton(option.id)}>
             {option.node({ ...option.props })}
           </ModalButton>
           ))
         }
       </Container>
     );
-  }
+  };
 
-  render() {
-    const { selected } = this.state;
-    const { options } = this.props;
-    return (
-      <Container name="dropdown-button">
-        <Button onClick={this.handleToggle}>
-          {options[selected].node({ ...options[selected].props })}
-          <Caret className="fa fa-caret-down" />
-        </Button>
-      </Container>
-    );
-  }
-}
+  const selectedOption = find(options, { id: selected });
+
+  return (
+    <Container name="dropdown-button">
+      <Button onClick={handleToggle}>
+        {selectedOption.node({ ...selectedOption.props })}
+        <Caret className="fa fa-caret-down" />
+      </Button>
+    </Container>
+  );
+};
 Dropdown.propTypes = {
   modalAdd: PropTypes.func.isRequired,
   modalDismiss: PropTypes.func.isRequired,
-  options: PropTypes.array.isRequired,
-  selected: PropTypes.number.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      node: PropTypes.func.isRequired,
+    }),
+  ).isRequired,
+  selected: PropTypes.string.isRequired,
+  onSelect: PropTypes.func.isRequired,
 };
 
 export default Dropdown;

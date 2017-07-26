@@ -4,7 +4,7 @@ import { Form, Field } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
 
 import messages from '../../containers/Dashboard/messages';
-import { ETH } from '../../containers/Dashboard/actions';
+import { ETH, NTZ } from '../../containers/Dashboard/actions';
 
 import NoWeb3Message from '../Web3Alerts/NoWeb3';
 import UnsupportedNetworkMessage from '../Web3Alerts/UnsupportedNetwork';
@@ -23,23 +23,24 @@ import {
 } from './styles';
 
 const tokens = [{
+  id: ETH,
   node: Token,
   props: {
     name: <FormattedMessage {...messages.ethereum} />,
     amount: 0.13,
-    unit: 'ETH',
+    amoutnUnit: ETH,
     icon: <Ethereum height={30} width={30} />,
   },
 }, {
+  id: NTZ,
   node: Token,
   props: {
     name: <FormattedMessage {...messages.nutz} />,
     amount: 1000,
-    unit: 'NTZ',
+    amountUnit: NTZ,
     icon: <Nutz height={30} width={30} />,
   },
 }];
-
 
 class TokenDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -63,10 +64,9 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
       invalid,
       hasWeb3,
       networkSupported,
-      unit,
+      amountUnit,
+      setAmountUnit,
     } = this.props;
-    const selected = unit === ETH ? 0 : 1;
-
     return (
       <div>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
@@ -74,7 +74,8 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
             <ControlDropdown>
               <Dropdown
                 options={tokens}
-                selected={selected}
+                selected={amountUnit}
+                onSelect={setAmountUnit}
                 {...this.props}
               />
             </ControlDropdown>
@@ -121,7 +122,8 @@ TokenDialog.propTypes = {
   handleSubmit: PropTypes.func,
   handleTransfer: PropTypes.func,
   error: PropTypes.any,
-  unit: PropTypes.string,
+  amountUnit: PropTypes.string,
+  setAmountUnit: PropTypes.func,
 };
 
 export default TokenDialog;

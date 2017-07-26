@@ -26,12 +26,13 @@ import {
   WALLET,
   EXCHANGE,
   setActiveTab,
+  setAmountUnit,
 } from './actions';
 import messages from './messages';
 import { txnsToList } from './txnsToList';
 import {
   getActiveTab,
-  getUnit,
+  getAmountUnit,
   createDashboardTxsSelector,
 } from './selectors';
 
@@ -384,6 +385,7 @@ DashboardRoot.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   setActiveTab: (whichTab) => dispatch(setActiveTab(whichTab)),
+  setAmountUnit: (unit) => dispatch(setAmountUnit(unit)),
   modalAdd,
   modalDismiss,
   transferETH,
@@ -400,7 +402,7 @@ const mapStateToProps = createStructuredSelector({
   nickName: makeNickNameSelector(),
   signerAddr: makeSignerAddrSelector(),
   privKey: makeSelectPrivKey(),
-  unit: getUnit(),
+  amountUnit: getAmountUnit(),
 });
 
 export default web3Connect(

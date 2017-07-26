@@ -79,6 +79,7 @@ export const TokenAmount = styled.div``;
 
 export const TokenUnit = styled.div`
   margin-left: 12px;
+  text-transform: uppercase;
 `;
 
 // Toggle Button

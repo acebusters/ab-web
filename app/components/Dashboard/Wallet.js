@@ -22,7 +22,7 @@ const Wallet = (props) => {
     nutzBalance,
     handleNTZTransfer,
     handleETHTransfer,
-    unit,
+    amountUnit,
     // weiBalance,
   } = props;
   return (
@@ -40,7 +40,7 @@ const Wallet = (props) => {
       <Section name="wallet-send">
         <H2><ModeIcon className="fa fa-send" />Transfer</H2>
         <SendContainer>
-          {unit === ETH ?
+          {amountUnit === ETH ?
             <TransferDialog
               handleTransfer={handleETHTransfer}
               maxAmount={ethBalance}
@@ -56,8 +56,6 @@ const Wallet = (props) => {
             />
           }
         </SendContainer>
-        <SendContainer>
-        </SendContainer>
       </Section>
 
     </Pane>
@@ -71,7 +69,7 @@ Wallet.propTypes = {
   nutzBalance: PropTypes.object,
   handleNTZTransfer: PropTypes.func,
   handleETHTransfer: PropTypes.func,
-  unit: PropTypes.string,
+  amountUnit: PropTypes.string,
   // weiBalance: PropTypes.object,
 };
 
