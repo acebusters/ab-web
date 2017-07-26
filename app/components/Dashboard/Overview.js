@@ -6,22 +6,12 @@ import messages from '../../containers/Dashboard/messages';
 import H2 from '../H2';
 import List from '../List';
 
-import { AccountIsLocked, AccountNotLocked } from './SectionReceive';
 import { Pane, Section } from './styles';
 
 const Overview = (props) => {
-  const { account, listTxns } = props;
+  const { listTxns } = props;
   return (
     <Pane name="dashboard-overview">
-
-      <Section name="wallet-receive">
-        <H2>Deposit</H2>
-        {account.isLocked ?
-          <AccountIsLocked {...props} />
-          :
-          <AccountNotLocked {...props} />
-        }
-      </Section>
 
       <Section name="transaction-history">
         <H2><FormattedMessage {...messages.included} /></H2>
@@ -50,7 +40,6 @@ const Overview = (props) => {
   );
 };
 Overview.propTypes = {
-  account: PropTypes.object,
   listTxns: PropTypes.array,
 };
 

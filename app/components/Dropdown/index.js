@@ -11,7 +11,7 @@ import {
 class Dropdown extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { selected: 0 };
+    this.state = { selected: this.props.selected };
     this.handleToggle = this.handleToggle.bind(this);
     this.handleSelectButton = this.handleSelectButton.bind(this);
   }
@@ -51,6 +51,7 @@ Dropdown.propTypes = {
   modalAdd: PropTypes.func.isRequired,
   modalDismiss: PropTypes.func.isRequired,
   options: PropTypes.array.isRequired,
+  selected: PropTypes.number.isRequired,
 };
 
 export default Dropdown;

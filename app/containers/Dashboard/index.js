@@ -29,7 +29,11 @@ import {
 } from './actions';
 import messages from './messages';
 import { txnsToList } from './txnsToList';
-import { getActiveTab, createDashboardTxsSelector } from './selectors';
+import {
+  getActiveTab,
+  getUnit,
+  createDashboardTxsSelector,
+} from './selectors';
 
 import Container from '../../components/Container';
 import H2 from '../../components/H2';
@@ -396,6 +400,7 @@ const mapStateToProps = createStructuredSelector({
   nickName: makeNickNameSelector(),
   signerAddr: makeSignerAddrSelector(),
   privKey: makeSelectPrivKey(),
+  unit: getUnit(),
 });
 
 export default web3Connect(

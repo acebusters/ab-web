@@ -2,8 +2,11 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 
-import { DBButton } from '../../containers/Dashboard/styles';
 import messages from '../../containers/Dashboard/messages';
+import {
+  ETH,
+  // NTZ,
+} from '../../containers/Dashboard/actions';
 import TransferDialog from '../../containers/TransferDialog';
 
 import H2 from '../H2';
@@ -11,17 +14,16 @@ import Token from '../Dropdown/Token';
 import Ethereum from '../Logo/Ethereum';
 import Nutz from '../Logo/Nutz';
 import Dropdown from '../Dropdown';
-import Toggle from '../Dropdown/Toggle';
 
 import {
   ControlWrapper,
   ControlDropdown,
-  ControlToggle,
   Pane,
   Section,
   SendContainer,
   TabIcon as ModeIcon,
 } from './styles';
+import { AccountIsLocked, AccountNotLocked } from './SectionReceive';
 
 const tokens = [{
   node: Token,
@@ -41,68 +43,59 @@ const tokens = [{
   },
 }];
 
-const toggleValues = [{
-  type: 'receive',
-  name: <FormattedMessage {...messages.receive} />,
-}, {
-  type: 'send',
-  name: <FormattedMessage {...messages.send} />,
-}];
-
 const Wallet = (props) => {
   const {
-    babzBalance,
+    account,
+    // babzBalance,
     ethBalance,
     nutzBalance,
     handleNTZTransfer,
     handleETHTransfer,
-    modalAdd,
-    weiBalance,
+    unit,
+    // weiBalance,
   } = props;
+  const selected = unit === ETH ? 0 : 1;
   return (
     <Pane name="dashboard-wallet">
-      <ControlWrapper>
-        <ControlDropdown>
-          <Dropdown options={tokens} {...props} />
-        </ControlDropdown>
-        <ControlToggle>
-          <Toggle values={toggleValues} />
-        </ControlToggle>
-      </ControlWrapper>
+
+      <Section name="wallet-receive">
+        <H2><ModeIcon className="fa fa-inbox" />Deposit</H2>
+        {account.isLocked ?
+          <AccountIsLocked {...props} />
+          :
+          <AccountNotLocked {...props} />
+        }
+      </Section>
 
       <Section name="wallet-send">
         <H2><ModeIcon className="fa fa-send" />Transfer</H2>
+        <ControlWrapper>
+          <ControlDropdown>
+            <Dropdown
+              options={tokens}
+              selected={selected}
+              {...props}
+            />
+          </ControlDropdown>
+        </ControlWrapper>
         <SendContainer>
-          {babzBalance &&
-            <DBButton
-              onClick={() => modalAdd(
-                <TransferDialog
-                  title={<FormattedMessage {...messages.ntzTransferTitle} />}
-                  handleTransfer={handleNTZTransfer}
-                  maxAmount={nutzBalance}
-                  amountUnit="NTZ"
-                />
-              )}
-              size="medium"
-            >
-              Nutz
-            </DBButton>
+          {unit === ETH ?
+            <TransferDialog
+              // title={<FormattedMessage {...messages.ethTransferTitle} />}
+              handleTransfer={handleETHTransfer}
+              maxAmount={ethBalance}
+              amountUnit="ETH"
+            />
+          :
+            <TransferDialog
+              // title={<FormattedMessage {...messages.ntzTransferTitle} />}
+              handleTransfer={handleNTZTransfer}
+              maxAmount={nutzBalance}
+              amountUnit="NTZ"
+            />
           }
-          {weiBalance &&
-            <DBButton
-              onClick={() => modalAdd(
-                <TransferDialog
-                  title={<FormattedMessage {...messages.ethTransferTitle} />}
-                  handleTransfer={handleETHTransfer}
-                  maxAmount={ethBalance}
-                  amountUnit="ETH"
-                />
-              )}
-              size="medium"
-            >
-              Ether
-            </DBButton>
-          }
+        </SendContainer>
+        <SendContainer>
         </SendContainer>
       </Section>
 
@@ -111,13 +104,14 @@ const Wallet = (props) => {
 };
 
 Wallet.propTypes = {
-  babzBalance: PropTypes.object,
+  account: PropTypes.object,
+  // babzBalance: PropTypes.object,
   ethBalance: PropTypes.object,
   nutzBalance: PropTypes.object,
   handleNTZTransfer: PropTypes.func,
   handleETHTransfer: PropTypes.func,
-  modalAdd: PropTypes.func,
-  weiBalance: PropTypes.object,
+  unit: PropTypes.string,
+  // weiBalance: PropTypes.object,
 };
 
 export default Wallet;
