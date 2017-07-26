@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import messages from '../../containers/Dashboard/messages';
 import {
   ETH,
-  // NTZ,
 } from '../../containers/Dashboard/actions';
 import TransferDialog from '../../containers/TransferDialog';
 

@@ -14,8 +14,7 @@ import { MODAL_DISMISS } from '../App/actions';
 import {
   SET_ACTIVE_TAB,
   OVERVIEW,
-  // NTZ,
-  ETH,
+  NTZ,
 } from './actions';
 
 import { composeReducers } from '../../utils/composeReducers';
@@ -41,8 +40,7 @@ const initialState = fromJS({
   failedTx: null,
   events: null,
   activeTab: OVERVIEW,
-  // unit: NTZ,
-  unit: ETH,
+  unit: NTZ,
 });
 
 function formatTxErrorMessage(error) {
