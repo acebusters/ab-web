@@ -74,21 +74,6 @@ export const ExchangeContainer = styled.div`
   justify-content: center;
 `;
 
-// Controller
-export const ControlWrapper = styled.div`
-  width: 100%;
-  display: flex;
-`;
-
-export const ControlDropdown = styled.div`
-  flex-grow: 3;
-`;
-
-export const ControlToggle = styled.div`
-  margin-left: 6px;
-  flex-grow: 1;
-`;
-
 // Overview
 export const ReceiveSection = styled.div`
   display: flex;
