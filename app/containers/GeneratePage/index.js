@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Form, Field, reduxForm, SubmissionError, propTypes, change, formValueSelector } from 'redux-form/immutable';
 import { browserHistory } from 'react-router';
 import { Receipt, Type } from 'poker-helper';
-import Pusher from 'pusher-js';
+// import Pusher from 'pusher-js';
 
 // components
 import Container from '../../components/Container';
@@ -52,18 +52,20 @@ const warn = (values) => {
   return warnings;
 };
 
-function waitForAccountTx(signerAddr) {
-  const pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
-  const channel = pusher.subscribe(signerAddr);
-  return new Promise((resolve) => {
-    channel.bind('update', (event) => {
-      if (event.type === 'txHash') {
-        resolve(waitForTx(getWeb3(), event.payload));
-        channel.unbind('update');
-      }
-    });
-  });
-}
+// function waitForAccountTx(signerAddr) {
+//   console.log('waitForAccountTx', signerAddr);
+//   const pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
+//   const channel = pusher.subscribe(signerAddr);
+//   return new Promise((resolve) => {
+//     channel.bind('update', (event) => {
+//       console.log('channel update', event);
+//       if (event.type === 'txHash') {
+//         resolve(waitForTx(getWeb3(), event.payload));
+//         channel.unbind('update');
+//       }
+//     });
+//   });
+// }
 
 const requests = {
   [Type.CREATE_CONF]: account.addWallet,
@@ -87,6 +89,7 @@ function handleRecoveryTx(accountId, newSignerAddr) {
         const isLocked = acc[2];
 
         if (isLocked) {
+          console.log('locked');
           const receipt = new Receipt().resetConf(accountId).sign(newSignerAddr);
           console.log('sendTx', receipt);
           return sendTx(receipt);
@@ -96,7 +99,18 @@ function handleRecoveryTx(accountId, newSignerAddr) {
         return handleRecovery(
           newSignerAddr,
           { from: window.web3.eth.accounts[0] }
-        );
+        ).then((txHash) => {
+          console.log('waitForTx', txHash);
+          waitForTx(getWeb3(), txHash).then(
+            () => console.log('handleRecovery done', txHash),
+            (err) => console.error(err),
+          );
+          return txHash;
+        });
+      })
+      .catch((e) => {
+        console.log('err', e);
+        return Promise.reject(e);
       })
   );
 }
@@ -191,12 +205,20 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
             ? handleRecoveryTx(
                 receipt.accountId,
                 workerRsp.data.wallet.address
-              )
+              ).then((result) => console.log('handleRecoveryDone', result))
             : Promise.resolve()
           )
             .then(() => request(confCode, workerRsp.data.wallet))
+            .then((data) => {
+              console.log('request', data);
+              return data;
+            })
             .catch(throwSubmitError)
-            .then(() => waitForAccountTx(workerRsp.data.wallet.address))
+            // .then(() => waitForAccountTx(workerRsp.data.wallet.address))
+            // .then((txHash) => {
+            //   console.log('waitForTx', txHash);
+            //   return txHash;
+            // })
             .catch(throwTxError)
             .then(() => browserHistory.push('/login'))
         ))
