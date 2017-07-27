@@ -8,7 +8,7 @@ import { reduxForm } from 'redux-form/immutable';
 
 import { makeSelectHasWeb3, makeSelectNetworkSupported } from '../../containers/AccountProvider/selectors';
 
-import TransferDialog from '../../components/TransferDialog';
+import DefaultDialog from '../../components/TransferDialog/Default';
 import TokenDialog from '../../components/TransferDialog/Token';
 
 const isEthereumAddress = (address) => ethUtil.isValidAddress(address) || ethUtil.isValidChecksumAddress(address);
@@ -34,7 +34,7 @@ const warn = () => {
 
 const DIALOGS = {
   token: TokenDialog,
-  default: TransferDialog,
+  default: DefaultDialog,
 };
 
 const TransferDialogContainer = (props) => {

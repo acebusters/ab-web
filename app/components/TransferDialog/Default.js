@@ -2,15 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Field } from 'redux-form/immutable';
 
-import NoWeb3Message from '../../components/Web3Alerts/NoWeb3';
-import UnsupportedNetworkMessage from '../../components/Web3Alerts/UnsupportedNetwork';
-import { ErrorMessage } from '../../components/FormMessages';
-import SubmitButton from '../../components/SubmitButton';
-import FormField from '../../components/Form/FormField';
-import AmountField from '../../components/AmountField';
-import H2 from '../../components/H2';
+import NoWeb3Message from '../Web3Alerts/NoWeb3';
+import UnsupportedNetworkMessage from '../Web3Alerts/UnsupportedNetwork';
+import { ErrorMessage } from '../FormMessages';
+import SubmitButton from '../SubmitButton';
+import FormField from '../Form/FormField';
+import AmountField from '../AmountField';
+import H2 from '../H2';
 
-class TransferDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class DefaultDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -77,7 +77,7 @@ class TransferDialog extends React.Component { // eslint-disable-line react/pref
     );
   }
 }
-TransferDialog.propTypes = {
+DefaultDialog.propTypes = {
   title: PropTypes.any,
   description: PropTypes.any,
   hasWeb3: PropTypes.bool,
@@ -92,8 +92,8 @@ TransferDialog.propTypes = {
   error: PropTypes.any,
 };
 
-TransferDialog.defaultProps = {
+DefaultDialog.defaultProps = {
   hideAddress: false,
 };
 
-export default TransferDialog;
+export default DefaultDialog;
