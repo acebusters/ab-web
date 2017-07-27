@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Form, Field, reduxForm, SubmissionError, propTypes, change, formValueSelector } from 'redux-form/immutable';
 import { browserHistory } from 'react-router';
 import { Receipt, Type } from 'poker-helper';
-// import Pusher from 'pusher-js';
+import Pusher from 'pusher-js';
 
 // components
 import Container from '../../components/Container';
@@ -21,7 +21,7 @@ import * as storageService from '../../services/localStorage';
 import { getWeb3 } from '../../containers/AccountProvider/utils';
 import { waitForTx } from '../../utils/waitForTx';
 import { promisifyContractCall } from '../../utils/promisifyContractCall';
-import { conf, ABI_ACCOUNT_FACTORY } from '../../app.config';
+import { conf, ABI_ACCOUNT_FACTORY, ABI_PROXY } from '../../app.config';
 import { sendTx } from '../../services/transactions';
 
 import { workerError, walletExported, register } from './actions';
@@ -52,20 +52,20 @@ const warn = (values) => {
   return warnings;
 };
 
-// function waitForAccountTx(signerAddr) {
-//   console.log('waitForAccountTx', signerAddr);
-//   const pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
-//   const channel = pusher.subscribe(signerAddr);
-//   return new Promise((resolve) => {
-//     channel.bind('update', (event) => {
-//       console.log('channel update', event);
-//       if (event.type === 'txHash') {
-//         resolve(waitForTx(getWeb3(), event.payload));
-//         channel.unbind('update');
-//       }
-//     });
-//   });
-// }
+function waitForAccountTx(signerAddr) {
+  console.log('waitForAccountTx', signerAddr);
+  const pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
+  const channel = pusher.subscribe(signerAddr);
+  return new Promise((resolve) => {
+    channel.bind('update', (event) => {
+      console.log('channel update', event);
+      if (event.type === 'txHash') {
+        resolve(waitForTx(getWeb3(), event.payload));
+        channel.unbind('update');
+      }
+    });
+  });
+}
 
 const requests = {
   [Type.CREATE_CONF]: account.addWallet,
@@ -75,7 +75,7 @@ const requests = {
 function handleRecoveryTx(accountId, newSignerAddr) {
   const factory = getWeb3(true).eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
   const getAccount = promisifyContractCall(factory.getAccount);
-  const handleRecovery = promisifyContractCall(factory.handleRecovery.sendTransaction);
+  // const handleRecovery = promisifyContractCall(factory.handleRecovery.sendTransaction);
   console.log('handleRecoveryTx', accountId, newSignerAddr);
   return (
     account.getAccount(accountId)
@@ -86,7 +86,11 @@ function handleRecoveryTx(accountId, newSignerAddr) {
       }, (err) => console.error(err))
       .then((acc) => {
         console.log('getAccount', acc);
+        const proxyAddr = acc[0];
         const isLocked = acc[2];
+        const proxy = getWeb3(true).eth.contract(ABI_PROXY).at(proxyAddr);
+        const forward = promisifyContractCall(proxy.forward.sendTransaction);
+        const data = factory.handleRecovery.getData(newSignerAddr);
 
         if (isLocked) {
           console.log('locked');
@@ -96,17 +100,12 @@ function handleRecoveryTx(accountId, newSignerAddr) {
         }
 
         console.log('handleRecovery', newSignerAddr, { from: window.web3.eth.accounts[0] });
-        return handleRecovery(
-          newSignerAddr,
+        return forward(
+          factory.address,
+          0,
+          data,
           { from: window.web3.eth.accounts[0] }
-        ).then((txHash) => {
-          console.log('waitForTx', txHash);
-          waitForTx(getWeb3(), txHash).then(
-            () => console.log('handleRecovery done', txHash),
-            (err) => console.error(err),
-          );
-          return txHash;
-        });
+        ).then((txHash) => waitForTx(getWeb3(), txHash));
       })
       .catch((e) => {
         console.log('err', e);
@@ -209,16 +208,11 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
             : Promise.resolve()
           )
             .then(() => request(confCode, workerRsp.data.wallet))
-            .then((data) => {
-              console.log('request', data);
-              return data;
-            })
             .catch(throwSubmitError)
-            // .then(() => waitForAccountTx(workerRsp.data.wallet.address))
-            // .then((txHash) => {
-            //   console.log('waitForTx', txHash);
-            //   return txHash;
-            // })
+            .then(() => receipt.type === Type.RESET_CONF
+              ? Promise.resolve()
+              : waitForAccountTx(workerRsp.data.wallet.address)
+            )
             .catch(throwTxError)
             .then(() => browserHistory.push('/login'))
         ))
