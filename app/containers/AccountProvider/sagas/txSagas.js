@@ -1,6 +1,6 @@
 import { select, actionChannel, put, take, call } from 'redux-saga/effects';
 import { Receipt } from 'poker-helper';
-import { conf, ABI_TOKEN_CONTRACT, ABI_PROXY } from '../../../app.config';
+import { conf, ABI_PROXY } from '../../../app.config';
 import { sendTx } from '../../../services/transactions';
 
 import { getWeb3 } from '../utils';
@@ -87,20 +87,18 @@ function* secureTransferETH(action) {
 
   const web3 = getWeb3(true);
   const proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
-  const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(ntzAddr);
-  const data = token.transfer.getData(dest, amount);
 
   return new Promise((resolve, reject) => {
     proxy.forward.estimateGas(
       dest,
       `0x${amount.toString(16)}`,
-      data,
+      '',
       { from: injectedAddr },
       (gasErr, gas) => {
         proxy.forward.sendTransaction(
           dest,
           `0x${amount.toString(16)}`,
-          data,
+          '',
           { from: injectedAddr, gas: gas * 1.9 },
           (err, result) => {
             if (err) {
