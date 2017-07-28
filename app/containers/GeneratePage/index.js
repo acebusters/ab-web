@@ -52,12 +52,10 @@ const warn = (values) => {
 };
 
 function waitForAccountTx(signerAddr) {
-  console.log('waitForAccountTx', signerAddr);
   const pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
   const channel = pusher.subscribe(signerAddr);
   return new Promise((resolve) => {
     channel.bind('update', (event) => {
-      console.log('channel update', event);
       if (event.type === 'txHash') {
         resolve(waitForTx(getWeb3(), event.payload));
         channel.unbind('update');
@@ -133,15 +131,12 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
     const factory = getWeb3(true).eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
     const getAccount = promisifyContractCall(factory.getAccount);
     const newSignerAddr = workerRsp.data.wallet.address;
-    console.log('handleRecovery', newSignerAddr, privKey);
 
     try {
       const backedAccount = await account.getAccount(receipt.accountId);
       const wallet = JSON.parse(backedAccount.wallet);
-      console.log('backend account', backedAccount);
 
       const acc = await getAccount(wallet.address);
-      console.log('getAccount', acc);
       const proxyAddr = acc[0];
       const isLocked = acc[2];
       const proxy = getWeb3(true).eth.contract(ABI_PROXY).at(proxyAddr);
@@ -150,23 +145,11 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
 
       let txHash;
       if (isLocked) {
-        const forwardReceipt = new Receipt(proxyAddr).forward(
-          0,
-          factory.address,
-          0,
-          data,
-        ).sign(privKey);
-        console.log('sendTx', Receipt.parse(forwardReceipt));
+        const forwardReceipt = new Receipt(proxyAddr).forward(0, factory.address, 0, data).sign(privKey);
         const result = await sendTx(forwardReceipt, confCode);
         txHash = result.txHash;
       } else {
-        console.log('handleRecovery', newSignerAddr, { from: window.web3.eth.accounts[0] });
-        txHash = await forward(
-          factory.address,
-          0,
-          data,
-          { from: window.web3.eth.accounts[0] }
-        );
+        txHash = await forward(factory.address, 0, data, { from: window.web3.eth.accounts[0] });
       }
 
       await waitForTx(getWeb3(), txHash);
