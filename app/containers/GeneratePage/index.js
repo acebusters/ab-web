@@ -26,7 +26,6 @@ import { sendTx } from '../../services/transactions';
 
 import { workerError, walletExported, register } from './actions';
 
-
 const validate = (values) => {
   const errors = {};
   if (!values.get('password')) {
@@ -71,48 +70,6 @@ const requests = {
   [Type.CREATE_CONF]: account.addWallet,
   [Type.RESET_CONF]: account.resetWallet,
 };
-
-function handleRecoveryTx(accountId, newSignerAddr) {
-  const factory = getWeb3(true).eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
-  const getAccount = promisifyContractCall(factory.getAccount);
-  // const handleRecovery = promisifyContractCall(factory.handleRecovery.sendTransaction);
-  console.log('handleRecoveryTx', accountId, newSignerAddr);
-  return (
-    account.getAccount(accountId)
-      .then((acc) => {
-        console.log('backend account', acc);
-        const wallet = JSON.parse(acc.wallet);
-        return getAccount(wallet.address);
-      }, (err) => console.error(err))
-      .then((acc) => {
-        console.log('getAccount', acc);
-        const proxyAddr = acc[0];
-        const isLocked = acc[2];
-        const proxy = getWeb3(true).eth.contract(ABI_PROXY).at(proxyAddr);
-        const forward = promisifyContractCall(proxy.forward.sendTransaction);
-        const data = factory.handleRecovery.getData(newSignerAddr);
-
-        if (isLocked) {
-          console.log('locked');
-          const receipt = new Receipt().resetConf(accountId).sign(newSignerAddr);
-          console.log('sendTx', receipt);
-          return sendTx(receipt);
-        }
-
-        console.log('handleRecovery', newSignerAddr, { from: window.web3.eth.accounts[0] });
-        return forward(
-          factory.address,
-          0,
-          data,
-          { from: window.web3.eth.accounts[0] }
-        ).then((txHash) => waitForTx(getWeb3(), txHash));
-      })
-      .catch((e) => {
-        console.log('err', e);
-        return Promise.reject(e);
-      })
-  );
-}
 
 export class GeneratePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -164,6 +121,63 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
     this.setState({ entropySaved: true });
   }
 
+  handleCreate(workerRsp, receipt, confCode) {
+    return account.addWallet(confCode, workerRsp.data.wallet)
+      .catch(throwSubmitError)
+      .then(() => waitForAccountTx(workerRsp.data.wallet.address))
+      .catch(throwTxError)
+      .then(() => browserHistory.push('/login'));
+  }
+
+  async handleRecovery(workerRsp, receipt, confCode, privKey) {
+    const factory = getWeb3(true).eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
+    const getAccount = promisifyContractCall(factory.getAccount);
+    const newSignerAddr = workerRsp.data.wallet.address;
+    console.log('handleRecovery', newSignerAddr, privKey);
+
+    try {
+      const backedAccount = await account.getAccount(receipt.accountId);
+      const wallet = JSON.parse(backedAccount.wallet);
+      console.log('backend account', backedAccount);
+
+      const acc = await getAccount(wallet.address);
+      console.log('getAccount', acc);
+      const proxyAddr = acc[0];
+      const isLocked = acc[2];
+      const proxy = getWeb3(true).eth.contract(ABI_PROXY).at(proxyAddr);
+      const forward = promisifyContractCall(proxy.forward.sendTransaction);
+      const data = factory.handleRecovery.getData(newSignerAddr);
+
+      let txHash;
+      if (isLocked) {
+        const forwardReceipt = new Receipt(proxyAddr).forward(
+          0,
+          factory.address,
+          0,
+          data,
+        ).sign(privKey);
+        console.log('sendTx', Receipt.parse(forwardReceipt));
+        const result = await sendTx(forwardReceipt, confCode);
+        txHash = result.txHash;
+      } else {
+        console.log('handleRecovery', newSignerAddr, { from: window.web3.eth.accounts[0] });
+        txHash = await forward(
+          factory.address,
+          0,
+          data,
+          { from: window.web3.eth.accounts[0] }
+        );
+      }
+
+      await waitForTx(getWeb3(), txHash);
+      await account.resetWallet(confCode, workerRsp.data.wallet);
+
+      browserHistory.push('/login');
+    } catch (e) {
+      throwSubmitError(e);
+    }
+  }
+
   handleSubmit(values, dispatch) {
     if (!this.props.isWorkerInitialized) {
       // The worker should have been loaded, while user typed.
@@ -198,23 +212,11 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
     return (
       register(values, dispatch)
         .catch(throwWorkerError)
+        // If worker success, ...
         .then((workerRsp) => (
-          // If worker success, ...
-          (receipt.type === Type.RESET_CONF
-            ? handleRecoveryTx(
-                receipt.accountId,
-                workerRsp.data.wallet.address
-              ).then((result) => console.log('handleRecoveryDone', result))
-            : Promise.resolve()
-          )
-            .then(() => request(confCode, workerRsp.data.wallet))
-            .catch(throwSubmitError)
-            .then(() => receipt.type === Type.RESET_CONF
-              ? Promise.resolve()
-              : waitForAccountTx(workerRsp.data.wallet.address)
-            )
-            .catch(throwTxError)
-            .then(() => browserHistory.push('/login'))
+          receipt.type === Type.RESET_CONF
+            ? this.handleRecovery(workerRsp, receipt, confCode, `0x${seed.toString('hex')}`)
+            : this.handleCreate(workerRsp, receipt, confCode)
         ))
     );
   }
