@@ -36,35 +36,60 @@ const tokens = [{
   },
 }];
 
-const TokenAmountField = ({
-  input,
-  label,
-  type,
-  amountUnit,
-  setAmountUnit,
-  meta: { touched, error, warning },
-  ...props
-}) => (
-  <FormGroup>
-    <Label htmlFor={input.name}>{label}</Label>
-    <ControlWrapper>
-      <FieldGroup>
-        <InputWithUnit {...input} {...props} type={type} id={input.name} />
-        <Unit name="unit">NTZ</Unit>
-      </FieldGroup>
-      <Dropdown
-        selected={amountUnit}
-        onSelect={setAmountUnit}
-        options={tokens}
-        {...props}
-      />
-    </ControlWrapper>
+class TokenAmountField extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { amountFocus: false };
+    this.handleAmountFocus = this.handleAmountFocus.bind(this);
+    this.handleAmountBlur = this.handleAmountBlur.bind(this);
+  }
 
-    {touched && error && <ErrorMessage error={error} />}
-    {touched && warning && <WarningMessage error={warning} />}
-  </FormGroup>
-);
+  handleAmountFocus() {
+    this.setState({ amountFocus: true });
+  }
 
+  handleAmountBlur() {
+    this.setState({ amountFocus: false });
+  }
+
+  render() {
+    const {
+      input,
+      label,
+      type,
+      amountUnit,
+      setAmountUnit,
+      meta: { touched, error, warning },
+    } = this.props;
+    return (
+      <FormGroup>
+        <Label htmlFor={input.name}>{label}</Label>
+        <ControlWrapper>
+          <FieldGroup focus={this.state.amountFocus}>
+            <InputWithUnit
+              {...input}
+              {...this.props}
+              onFocus={this.handleAmountFocus}
+              onBlur={this.handleAmountBlur}
+              type={type}
+              id={input.name}
+            />
+            <Unit name="unit">{amountUnit}</Unit>
+          </FieldGroup>
+          <Dropdown
+            selected={amountUnit}
+            onSelect={setAmountUnit}
+            options={tokens}
+            {...this.props}
+          />
+        </ControlWrapper>
+
+        {touched && error && <ErrorMessage error={error} />}
+        {touched && warning && <WarningMessage error={warning} />}
+      </FormGroup>
+    );
+  }
+}
 TokenAmountField.propTypes = {
   input: PropTypes.object,
   label: PropTypes.node,

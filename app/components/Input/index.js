@@ -29,6 +29,7 @@ const InputStyled = styled.input`
   transition: box-shadow 0.3s, border 0.3s;
 `;
 
+// focus on this element is handled by component state
 export const InputWithUnit = styled.input`
   ${(props) => {
     if (props.touched && !props.error) {
@@ -44,6 +45,9 @@ export const InputWithUnit = styled.input`
   font-family: "Open Sans", sans-serif;
   font-size: 18px;
   transition: box-shadow 0.3s, border 0.3s;
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const CheckBox = styled.input`

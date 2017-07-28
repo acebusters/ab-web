@@ -6,7 +6,7 @@ const fontColor = '#979797';
 // Dropdown base styles
 export const Container = styled.div`
   padding: 4px;
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.50);
 `;
 
@@ -16,7 +16,7 @@ export const Button = styled(ButtonBase)`
   height: 58px;
   padding: 10px 20px;
   background-color: white;
-  border-radius: 6px;
+  border-radius: 2px;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
   width: 100%;
   color: ${fontColor};

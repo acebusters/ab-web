@@ -14,8 +14,10 @@ export const FieldGroup = styled.div`
   align-items: center;
   border: solid 1px gainsboro;
   border-radius: 4px;
+  outline: ${(props) => props.focus ? '-webkit-focus-ring-color auto 5px' : 'none'};
 `;
 
 export const Unit = styled.span`
   padding-right: 12px;
+  text-transform: uppercase;
 `;

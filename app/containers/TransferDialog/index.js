@@ -9,7 +9,7 @@ import { reduxForm } from 'redux-form/immutable';
 import { makeSelectHasWeb3, makeSelectNetworkSupported } from '../../containers/AccountProvider/selectors';
 
 import DefaultDialog from '../../components/TransferDialog/Default';
-import TokenDialog from '../../components/TransferDialog/Token';
+import TokenDialog from '../../components/TransferDialog/TokenDialog';
 
 const isEthereumAddress = (address) => ethUtil.isValidAddress(address) || ethUtil.isValidChecksumAddress(address);
 
