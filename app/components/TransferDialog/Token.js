@@ -11,16 +11,12 @@ import UnsupportedNetworkMessage from '../Web3Alerts/UnsupportedNetwork';
 import { ErrorMessage } from '../FormMessages';
 import SubmitButton from '../SubmitButton';
 import FormField from '../Form/FormField';
+import TokenAmountField from '../Form/TokenAmountField';
 import AmountField from '../AmountField';
-import Dropdown from '../Dropdown';
 import Token from '../Dropdown/Token';
 import Ethereum from '../Logo/Ethereum';
 import Nutz from '../Logo/Nutz';
 
-import {
-  ControlWrapper,
-  ControlDropdown,
-} from './styles';
 
 const tokens = [{
   id: ETH,
@@ -64,29 +60,22 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
       invalid,
       hasWeb3,
       networkSupported,
-      amountUnit,
-      setAmountUnit,
     } = this.props;
     return (
       <div>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          <ControlWrapper>
-            <ControlDropdown>
-              <Dropdown
-                options={tokens}
-                selected={amountUnit}
-                onSelect={setAmountUnit}
-                {...this.props}
-              />
-            </ControlDropdown>
-          </ControlWrapper>
-
           <AmountField
             name="amount"
-            component={FormField}
+            component={TokenAmountField}
             label="Amount"
             autoFocus
             maxAmount={maxAmount}
+            options={tokens}
+            modalAdd={this.props.modalAdd}
+            modalDismiss={this.props.modalDismiss}
+            amountUnit={this.props.amountUnit}
+            setAmountUnit={this.props.setAmountUnit}
+            // {...this.props}
           />
 
           <Field
@@ -122,6 +111,8 @@ TokenDialog.propTypes = {
   handleSubmit: PropTypes.func,
   handleTransfer: PropTypes.func,
   error: PropTypes.any,
+  modalAdd: PropTypes.func,
+  modalDismiss: PropTypes.func,
   amountUnit: PropTypes.string,
   setAmountUnit: PropTypes.func,
 };
