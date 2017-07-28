@@ -7,6 +7,7 @@ import {
   Caret,
   Container,
   ModalButton,
+  ModalContainer,
 } from './styles';
 
 const Dropdown = ({
@@ -23,14 +24,14 @@ const Dropdown = ({
 
   const handleToggle = () => {
     modalAdd(
-      <Container>
+      <ModalContainer>
         {options.map((option, index) => (
           <ModalButton key={index} onClick={() => handleSelectButton(option.id)}>
             {option.node({ ...option.props })}
           </ModalButton>
           ))
         }
-      </Container>
+      </ModalContainer>
     );
   };
 

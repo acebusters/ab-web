@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 import { Button as ButtonBase } from '../../utils/styleUtils';
+import {
+  activeColor as activeBg,
+  hover as hoverBg,
+} from '../../variables';
 
 const fontColor = '#979797';
 
@@ -13,32 +17,37 @@ export const Container = styled.div`
 export const Button = styled(ButtonBase)`
   display: flex;
   align-items: center;
-  height: 58px;
-  padding: 10px 20px;
+  height: 50px;
+  padding: 10px 12px;
   background-color: white;
   border-radius: 2px;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.50);
   width: 100%;
   color: ${fontColor};
   &:hover {
-    background-color: yellow;
+    color: white;
+    background-color: ${hoverBg};
   }
   &:active {
-    background-color: lavender;
+    color: white;
+    background-color: ${activeBg};
   }
 `;
 
 export const Caret = styled.i`
   margin-left: auto;
-  padding-left: 10px;
+  padding: 0 10px;
   &:before {
     font-size: 1.5em;
   }
 `;
 
 // Modal
+export const ModalContainer = styled(Container)`
+  min-width: 180px;
+`;
 export const ModalButton = styled(Button)`
-  margin-top: 10px;
+  margin-top: 6px;
   &:first-child {
     margin-top: 0;
   }
@@ -57,7 +66,7 @@ export const TokenIcon = styled.div`
 `;
 
 export const TokenName = styled.div`
-  margin-left: 12px;
+  margin-left: 6px;
 `;
 
 // Toggle Button

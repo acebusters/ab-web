@@ -25,14 +25,14 @@ const tokens = [{
   node: Token,
   props: {
     name: <FormattedMessage {...messages.ethereum} />,
-    icon: <Ethereum height={30} width={30} />,
+    icon: <Ethereum height={26} width={26} />,
   },
 }, {
   id: NTZ,
   node: Token,
   props: {
     name: <FormattedMessage {...messages.nutz} />,
-    icon: <Nutz height={30} width={30} />,
+    icon: <Nutz height={26} width={26} />,
   },
 }];
 
