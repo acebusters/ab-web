@@ -1,10 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Field } from 'redux-form/immutable';
-import { FormattedMessage } from 'react-intl';
-
-import messages from '../../containers/Dashboard/messages';
-import { ETH, NTZ } from '../../containers/Dashboard/actions';
 
 import NoWeb3Message from '../Web3Alerts/NoWeb3';
 import UnsupportedNetworkMessage from '../Web3Alerts/UnsupportedNetwork';
@@ -13,30 +9,6 @@ import SubmitButton from '../SubmitButton';
 import FormField from '../Form/FormField';
 import TokenAmountField from '../Form/TokenAmountField';
 import AmountField from '../AmountField';
-import Token from '../Dropdown/Token';
-import Ethereum from '../Logo/Ethereum';
-import Nutz from '../Logo/Nutz';
-
-
-const tokens = [{
-  id: ETH,
-  node: Token,
-  props: {
-    name: <FormattedMessage {...messages.ethereum} />,
-    amount: 0.13,
-    amoutnUnit: ETH,
-    icon: <Ethereum height={30} width={30} />,
-  },
-}, {
-  id: NTZ,
-  node: Token,
-  props: {
-    name: <FormattedMessage {...messages.nutz} />,
-    amount: 1000,
-    amountUnit: NTZ,
-    icon: <Nutz height={30} width={30} />,
-  },
-}];
 
 class TokenDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -70,7 +42,6 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
             label="Amount"
             autoFocus
             maxAmount={maxAmount}
-            options={tokens}
             modalAdd={this.props.modalAdd}
             modalDismiss={this.props.modalDismiss}
             amountUnit={this.props.amountUnit}

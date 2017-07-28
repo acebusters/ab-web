@@ -3,11 +3,9 @@ import { Button as ButtonBase } from '../../utils/styleUtils';
 
 const fontColor = '#979797';
 
-
 // Dropdown base styles
 export const Container = styled.div`
   padding: 4px;
-  width: 100%;
   border-radius: 8px;
   box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.50);
 `;
@@ -47,19 +45,10 @@ export const ModalButton = styled(Button)`
 `;
 
 // Token Button
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 1.2em;
-`;
-
 export const TokenContainer = styled.div`
   display: flex;
-  width: 100%;
-  min-width: 240px;
-`;
-
-export const TokenWrapperLeft = styled(Wrapper)`
+  align-items: center;
+  min-width: 100px;
 `;
 
 export const TokenIcon = styled.div`
@@ -69,17 +58,6 @@ export const TokenIcon = styled.div`
 
 export const TokenName = styled.div`
   margin-left: 12px;
-`;
-
-export const TokenWrapperRight = styled(Wrapper)`
-  margin-left: auto;
-`;
-
-export const TokenAmount = styled.div``;
-
-export const TokenUnit = styled.div`
-  margin-left: 12px;
-  text-transform: uppercase;
 `;
 
 // Toggle Button
