@@ -24,7 +24,7 @@ import { promisifyContractCall } from '../../utils/promisifyContractCall';
 import { conf, ABI_ACCOUNT_FACTORY, ABI_PROXY } from '../../app.config';
 import { sendTx } from '../../services/transactions';
 
-import { workerError, walletExported, register } from './actions';
+import { workerError, walletExported, register, accountTxHashReceived } from './actions';
 
 const validate = (values) => {
   const errors = {};
@@ -51,13 +51,13 @@ const warn = (values) => {
   return warnings;
 };
 
-function waitForAccountTx(signerAddr) {
+function waitForAccountTxHash(signerAddr) {
   const pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
   const channel = pusher.subscribe(signerAddr);
   return new Promise((resolve) => {
     channel.bind('update', (event) => {
       if (event.type === 'txHash') {
-        resolve(waitForTx(getWeb3(), event.payload));
+        resolve(event.payload);
         channel.unbind('update');
       }
     });
@@ -122,9 +122,11 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
   handleCreate(workerRsp, receipt, confCode) {
     return account.addWallet(confCode, workerRsp.data.wallet)
       .catch(throwSubmitError)
-      .then(() => waitForAccountTx(workerRsp.data.wallet.address))
-      .catch(throwTxError)
-      .then(() => browserHistory.push('/login'));
+      .then(() => waitForAccountTxHash(workerRsp.data.wallet.address))
+      .then((txHash) => {
+        this.props.onAccountTxHashReceived(txHash);
+        browserHistory.push('/login');
+      });
   }
 
   async handleRecovery(workerRsp, receipt, confCode, privKey) {
@@ -271,6 +273,7 @@ GeneratePage.defaultProps = {
 GeneratePage.propTypes = {
   ...propTypes,
   workerPath: PropTypes.string,
+  onAccountTxHashReceived:PropTypes.func,
   onWorkerError:PropTypes.func,
   onWorkerInitialized: PropTypes.func,
   onWorkerProgress: PropTypes.func,
@@ -291,12 +294,9 @@ const throwSubmitError = (err) => {
   }
 };
 
-const throwTxError = (err) => {
-  throw new SubmissionError({ _error: `Registration failed with message: ${err}` });
-};
-
 function mapDispatchToProps(dispatch) {
   return {
+    onAccountTxHashReceived: (txHash) => dispatch(accountTxHashReceived(txHash)),
     onWorkerError: (event) => dispatch(workerError(event)),
     onWorkerInitialized: () => dispatch(change('register', 'isWorkerInitialized', true)),
     onWorkerProgress: (percent) => dispatch(change('register', 'workerProgress', percent)),
