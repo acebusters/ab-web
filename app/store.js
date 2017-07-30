@@ -6,6 +6,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
+import createWorkerMiddleware from 'redux-worker-middleware';
 
 import createReducer from './reducers';
 import { setAuthState } from './containers/AccountProvider/actions';
@@ -20,11 +21,22 @@ import * as storageService from './services/localStorage';
 
 const sagaMiddleware = createSagaMiddleware();
 
+const LoginWorker = require('worker-loader!../app/containers/LoginPage/worker.js');
+const loginWorker = new LoginWorker();
+
+const GenerateWorker = require('worker-loader!../app/containers/GeneratePage/worker.js');
+const generateWorker = new GenerateWorker();
+
+const loginWorkerMiddleware = createWorkerMiddleware(loginWorker);
+const generateWorkerMiddleware = createWorkerMiddleware(generateWorker);
+
 export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
   const middlewares = [
+    loginWorkerMiddleware,
+    generateWorkerMiddleware,
     sagaMiddleware,
     routerMiddleware(history),
   ];
