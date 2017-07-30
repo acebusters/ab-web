@@ -36,6 +36,28 @@ export const noWeb3Danger = {
   type: 'danger',
 };
 
+export const txTransferPending = {
+  // txId: null,
+  notifyType: 'TX_TRANSFER_PENDING',
+  category: 'Transfer Pending',
+  details: ' Sending X.XX ETH/NTZ',
+  removing: false,
+  dismissable: false,
+  date: new Date(),
+  type: 'info',
+};
+
+export const txTransferSent = {
+  // txId: null,
+  notifyType: 'TX_TRANSFER_SENT',
+  category: 'Transfer Sent',
+  details: 'Sent X.XX ETH/NTZ',
+  removing: false,
+  dismissable: true,
+  date: new Date(),
+  type: 'success',
+};
+
 export const temp = {
   notifyType: 'FUNDS_TRANSFERRED_NTZ',
   category: 'NTZ Wallet',
