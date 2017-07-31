@@ -20,8 +20,9 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
     return this.props.handleTransfer(
       values.get('amount'),
       values.get('address'),
-    );
+    ).then(() => this.props.reset());
   }
+
 
   render() {
     const {
@@ -86,6 +87,7 @@ TokenDialog.propTypes = {
   modalDismiss: PropTypes.func,
   amountUnit: PropTypes.string,
   setAmountUnit: PropTypes.func,
+  reset: PropTypes.func,
 };
 
 export default TokenDialog;
