@@ -14,6 +14,8 @@ import {
   ABP_DECIMALS,
   formatAbp,
 } from '../../utils/amountFormatter';
+
+import { waitForTx } from '../../utils/waitForTx';
 import { modalAdd, modalDismiss } from '../App/actions';
 import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
 import makeSelectAccountData, {
@@ -417,10 +419,9 @@ class DashboardRoot extends React.Component {
               formatDate(nextPayout(r, downtime)),
               <button
                 onClick={() => {
-                  const power = getWeb3().eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
-                  power.downTick.call(r[0], (err, result) => {
+                  this.power.downTick.sendTransaction(r[0], (err, result) => {
                     if (result) {
-                      this.loadDownRequests();
+                      waitForTx(result).then(() => this.loadDownRequests());
                     }
                   });
                 }}
