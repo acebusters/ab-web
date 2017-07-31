@@ -4,6 +4,7 @@ import {
   WORKER_PROGRESS,
   WALLET_EXPORTED,
   WALLET_EXPORT,
+  ACCOUNT_TX_HASH_RECEIVED,
 } from './constants';
 
 export function workerError(error) {
@@ -37,6 +38,10 @@ export function walletExport(data) {
       data,
     },
   };
+}
+
+export function accountTxHashReceived(txHash) {
+  return { type: ACCOUNT_TX_HASH_RECEIVED, payload: txHash };
 }
 
 export const register = createFormAction('REGISTER');

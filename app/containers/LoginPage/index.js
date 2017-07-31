@@ -12,7 +12,12 @@ import account from '../../services/account';
 import { walletImport, login } from './actions';
 import { setProgress } from '../App/actions';
 import { setAuthState } from '../AccountProvider/actions';
+import { notifyAdd } from '../Notifications/actions';
+import { selectAccount } from '../AccountProvider/selectors';
+import { getWeb3 } from '../AccountProvider/utils';
+import { waitForTx } from '../../utils/waitForTx';
 import H1 from '../../components/H1';
+import { firstLogin } from '../Notifications/constants';
 
 import { ForgotField } from './styles';
 
@@ -47,45 +52,68 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
   }
 
   handleSubmit(values, dispatch) {
-    return account.login(values.get('email')).catch((err) => {
-      const errMsg = 'Login failed!';
-      if (err === 404) {
-        throw new SubmissionError({ confCode: 'Email unknown.', _error: errMsg });
-      } else {
-        throw new SubmissionError({ _error: `Login failed with error code ${err}` });
-      }
-    }).then((data) => {
-      this.props.walletImport({
-        json: data.wallet,
-        password: values.get('password'),
-      });
+    return (
+      account.login(values.get('email'))
+        .catch((err) => {
+          if (err === 404) {
+            throw new SubmissionError({ email: 'Email unknown.', _error: 'Login failed!' });
+          } else {
+            throw new SubmissionError({ _error: `Login failed with error code ${err}` });
+          }
+        })
+        // the best place for waiting for proxy tx, it allows to get login errors without delay
+        .then((data) => {
+          // if user just created account, we need to ensure that proxy contract is deployed before continue login process
+          const proxyTxHash = this.props.account.get('proxyTxHash');
+          if (proxyTxHash) {
+            this.props.notifyAdd(firstLogin);
+            return waitForTx(getWeb3(), proxyTxHash)
+              .then(
+                () => data,
+                () => {
+                  throw new SubmissionError({ _error: `Login failed. Account tx failed, tx has was: ${proxyTxHash}` });
+                }
+              );
+          }
 
-      // Login saga is called, we return the promise here,
-      // so we can display form errors if any of the async ops fail.
-      return login(values, dispatch).catch((workerErr) => {
-        // If worker failed, ...
-        throw new SubmissionError({ _error: `error, Login failed due to worker error: ${workerErr.payload.error}` });
-      }).then((workerRsp) => {
-        // If worker success, ...
-        // ...tell account provider about login.
-        this.props.setAuthState({
-          privKey: workerRsp.payload.hexSeed,
-          email: values.get('email'),
-          loggedIn: true,
-        });
+          return data;
+        })
+        .then((data) => {
+          this.props.walletImport({
+            json: data.wallet,
+            password: values.get('password'),
+          });
+          // Login saga is called, we return the promise here,
+          // so we can display form errors if any of the async ops fail.
+          return (
+            login(values, dispatch)
+              .catch((workerErr) => {
+                // If worker failed, ...
+                throw new SubmissionError({ _error: `Error: login failed due to worker error: ${workerErr}` });
+              })
+              .then((workerRsp) => {
+                // If worker success, ...
+                // ...tell account provider about login.
+                this.props.setAuthState({
+                  privKey: workerRsp.payload.hexSeed,
+                  email: values.get('email'),
+                  loggedIn: true,
+                });
 
-        const { location } = this.props;
-        let nextPath = '/lobby';
+                const { location } = this.props;
+                let nextPath = '/lobby';
 
-        if (location.state && location.state.nextPathname) {
-          nextPath = location.state.nextPathname;
-        } else if (location.query && location.query.redirect) {
-          nextPath = decodeURIComponent(location.query.redirect);
-        }
+                if (location.state && location.state.nextPathname) {
+                  nextPath = location.state.nextPathname;
+                } else if (location.query && location.query.redirect) {
+                  nextPath = decodeURIComponent(location.query.redirect);
+                }
 
-        browserHistory.push(nextPath); // Go to page that was requested
-      });
-    });
+                browserHistory.push(nextPath); // Go to page that was requested
+              })
+          );
+        })
+    );
   }
 
   render() {
@@ -121,18 +149,25 @@ LoginPage.propTypes = {
   setProgress: React.PropTypes.func,
   walletImport: React.PropTypes.func,
   setAuthState: React.PropTypes.func,
+  notifyAdd: React.PropTypes.func,
 };
 
 
 function mapDispatchToProps(dispatch) {
   return {
+    notifyAdd: (notification) => dispatch(notifyAdd(notification)),
     setProgress: (percent) => dispatch(setProgress(percent)),
     walletImport: (data) => dispatch(walletImport(data)),
     setAuthState: (data) => dispatch(setAuthState(data)),
   };
 }
 
-const mapStateToProps = () => ({});
+// Which props do we want to inject, given the global state?
+const mapStateToProps = (state) => ({
+  account: selectAccount(state),
+});
 
 // Wrap the component to inject dispatch and state into it
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'login', validate, warn })(LoginPage));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({ form: 'login', validate, warn })(LoginPage)
+);
