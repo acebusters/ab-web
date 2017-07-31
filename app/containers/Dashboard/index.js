@@ -180,16 +180,15 @@ class DashboardRoot extends React.Component {
         this.web3.eth.getBalance(proxyAddr);
       }
     });
-
+    this.power.downtime.call();
     this.power.allEvents({
       toBlock: 'latest',
     }).watch((error, event) => {
       console.log(event);
+      this.loadDownRequests();
     });
 
-    this.loadDownRequests().then((requests) => {
-      this.setState({ downRequests: requests });
-    });
+    this.loadDownRequests();
   }
 
   watchTokenEvents(proxyAddr) {
@@ -258,7 +257,7 @@ class DashboardRoot extends React.Component {
               return;
             }
             if (request[0] !== '0x') {
-              result[base + i] = request;
+              result[base + i] = [base + i, ...request];
             } else {
               stop = true;
             }
@@ -278,7 +277,9 @@ class DashboardRoot extends React.Component {
       runBatch(0);
     });
 
-    return promise.then((requests) => requests.filter((r) => r[0] === this.props.account.proxy));
+    promise
+      .then((requests) => requests.filter((r) => r[1] === this.props.account.proxy))
+      .then((requests) => this.setState({ downRequests: requests }));
   }
 
   handleETHClaim(proxyAddr) {
@@ -366,7 +367,9 @@ class DashboardRoot extends React.Component {
 
   render() {
     const { account } = this.props;
+    const { downRequests } = this.state;
     const qrUrl = `ether:${account.proxy}`;
+    const downtime = this.power.downtime();
     const weiBalance = this.web3.eth.balance(account.proxy);
     const ethBalance = weiBalance && weiBalance.div(ETH_DECIMALS);
     const babzBalance = this.token.balanceOf(account.proxy);
@@ -407,11 +410,23 @@ class DashboardRoot extends React.Component {
             nutzBalance,
             listTxns,
             qrUrl,
-            downRequests: this.state.downRequests && this.state.downRequests.map((r) => [
-              `${formatAbp(r[1])} ABP`,
-              `${formatAbp(r[1].sub(r[2]))} ABP`,
-              formatDate(r[3].toNumber()),
-              '',
+            downRequests: downtime && downRequests && downRequests.map((r) => [
+              `${formatAbp(r[2])} ABP`,
+              `${formatAbp(r[2].sub(r[3]))} ABP`,
+              formatDate(r[4].toNumber()),
+              formatDate(nextPayout(r, downtime)),
+              <button
+                onClick={() => {
+                  const power = getWeb3().eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
+                  power.downTick.call(r[0], (err, result) => {
+                    if (result) {
+                      this.loadDownRequests();
+                    }
+                  });
+                }}
+              >
+                Tick
+              </button>,
             ]),
             handleNTZSell: this.handleNTZSell,
             handleNTZPurchase: this.handleNTZPurchase,
@@ -440,6 +455,17 @@ DashboardRoot.propTypes = {
   transferETH: PropTypes.func,
   web3Redux: PropTypes.any,
 };
+
+function nextPayout(request, downtime) {
+  const start = request[4].toNumber();
+  const step = downtime.toNumber() / 10;
+  const nextStep = Math.ceil(((Date.now() / 1000) - start) / step);
+
+  return Math.min(
+    start + (step * nextStep),
+    start + downtime.toNumber()
+  );
+}
 
 const mapDispatchToProps = (dispatch) => ({
   setActiveTab: (whichTab) => dispatch(setActiveTab(whichTab)),

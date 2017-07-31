@@ -31,12 +31,14 @@ const Overview = (props) => {
             'Total',
             'Payed out',
             'Date',
+            'Next payout',
             '',
           ]}
           columnsStyle={{
             0: { width: 20, textAlign: 'left', whiteSpace: 'nowrap' },
             1: { width: 20, textAlign: 'left', whiteSpace: 'nowrap' },
             2: { width: 20, textAlign: 'left', whiteSpace: 'nowrap' },
+            3: { width: 20, textAlign: 'left', whiteSpace: 'nowrap' },
           }}
           noDataMsg="No Transactions Yet"
         />
