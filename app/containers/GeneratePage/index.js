@@ -130,7 +130,7 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
   }
 
   async handleRecovery(workerRsp, receipt, confCode, privKey) {
-    const factory = getWeb3(true).eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
+    const factory = getWeb3().eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
     const getAccount = promisifyContractCall(factory.getAccount);
     const newSignerAddr = workerRsp.data.wallet.address;
 
@@ -141,8 +141,6 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
       const acc = await getAccount(wallet.address);
       const proxyAddr = acc[0];
       const isLocked = acc[2];
-      const proxy = getWeb3(true).eth.contract(ABI_PROXY).at(proxyAddr);
-      const forward = promisifyContractCall(proxy.forward.sendTransaction);
       const data = factory.handleRecovery.getData(newSignerAddr);
 
       let txHash;
@@ -151,6 +149,8 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
         const result = await sendTx(forwardReceipt, confCode);
         txHash = result.txHash;
       } else {
+        const proxy = getWeb3(true).eth.contract(ABI_PROXY).at(proxyAddr);
+        const forward = promisifyContractCall(proxy.forward.sendTransaction);
         txHash = await forward(factory.address, 0, data, { from: window.web3.eth.accounts[0] });
       }
 
