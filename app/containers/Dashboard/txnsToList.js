@@ -92,7 +92,11 @@ function txDescription(event, tableAddrs, proxyAddr) {
       />
     );
   } else if (event.address === confParams.pwrAddr) {
-    return <FormattedMessage {...messages.powerUpStatus} />;
+    return (
+      <FormattedMessage
+        {...(event.type === 'income' ? messages.powerDownPayoutStatus : messages.powerUpStatus)}
+      />
+    );
   } else if (isSellEndEvent(event)) {
     return <FormattedMessage {...messages.sellEnd} />;
   } else if (isSellStartEvent(event)) {

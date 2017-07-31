@@ -114,4 +114,8 @@ export default defineMessages({
     id: 'app.containers.Dashboard.powerUpStatus',
     defaultMessage: 'Power Up',
   },
+  powerDownPayoutStatus: {
+    id: 'app.containers.Dashboard.powerDownPayoutStatus',
+    defaultMessage: 'Power Down Payout',
+  },
 });
