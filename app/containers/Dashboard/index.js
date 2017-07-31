@@ -12,6 +12,7 @@ import {
   ETH_DECIMALS,
   NTZ_DECIMALS,
   ABP_DECIMALS,
+  formatAbp,
 } from '../../utils/amountFormatter';
 import { modalAdd, modalDismiss } from '../App/actions';
 import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
@@ -29,6 +30,7 @@ import {
 } from './actions';
 import messages from './messages';
 import { txnsToList } from './txnsToList';
+import { formatDate } from './utils';
 import { getActiveTab, createDashboardTxsSelector } from './selectors';
 
 import Container from '../../components/Container';
@@ -87,6 +89,8 @@ class DashboardRoot extends React.Component {
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
     this.power = this.web3.eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
     this.tableFactory = this.web3.eth.contract(ABI_TABLE_FACTORY).at(confParams.tableFactory);
+    // const power = getWeb3().eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
+    // power.downs.call(0, (err, res) => console.log(err, res));
 
     this.tableFactory.getTables.call();
     if (this.props.account.proxy) {
@@ -94,6 +98,10 @@ class DashboardRoot extends React.Component {
       this.watchTokenEvents(this.props.account.proxy);
       this.power.balanceOf.call(this.props.account.proxy);
     }
+
+    this.state = {
+      downRequests: null,
+    };
   }
 
   componentDidMount() {
@@ -172,12 +180,21 @@ class DashboardRoot extends React.Component {
         this.web3.eth.getBalance(proxyAddr);
       }
     });
+
+    this.power.allEvents({
+      toBlock: 'latest',
+    }).watch((error, event) => {
+      console.log(event);
+    });
+
+    this.loadDownRequests().then((requests) => {
+      this.setState({ downRequests: requests });
+    });
   }
 
   watchTokenEvents(proxyAddr) {
     this.token.floor.call();
     this.token.ceiling.call();
-    this.token.powerAddr.call();
     this.token.balanceOf.call(proxyAddr);
     this.web3.eth.getBalance(proxyAddr);
 
@@ -222,6 +239,46 @@ class DashboardRoot extends React.Component {
 
       events.stopWatching();
     });
+  }
+
+  loadDownRequests() {
+    const power = getWeb3().eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
+    const result = [];
+    const batchSize = 20;
+    let stop = false;
+    const promise = new Promise((resolve, reject) => {
+      const runBatch = (base) => {
+        // ToDo: find a bug with batch and use it
+        // const batch = getWeb3().createBatch();
+        for (let i = 0; i < batchSize; i += 1) {
+          // batch.add(
+          power.downs.call(base + i, (err, request) => { // eslint-disable-line
+            if (err) {
+              reject(err);
+              return;
+            }
+            if (request[0] !== '0x') {
+              result[base + i] = request;
+            } else {
+              stop = true;
+            }
+
+            if (i + 1 === batchSize) {
+              if (stop) {
+                resolve(result);
+              } else {
+                runBatch(base + batchSize);
+              }
+            }
+          });
+        }
+        // batch.execute();
+      };
+
+      runBatch(0);
+    });
+
+    return promise.then((requests) => requests.filter((r) => r[0] === this.props.account.proxy));
   }
 
   handleETHClaim(proxyAddr) {
@@ -350,6 +407,12 @@ class DashboardRoot extends React.Component {
             nutzBalance,
             listTxns,
             qrUrl,
+            downRequests: this.state.downRequests && this.state.downRequests.map((r) => [
+              `${formatAbp(r[1])} ABP`,
+              `${formatAbp(r[1].sub(r[2]))} ABP`,
+              formatDate(r[3].toNumber()),
+              '',
+            ]),
             handleNTZSell: this.handleNTZSell,
             handleNTZPurchase: this.handleNTZPurchase,
             handleNTZTransfer: this.handleNTZTransfer,

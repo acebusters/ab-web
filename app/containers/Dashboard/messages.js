@@ -24,7 +24,11 @@ export default defineMessages({
   },
   included: {
     id: 'app.containers.Dashboard.included',
-    defaultMessage: 'Transaction History:',
+    defaultMessage: 'Transaction History',
+  },
+  powerDownRequests: {
+    id: 'app.containers.Dashboard.powerDownRequests',
+    defaultMessage: 'Power Down Requests',
   },
   transactionErrorTitle: {
     id: 'app.containers.Dashboard.transactionErrorTitle',
