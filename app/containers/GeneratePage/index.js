@@ -159,7 +159,7 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
           wallet.address = `0x${wallet.address}`;
           delete wallet.id;
           return receipt.type === Type.RESET_CONF
-            ? this.handleRecovery(wallet, receipt, confCode, wallet.privateKey)
+            ? this.handleRecovery(wallet, receipt, confCode, workerRsp.payload.privateKey)
             : this.handleCreate(wallet, receipt, confCode);
         })
     );

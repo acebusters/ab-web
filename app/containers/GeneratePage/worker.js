@@ -44,7 +44,10 @@ function exportWallet(payload) {
 
       postMessage({
         type: WALLET_EXPORTED,
-        payload: { json },
+        payload: {
+          json,
+          privateKey: wallet.privateKey,
+        },
       });
     })
     .catch((reason) => {
