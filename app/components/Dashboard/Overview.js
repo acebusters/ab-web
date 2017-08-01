@@ -29,9 +29,9 @@ const Overview = (props) => {
           items={downRequests}
           headers={[
             'Total',
-            'Payed out',
-            'Date',
-            'Next payout',
+            'Payed-Out',
+            'Request date',
+            'Next Pay-Out',
             '',
           ]}
           columnsStyle={{

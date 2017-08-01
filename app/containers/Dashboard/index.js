@@ -12,10 +12,9 @@ import {
   ETH_DECIMALS,
   NTZ_DECIMALS,
   ABP_DECIMALS,
-  formatAbp,
 } from '../../utils/amountFormatter';
-
 import { waitForTx } from '../../utils/waitForTx';
+
 import { modalAdd, modalDismiss } from '../App/actions';
 import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
 import makeSelectAccountData, {
@@ -32,7 +31,7 @@ import {
 } from './actions';
 import messages from './messages';
 import { txnsToList } from './txnsToList';
-import { formatDate } from './utils';
+import { downRequestsToList } from './downRequestsToList';
 import { getActiveTab, createDashboardTxsSelector } from './selectors';
 
 import Container from '../../components/Container';
@@ -185,9 +184,10 @@ class DashboardRoot extends React.Component {
     this.power.downtime.call();
     this.power.allEvents({
       toBlock: 'latest',
-    }).watch((error, event) => {
-      console.log(event);
-      this.loadDownRequests();
+    }).watch((error) => {
+      if (!error) {
+        this.loadDownRequests();
+      }
     });
 
     this.loadDownRequests();
@@ -367,6 +367,14 @@ class DashboardRoot extends React.Component {
     });
   }
 
+  handleTickClick(pos) {
+    this.power.downTick.sendTransaction(pos, (err, result) => {
+      if (result) {
+        waitForTx(getWeb3(), result).then(() => this.loadDownRequests());
+      }
+    });
+  }
+
   render() {
     const { account } = this.props;
     const { downRequests } = this.state;
@@ -412,23 +420,11 @@ class DashboardRoot extends React.Component {
             nutzBalance,
             listTxns,
             qrUrl,
-            downRequests: downtime && downRequests && downRequests.map((r) => [
-              `${formatAbp(r[2])} ABP`,
-              `${formatAbp(r[2].sub(r[3]))} ABP`,
-              formatDate(r[4].toNumber()),
-              formatDate(nextPayout(r, downtime)),
-              <button
-                onClick={() => {
-                  this.power.downTick.sendTransaction(r[0], (err, result) => {
-                    if (result) {
-                      waitForTx(getWeb3(), result).then(() => this.loadDownRequests());
-                    }
-                  });
-                }}
-              >
-                Tick
-              </button>,
-            ]),
+            downRequests: downRequestsToList(
+              downRequests,
+              downtime,
+              (pos) => this.handleTickClick(pos),
+            ),
             handleNTZSell: this.handleNTZSell,
             handleNTZPurchase: this.handleNTZPurchase,
             handleNTZTransfer: this.handleNTZTransfer,
@@ -456,17 +452,6 @@ DashboardRoot.propTypes = {
   transferETH: PropTypes.func,
   web3Redux: PropTypes.any,
 };
-
-function nextPayout(request, downtime) {
-  const start = request[4].toNumber();
-  const step = downtime.toNumber() / 10;
-  const nextStep = Math.ceil(((Date.now() / 1000) - start) / step);
-
-  return Math.min(
-    start + (step * nextStep),
-    start + downtime.toNumber()
-  );
-}
 
 const mapDispatchToProps = (dispatch) => ({
   setActiveTab: (whichTab) => dispatch(setActiveTab(whichTab)),
