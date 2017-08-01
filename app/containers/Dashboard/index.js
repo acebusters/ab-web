@@ -421,7 +421,7 @@ class DashboardRoot extends React.Component {
                 onClick={() => {
                   this.power.downTick.sendTransaction(r[0], (err, result) => {
                     if (result) {
-                      waitForTx(result).then(() => this.loadDownRequests());
+                      waitForTx(getWeb3(), result).then(() => this.loadDownRequests());
                     }
                   });
                 }}
