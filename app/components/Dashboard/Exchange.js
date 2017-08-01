@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import BigNumber from 'bignumber.js';
 
 import { ABP_DECIMALS } from '../../utils/amountFormatter';
@@ -31,6 +31,7 @@ const Exchange = ({
   modalAdd,
   pwrBalance,
   weiBalance,
+  totalSupply,
 }) => (
   <Pane name="dashboard-exchange" >
     <Section>
@@ -102,14 +103,22 @@ const Exchange = ({
           </DBButton>
         }
 
-        {pwrBalance &&
+        {pwrBalance && totalSupply &&
           <DBButton
             onClick={() => modalAdd(
               <TransferDialog
                 title={<FormattedMessage {...messages.powerDownTitle} />}
-                description="Power Down will convert ABP back to NTZ over a period of 3 month"
+                description={
+                  <FormattedHTMLMessage
+                    {...messages.powerDownDescr}
+                    values={{
+                      min: totalSupply.div(10000).div(ABP_DECIMALS).ceil().toNumber(),
+                    }}
+                  />
+                }
                 handleTransfer={handlePowerDown}
                 maxAmount={pwrBalance.div(ABP_DECIMALS)}
+                minAmount={totalSupply.div(10000).div(ABP_DECIMALS).ceil()}
                 hideAddress
                 amountUnit="ABP"
               />
@@ -128,6 +137,7 @@ Exchange.propTypes = {
   ETH_FISH_LIMIT: PropTypes.object,
   account: PropTypes.object,
   babzBalance: PropTypes.object,
+  totalSupply: PropTypes.object,
   ethBalance: PropTypes.object,
   calcETHAmount: PropTypes.func,
   calcNTZAmount: PropTypes.func,

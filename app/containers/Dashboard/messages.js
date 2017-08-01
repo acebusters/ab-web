@@ -58,6 +58,10 @@ export default defineMessages({
     id: 'app.containers.Dashboard.powerDownTitle',
     defaultMessage: 'Power Down',
   },
+  powerDownDescr: {
+    id: 'app.containers.Dashboard.powerDownDescr',
+    defaultMessage: 'Power Down will convert ABP back to NTZ over a period of 3 month.<br />Minimal power down amount: {min} ABP',
+  },
   sellTitle: {
     id: 'app.containers.Dashboard.sellTitle',
     defaultMessage: 'Sell NTZ',

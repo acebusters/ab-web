@@ -90,8 +90,6 @@ class DashboardRoot extends React.Component {
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
     this.power = this.web3.eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
     this.tableFactory = this.web3.eth.contract(ABI_TABLE_FACTORY).at(confParams.tableFactory);
-    // const power = getWeb3().eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
-    // power.downs.call(0, (err, res) => console.log(err, res));
 
     this.tableFactory.getTables.call();
     if (this.props.account.proxy) {
@@ -182,6 +180,7 @@ class DashboardRoot extends React.Component {
       }
     });
     this.power.downtime.call();
+    this.power.totalSupply.call();
     this.power.allEvents({
       toBlock: 'latest',
     }).watch((error, event) => {
@@ -380,6 +379,7 @@ class DashboardRoot extends React.Component {
     const { downRequests } = this.state;
     const qrUrl = `ether:${account.proxy}`;
     const downtime = this.power.downtime();
+    const totalSupply = this.power.totalSupply();
     const weiBalance = this.web3.eth.balance(account.proxy);
     const ethBalance = weiBalance && weiBalance.div(ETH_DECIMALS);
     const babzBalance = this.token.balanceOf(account.proxy);
@@ -418,6 +418,7 @@ class DashboardRoot extends React.Component {
             ethBalance,
             pwrBalance,
             nutzBalance,
+            totalSupply,
             listTxns,
             qrUrl,
             downRequests: downRequestsToList(
