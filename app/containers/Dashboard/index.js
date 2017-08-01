@@ -184,8 +184,8 @@ class DashboardRoot extends React.Component {
     this.power.downtime.call();
     this.power.allEvents({
       toBlock: 'latest',
-    }).watch((error) => {
-      if (!error) {
+    }).watch((error, event) => {
+      if (!error && event.args.from === proxyAddr) {
         this.loadDownRequests();
       }
     });

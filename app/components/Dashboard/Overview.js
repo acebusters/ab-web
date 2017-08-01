@@ -13,6 +13,8 @@ import {
 
 const Overview = (props) => {
   const { account, listTxns, downRequests } = props;
+  const requestColumnStyle = { width: 20, textAlign: 'left', whiteSpace: 'nowrap' };
+
   return (
     <Pane name="dashboard-overview">
       <Section name="wallet-receive">
@@ -23,26 +25,28 @@ const Overview = (props) => {
         }
       </Section>
 
-      <Section name="power-down-requests">
-        <H2><FormattedMessage {...messages.powerDownRequests} /></H2>
-        <List
-          items={downRequests}
-          headers={[
-            'Total',
-            'Payed-Out',
-            'Request date',
-            'Next Pay-Out',
-            '',
-          ]}
-          columnsStyle={{
-            0: { width: 20, textAlign: 'left', whiteSpace: 'nowrap' },
-            1: { width: 20, textAlign: 'left', whiteSpace: 'nowrap' },
-            2: { width: 20, textAlign: 'left', whiteSpace: 'nowrap' },
-            3: { width: 20, textAlign: 'left', whiteSpace: 'nowrap' },
-          }}
-          noDataMsg="No Transactions Yet"
-        />
-      </Section>
+      {!account.isLocked && downRequests && downRequests.length > 0 &&
+        <Section name="power-down-requests">
+          <H2><FormattedMessage {...messages.powerDownRequests} /></H2>
+          <List
+            items={downRequests}
+            headers={[
+              'Total',
+              'Payed-Out',
+              'Request date',
+              'Next Pay-Out',
+              '',
+            ]}
+            columnsStyle={{
+              0: requestColumnStyle,
+              1: requestColumnStyle,
+              2: requestColumnStyle,
+              3: requestColumnStyle,
+            }}
+            noDataMsg="No Requests Yet"
+          />
+        </Section>
+      }
 
       <Section name="transaction-history">
         <H2><FormattedMessage {...messages.included} /></H2>
