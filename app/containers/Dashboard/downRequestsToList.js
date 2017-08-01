@@ -26,7 +26,7 @@ function nextPayout(request, downtime) {
   const total = request[2];
   const left = request[3];
   const start = request[4].toNumber();
-  const nextStep = Math.ceil(total.sub(left).div(total.mul(0.1)).toNumber());
+  const nextStep = Math.floor(total.sub(left).div(total.mul(0.1)).toNumber()) + 1;
 
   return Math.min(
     start + downtime.div(10).mul(nextStep).toNumber(),
