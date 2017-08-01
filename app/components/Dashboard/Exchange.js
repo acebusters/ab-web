@@ -8,11 +8,10 @@ import { ABP_DECIMALS } from '../../utils/amountFormatter';
 import ExchangeDialog from '../../containers/ExchangeDialog';
 import TransferDialog from '../../containers/TransferDialog';
 import messages from '../../containers/Dashboard/messages';
-import { DBButton } from '../../containers/Dashboard/styles';
 
 import H2 from '../H2';
 
-import { Pane, Section, ExchangeContainer } from './styles';
+import { Pane, Section, ExchangeContainer, DBButton } from './styles';
 
 const Exchange = ({
   ETH_FISH_LIMIT,
