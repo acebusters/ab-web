@@ -209,8 +209,11 @@ function* transferToken() {
 function* transferPending({ payload }) {
   const { txHash, methodName } = payload;
   if (methodName === 'transfer') {
-    txTransferPending.txId = txHash;
-    yield* createPersistNotification(txTransferPending);
+    const note = txTransferPending;
+    const amount = payload.args[1];
+    note.txId = txHash;
+    note.details = `Sending ${amount} NTZ`;
+    yield* createPersistNotification(note);
   }
   yield takeEvery(CONTRACT_EVENTS, transferSuccess);
 }
@@ -219,9 +222,9 @@ function* transferSuccess({ payload }) {
   const { transactionHash, event } = payload[0];
   if (event === 'Transfer') {
     yield* removeNotification({ txId: transactionHash });
-    yield* createTempNotification(txTransferSuccess);
+    const note = txTransferSuccess;
+    yield* createTempNotification(note);
   }
-  console.log('transferSuccess, going?');
 }
 
 export function* notificationsSaga() {
