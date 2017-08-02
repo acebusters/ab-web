@@ -29,6 +29,7 @@ import {
   EXCHANGE,
   setActiveTab,
   setAmountUnit,
+  transferTokenNotify,
 } from './actions';
 import messages from './messages';
 import { txnsToList } from './txnsToList';
@@ -299,6 +300,7 @@ class DashboardRoot extends React.Component {
 
   handleTxSubmit(txFn) {
     return new Promise((resolve, reject) => {
+      this.props.transferTokenNotify();
       txFn((err, result) => {
         this.props.modalDismiss();
         if (err) {
@@ -457,11 +459,13 @@ DashboardRoot.propTypes = {
   proxyEvents: PropTypes.func,
   transferETH: PropTypes.func,
   web3Redux: PropTypes.any,
+  transferTokenNotify: PropTypes.func,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   setActiveTab: (whichTab) => dispatch(setActiveTab(whichTab)),
   setAmountUnit: (unit) => dispatch(setAmountUnit(unit)),
+  transferTokenNotify,
   modalAdd,
   modalDismiss,
   transferETH,

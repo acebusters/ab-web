@@ -1,6 +1,3 @@
-import React from 'react';
-import Link from '../../components/Link';
-
 export const PERSIST = 'persist';
 export const TEMP = 'temp';
 
@@ -28,27 +25,6 @@ export const loggedInSuccess = {
   type: 'success',
 };
 
-export const notLoggedIn = {
-  txId: 'AUTH_NOT_LOGGED_IN',
-  notifyType: 'AUTH_NOT_LOGGED_IN',
-  category: 'Visitor Mode',
-  details: <span>Please <Link to="/login">login</Link> or <Link to="/register">signup</Link> to join a game</span>,
-  removing: false,
-  dismissable: false,
-  date: new Date(),
-  type: 'info',
-};
-
-export const firstLogin = {
-  txId: 'LOGGING_IN',
-  category: 'Logging in',
-  details: 'First time it may take awhile',
-  removing: false,
-  dismissable: true,
-  date: new Date(),
-  type: 'info',
-};
-
 export const noWeb3Danger = {
   txId: 'NO_WEB3_MESSAGE',
   notifyType: 'ACCOUNT_LOADED',
@@ -71,10 +47,10 @@ export const txTransferPending = {
   type: 'info',
 };
 
-export const txTransferSent = {
+export const txTransferSuccess = {
   // txId: null,
-  notifyType: 'TX_TRANSFER_SENT',
-  category: 'Transfer Sent',
+  notifyType: 'TX_TRANSFER_SUCCESS',
+  category: 'Transfer Success',
   details: 'Sent X.XX ETH/NTZ',
   removing: false,
   dismissable: true,

@@ -8,6 +8,12 @@ import * as storageService from '../../services/sessionStorage';
 import WithLoading from '../../components/WithLoading';
 
 import {
+  // ETH_DECIMALS,
+  // NTZ_DECIMALS,
+  // ABP_DECIMALS,
+} from '../../utils/amountFormatter';
+
+import {
   NOTIFY_CREATE,
   NOTIFY_REMOVE,
   notifyAdd,
@@ -22,7 +28,12 @@ import {
   CONTRACT_TX_SEND,
   CONTRACT_TX_SUCCESS,
   CONTRACT_TX_ERROR,
+  CONTRACT_EVENTS,
 } from '../AccountProvider/actions';
+
+import {
+  TRANSFER_TOKEN_NOTIFY,
+} from '../Dashboard/actions';
 
 import { makeLatestHandSelector } from '../Table/selectors';
 
@@ -36,6 +47,8 @@ import {
   persist,
   firstLogin,
   notLoggedIn,
+  txTransferPending,
+  txTransferSuccess,
 } from './constants';
 
 import { waitForTx } from '../../utils/waitForTx';
@@ -188,6 +201,29 @@ function* visitorModeNotification({ payload: { pathname = '' } }) {
   }
 }
 
+function* transferToken() {
+  // only listen for this action, if TRANSFER_TOKEN_NOTIFY was called
+  yield takeEvery(CONTRACT_TX_SUCCESS, transferPending);
+}
+
+function* transferPending({ payload }) {
+  const { txHash, methodName } = payload;
+  if (methodName === 'transfer') {
+    txTransferPending.txId = txHash;
+    yield* createPersistNotification(txTransferPending);
+  }
+  yield takeEvery(CONTRACT_EVENTS, transferSuccess);
+}
+
+function* transferSuccess({ payload }) {
+  const { transactionHash, event } = payload[0];
+  if (event === 'Transfer') {
+    yield* removeNotification({ txId: transactionHash });
+    yield* createTempNotification(txTransferSuccess);
+  }
+  console.log('transferSuccess, going?');
+}
+
 export function* notificationsSaga() {
   yield takeEvery(LOCATION_CHANGE, visitorModeNotification);
   yield takeEvery(SET_AUTH, authNotification);
@@ -196,6 +232,7 @@ export function* notificationsSaga() {
   yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
   yield takeEvery(CONTRACT_TX_SEND, tableNotifications);
+  yield takeEvery(TRANSFER_TOKEN_NOTIFY, transferToken);
 
   yield call(visitorModeNotification, {
     payload: {
