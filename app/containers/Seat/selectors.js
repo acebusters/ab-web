@@ -134,6 +134,16 @@ const makeMyPendingSelector = () => createSelector(
   }
 );
 
+const makeMyPendingSeatSelector = () => createSelector(
+  [makeLineupSelector(), makeSignerAddrSelector()],
+  (lineup, signerAddr) => {
+    if (lineup && lineup.toJS) {
+      return lineup.toJS().findIndex((l) => l.pending && l.pending.signerAddr === signerAddr);
+    }
+    return -1;
+  }
+);
+
 const makeDealerSelector = () => createSelector(
   makeHandSelector(),
   (hand) => (hand && hand.get) ? hand.get('dealer') : -1
@@ -353,6 +363,7 @@ export {
   makeDealerSelector,
   makePendingSelector,
   makeMyPendingSelector,
+  makeMyPendingSeatSelector,
   makeOpenSelector,
   makeCoordsSelector,
   makeAmountCoordsSelector,

@@ -24,6 +24,7 @@ import {
   NET,
   HAND_REQUEST,
   UPDATE_RECEIVED,
+  LINEUP_RECEIVED,
   SEND_MESSAGE,
 } from './actions';
 
@@ -34,6 +35,7 @@ import {
 
 import {
   makeMyCardsSelector,
+  makeMyPendingSeatSelector,
 } from '../Seat/selectors';
 import {
   lastAmountByAction,
@@ -47,6 +49,7 @@ import {
   makeLineupSelector,
   makeHandSelector,
   makeSelectWinners,
+  makeMyPosSelector,
 } from './selectors';
 
 import TableService, { getHand } from '../../services/tableService';
@@ -231,6 +234,33 @@ function* performShow(action) {
   }
 }
 
+export function* lineupScanner(action) {
+  if (!action.handId) {
+    return;
+  }
+
+  if (action.myPendingSeat === -1) {
+    return;
+  }
+
+  const params = { params: { tableAddr: action.tableAddr, handId: action.handId } };
+  const state = yield select();
+  const myPendingSeat = makeMyPendingSeatSelector()(state, params);
+  const myPos = makeMyPosSelector()(state, params);
+
+  if (myPendingSeat === -1 && myPos === action.myPendingSeat) {
+    const hand = makeHandSelector()(state, params);
+    // check state of the hand, state > dealing && state < showdown
+    if (hand.state !== 'waiting' && hand.state !== 'dealing') {
+      const privKey = makeSelectPrivKey()(state, params);
+      // sign and send receipt
+      const handId = parseInt(action.handId, 10);
+      const sitoutAction = bet(action.tableAddr, handId, 1, privKey, myPos);
+      yield put(sitoutAction);
+    }
+  }
+}
+
 export function* updateScanner() {
   const privKeySelector = makeSelectPrivKey();
   const myAddrSelector = makeSignerAddrSelector();
@@ -319,6 +349,7 @@ export function* updateScanner() {
 }
 
 export function* tableStateSaga() {
+  yield takeEvery(LINEUP_RECEIVED, lineupScanner);
   yield takeEvery(SEND_MESSAGE, sendMessage);
   yield takeEvery(BET, performBet);
   yield takeEvery(SHOW, performShow);
