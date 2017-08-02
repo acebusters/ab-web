@@ -3,7 +3,7 @@ import { Receipt } from 'poker-helper';
 import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Form, Field, reduxForm } from 'redux-form/immutable';
+import { Form, Field, SubmissionError, reduxForm } from 'redux-form/immutable';
 
 import { makeSelectAccountData } from '../../containers/AccountProvider/selectors';
 import { getWeb3 } from '../../containers/AccountProvider/utils';
@@ -19,6 +19,7 @@ import { accountUnlocked } from '../AccountProvider/actions';
 
 import { ABI_PROXY } from '../../app.config';
 import { waitForTx } from '../../utils/waitForTx';
+import { promisifyContractCall } from '../../utils/promisifyContractCall';
 import accountService from '../../services/account';
 
 const validate = (values) => {
@@ -62,21 +63,19 @@ class UpgradeDialog extends React.Component {
   async handleSubmit() {
     const { account } = this.props;
     const proxyContract = getWeb3(true).eth.contract(ABI_PROXY).at(account.proxy);
+    const unlockTx = promisifyContractCall(proxyContract.unlock);
 
-    const unlockRequest = new Receipt().unlockRequest(account.injected).sign(`0x${account.privKey}`);
-    const unlock = await accountService.unlock(unlockRequest);
-    return new Promise((resolve, reject) => {
-      proxyContract.unlock(
+    try {
+      const unlockRequest = new Receipt().unlockRequest(account.injected).sign(`0x${account.privKey}`);
+      const unlock = await accountService.unlock(unlockRequest);
+      const txHash = await unlockTx(
         ...Receipt.parseToParams(unlock),
-        { from: account.injected },
-        (err, txHash) => {
-          if (err) {
-            reject(err);
-          } else {
-            waitForTx(getWeb3(), txHash).then(resolve, reject);
-          }
-        });
-    });
+          { from: account.injected },
+      );
+      await waitForTx(getWeb3(), txHash);
+    } catch (e) {
+      throw new SubmissionError(`Error: ${e.message || e}`);
+    }
   }
 
   render() {
