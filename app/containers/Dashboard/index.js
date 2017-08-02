@@ -14,6 +14,8 @@ import {
   ABP_DECIMALS,
 } from '../../utils/amountFormatter';
 import { waitForTx } from '../../utils/waitForTx';
+import { notifyCreate } from '../Notifications/actions';
+import { TRANSFER_NTZ, TRANSFER_ETH } from '../Notifications/constants';
 
 import { modalAdd, modalDismiss } from '../App/actions';
 import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
@@ -29,7 +31,6 @@ import {
   EXCHANGE,
   setActiveTab,
   setAmountUnit,
-  transferTokenNotify,
 } from './actions';
 import messages from './messages';
 import { txnsToList } from './txnsToList';
@@ -300,7 +301,6 @@ class DashboardRoot extends React.Component {
 
   handleTxSubmit(txFn) {
     return new Promise((resolve, reject) => {
-      this.props.transferTokenNotify();
       txFn((err, result) => {
         this.props.modalDismiss();
         if (err) {
@@ -313,6 +313,7 @@ class DashboardRoot extends React.Component {
   }
 
   handleNTZTransfer(amount, to) {
+    this.props.notifyCreate(TRANSFER_NTZ);
     return this.handleTxSubmit((callback) => {
       this.token.transfer.sendTransaction(
         to,
@@ -344,6 +345,7 @@ class DashboardRoot extends React.Component {
   }
 
   handleETHTransfer(amount, dest) {
+    this.props.notifyCreate(TRANSFER_ETH);
     return this.handleTxSubmit((callback) => {
       this.props.transferETH({
         dest,
@@ -459,13 +461,13 @@ DashboardRoot.propTypes = {
   proxyEvents: PropTypes.func,
   transferETH: PropTypes.func,
   web3Redux: PropTypes.any,
-  transferTokenNotify: PropTypes.func,
+  notifyCreate: PropTypes.func,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   setActiveTab: (whichTab) => dispatch(setActiveTab(whichTab)),
   setAmountUnit: (unit) => dispatch(setAmountUnit(unit)),
-  transferTokenNotify,
+  notifyCreate: (type, props) => dispatch(notifyCreate(type, props)),
   modalAdd,
   modalDismiss,
   transferETH,

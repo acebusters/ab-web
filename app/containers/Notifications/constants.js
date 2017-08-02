@@ -1,5 +1,5 @@
-export const PERSIST = 'persist';
-export const TEMP = 'temp';
+export const TRANSFER_NTZ = 'transfer_ntz';
+export const TRANSFER_ETH = 'transfer_eth';
 
 /**
  * type Notification = {
@@ -36,44 +36,24 @@ export const noWeb3Danger = {
   type: 'danger',
 };
 
-export const txTransferPending = {
+export const transferPending = {
   // txId: null,
   notifyType: 'TX_TRANSFER_PENDING',
   category: 'Transfer Pending',
-  details: ' Sending X.XX ETH/NTZ',
+  details: null,
   removing: false,
   dismissable: false,
   date: new Date(),
   type: 'info',
 };
 
-export const txTransferSuccess = {
-  // txId: null,
+export const transferSuccess = {
+  // txId: temp, so no txId
   notifyType: 'TX_TRANSFER_SUCCESS',
   category: 'Transfer Success',
-  details: 'Sent X.XX ETH/NTZ',
+  details: null,
   removing: false,
   dismissable: true,
   date: new Date(),
   type: 'success',
-};
-
-export const temp = {
-  notifyType: 'FUNDS_TRANSFERRED_NTZ',
-  category: 'NTZ Wallet',
-  details: 'Sent 1,000 NTZ to 0x2381...3290',
-  removing: false,
-  dismissable: true,
-  date: new Date(),
-  type: 'success',
-};
-
-export const persist = {
-  notifyType: 'TABLE_JOINING',
-  category: 'Joining Table',
-  details: '0xdsaifoj...dskafj',
-  removing: false,
-  dismissable: false,
-  date: new Date(),
-  type: 'danger',
 };

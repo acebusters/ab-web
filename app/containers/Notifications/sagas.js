@@ -2,15 +2,14 @@ import React from 'react';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { put, takeEvery, take, select, call } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
-import uuid from 'uuid/v4';
+
 import * as storageService from '../../services/sessionStorage';
 
 import WithLoading from '../../components/WithLoading';
 
 import {
-  // ETH_DECIMALS,
-  // NTZ_DECIMALS,
-  // ABP_DECIMALS,
+  formatNtz,
+  formatEth,
 } from '../../utils/amountFormatter';
 
 import {
@@ -25,30 +24,27 @@ import {
   SET_AUTH,
   ACCOUNT_LOADED,
   INJECT_ACCOUNT_UPDATE,
+  ETH_TRANSFER_SUCCESS,
+  PROXY_EVENTS,
   CONTRACT_TX_SEND,
   CONTRACT_TX_SUCCESS,
   CONTRACT_TX_ERROR,
   CONTRACT_EVENTS,
 } from '../AccountProvider/actions';
 
-import {
-  TRANSFER_TOKEN_NOTIFY,
-} from '../Dashboard/actions';
-
 import { makeLatestHandSelector } from '../Table/selectors';
 
 import { getWeb3 } from '../AccountProvider/utils';
 
 import {
-  TEMP,
+  TRANSFER_ETH,
+  TRANSFER_NTZ,
   loggedInSuccess,
   noWeb3Danger,
-  temp,
-  persist,
   firstLogin,
   notLoggedIn,
-  txTransferPending,
-  txTransferSuccess,
+  transferPending,
+  transferSuccess,
 } from './constants';
 
 import { waitForTx } from '../../utils/waitForTx';
@@ -66,14 +62,12 @@ function* createPersistNotification(note) {
   yield put(notifyAdd(note));
 }
 
-function* selectNotification(action) {
-  if (action.notifyType === TEMP) {
-    temp.txId = uuid();
-    yield* createTempNotification(temp);
-  } else {
-    persist.txId = uuid();
-    // if persist
-    yield* createPersistNotification(persist);
+function* createNotification(action) {
+  if (action.notifyType === TRANSFER_ETH) {
+    yield takeEvery(ETH_TRANSFER_SUCCESS, transferPendingEth);
+  }
+  if (action.notifyType === TRANSFER_NTZ) {
+    yield takeEvery(CONTRACT_TX_SUCCESS, transferPendingNtz);
   }
 }
 
@@ -201,28 +195,42 @@ function* visitorModeNotification({ payload: { pathname = '' } }) {
   }
 }
 
-function* transferToken() {
-  // only listen for this action, if TRANSFER_TOKEN_NOTIFY was called
-  yield takeEvery(CONTRACT_TX_SUCCESS, transferPending);
-}
-
-function* transferPending({ payload }) {
-  const { txHash, methodName } = payload;
+function* transferPendingNtz({ payload }) {
+  const { args, txHash, methodName } = payload;
   if (methodName === 'transfer') {
-    const note = txTransferPending;
-    const amount = payload.args[1];
+    const note = transferPending;
     note.txId = txHash;
-    note.details = `Sending ${amount} NTZ`;
+    note.details = `Sending ${formatNtz(args[1])} NTZ`;
     yield* createPersistNotification(note);
   }
-  yield takeEvery(CONTRACT_EVENTS, transferSuccess);
+  yield takeEvery(CONTRACT_EVENTS, transferSuccessNtz);
 }
 
-function* transferSuccess({ payload }) {
-  const { transactionHash, event } = payload[0];
+function* transferSuccessNtz({ payload }) {
+  const { args, transactionHash, event } = payload[0];
   if (event === 'Transfer') {
     yield* removeNotification({ txId: transactionHash });
-    const note = txTransferSuccess;
+    const note = transferSuccess;
+    note.details = `Sent ${formatNtz(args.value)} NTZ`;
+    yield* createTempNotification(note);
+  }
+}
+
+function* transferPendingEth({ payload }) {
+  const { txHash, amount } = payload;
+  const note = transferPending;
+  note.txId = txHash;
+  note.details = `Sending ${formatEth(amount)} ETH`;
+  yield* createPersistNotification(note);
+  yield takeEvery(PROXY_EVENTS, transferSuccessEth);
+}
+
+function* transferSuccessEth({ payload }) {
+  const { args, transactionHash, event } = payload[0];
+  if (event === 'Withdrawal') {
+    yield* removeNotification({ txId: transactionHash });
+    const note = transferSuccess;
+    note.details = `Sent ${formatEth(args.value)} ETH`;
     yield* createTempNotification(note);
   }
 }
@@ -232,10 +240,9 @@ export function* notificationsSaga() {
   yield takeEvery(SET_AUTH, authNotification);
   yield takeEvery(ACCOUNT_LOADED, injectedWeb3Notification);
   yield takeEvery(INJECT_ACCOUNT_UPDATE, injectedWeb3NotificationDismiss);
-  yield takeEvery(NOTIFY_CREATE, selectNotification);
+  yield takeEvery(NOTIFY_CREATE, createNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
   yield takeEvery(CONTRACT_TX_SEND, tableNotifications);
-  yield takeEvery(TRANSFER_TOKEN_NOTIFY, transferToken);
 
   yield call(visitorModeNotification, {
     payload: {
