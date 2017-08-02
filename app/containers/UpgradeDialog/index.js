@@ -19,6 +19,7 @@ import { accountUnlocked } from '../AccountProvider/actions';
 
 import { ABI_PROXY } from '../../app.config';
 import { waitForTx } from '../../utils/waitForTx';
+import accountService from '../../services/account';
 
 const validate = (values) => {
   const errors = {};
@@ -58,18 +59,15 @@ class UpgradeDialog extends React.Component {
     }
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     const { account } = this.props;
     const proxyContract = getWeb3(true).eth.contract(ABI_PROXY).at(account.proxy);
 
-    // ToDo: extract LOCK_PRIV addr
-    const receipt = new Receipt(proxyContract.address)
-                      .unlock(account.injected)
-                      .sign('0x94890218f2b0d04296f30aeafd13655eba4c5bbf1770273276fee52cbe3f2cb4');
-
+    const unlockRequest = new Receipt().unlockRequest(account.injected).sign(`0x${account.privKey}`);
+    const unlock = await accountService.unlock(unlockRequest);
     return new Promise((resolve, reject) => {
       proxyContract.unlock(
-        ...Receipt.parseToParams(receipt),
+        ...Receipt.parseToParams(unlock),
         { from: account.injected },
         (err, txHash) => {
           if (err) {
