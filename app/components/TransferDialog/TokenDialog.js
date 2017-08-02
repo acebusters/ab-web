@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Field } from 'redux-form/immutable';
+import BigNumber from 'bignumber.js';
 
 import NoWeb3Message from '../Web3Alerts/NoWeb3';
 import UnsupportedNetworkMessage from '../Web3Alerts/UnsupportedNetwork';
@@ -30,6 +31,7 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
       handleSubmit,
       submitting,
       maxAmount,
+      minAmount,
       invalid,
       hasWeb3,
       networkSupported,
@@ -43,6 +45,7 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
             label="Amount"
             autoFocus
             maxAmount={maxAmount}
+            minAmount={minAmount}
             modalAdd={this.props.modalAdd}
             modalDismiss={this.props.modalDismiss}
             amountUnit={this.props.amountUnit}
@@ -80,6 +83,7 @@ TokenDialog.propTypes = {
   submitting: PropTypes.bool,
   invalid: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
+  minAmount: PropTypes.object, // BigNumber
   handleSubmit: PropTypes.func,
   handleTransfer: PropTypes.func,
   error: PropTypes.any,
@@ -88,6 +92,9 @@ TokenDialog.propTypes = {
   amountUnit: PropTypes.string,
   setAmountUnit: PropTypes.func,
   reset: PropTypes.func,
+};
+TokenDialog.defaultProps = {
+  minAmount: new BigNumber(0),
 };
 
 export default TokenDialog;

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Field } from 'redux-form/immutable';
+import BigNumber from 'bignumber.js';
 
 import NoWeb3Message from '../Web3Alerts/NoWeb3';
 import UnsupportedNetworkMessage from '../Web3Alerts/UnsupportedNetwork';
@@ -30,6 +31,7 @@ class DefaultDialog extends React.Component { // eslint-disable-line react/prefe
       submitting,
       amountUnit,
       maxAmount,
+      minAmount,
       hideAddress,
       title,
       description,
@@ -48,6 +50,7 @@ class DefaultDialog extends React.Component { // eslint-disable-line react/prefe
             component={FormField}
             label={`Amount (${amountUnit})`}
             autoFocus
+            minAmount={minAmount}
             maxAmount={maxAmount}
           />
 
@@ -86,6 +89,7 @@ DefaultDialog.propTypes = {
   invalid: PropTypes.bool,
   hideAddress: PropTypes.bool,
   maxAmount: PropTypes.object, // BigNumber
+  minAmount: PropTypes.object, // BigNumber
   amountUnit: PropTypes.string,
   handleSubmit: PropTypes.func,
   handleTransfer: PropTypes.func,
@@ -94,6 +98,7 @@ DefaultDialog.propTypes = {
 
 DefaultDialog.defaultProps = {
   hideAddress: false,
+  minAmount: new BigNumber(0),
 };
 
 export default DefaultDialog;

@@ -40,7 +40,11 @@ export default defineMessages({
   },
   included: {
     id: 'app.containers.Dashboard.included',
-    defaultMessage: 'Transaction History:',
+    defaultMessage: 'Transaction History',
+  },
+  powerDownRequests: {
+    id: 'app.containers.Dashboard.powerDownRequests',
+    defaultMessage: 'Power Down Requests',
   },
   transactionErrorTitle: {
     id: 'app.containers.Dashboard.transactionErrorTitle',
@@ -69,6 +73,10 @@ export default defineMessages({
   powerDownTitle: {
     id: 'app.containers.Dashboard.powerDownTitle',
     defaultMessage: 'Power Down',
+  },
+  powerDownDescr: {
+    id: 'app.containers.Dashboard.powerDownDescr',
+    defaultMessage: 'Power Down will convert ABP back to NTZ over a period of 3 month.<br />Minimal power down amount: {min} ABP',
   },
   sellTitle: {
     id: 'app.containers.Dashboard.sellTitle',
@@ -125,5 +133,9 @@ export default defineMessages({
   powerUpStatus: {
     id: 'app.containers.Dashboard.powerUpStatus',
     defaultMessage: 'Power Up',
+  },
+  powerDownPayoutStatus: {
+    id: 'app.containers.Dashboard.powerDownPayoutStatus',
+    defaultMessage: 'Power Down Payout',
   },
 });
