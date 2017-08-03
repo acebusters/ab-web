@@ -1849,6 +1849,11 @@
       "version": "https://registry.npmjs.org/add-dom-event-listener/-/add-dom-event-listener-1.0.2.tgz",
       "integrity": "sha1-j67SxBAIchzxEdodMNmVuFvkK+0="
     },
+    "aes-js": {
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/aes-js/-/aes-js-3.0.0.tgz",
+      "integrity": "sha1-4h3xCtbCBTKVvLuNq0Cwnb6ofk0="
+    },
     "airbnb-js-shims": {
       "version": "https://registry.npmjs.org/airbnb-js-shims/-/airbnb-js-shims-1.1.1.tgz",
       "integrity": "sha1-JyJPADDyROZXBELtECB3LBQ0rsI=",
@@ -2863,11 +2868,13 @@
       "dev": true
     },
     "browserify-sha3": {
-      "version": "https://registry.npmjs.org/browserify-sha3/-/browserify-sha3-0.0.1.tgz",
+      "version": "0.0.1",
+      "resolved": "https://registry.npmjs.org/browserify-sha3/-/browserify-sha3-0.0.1.tgz",
       "integrity": "sha1-P/NKMAbvFcD7NWflQbkaI0ASPRE=",
       "dependencies": {
         "js-sha3": {
-          "version": "https://registry.npmjs.org/js-sha3/-/js-sha3-0.3.1.tgz",
+          "version": "0.3.1",
+          "resolved": "https://registry.npmjs.org/js-sha3/-/js-sha3-0.3.1.tgz",
           "integrity": "sha1-hhIoAhQvCChQKg0d7h2V4lO7AkM="
         }
       }
@@ -4229,6 +4236,31 @@
     "ethereumjs-util": {
       "version": "https://registry.npmjs.org/ethereumjs-util/-/ethereumjs-util-5.1.2.tgz",
       "integrity": "sha1-JboCFcu0wvCxCKb5avKi5i5Fkh8="
+    },
+    "ethers": {
+      "version": "2.1.2",
+      "resolved": "https://registry.npmjs.org/ethers/-/ethers-2.1.2.tgz",
+      "integrity": "sha1-pRKAvR7jJkX3MFJdCI8ek9pW4WM="
+    },
+    "ethers-contracts": {
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/ethers-contracts/-/ethers-contracts-2.1.0.tgz",
+      "integrity": "sha1-1IjKk3qKO8lWLTl4YKfEjrunchI="
+    },
+    "ethers-providers": {
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/ethers-providers/-/ethers-providers-2.1.1.tgz",
+      "integrity": "sha1-NTaG3oGsvyhm42a5QKBQZ94g6ok="
+    },
+    "ethers-utils": {
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/ethers-utils/-/ethers-utils-2.1.1.tgz",
+      "integrity": "sha1-FB/2MmNCZvFHPnE8+61bqmCRmp8="
+    },
+    "ethers-wallet": {
+      "version": "2.1.2",
+      "resolved": "https://registry.npmjs.org/ethers-wallet/-/ethers-wallet-2.1.2.tgz",
+      "integrity": "sha1-svcZ/GcPb+jawEck9AxjxGasx9g="
     },
     "ethjs-util": {
       "version": "https://registry.npmjs.org/ethjs-util/-/ethjs-util-0.1.4.tgz",
@@ -6359,6 +6391,11 @@
       "integrity": "sha1-8OgK4DmkvWVLXygfyT8EqRSn/M4=",
       "dev": true
     },
+    "js-sha3": {
+      "version": "0.5.7",
+      "resolved": "https://registry.npmjs.org/js-sha3/-/js-sha3-0.5.7.tgz",
+      "integrity": "sha1-DU/9gALVMzqrr0oj7tL2N0yfKOc="
+    },
     "js-tokens": {
       "version": "https://registry.npmjs.org/js-tokens/-/js-tokens-3.0.1.tgz",
       "integrity": "sha1-COnxMkhKLEWjCQfp3E1VZ7fxFNc="
@@ -6454,11 +6491,13 @@
       "dev": true
     },
     "keccak": {
-      "version": "https://registry.npmjs.org/keccak/-/keccak-1.3.0.tgz",
+      "version": "1.3.0",
+      "resolved": "https://registry.npmjs.org/keccak/-/keccak-1.3.0.tgz",
       "integrity": "sha1-NoG9ma09A1TdspuQQMG2VgzOCKw="
     },
     "keccakjs": {
-      "version": "https://registry.npmjs.org/keccakjs/-/keccakjs-0.2.1.tgz",
+      "version": "0.2.1",
+      "resolved": "https://registry.npmjs.org/keccakjs/-/keccakjs-0.2.1.tgz",
       "integrity": "sha1-HWM6+QfvMFu/ny+mFtVsRFYd+k0="
     },
     "keycode": {
@@ -7652,9 +7691,9 @@
       }
     },
     "poker-helper": {
-      "version": "0.5.0",
-      "resolved": "https://registry.npmjs.org/poker-helper/-/poker-helper-0.5.0.tgz",
-      "integrity": "sha1-A8hszLriRQ0L+P1tl+gQbfrK0RY=",
+      "version": "0.6.0",
+      "resolved": "https://registry.npmjs.org/poker-helper/-/poker-helper-0.6.0.tgz",
+      "integrity": "sha1-Qzm979bt3fT7ASe7ZFyVjPl06Is=",
       "dependencies": {
         "ethereumjs-util": {
           "version": "4.5.0",
@@ -8845,6 +8884,11 @@
       "integrity": "sha1-Yv2LEhF+hIrFqsNxWxwTjzKqemU=",
       "dev": true
     },
+    "redux-worker-middleware": {
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/redux-worker-middleware/-/redux-worker-middleware-1.0.0.tgz",
+      "integrity": "sha1-Lspgisplx68wcqvNWngCGsAdFu0="
+    },
     "regenerate": {
       "version": "https://registry.npmjs.org/regenerate/-/regenerate-1.3.2.tgz",
       "integrity": "sha1-0ZQcZ7rUN+G+dkM63Vs4X5WxkmA="
@@ -9087,6 +9131,11 @@
       "version": "https://registry.npmjs.org/scroll-behavior/-/scroll-behavior-0.9.3.tgz",
       "integrity": "sha1-5IvMivNk8/BxdujbyjlovV5xVXs="
     },
+    "scrypt-js": {
+      "version": "2.0.3",
+      "resolved": "https://registry.npmjs.org/scrypt-js/-/scrypt-js-2.0.3.tgz",
+      "integrity": "sha1-uwBAvgMEPamgEqLOqfyfhSz8h9Q="
+    },
     "secp256k1": {
       "version": "https://registry.npmjs.org/secp256k1/-/secp256k1-3.3.0.tgz",
       "integrity": "sha1-UOybIBukAUA90TzL8h0x7rP/Q88="
@@ -9175,7 +9224,8 @@
       "integrity": "sha1-NwaMLEdra69ALRSknGf1l5IfY08="
     },
     "sha3": {
-      "version": "https://registry.npmjs.org/sha3/-/sha3-1.2.0.tgz",
+      "version": "1.2.0",
+      "resolved": "https://registry.npmjs.org/sha3/-/sha3-1.2.0.tgz",
       "integrity": "sha1-aYnxtwpJhwWHajc+LGKs6WqpOZo="
     },
     "shallowequal": {
@@ -10259,6 +10309,12 @@
     "worker-farm": {
       "version": "https://registry.npmjs.org/worker-farm/-/worker-farm-1.3.1.tgz",
       "integrity": "sha1-QzMRK7SbF6oFC4eJXKayys9A5f8=",
+      "dev": true
+    },
+    "worker-loader": {
+      "version": "0.8.1",
+      "resolved": "https://registry.npmjs.org/worker-loader/-/worker-loader-0.8.1.tgz",
+      "integrity": "sha1-6OmVMx6jTfW/aCloJL+38K1XjUM=",
       "dev": true
     },
     "wrap-ansi": {
