@@ -15,6 +15,7 @@ export function* injectedWeb3ListenerSaga() {
         }
       } catch (e) { } // eslint-disable-line no-empty
     }
-    yield call(delay, 5000);
+
+    yield call(delay, 2000);
   }
 }
