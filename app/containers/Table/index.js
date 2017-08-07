@@ -192,7 +192,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       const balance = parseInt(this.balance.toString(), 10);
 
       this.props.modalDismiss();
-      this.props.modalAdd((
+      this.props.modalAdd(
         <RebuyDialog
           pos={this.props.myPos}
           handleRebuy={this.handleRebuy}
@@ -202,7 +202,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
           balance={balance}
         />,
         this.handleLeave
-      ));
+      );
     }
   }
 
