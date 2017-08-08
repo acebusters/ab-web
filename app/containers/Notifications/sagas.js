@@ -39,12 +39,16 @@ import { getWeb3 } from '../AccountProvider/utils';
 import {
   TRANSFER_ETH,
   TRANSFER_NTZ,
+  SELL_NTZ,
+  PURCHASE_NTZ,
   loggedInSuccess,
   noWeb3Danger,
   firstLogin,
   notLoggedIn,
   transferPending,
   transferSuccess,
+  exchangePending,
+  exchangeSuccess,
 } from './constants';
 
 import { waitForTx } from '../../utils/waitForTx';
@@ -69,6 +73,13 @@ function* createNotification(action) {
   if (action.notifyType === TRANSFER_NTZ) {
     yield takeEvery(CONTRACT_TX_SUCCESS, transferPendingNtz);
   }
+  if (action.notifyType === SELL_NTZ) {
+    yield takeEvery(CONTRACT_TX_SUCCESS, exchangeSellPending);
+  }
+  if (action.notifyType === PURCHASE_NTZ) {
+    yield takeEvery(ETH_TRANSFER_SUCCESS, exchangePurPending);
+  }
+  // throw error?
 }
 
 function* removeNotification({ txId }) {
@@ -196,6 +207,27 @@ function* visitorModeNotification({ payload: { pathname = '' } }) {
   }
 }
 
+function* exchangeSellPending({ payload }) {
+  const { methodName, txHash } = payload;
+  if (methodName === 'transfer') {
+    const note = exchangePending;
+    note.txId = txHash;
+    note.details = 'NTZ for ETH';
+    yield* createPersistNotification(note);
+  }
+  yield takeEvery(CONTRACT_EVENTS, exchangeSellSuccess);
+}
+
+function* exchangeSellSuccess({ payload }) {
+  const { transactionHash, event } = payload[0];
+  if (event === 'Sell') {
+    yield* removeNotification({ txId: transactionHash });
+    const note = exchangeSuccess;
+    note.details = 'NTZ for ETH';
+    yield* createTempNotification(note);
+  }
+}
+
 function* transferPendingNtz({ payload }) {
   const { args, txHash, methodName } = payload;
   if (methodName === 'transfer') {
@@ -213,6 +245,25 @@ function* transferSuccessNtz({ payload }) {
     yield* removeNotification({ txId: transactionHash });
     const note = transferSuccess;
     note.details = `Sent ${formatNtz(args.value)} NTZ`;
+    yield* createTempNotification(note);
+  }
+}
+
+function* exchangePurPending({ payload }) {
+  const { txHash } = payload;
+  const note = exchangePending;
+  note.txId = txHash;
+  note.details = 'ETH for NTZ';
+  yield* createPersistNotification(note);
+  yield takeEvery(PROXY_EVENTS, exchangePurSuccess);
+}
+
+function* exchangePurSuccess({ payload }) {
+  const { transactionHash, event } = payload[0];
+  if (event === 'Withdrawal') {
+    yield* removeNotification({ txId: transactionHash });
+    const note = exchangeSuccess;
+    note.details = 'ETH for NTZ';
     yield* createTempNotification(note);
   }
 }
