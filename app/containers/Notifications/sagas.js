@@ -74,7 +74,8 @@ function* createNotification(action) {
     yield takeEvery(CONTRACT_TX_SUCCESS, transferPendingNtz);
   }
   if (action.notifyType === SELL_NTZ) {
-    yield takeEvery(CONTRACT_TX_SUCCESS, exchangeSellPending);
+    yield* exchangeSellPending();
+    yield* exchangeSellSuccess();
   }
   if (action.notifyType === PURCHASE_NTZ) {
     yield takeEvery(ETH_TRANSFER_SUCCESS, exchangePurPending);
@@ -207,25 +208,23 @@ function* visitorModeNotification({ payload: { pathname = '' } }) {
   }
 }
 
-function* exchangeSellPending({ payload }) {
-  const { methodName, txHash } = payload;
-  if (methodName === 'transfer') {
-    const note = exchangePending;
-    note.txId = txHash;
-    note.details = 'NTZ for ETH';
-    yield* createPersistNotification(note);
-  }
-  yield takeEvery(CONTRACT_EVENTS, exchangeSellSuccess);
+function* exchangeSellPending() {
+  // listen for contract start
+  const { /* methodName, */txHash } = yield take(CONTRACT_TX_SUCCESS);
+  const note1 = exchangePending;
+  note1.txId = txHash;
+  note1.details = 'NTZ for ETH';
+  yield* createPersistNotification(note1);
 }
 
-function* exchangeSellSuccess({ payload }) {
-  const { transactionHash, event } = payload[0];
-  if (event === 'Sell') {
-    yield* removeNotification({ txId: transactionHash });
-    const note = exchangeSuccess;
-    note.details = 'NTZ for ETH';
-    yield* createTempNotification(note);
-  }
+function* exchangeSellSuccess() {
+  // remove pending and create success notification
+  const { payload } = yield take(CONTRACT_EVENTS);
+  const { transactionHash/* , event */ } = payload[0];
+  yield* removeNotification({ txId: transactionHash });
+  const note2 = exchangeSuccess;
+  note2.details = 'NTZ for ETH';
+  yield* createTempNotification(note2);
 }
 
 function* transferPendingNtz({ payload }) {
