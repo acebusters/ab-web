@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Form, reduxForm, formValueSelector } from 'redux-form/immutable';
@@ -8,7 +9,7 @@ import { makeSelectHasWeb3, makeSelectNetworkSupported } from '../../containers/
 import NoWeb3Message from '../../components/Web3Alerts/NoWeb3';
 import UnsupportedNetworkMessage from '../../components/Web3Alerts/UnsupportedNetwork';
 import SubmitButton from '../../components/SubmitButton';
-import FormField from '../../components/Form/FormField';
+import TokenAmountField from '../../components/Form/TokenAmountField';
 import AmountField from '../../components/AmountField';
 import H2 from '../../components/H2';
 
@@ -38,7 +39,9 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
   }
 
   handleSubmit(values) {
-    return this.props.handleExchange(values.get('amount'));
+    return this.props.handleExchange(
+      values.get('amount')
+    ).then(() => this.props.reset());
   }
 
   render() {
@@ -64,24 +67,29 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
           <H2>{title}</H2>
         }
 
-        {calcExpectedAmount &&
-          <FormattedMessage
-            {...messages.expectedAmount}
-            values={{
-              amount: formatExpValue(calcExpectedAmount(round(amount, 8)).mul(decimals)),
-              unit: expectedAmountUnit.toUpperCase(),
-            }}
-          />
-        }
-
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <AmountField
             name="amount"
-            component={FormField}
-            label={`Amount (${amountUnit.toUpperCase()})`}
-            maxAmount={maxAmount}
+            component={TokenAmountField}
+            label="Sell"
             autoFocus
+            maxAmount={maxAmount}
+            minAmount={this.props.minAmount}
+            modalAdd={this.props.modalAdd}
+            modalDismiss={this.props.modalDismiss}
+            amountUnit={this.props.amountUnit}
+            setAmountUnit={this.props.setAmountUnit}
           />
+
+          {calcExpectedAmount &&
+            <FormattedMessage
+              {...messages.expectedAmount}
+              values={{
+                amount: formatExpValue(calcExpectedAmount(round(amount, 8)).mul(decimals)),
+                unit: expectedAmountUnit.toUpperCase(),
+              }}
+            />
+          }
 
           {!hasWeb3 && <NoWeb3Message />}
           {hasWeb3 && !networkSupported && <UnsupportedNetworkMessage />}
@@ -99,7 +107,11 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
 }
 
 ExchangeDialog.propTypes = {
+  modalAdd: PropTypes.func,
+  modalDismiss: PropTypes.func,
+  minAmount: PropTypes.object, // BigNumber
   submitting: PropTypes.bool,
+  setAmountUnit: PropTypes.func,
   invalid: PropTypes.bool,
   networkSupported: PropTypes.bool,
   hasWeb3: PropTypes.bool,
@@ -110,6 +122,7 @@ ExchangeDialog.propTypes = {
   amount: PropTypes.number,
   title: PropTypes.node,
   amountUnit: PropTypes.string.isRequired,
+  reset: PropTypes.func,
 };
 
 const valueSelector = formValueSelector('exchange');
