@@ -56,7 +56,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
           <AmountField
             name="amount"
             component={TokenAmountField}
-            label="Amount"
+            label={<FormattedMessage {...messages.sellTitle} />}
             autoFocus
             maxAmount={maxAmount}
             minAmount={this.props.minAmount}
@@ -87,7 +87,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
             disabled={invalid || !hasWeb3 || !networkSupported}
             submitting={submitting}
           >
-            Submit
+            <FormattedMessage {...messages.submitButton} />
           </SubmitButton>
         </Form>
       </div>
