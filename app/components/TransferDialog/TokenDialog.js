@@ -37,7 +37,7 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
       networkSupported,
     } = this.props;
     return (
-      <div>
+      <div style={{ maxWidth: 480 }}>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <AmountField
             name="amount"

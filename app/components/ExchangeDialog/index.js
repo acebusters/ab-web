@@ -6,14 +6,17 @@ import { FormattedMessage } from 'react-intl';
 import { NTZ_DECIMALS, ETH_DECIMALS, formatNtz, formatEth } from '../../utils/amountFormatter';
 import { round } from '../../utils';
 
-import messages from '../../containers/ExchangeDialog/messages';
-
 import NoWeb3Message from '../Web3Alerts/NoWeb3';
 import UnsupportedNetworkMessage from '../Web3Alerts/UnsupportedNetwork';
 import SubmitButton from '../SubmitButton';
 import TokenAmountField from '../Form/TokenAmountField';
 import AmountField from '../AmountField';
 import H2 from '../H2';
+
+import {
+  FeedbackField,
+  ReceiveUnit,
+ } from './styles';
 
 class ExchangeDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -29,6 +32,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
 
   render() {
     const {
+      messages,
       handleSubmit,
       submitting,
       maxAmount,
@@ -45,10 +49,8 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
     const decimals = expectedAmountUnit === 'ntz' ? NTZ_DECIMALS : ETH_DECIMALS;
 
     return (
-      <div>
-        {title &&
-          <H2>{title}</H2>
-        }
+      <div style={{ maxWidth: 480 }}>
+        {title && <H2>{title}</H2>}
 
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <AmountField
@@ -64,14 +66,18 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
             setAmountUnit={this.props.setAmountUnit}
           />
 
-          {calcExpectedAmount &&
-            <FormattedMessage
-              {...messages.expectedAmount}
-              values={{
-                amount: formatExpValue(calcExpectedAmount(round(amount, 8)).mul(decimals)),
-                unit: expectedAmountUnit.toUpperCase(),
-              }}
-            />
+          {calcExpectedAmount && expectedAmountUnit &&
+            <FeedbackField>
+              <FormattedMessage
+                {...messages.expectedAmount}
+                values={{
+                  amount: formatExpValue(calcExpectedAmount(round(amount, 8)).mul(decimals)),
+                }}
+              />
+              <ReceiveUnit>
+                {expectedAmountUnit.toUpperCase()}
+              </ReceiveUnit>
+            </FeedbackField>
           }
 
           {!hasWeb3 && <NoWeb3Message />}
@@ -90,6 +96,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
 }
 
 ExchangeDialog.propTypes = {
+  messages: PropTypes.object,
   modalAdd: PropTypes.func,
   modalDismiss: PropTypes.func,
   minAmount: PropTypes.object, // BigNumber

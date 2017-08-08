@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form/immutable';
 
 import ExchangeDialog from '../../components/ExchangeDialog';
+import messages from './messages';
 
 import {
   makeSelectHasWeb3,
@@ -25,6 +26,7 @@ const warn = () => {
 const valueSelector = formValueSelector('exchange');
 
 const mapStateToProps = (state) => ({
+  messages,
   amount: valueSelector(state, 'amount'),
   hasWeb3: makeSelectHasWeb3()(state),
   networkSupported: makeSelectNetworkSupported()(state),
