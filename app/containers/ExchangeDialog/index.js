@@ -1,22 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { reduxForm, formValueSelector } from 'redux-form/immutable';
 
-import { Form, reduxForm, formValueSelector } from 'redux-form/immutable';
-import { FormattedMessage } from 'react-intl';
+import ExchangeDialog from '../../components/ExchangeDialog';
 
-import { makeSelectHasWeb3, makeSelectNetworkSupported } from '../../containers/AccountProvider/selectors';
-import NoWeb3Message from '../../components/Web3Alerts/NoWeb3';
-import UnsupportedNetworkMessage from '../../components/Web3Alerts/UnsupportedNetwork';
-import SubmitButton from '../../components/SubmitButton';
-import TokenAmountField from '../../components/Form/TokenAmountField';
-import AmountField from '../../components/AmountField';
-import H2 from '../../components/H2';
-
-import { NTZ_DECIMALS, ETH_DECIMALS, formatNtz, formatEth } from '../../utils/amountFormatter';
-import { round } from '../../utils';
-
-import messages from './messages';
+import {
+  makeSelectHasWeb3,
+  makeSelectNetworkSupported,
+} from '../AccountProvider/selectors';
 
 const validate = (values) => {
   const errors = {};
@@ -30,99 +20,6 @@ const validate = (values) => {
 const warn = () => {
   const warnings = {};
   return warnings;
-};
-
-class ExchangeDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleSubmit(values) {
-    return this.props.handleExchange(
-      values.get('amount')
-    ).then(() => this.props.reset());
-  }
-
-  render() {
-    const {
-      handleSubmit,
-      submitting,
-      maxAmount,
-      amount = 0,
-      calcExpectedAmount,
-      amountUnit,
-      title,
-      invalid,
-      hasWeb3,
-      networkSupported,
-    } = this.props;
-    const expectedAmountUnit = amountUnit.toLowerCase() === 'ntz' ? 'eth' : 'ntz';
-    const formatExpValue = expectedAmountUnit === 'ntz' ? formatNtz : formatEth;
-    const decimals = expectedAmountUnit === 'ntz' ? NTZ_DECIMALS : ETH_DECIMALS;
-
-    return (
-      <div>
-        {title &&
-          <H2>{title}</H2>
-        }
-
-        <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          <AmountField
-            name="amount"
-            component={TokenAmountField}
-            label="Sell"
-            autoFocus
-            maxAmount={maxAmount}
-            minAmount={this.props.minAmount}
-            modalAdd={this.props.modalAdd}
-            modalDismiss={this.props.modalDismiss}
-            amountUnit={this.props.amountUnit}
-            setAmountUnit={this.props.setAmountUnit}
-          />
-
-          {calcExpectedAmount &&
-            <FormattedMessage
-              {...messages.expectedAmount}
-              values={{
-                amount: formatExpValue(calcExpectedAmount(round(amount, 8)).mul(decimals)),
-                unit: expectedAmountUnit.toUpperCase(),
-              }}
-            />
-          }
-
-          {!hasWeb3 && <NoWeb3Message />}
-          {hasWeb3 && !networkSupported && <UnsupportedNetworkMessage />}
-
-          <SubmitButton
-            disabled={invalid || !hasWeb3 || !networkSupported}
-            submitting={submitting}
-          >
-            Submit
-          </SubmitButton>
-        </Form>
-      </div>
-    );
-  }
-}
-
-ExchangeDialog.propTypes = {
-  modalAdd: PropTypes.func,
-  modalDismiss: PropTypes.func,
-  minAmount: PropTypes.object, // BigNumber
-  submitting: PropTypes.bool,
-  setAmountUnit: PropTypes.func,
-  invalid: PropTypes.bool,
-  networkSupported: PropTypes.bool,
-  hasWeb3: PropTypes.bool,
-  maxAmount: PropTypes.object, // BigNumber
-  calcExpectedAmount: PropTypes.func,
-  handleSubmit: PropTypes.func,
-  handleExchange: PropTypes.func,
-  amount: PropTypes.number,
-  title: PropTypes.node,
-  amountUnit: PropTypes.string.isRequired,
-  reset: PropTypes.func,
 };
 
 const valueSelector = formValueSelector('exchange');

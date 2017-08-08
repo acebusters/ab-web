@@ -7,7 +7,6 @@ import { ABP_DECIMALS } from '../../utils/amountFormatter';
 
 import ExchangeDialog from '../../containers/ExchangeDialog';
 import TransferDialog from '../../containers/TransferDialog';
-import messages from '../../containers/Dashboard/messages';
 import { ETH, NTZ } from '../../containers/Dashboard/actions';
 
 import H2 from '../H2';
@@ -18,6 +17,7 @@ const Exchange = (props) => {
   const {
     amountUnit,
     ETH_FISH_LIMIT,
+    messages,
     account,
     babzBalance,
     ethBalance,
@@ -38,7 +38,6 @@ const Exchange = (props) => {
   return (
     <Pane name="dashboard-exchange" >
       <Section>
-        <H2>Acebuster Nutz (NTZ/ETH)</H2>
         <ExchangeContainer>
           {amountUnit === NTZ && babzBalance && floor &&
             <ExchangeDialog
@@ -135,6 +134,7 @@ Exchange.propTypes = {
   calcETHAmount: PropTypes.func,
   calcNTZAmount: PropTypes.func,
   nutzBalance: PropTypes.object,
+  messages: PropTypes.object,
   ceiling: PropTypes.object,
   floor: PropTypes.object,
   handleNTZSell: PropTypes.func,

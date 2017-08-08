@@ -427,6 +427,7 @@ class DashboardRoot extends React.Component {
             totalSupply,
             listTxns,
             qrUrl,
+            messages,
             downRequests: downRequestsToList(
               downRequests,
               downtime,
