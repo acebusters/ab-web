@@ -77,7 +77,7 @@ function* createNotification(action) {
     yield* exchangeSellPending();
   }
   if (action.notifyType === PURCHASE_NTZ) {
-    yield takeEvery(ETH_TRANSFER_SUCCESS, exchangePurPending);
+    yield* exchangePurPending();
   }
   // throw error?
 }
@@ -268,22 +268,27 @@ function* transferSuccessNtz() {
   }
 }
 
-function* exchangePurPending({ payload }) {
-  const { txHash } = payload;
+function* exchangePurPending() {
+  const { payload: { txHash } } = yield take(ETH_TRANSFER_SUCCESS);
   const note = exchangePending;
   note.txId = txHash;
   note.details = 'ETH for NTZ';
   yield* createPersistNotification(note);
-  yield takeEvery(PROXY_EVENTS, exchangePurSuccess);
+  yield* exchangePurSuccess();
 }
 
-function* exchangePurSuccess({ payload }) {
-  const { transactionHash, event } = payload[0];
-  if (event === 'Withdrawal') {
-    yield* removeNotification({ txId: transactionHash });
-    const note = exchangeSuccess;
-    note.details = 'ETH for NTZ';
-    yield* createTempNotification(note);
+function* exchangePurSuccess() {
+  let finished;
+  while (!finished) {
+    const { payload } = yield take(PROXY_EVENTS);
+    const { transactionHash, event } = payload[0];
+    if (event === 'Withdrawal') {
+      finished = true;
+      yield* removeNotification({ txId: transactionHash });
+      const note = exchangeSuccess;
+      note.details = 'ETH for NTZ';
+      yield* createTempNotification(note);
+    }
   }
 }
 
