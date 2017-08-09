@@ -114,7 +114,7 @@ export class RebuyDialog extends React.Component {
         {hasWeb3 && !networkSupported && <UnsupportedNetworkMessage />}
 
         <ButtonContainer>
-          <SubmitButton onClick={this.handleLeave}>
+          <SubmitButton onClick={this.handleLeave} type="button">
             <FormattedMessage {...messages.leave} />
           </SubmitButton>
 
