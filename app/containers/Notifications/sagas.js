@@ -71,7 +71,7 @@ function* createNotification(action) {
     yield* transferPendingEth();
   }
   if (action.notifyType === TRANSFER_NTZ) {
-    yield takeEvery(CONTRACT_TX_SUCCESS, transferPendingNtz);
+    yield* transferPendingNtz();
   }
   if (action.notifyType === SELL_NTZ) {
     yield* exchangeSellPending();
@@ -238,24 +238,33 @@ function* exchangeSellSuccess() {
   }
 }
 
-function* transferPendingNtz({ payload }) {
-  const { args, txHash, methodName } = payload;
-  if (methodName === 'transfer') {
-    const note = transferPending;
-    note.txId = txHash;
-    note.details = `Sending ${formatNtz(args[1])} NTZ`;
-    yield* createPersistNotification(note);
+function* transferPendingNtz() {
+  let finished;
+  while (!finished) {
+    const { payload: { args, txHash, methodName } } = yield take(CONTRACT_TX_SUCCESS);
+    if (methodName === 'transfer') {
+      finished = true;
+      const note = transferPending;
+      note.txId = txHash;
+      note.details = `Sending ${formatNtz(args[1])} NTZ`;
+      yield* createPersistNotification(note);
+      yield* transferSuccessNtz();
+    }
   }
-  yield takeEvery(CONTRACT_EVENTS, transferSuccessNtz);
 }
 
-function* transferSuccessNtz({ payload }) {
-  const { args, transactionHash, event } = payload[0];
-  if (event === 'Transfer') {
-    yield* removeNotification({ txId: transactionHash });
-    const note = transferSuccess;
-    note.details = `Sent ${formatNtz(args.value)} NTZ`;
-    yield* createTempNotification(note);
+function* transferSuccessNtz() {
+  let finished;
+  while (!finished) {
+    const { payload } = yield take(CONTRACT_EVENTS);
+    const { args, transactionHash, event } = payload[0];
+    if (event === 'Transfer') {
+      finished = true;
+      yield* removeNotification({ txId: transactionHash });
+      const note = transferSuccess;
+      note.details = `Sent ${formatNtz(args.value)} NTZ`;
+      yield* createTempNotification(note);
+    }
   }
 }
 
