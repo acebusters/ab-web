@@ -36,6 +36,7 @@ import {
 import {
   makeMyCardsSelector,
   makeMyPendingSeatSelector,
+  makeLastReceiptSelector,
 } from '../Seat/selectors';
 import {
   lastAmountByAction,
@@ -50,6 +51,8 @@ import {
   makeHandSelector,
   makeSelectWinners,
   makeMyPosSelector,
+  makeSitoutAmountSelector,
+  makeMySitoutSelector,
 } from './selectors';
 
 import TableService, { getHand } from '../../services/tableService';
@@ -234,7 +237,7 @@ function* performShow(action) {
   }
 }
 
-export function* lineupScanner(action) {
+export function* lineupScanner(dispatch, action) {
   if (!action.handId) {
     return;
   }
@@ -249,14 +252,27 @@ export function* lineupScanner(action) {
   const myPos = makeMyPosSelector()(state, params);
 
   if (myPendingSeat === -1 && myPos === action.myPendingSeat) {
-    const hand = makeHandSelector()(state, params);
-    // check state of the hand, state > dealing && state < showdown
+    const hand = makeHandSelector()(state, params).toJS();
     if (hand.state !== 'waiting' && hand.state !== 'dealing') {
       const privKey = makeSelectPrivKey()(state, params);
-      // sign and send receipt
+      const sitoutAmount = makeSitoutAmountSelector()(state, params);
+      const lastReceipt = makeLastReceiptSelector()(state, params);
+      const sitout = makeMySitoutSelector()(state, params);
       const handId = parseInt(action.handId, 10);
-      const sitoutAction = bet(action.tableAddr, handId, 1, privKey, myPos);
-      yield put(sitoutAction);
+      const nextSitoutState = sitout > 0 ? null : 0;
+      const sitoutAction = bet(
+        action.tableAddr,
+        handId,
+        sitoutAmount,
+        privKey,
+        myPos,
+        lastReceipt,
+        {
+          originalSitout: sitout,
+          nextSitoutState,
+        }
+      );
+      yield sitOutToggle(sitoutAction, dispatch);
     }
   }
 }
@@ -348,8 +364,7 @@ export function* updateScanner() {
   }
 }
 
-export function* tableStateSaga() {
-  yield takeEvery(LINEUP_RECEIVED, lineupScanner);
+export function* tableStateSaga(dispatch) {
   yield takeEvery(SEND_MESSAGE, sendMessage);
   yield takeEvery(BET, performBet);
   yield takeEvery(SHOW, performShow);
@@ -358,4 +373,5 @@ export function* tableStateSaga() {
   yield fork(sitoutFlow);
   yield fork(updateScanner);
   yield fork(payFlow);
+  yield takeEvery(LINEUP_RECEIVED, lineupScanner, dispatch);
 }
