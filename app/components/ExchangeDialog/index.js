@@ -64,6 +64,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
             modalDismiss={this.props.modalDismiss}
             amountUnit={this.props.amountUnit}
             setAmountUnit={this.props.setAmountUnit}
+            reset={this.props.reset}
           />
 
           {calcExpectedAmount && expectedAmountUnit &&

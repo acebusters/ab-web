@@ -11,6 +11,8 @@ import {
 } from './styles';
 
 const Dropdown = ({
+  handleFocus,
+  handleBlur,
   options,
   selected,
   onSelect,
@@ -39,7 +41,11 @@ const Dropdown = ({
 
   return (
     <Container name="dropdown-button">
-      <Button onClick={handleToggle}>
+      <Button
+        onClick={handleToggle}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      >
         {selectedOption.node({ ...selectedOption.props })}
         <Caret className="fa fa-caret-down" />
       </Button>
@@ -57,6 +63,8 @@ Dropdown.propTypes = {
   ).isRequired,
   selected: PropTypes.string.isRequired,
   onSelect: PropTypes.func.isRequired,
+  handleFocus: PropTypes.func,
+  handleBlur: PropTypes.func,
 };
 
 export default Dropdown;
