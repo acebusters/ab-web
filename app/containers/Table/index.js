@@ -52,6 +52,7 @@ import makeSelectAccountData, {
 
 import {
   makeLastReceiptSelector,
+  makeMyLastReceiptSelector,
   makeMyStackSelector,
   makeMyStandingUpSelector,
   makeMyPendingSeatSelector,
@@ -566,6 +567,7 @@ const mapStateToProps = createStructuredSelector({
   lineup: makeLineupSelector(),
   latestHand: makeLatestHandSelector(),
   lastReceipt: makeLastReceiptSelector(),
+  myLastReceipt: makeMyLastReceiptSelector(),
   missingHands: makeMissingHandSelector(),
   myHand: makeMyHandValueSelector(),
   myStack: makeMyStackSelector(),
