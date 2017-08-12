@@ -39,9 +39,16 @@ const posSelector = (state, props) => {
   return -1;
 };
 
+const lastReceiptSelector = (hand, pos) => (hand && pos > -1 && hand.getIn && hand.getIn(['lineup', pos])) ? rc.get(hand.getIn(['lineup', pos, 'last'])) : undefined;
+
 const makeLastReceiptSelector = () => createSelector(
     [makeHandSelector(), posSelector],
-    (hand, pos) => (hand && pos > -1 && hand.getIn && hand.getIn(['lineup', pos])) ? rc.get(hand.getIn(['lineup', pos, 'last'])) : undefined
+    lastReceiptSelector
+);
+
+const makeMyLastReceiptSelector = () => createSelector(
+    [makeHandSelector(), makeMyPosSelector()],
+    lastReceiptSelector
 );
 
 const seatSelector = (hand, pos) => (hand && pos > -1 && hand.getIn && hand.getIn(['lineup', pos])) ? hand.getIn(['lineup', pos]) : undefined;
@@ -101,13 +108,7 @@ const makeCardsSelector = () => createSelector(
     // Note: no players should have cards shown on table if it's still waiting
     // and show his cards only if he is an active player
     // except in showdown, when cards should always be shown
-    let isActivePlayer;
-    try {
-      isActivePlayer = pokerHelper.isActivePlayer(lineup, pos, hand.get('state'));
-    } catch (e) {
-      isActivePlayer = null;
-    }
-    if (state === 'waiting' || (state !== 'showdown' && !isActivePlayer)) {
+    if (state === 'waiting' || (state !== 'showdown' && !pokerHelper.isActivePlayer(lineup, pos, hand.get('state')))) {
       return [null, null];
     }
 
@@ -364,6 +365,7 @@ export {
   posSelector,
   makeSeatSelector,
   makeLastReceiptSelector,
+  makeMyLastReceiptSelector,
   makeSitoutSelector,
   makeLastAmountSelector,
   makeDealerSelector,
