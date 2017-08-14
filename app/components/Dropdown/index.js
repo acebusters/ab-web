@@ -45,6 +45,7 @@ const Dropdown = ({
         onClick={handleToggle}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        type="button"
       >
         {selectedOption.node({ ...selectedOption.props })}
         <Caret className="fa fa-caret-down" />
