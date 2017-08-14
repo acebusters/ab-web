@@ -62,7 +62,6 @@ const Exchange = (props) => {
           }
         </ExchangeContainer>
       </Section>
-
     </Pane>
   );
 };
