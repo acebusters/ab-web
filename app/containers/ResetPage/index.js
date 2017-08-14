@@ -59,7 +59,7 @@ export class ResetPage extends React.Component { // eslint-disable-line react/pr
     return accountService.reset(values.get('email'), values.get('captchaResponse'), window.location.origin).catch((err) => {
       // If store account failed, ...
       const errMsg = 'Reset failed!';
-      if (err === 404) {
+      if (err.status && err.status === 404) {
         throw new SubmissionError({ email: 'Email not found.', _error: errMsg });
       } else {
         throw new SubmissionError({ _error: `Reset failed with error code ${err}` });

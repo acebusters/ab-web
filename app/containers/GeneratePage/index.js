@@ -225,7 +225,7 @@ const throwWorkerError = (workerErr) => {
 
 const throwSubmitError = (err) => {
   // If store account failed...
-  if (err === 409) {
+  if (err.status && err.status === 409) {
     throw new SubmissionError({ email: 'Email taken.', _error: 'Registration failed!' });
   } else {
     throw new SubmissionError({ _error: `Registration failed with error code ${err}` });

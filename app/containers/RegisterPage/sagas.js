@@ -28,7 +28,7 @@ export function* registerSaga() {
       yield put(push('/confirm'));
     } catch (err) {
       const errors = {};
-      if (err === 409) {
+      if (err.status && err.status === 409) {
         errors.email = 'Email taken.';
         errors._error = 'Registration failed!'; // eslint-disable-line no-underscore-dangle
       } else {
@@ -51,7 +51,7 @@ function* validateRefCode(value) {
       yield call(accountService.checkReferral, value);
       yield put(stopAsyncValidation('register'));
     } catch (err) {
-      const message = yield call(refCodeErrorByCode, err);
+      const message = yield call(refCodeErrorByCode, err.status);
 
       yield put(
         stopAsyncValidation(

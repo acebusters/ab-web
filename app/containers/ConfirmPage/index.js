@@ -128,7 +128,7 @@ export class ConfirmPage extends React.PureComponent { // eslint-disable-line re
     if (receipt.type === Type.CREATE_CONF) {
       return accountService.confirm(confCode).catch((err) => {
         const errMsg = 'Email Confirmation failed!';
-        if (err === 409) {
+        if (err.status && err.status === 409) {
           throw new SubmissionError({ confCode: 'Email already confirmed.', _error: errMsg });
         } else {
           throw new SubmissionError({ _error: `Email Confirmation failed with error code ${err}` });

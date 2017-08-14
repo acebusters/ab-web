@@ -55,7 +55,7 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
     return (
       accountService.login(values.get('email'))
         .catch((err) => {
-          throw new SubmissionError({ _error: `Login failed with error code ${err}` });
+          throw new SubmissionError({ _error: `Login failed with error code ${err.status}` });
         })
         // the best place for waiting for proxy tx, it allows to get login errors without delay
         .then((data) => {

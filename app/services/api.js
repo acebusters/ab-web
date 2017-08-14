@@ -1,4 +1,12 @@
-import fetch from 'isomorphic-fetch';
+// import fetch from 'isomorphic-fetch';
+
+class RequestError extends Error {
+  constructor(response) {
+    super(response.statusText);
+    this.status = response.status;
+    this.response = response;
+  }
+}
 
 export const requestApi = (apiUrl) => async (method, path, params) => {
   const options = {
@@ -16,6 +24,6 @@ export const requestApi = (apiUrl) => async (method, path, params) => {
     return json;
   }
 
-  throw response.status;
+  throw new RequestError(response);
 };
 
