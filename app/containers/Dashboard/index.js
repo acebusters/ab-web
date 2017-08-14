@@ -34,6 +34,7 @@ import {
   OVERVIEW,
   WALLET,
   EXCHANGE,
+  INVEST,
   setActiveTab,
   setAmountUnit,
 } from './actions';
@@ -51,6 +52,7 @@ import H2 from '../../components/H2';
 import Overview from '../../components/Dashboard/Overview';
 import Wallet from '../../components/Dashboard/Wallet';
 import Exchange from '../../components/Dashboard/Exchange';
+import Invest from '../../components/Dashboard/Invest';
 import SubmitButton from '../../components/SubmitButton';
 import Balances from '../../components/Dashboard/Balances';
 
@@ -68,6 +70,7 @@ const PANES = {
   [OVERVIEW]: Overview,
   [WALLET]: Wallet,
   [EXCHANGE]: Exchange,
+  [INVEST]: Invest,
 };
 
 const TABS = [
@@ -85,6 +88,11 @@ const TABS = [
     name: EXCHANGE,
     title: <FormattedMessage {...messages[EXCHANGE]} />,
     icon: 'fa-exchange',
+  },
+  {
+    name: INVEST,
+    title: <FormattedMessage {...messages[INVEST]} />,
+    icon: 'fa-line-chart',
   },
 ];
 

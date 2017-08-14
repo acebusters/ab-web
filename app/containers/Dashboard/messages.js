@@ -38,6 +38,10 @@ export default defineMessages({
     id: 'app.containers.Dashboard.exchange',
     defaultMessage: 'Exchange',
   },
+  invest: {
+    id: 'app.containers.Dashboard.invest',
+    defaultMessage: 'Invest',
+  },
   header: {
     id: 'app.containers.Dashboard.header',
     defaultMessage: 'Account Dashboard',
@@ -73,6 +77,10 @@ export default defineMessages({
   powerUpTitle: {
     id: 'app.containers.Dashboard.powerUpTitle',
     defaultMessage: 'Power Up',
+  },
+  powerUpDescr: {
+    id: 'app.containers.Dashboard.powerUpDescr',
+    defaultMessage: 'Power Up will convert NTZ to ABP immediately so you can partake in the Acebuster\'s economy.',
   },
   powerDownTitle: {
     id: 'app.containers.Dashboard.powerDownTitle',
