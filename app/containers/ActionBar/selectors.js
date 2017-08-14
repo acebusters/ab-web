@@ -7,15 +7,12 @@ import { PokerHelper, ReceiptCache } from 'poker-helper';
 
 import {
   makeMaxBetSelector,
-  makeMyMaxBetSelector,
   makeSbSelector,
   makeHandSelector,
   makeHandStateSelector,
-} from '../Table/selectors';
-
-import {
+  makeAmountToCallSelector,
   makeMyStackSelector,
-} from '../Seat/selectors';
+} from '../Table/selectors';
 
 const getIsMyTurn = (_, props) => props.isMyTurn;
 const getActionBarState = (state) => state.get('actionBar');
@@ -74,17 +71,6 @@ export const getExecuteAction = () => createSelector(
   (actionBar) => actionBar.get('executeAction'),
 );
 
-// Other selectors
-const makeAmountToCallSelector = () => createSelector(
-  [makeMaxBetSelector(), makeMyMaxBetSelector()],
-  (maxBet, myMaxbet) => {
-    if (maxBet === undefined || myMaxbet === undefined) {
-      return undefined;
-    }
-    return maxBet - myMaxbet;
-  }
-);
-
 const makeMinSelector = () => createSelector(
   [makeSbSelector(), makeHandSelector(), makeMyStackSelector(), makeAmountToCallSelector(), makeMaxBetSelector()],
   (sb, hand, stack, amountToCall, maxBet) => {
@@ -123,7 +109,6 @@ const makeCallAmountSelector = () => createSelector(
 );
 
 export {
-  makeAmountToCallSelector,
   makeMinSelector,
   makeCallAmountSelector,
 };

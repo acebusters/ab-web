@@ -10,6 +10,7 @@ import {
   makeSitoutAmountSelector,
   makeLatestHandSelector,
   makeReservationSelector,
+  makeAmountToCallSelector,
 } from '../selectors';
 
 import { PLAYER1, PLAYER2, PLAYER3, PLAYER4, PLAYER_EMPTY } from './consts';
@@ -642,5 +643,93 @@ describe('sitout Selector', () => {
     };
     const selectSitoutAmount = makeSitoutAmountSelector();
     expect(selectSitoutAmount(mockedState, props)).toEqual(100000000000000);
+  });
+});
+
+describe('amountToCall Selector', () => {
+  it('should correct amount when my maxBet 0', () => {
+    const mockedState = fromJS({
+      account: {
+        privKey: PLAYER1.key,
+      },
+      table: {
+        [TBL_ADDR]: {
+          4: {
+            state: 'preflop',
+            lastRoundMaxBet: 0,
+            dealer: 0,
+            lineup: [{
+              address: PLAYER1.address,
+              last: new Receipt(TBL_ADDR).bet(1, babz(0)).sign(PLAYER1.key),
+            }, {
+              address: PLAYER2.address,
+              last: new Receipt(TBL_ADDR).bet(1, babz(500)).sign(PLAYER2.key),
+            }, {
+              address: PLAYER3.address,
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(PLAYER3.key),
+            }, {
+              address: PLAYER_EMPTY.address,
+            }],
+          },
+          data: {
+            smallBlind: 500,
+            lastHandNetted: 3,
+          },
+        },
+      },
+    });
+
+    const amountToCallSelector = makeAmountToCallSelector();
+    const props = {
+      pos: 0,
+      params: {
+        handId: 4,
+        tableAddr: TBL_ADDR,
+      },
+    };
+    expect(amountToCallSelector(mockedState, props)).toEqual(babz(1000).toNumber());
+  });
+
+  it('should return difference between maxBet and myMaxBet', () => {
+    const mockedState = fromJS({
+      account: {
+        privKey: PLAYER1.key,
+      },
+      table: {
+        [TBL_ADDR]: {
+          4: {
+            state: 'preflop',
+            lastRoundMaxBet: babz(1000).toNumber(),
+            dealer: 0,
+            lineup: [{
+              address: PLAYER1.address,
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(PLAYER1.key),
+            }, {
+              address: PLAYER2.address,
+              last: new Receipt(TBL_ADDR).bet(1, babz(1000)).sign(PLAYER2.key),
+            }, {
+              address: PLAYER3.address,
+              last: new Receipt(TBL_ADDR).bet(1, babz(2500)).sign(PLAYER3.key),
+            }, {
+              address: PLAYER_EMPTY.address,
+            }],
+          },
+          data: {
+            smallBlind: 500,
+            lastHandNetted: 3,
+          },
+        },
+      },
+    });
+
+    const amountToCallSelector = makeAmountToCallSelector();
+    const props = {
+      pos: 0,
+      params: {
+        handId: 4,
+        tableAddr: TBL_ADDR,
+      },
+    };
+    expect(amountToCallSelector(mockedState, props)).toEqual(babz(1500).toNumber());
   });
 });

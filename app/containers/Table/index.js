@@ -47,7 +47,10 @@ import {
   setPending,
   setExitHand,
   sitOutToggle,
+  setCards,
   bet,
+  pay,
+  check,
 } from './actions';
 // selectors
 import makeSelectAccountData, {
@@ -59,7 +62,6 @@ import makeSelectAccountData, {
 import {
   makeLastReceiptSelector,
   makeMyLastReceiptSelector,
-  makeMyStackSelector,
   makeMyStandingUpSelector,
   makeMyPendingSeatSelector,
 } from '../Seat/selectors';
@@ -79,6 +81,9 @@ import {
   makeMySitoutSelector,
   makeLatestHandSelector,
   makeSelectWinners,
+  makeMyMaxBetSelector,
+  makeMyStackSelector,
+  makeCanICheckSelector,
 } from './selectors';
 
 import TableComponent from '../../components/Table';
@@ -152,9 +157,45 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
   componentWillReceiveProps(nextProps) {
     const handId = this.props.latestHand;
-    // take care of timing out players
-    if (this.props.myPos !== undefined && this.props.hand
-      && this.props.hand.get('changed') < nextProps.hand.get('changed')) {
+    const { isMyTurn, canICheck } = nextProps;
+
+    if (isMyTurn && canICheck) {              // # if player <in turn> can <check>: send <check> by timeout,
+      if (this.checkTimeOut) {
+        clearTimeout(this.checkTimeOut);
+      }
+
+      let passed = Math.floor(Date.now() / 1000) - nextProps.hand.get('changed');
+      passed = (passed > TIMEOUT_PERIOD) ? TIMEOUT_PERIOD : passed;
+      // autoCheckTimeOut should be earlier than usual timeout, so -1.5 sec
+      const autoCheckTimeOut = ((TIMEOUT_PERIOD * 1000) - (passed * 1000)) - 1500;
+
+      if (autoCheckTimeOut > 0) {
+        this.checkTimeOut = setTimeout(() => {
+          const amount = nextProps.myMaxBet;
+          const checkStates = ['preflop', 'turn', 'river', 'flop'];
+          const state = nextProps.state;
+          const checkType = checkStates.indexOf(state) !== -1 ? state : 'flop';
+          const action = this.props.check(
+            this.props.params.tableAddr,
+            handId,
+            amount,
+            nextProps.privKey,
+            nextProps.myPos,
+            nextProps.lastReceipt,
+            checkType,
+          );
+
+          return this.props.pay(action)
+            .then((cards) => this.props.setCards(this.props.params.tableAddr, handId, cards));
+        }, autoCheckTimeOut);
+      }
+    } else if (                               // # if player <out of turn>: send usual <timeout>
+      !isMyTurn &&
+      this.props.myPos !== undefined &&
+      this.props.hand &&
+      this.props.hand.get('changed') < nextProps.hand.get('changed')
+    ) {
+      // take care of timing out players
       if (this.timeOut) {
         clearTimeout(this.timeOut);
       }
@@ -221,6 +262,9 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   componentWillUnmount() {
+    if (this.checkTimeOut) {
+      clearTimeout(this.checkTimeOut);
+    }
     if (this.timeOut) {
       clearInterval(this.timeOut);
     }
@@ -580,7 +624,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 }
 
 
-export function mapDispatchToProps() {
+export function mapDispatchToProps(dispatch) {
   return {
     handRequest,
     lineupReceived,
@@ -593,6 +637,9 @@ export function mapDispatchToProps() {
     updateReceived,
     addMessage,
     seatReserved,
+    setCards,
+    check,
+    pay: (betAction) => pay(betAction, dispatch),
   };
 }
 
@@ -620,12 +667,15 @@ const mapStateToProps = createStructuredSelector({
   winners: makeSelectWinners(),
   standingUp: makeMyStandingUpSelector(),
   myPendingSeat: makeMyPendingSeatSelector(),
+  myMaxBet: makeMyMaxBetSelector(),
+  canICheck: makeCanICheckSelector(),
 });
 
 Table.propTypes = {
   state: React.PropTypes.string,
   board: React.PropTypes.array,
   hand: React.PropTypes.object,
+  isMyTurn: React.PropTypes.bool,
   myHand: React.PropTypes.object,
   myStack: React.PropTypes.number,
   lineup: React.PropTypes.object,
@@ -658,6 +708,11 @@ Table.propTypes = {
   location: React.PropTypes.object,
   account: React.PropTypes.object,
   myPendingSeat: React.PropTypes.number,
+  check: React.PropTypes.func,
+  pay: React.PropTypes.func,
+  setCards: React.PropTypes.func,
+  myMaxBet: React.PropTypes.number,
+  canICheck: React.PropTypes.bool,
 };
 
 

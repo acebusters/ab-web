@@ -31,7 +31,6 @@ import {
   makeSelectActionBarVisible,
   makeMinSelector,
   makeCallAmountSelector,
-  makeAmountToCallSelector,
 } from './selectors';
 
 import { makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -42,11 +41,12 @@ import {
   makeMessagesSelector,
   makePlayersCountSelector,
   makeLatestHandSelector,
+  makeAmountToCallSelector,
+  makeMyStackSelector,
 } from '../Table/selectors';
 
 import {
   makeMyCardsSelector,
-  makeMyStackSelector,
 } from '../Seat/selectors';
 
 import { setCards, bet, pay, fold, check } from '../Table/actions';
@@ -250,17 +250,11 @@ ActionBarContainer.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    setCards: (tableAddr, handId, cards) => setCards(tableAddr, handId, cards),
-    bet: (tableAddr, handId, amount, privKey, myPos, lastReceipt) => bet(
-      tableAddr, handId, amount, privKey, myPos, lastReceipt,
-    ),
+    setCards,
+    bet,
     pay: (betAction) => pay(betAction, dispatch),
-    fold: (tableAddr, handId, amount, privKey, myPos, lastReceipt) => fold(
-      tableAddr, handId, amount, privKey, myPos, lastReceipt),
-    check: (tableAddr, handId, amount, privKey, myPos, lastReceipt, checkType
-      ) => check(
-        tableAddr, handId, amount, privKey, myPos, lastReceipt, checkType
-    ),
+    fold,
+    check,
     handleClickButton: (type) => dispatch(handleClickButton(type)),
     setActionBarTurnComplete: (complete) => dispatch(setActionBarTurnComplete(complete)),
     setActionBarButtonActive: (btn) => dispatch(setActionBarButtonActive(btn)),
