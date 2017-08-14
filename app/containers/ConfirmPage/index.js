@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { Receipt, Type } from 'poker-helper';
 
-import accountService from '../../services/account';
+import * as accountService from '../../services/account';
 import * as storageService from '../../services/localStorage';
 
 // components

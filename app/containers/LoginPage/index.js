@@ -8,7 +8,7 @@ import Button from '../../components/Button';
 import Link from '../../components/Link';
 import Container from '../../components/Container';
 import { ErrorMessage } from '../../components/FormMessages';
-import account from '../../services/account';
+import * as accountService from '../../services/account';
 import { walletImport, login } from './actions';
 import { setProgress } from '../App/actions';
 import { setAuthState } from '../AccountProvider/actions';
@@ -53,7 +53,7 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
 
   handleSubmit(values, dispatch) {
     return (
-      account.login(values.get('email'))
+      accountService.login(values.get('email'))
         .catch((err) => {
           throw new SubmissionError({ _error: `Login failed with error code ${err}` });
         })
