@@ -49,11 +49,26 @@ export default function tableReducer(state = initialState, action) {
     }
 
     case TableActions.TABLE_RECEIVED: {
-      if (!state.get(action.tableAddr)) {
-        return state.set(action.tableAddr, Map({}));
+      if (!state.has(action.tableAddr)) {
+        return state.set(action.tableAddr, Map({
+          reservation: Map({}),
+        }));
       }
       return state;
     }
+
+    case TableActions.RESERVATION_RECEIVED:
+      return state.setIn([action.meta.tableAddr, 'reservation'], fromJS(action.payload));
+
+    case TableActions.SEAT_RESERVED:
+      return state.setIn([action.meta.tableAddr, 'reservation', action.payload.pos], fromJS(action.payload));
+
+    case TableActions.SEATS_RELEASED:
+      return action.payload.reduce((st, item) => st.deleteIn([
+        action.meta.tableAddr,
+        'reservation',
+        item.pos,
+      ]), state);
 
     case TableActions.LINEUP_RECEIVED: {
       let lineup = List([]);
