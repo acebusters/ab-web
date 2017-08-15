@@ -47,10 +47,7 @@ import {
   setPending,
   setExitHand,
   sitOutToggle,
-  setCards,
   bet,
-  pay,
-  check,
 } from './actions';
 // selectors
 import makeSelectAccountData, {
@@ -589,7 +586,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 }
 
 
-export function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps() {
   return {
     handRequest,
     lineupReceived,
@@ -602,9 +599,6 @@ export function mapDispatchToProps(dispatch) {
     updateReceived,
     addMessage,
     seatReserved,
-    setCards,
-    check,
-    pay: (betAction) => pay(betAction, dispatch),
   };
 }
 
