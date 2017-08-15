@@ -69,9 +69,9 @@ export default function tableReducer(state = initialState, action) {
     case TableActions.SEAT_RESERVED:
       return (
         state
-          .setIn([action.meta.tableAddr, 'reservation', action.payload.pos], fromJS(action.payload))
+          .setIn([action.meta.tableAddr, 'reservation', String(action.payload.pos)], fromJS(action.payload))
           .setIn(
-            [action.meta.tableAddr, 'reservation', action.payload.pos, 'blocky'],
+            [action.meta.tableAddr, 'reservation', String(action.payload.pos), 'blocky'],
             createBlocky(action.payload.signerAddr)
           )
       );
@@ -80,7 +80,7 @@ export default function tableReducer(state = initialState, action) {
       return action.payload.reduce((st, item) => st.deleteIn([
         action.meta.tableAddr,
         'reservation',
-        item.pos,
+        String(item.pos),
       ]), state);
 
     case TableActions.LINEUP_RECEIVED: {

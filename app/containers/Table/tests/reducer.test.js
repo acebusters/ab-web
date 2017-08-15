@@ -9,10 +9,17 @@ import {
   setPending,
   dropPending,
   lineupReceived,
+  reservationReceived,
+  seatReserved,
+  seatsReleased,
   addMessage,
 } from '../actions';
 
 import { babz } from '../../../utils/amountFormatter';
+
+jest.mock('../../../services/blockies.js', () => ({
+  createBlocky: () => 'blocky',
+}));
 
 // secretSeed: 'rural tent tests net drip fatigue uncle action repeat couple lawn rival'
 const P1_ADDR = '0x6d2f2c0fa568243d2def3e999a791a6df45d816e';
@@ -30,6 +37,84 @@ const ADDR_EMPTY = '0x0000000000000000000000000000000000000000';
 const tableAddr = '0x112233';
 
 describe('table reducer tests', () => {
+  it('should add reservations to table data', () => {
+    const reservation = {
+      0: {
+        signerAddr: P1_ADDR,
+        amount: '10000',
+      },
+    };
+
+    const state = fromJS({
+      [tableAddr]: {
+        reservation: {},
+      },
+    });
+
+    const nextState = tableReducer(state, reservationReceived(tableAddr, reservation));
+    expect(nextState.getIn([tableAddr, 'reservation', '0', 'signerAddr'])).toEqual(P1_ADDR);
+    expect(nextState.getIn([tableAddr, 'reservation', '0', 'amount'])).toEqual('10000');
+    expect(nextState.getIn([tableAddr, 'reservation', '0', 'blocky'])).toEqual('blocky');
+  });
+
+  it('should add new seat reservation to table data', () => {
+    const reservation = {
+      pos: 0,
+      tableAddr,
+      signerAddr: P1_ADDR,
+      amount: '10000',
+    };
+
+    const state = fromJS({
+      [tableAddr]: {
+        reservation: {},
+      },
+    });
+
+    const nextState = tableReducer(state, seatReserved(tableAddr, reservation));
+    expect(nextState.getIn([tableAddr, 'reservation', '0', 'signerAddr'])).toEqual(P1_ADDR);
+    expect(nextState.getIn([tableAddr, 'reservation', '0', 'amount'])).toEqual('10000');
+    expect(nextState.getIn([tableAddr, 'reservation', '0', 'blocky'])).toEqual('blocky');
+  });
+
+  it('should release reserved seats', () => {
+    const releasedSeats = [
+      {
+        pos: '0',
+      },
+      {
+        pos: 2,
+      },
+    ];
+
+    const state = fromJS({
+      [tableAddr]: {
+        reservation: {
+          0: {
+            signerAddr: P1_ADDR,
+            amount: '10000',
+          },
+          1: {
+            signerAddr: P1_ADDR,
+            amount: '10000',
+          },
+          2: {
+            signerAddr: P1_ADDR,
+            amount: '10000',
+          },
+        },
+      },
+    });
+
+    const nextState = tableReducer(state, seatsReleased(tableAddr, releasedSeats));
+    expect(nextState.getIn([tableAddr, 'reservation', '0'])).toEqual(undefined);
+    expect(nextState.getIn([tableAddr, 'reservation', '1']).toJS()).toEqual({
+      signerAddr: P1_ADDR,
+      amount: '10000',
+    });
+    expect(nextState.getIn([tableAddr, 'reservation', '2'])).toEqual(undefined);
+  });
+
   it('should select lastRoundMaxBet for turn', () => {
     // set up previous state
     const lineup = [{
