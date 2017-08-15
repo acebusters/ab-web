@@ -58,10 +58,23 @@ export default function tableReducer(state = initialState, action) {
     }
 
     case TableActions.RESERVATION_RECEIVED:
-      return state.setIn([action.meta.tableAddr, 'reservation'], fromJS(action.payload));
+      return state.setIn(
+        [action.meta.tableAddr, 'reservation'],
+        fromJS(action.payload).map((item) => item.set(
+          'blocky',
+          createBlocky(item.get('signerAddr'))
+        )).toMap()
+      );
 
     case TableActions.SEAT_RESERVED:
-      return state.setIn([action.meta.tableAddr, 'reservation', action.payload.pos], fromJS(action.payload));
+      return (
+        state
+          .setIn([action.meta.tableAddr, 'reservation', action.payload.pos], fromJS(action.payload))
+          .setIn(
+            [action.meta.tableAddr, 'reservation', action.payload.pos, 'blocky'],
+            createBlocky(action.payload.signerAddr)
+          )
+      );
 
     case TableActions.SEATS_RELEASED:
       return action.payload.reduce((st, item) => st.deleteIn([
