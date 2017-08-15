@@ -62,7 +62,14 @@ import Balances from '../../components/Dashboard/Balances';
 import PanesRoot from '../../components/Dashboard/PanesRoot';
 import Tabs from '../../components/Dashboard/Tabs';
 
-import { ABI_TOKEN_CONTRACT, ABI_POWER_CONTRACT, ABI_PROXY, ABI_TABLE_FACTORY, conf } from '../../app.config';
+import {
+  ABI_TOKEN_CONTRACT,
+  ABI_POWER_CONTRACT,
+  ABI_PROXY,
+  ABI_TABLE_FACTORY,
+  ABI_PULL_PAYMENT_CONTRACT,
+  conf,
+} from '../../app.config';
 
 const confParams = conf();
 
@@ -136,14 +143,13 @@ class DashboardRoot extends React.Component {
       this.power.balanceOf.call(nextAccount.proxy);
 
       // Check if we have unfinished sell
-      this.token.allowance.callPromise(
-        confParams.ntzAddr,
-        nextAccount.proxy,
-      ).then((value) => {
-        if (!value.eq(0)) {
-          this.handleETHClaim(nextAccount.proxy);
-        }
-      });
+      this.getPullPaymentContract()
+        .then((pullPayment) => pullPayment.balanceOf.callPromise(nextAccount.proxy))
+        .then((value) => {
+          if (!value.eq(0)) {
+            this.handleETHClaim(nextAccount.proxy);
+          }
+        });
     }
 
     if (this.props.dashboardTxs.txError !== nextProps.dashboardTxs.txError && nextProps.dashboardTxs.txError) {
@@ -161,6 +167,16 @@ class DashboardRoot extends React.Component {
         </div>
       );
     }
+  }
+
+  async getPullPaymentContract() {
+    if (this.pullPayment) {
+      return this.pullPayment;
+    }
+    const pullAddr = await this.token.pullAddr.callPromise();
+    this.pullPayment = this.web3.eth.contract(ABI_PULL_PAYMENT_CONTRACT).at(pullAddr);
+
+    return this.pullPayment;
   }
 
   watchProxyEvents(proxyAddr) {
@@ -280,13 +296,9 @@ class DashboardRoot extends React.Component {
       .then((requests) => this.setState({ downRequests: requests }));
   }
 
-  handleETHClaim(proxyAddr) {
-    this.token.transferFrom.sendTransaction(
-      confParams.ntzAddr,
-      proxyAddr,
-      0,
-      { from: proxyAddr }
-    );
+  async handleETHClaim(proxyAddr) {
+    const pullPayment = await this.getPullPaymentContract();
+    pullPayment.withdraw.sendTransaction({ from: proxyAddr });
   }
 
   handleTxSubmit(txFn) {
