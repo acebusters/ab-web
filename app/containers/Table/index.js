@@ -228,7 +228,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   handleUpdate(event) {
-    console.log(event);
     if (event.type === 'chatMessage') {
       const msg = Receipt.parse(event.payload);
       this.props.addMessage(msg.message, msg.tableAddr, msg.signer, msg.created);
@@ -239,19 +238,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     } else if (event.type === 'seatsRelease') {
       this.props.seatsReleased(this.tableAddr, event.payload);
     }
-    //  else if (event.type === 'joinRequest') {
-    //   if (event.payload.signer !== this.props.signerAddr) {
-    //     const data = event.payload.data.slice(2);
-    //     const amount = parseInt(data.slice(8, 72), 16);
-    //     const pos = parseInt(data.slice(136), 16) - 1;
-    //     this.props.setPending(
-    //       this.tableAddr,
-    //       this.props.params.handId,
-    //       pos,
-    //       { signerAddr: event.payload.signer, stackSize: amount },
-    //     );
-    //   }
-    // }
   }
 
   handleRebuy(amount) {
@@ -274,7 +260,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     });
   }
 
-  handleJoin(pos, amount) {
+  async handleJoin(pos, amount) {
     const { signerAddr, account } = this.props;
 
     const promise = promisifyContractCall(this.token.transData.sendTransaction)(
@@ -283,25 +269,42 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`,
     );
 
-    return Promise.resolve(account.isLocked ? null : promise).then(() => {
-      const slides = (
-        <div>
-          <JoinSlides />
-          <Button size="large" onClick={this.props.modalDismiss}>
-            <FormattedMessage {...messages.joinModal.buttonDismiss} />
-          </Button>
-        </div>
-      );
-
-      this.props.modalDismiss();
-      this.props.modalAdd(slides);
-      this.props.setPending(
+    const reserveSeat = async () => {
+      const txHash = await promise;
+      reservationService.reserve(
         this.tableAddr,
-        this.props.params.handId,
         pos,
-        { signerAddr: this.props.signerAddr, stackSize: amount }
+        this.props.signerAddr,
+        txHash,
+        amount.toString(),
       );
-    });
+    };
+
+    if (!account.isLocked) {
+      await reserveSeat();
+    }
+
+    const slides = (
+      <div>
+        <JoinSlides />
+        <Button size="large" onClick={this.props.modalDismiss}>
+          <FormattedMessage {...messages.joinModal.buttonDismiss} />
+        </Button>
+      </div>
+    );
+
+    this.props.modalDismiss();
+    this.props.modalAdd(slides);
+    this.props.setPending(
+      this.tableAddr,
+      this.props.params.handId,
+      pos,
+      { signerAddr: this.props.signerAddr, stackSize: amount }
+    );
+
+    if (account.isLocked) {
+      await reserveSeat();
+    }
   }
 
   isTaken(open, myPos, pending, pos) {
