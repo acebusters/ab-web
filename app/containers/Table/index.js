@@ -62,6 +62,7 @@ import makeSelectAccountData, {
 import {
   makeLastReceiptSelector,
   makeMyLastReceiptSelector,
+  makeMyStackSelector,
   makeMyStandingUpSelector,
   makeMyPendingSeatSelector,
 } from '../Seat/selectors';
@@ -81,9 +82,6 @@ import {
   makeMySitoutSelector,
   makeLatestHandSelector,
   makeSelectWinners,
-  makeMyMaxBetSelector,
-  makeMyStackSelector,
-  makeCanICheckSelector,
 } from './selectors';
 
 import TableComponent from '../../components/Table';
@@ -156,40 +154,10 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   componentWillReceiveProps(nextProps) {
-    const handId = this.props.latestHand;
-    const { isMyTurn, canICheck } = nextProps;
-
-    if (isMyTurn && canICheck) {              // # if player <in turn> can <check>: send <check> by timeout,
-      if (this.checkTimeOut) {
-        clearTimeout(this.checkTimeOut);
-      }
-
-      let passed = Math.floor(Date.now() / 1000) - nextProps.hand.get('changed');
-      passed = (passed > TIMEOUT_PERIOD) ? TIMEOUT_PERIOD : passed;
-      // autoCheckTimeOut should be earlier than usual timeout, so -1.5 sec
-      const autoCheckTimeOut = ((TIMEOUT_PERIOD * 1000) - (passed * 1000)) - 1500;
-
-      if (autoCheckTimeOut > 0) {
-        this.checkTimeOut = setTimeout(() => {
-          const amount = nextProps.myMaxBet;
-          const checkStates = ['preflop', 'turn', 'river', 'flop'];
-          const state = nextProps.state;
-          const checkType = checkStates.indexOf(state) !== -1 ? state : 'flop';
-          const action = this.props.check(
-            this.props.params.tableAddr,
-            handId,
-            amount,
-            nextProps.privKey,
-            nextProps.myPos,
-            nextProps.lastReceipt,
-            checkType,
-          );
-
-          return this.props.pay(action)
-            .then((cards) => this.props.setCards(this.props.params.tableAddr, handId, cards));
-        }, autoCheckTimeOut);
-      }
-    } else if (                               // # if player <out of turn>: send usual <timeout>
+    const handId = parseInt(this.props.params.handId, 10);
+    const { isMyTurn } = nextProps;
+    // # if player <out of turn>: send usual <timeout>
+    if (
       !isMyTurn &&
       this.props.myPos !== undefined &&
       this.props.hand &&
@@ -262,9 +230,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   componentWillUnmount() {
-    if (this.checkTimeOut) {
-      clearTimeout(this.checkTimeOut);
-    }
     if (this.timeOut) {
       clearInterval(this.timeOut);
     }
@@ -667,8 +632,6 @@ const mapStateToProps = createStructuredSelector({
   winners: makeSelectWinners(),
   standingUp: makeMyStandingUpSelector(),
   myPendingSeat: makeMyPendingSeatSelector(),
-  myMaxBet: makeMyMaxBetSelector(),
-  canICheck: makeCanICheckSelector(),
 });
 
 Table.propTypes = {
@@ -708,11 +671,6 @@ Table.propTypes = {
   location: React.PropTypes.object,
   account: React.PropTypes.object,
   myPendingSeat: React.PropTypes.number,
-  check: React.PropTypes.func,
-  pay: React.PropTypes.func,
-  setCards: React.PropTypes.func,
-  myMaxBet: React.PropTypes.number,
-  canICheck: React.PropTypes.bool,
 };
 
 

@@ -7,6 +7,8 @@ import Raven from 'raven-js';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
+import { TIMEOUT_PERIOD } from '../../app.config';
+
 import { playIsPlayerTurn } from '../../sounds';
 
 import {
@@ -31,6 +33,8 @@ import {
   makeSelectActionBarVisible,
   makeMinSelector,
   makeCallAmountSelector,
+  makeAmountToCallSelector,
+  makeCanICheckSelector,
 } from './selectors';
 
 import { makeSelectPrivKey } from '../AccountProvider/selectors';
@@ -47,6 +51,7 @@ import {
 
 import {
   makeMyCardsSelector,
+  makeMyStackSelector,
 } from '../Seat/selectors';
 
 import { setCards, bet, pay, fold, check } from '../Table/actions';
@@ -69,6 +74,24 @@ class ActionBarContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) { // eslint-disable-line consistent-return
+    const handId = this.props.latestHand;
+    const { isMyTurn, canICheck } = nextProps;
+    // # if player <in turn> can <check>: send <check> by timeout
+    if (isMyTurn && canICheck) {
+      if (this.checkTimeOut) {
+        clearTimeout(this.checkTimeOut);
+      }
+
+      let passed = Math.floor(Date.now() / 1000) - nextProps.hand.get('changed');
+      passed = (passed > TIMEOUT_PERIOD) ? TIMEOUT_PERIOD : passed;
+      // autoCheckTimeOut should be earlier than usual timeout, so -1.5 sec
+      const autoCheckTimeOut = ((TIMEOUT_PERIOD * 1000) - (passed * 1000)) - 1500;
+
+      if (autoCheckTimeOut > 0) {
+        this.checkTimeOut = setTimeout(() => this.handleCheck(), autoCheckTimeOut);
+      }
+    }
+
     if (nextProps.turnComplete === true) {
       this.props.setActionBarTurnComplete(false);
     }
@@ -78,7 +101,6 @@ class ActionBarContainer extends React.Component {
     const { executeAction, mode } = nextProps;
     // after handleClickButton saga updates state to execute action
     if (executeAction) {
-      const handId = this.props.latestHand;
       this.disableTemporarilyAfterAction();
       this.resetActionBar();
       switch (mode) {
@@ -104,6 +126,12 @@ class ActionBarContainer extends React.Component {
     // should play sound
     if (wasDisabled && !disabled) {
       playIsPlayerTurn();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.checkTimeOut) {
+      clearTimeout(this.checkTimeOut);
     }
   }
 
@@ -245,6 +273,9 @@ ActionBarContainer.propTypes = {
   executeAction: PropTypes.bool,
   mode: PropTypes.string,
   updateActionBar: PropTypes.func,
+  canICheck: PropTypes.bool,
+  isMyTurn: React.PropTypes.bool,
+  hand: React.PropTypes.object,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -281,6 +312,7 @@ const mapStateToProps = createStructuredSelector({
   visible: makeSelectActionBarVisible(),
   executeAction: getExecuteAction(),
   latestHand: makeLatestHandSelector(),
+  canICheck: makeCanICheckSelector(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionBarContainer);

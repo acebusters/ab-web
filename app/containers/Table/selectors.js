@@ -3,7 +3,6 @@ import { fromJS, Map } from 'immutable';
 import { PokerHelper, ReceiptCache } from 'poker-helper';
 import Solver from 'ab-pokersolver';
 import { makeSignerAddrSelector } from '../AccountProvider/selectors';
-
 import {
   valuesShort,
   suits,
@@ -538,75 +537,6 @@ const makeAmountInTheMiddleSelector = () => createSelector(
   }
 );
 
-const makeMyStackSelector = () => createSelector(
-  [tableStateSelector, makeMyPosSelector()],
-  selectStack
-);
-
-const selectStack = (table, pos) => {
-  // make sure we have a position to work on
-  if (typeof pos === 'undefined') {
-    return null;
-  }
-  // get state of contract
-  const lastHandNetted = table.getIn(['data', 'lastHandNetted']);
-  if (typeof lastHandNetted === 'undefined' || lastHandNetted < 1) {
-    return null;
-  }
-  // const addr = table.getIn(['data', 'seats', pos, 'address']);
-  let amount = table.getIn(['data', 'amounts', pos]);
-  // get progress of state channel
-  let maxHand = 0;
-  table.keySeq().forEach((k) => {
-    if (!isNaN(k)) {
-      const handId = parseInt(k, 10);
-      if (handId > maxHand) {
-        maxHand = handId;
-      }
-    }
-  });
-  // handle empty state channel
-  if (maxHand === 0 || maxHand <= lastHandNetted) {
-    return amount;
-  }
-  // sum up state channel
-  for (let i = lastHandNetted + 1; i <= maxHand; i += 1) {
-    // get all the bets
-    const rec = table.getIn([i.toString(), 'lineup', pos, 'last']);
-    const bet = (rec) ? rc.get(rec).amount.toNumber() : 0;
-    if (bet) {
-      amount -= bet;
-    }
-    // get all the winnings
-    const distsRec = table.getIn([i.toString(), 'distribution']);
-    if (distsRec) {
-      const dist = rc.get(distsRec);
-      if (dist.outs[pos]) {
-        amount += dist.outs[pos].toNumber();
-      }
-    }
-  }
-  return amount;
-};
-
-const makeAmountToCallSelector = () => createSelector(
-  [makeMaxBetSelector(), makeMyMaxBetSelector()],
-  (maxBet, myMaxbet) => {
-    if (maxBet === undefined || myMaxbet === undefined) {
-      return undefined;
-    }
-    return maxBet - myMaxbet;
-  }
-);
-
-const makeCanICheckSelector = () => createSelector(
-  [makeIsMyTurnSelector(), makeHandStateSelector(), makeAmountToCallSelector(), makeMyStackSelector()],
-  (isMyTurn, state, amountToCall, myStack) =>
-    isMyTurn &&
-    state !== 'waiting' && state !== 'dealing' && state !== 'showdown' &&
-    amountToCall <= myStack && amountToCall === 0
-);
-
 export {
     tableStateSelector,
     actionSelector,
@@ -641,8 +571,4 @@ export {
     makeLastRoundMaxBetSelector,
     makeAmountInTheMiddleSelector,
     makeHandsSelector,
-    makeAmountToCallSelector,
-    makeMyStackSelector,
-    selectStack,
-    makeCanICheckSelector,
 };

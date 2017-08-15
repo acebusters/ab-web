@@ -7,12 +7,16 @@ import { PokerHelper, ReceiptCache } from 'poker-helper';
 
 import {
   makeMaxBetSelector,
+  makeMyMaxBetSelector,
   makeSbSelector,
   makeHandSelector,
   makeHandStateSelector,
-  makeAmountToCallSelector,
-  makeMyStackSelector,
+  makeIsMyTurnSelector,
 } from '../Table/selectors';
+
+import {
+  makeMyStackSelector,
+} from '../Seat/selectors';
 
 const getIsMyTurn = (_, props) => props.isMyTurn;
 const getActionBarState = (state) => state.get('actionBar');
@@ -71,6 +75,17 @@ export const getExecuteAction = () => createSelector(
   (actionBar) => actionBar.get('executeAction'),
 );
 
+// Other selectors
+const makeAmountToCallSelector = () => createSelector(
+  [makeMaxBetSelector(), makeMyMaxBetSelector()],
+  (maxBet, myMaxbet) => {
+    if (maxBet === undefined || myMaxbet === undefined) {
+      return undefined;
+    }
+    return maxBet - myMaxbet;
+  }
+);
+
 const makeMinSelector = () => createSelector(
   [makeSbSelector(), makeHandSelector(), makeMyStackSelector(), makeAmountToCallSelector(), makeMaxBetSelector()],
   (sb, hand, stack, amountToCall, maxBet) => {
@@ -108,7 +123,17 @@ const makeCallAmountSelector = () => createSelector(
   (amountToCall, stack) => (amountToCall > stack) ? stack : amountToCall
 );
 
+const makeCanICheckSelector = () => createSelector(
+  [makeIsMyTurnSelector(), makeHandStateSelector(), makeAmountToCallSelector(), makeMyStackSelector()],
+  (isMyTurn, state, amountToCall, myStack) =>
+  isMyTurn &&
+  state !== 'waiting' && state !== 'dealing' && state !== 'showdown' &&
+  amountToCall <= myStack && amountToCall === 0
+);
+
 export {
+  makeAmountToCallSelector,
   makeMinSelector,
   makeCallAmountSelector,
+  makeCanICheckSelector,
 };
