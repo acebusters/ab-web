@@ -1,44 +1,56 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import H2 from '../H2';
+import { POWERUP, POWERDOWN } from '../../containers/Dashboard/actions';
+
 import Tabs from './Tabs';
 import PanesRoot from './PanesRoot';
-import PowerUp from './PowerUp';
-import PowerDown from './PowerDown';
+import PowerUp from '../TransferDialog/PowerUp';
+import PowerDown from '../TransferDialog/PowerDown';
 
-import { Pane, Section, ExchangeContainer } from './styles';
+import { Pane, Section } from './styles';
 
 const TABS = [
   {
-    name: 'PowerUp',
+    name: POWERUP,
     title: 'PowerUp',
+    icon: 'fa fa-arrow-up',
   },
   {
-    name: 'PowerDown',
+    name: POWERDOWN,
     title: 'PowerDown',
+    icon: 'fa fa-arrow-down',
   },
 ];
 
 const PANES = {
-  powerUp: PowerUp,
-  powerDown: PowerDown,
+  [POWERUP]: PowerUp,
+  [POWERDOWN]: PowerDown,
 };
 
-const Invest = (props) => (
-  <Pane name="dashboard-exchange" >
-    <Section>
-      <H2>Acebuster Power (ABP/NTZ)</H2>
-      <ExchangeContainer>
-        <Tabs tabs={TABS} {...props} />
+const Invest = (props) => {
+  const { setInvestType, investType } = props;
+  return (
+    <Pane name="dashboard-invest" >
+      <Section>
+        <Tabs
+          tabs={TABS}
+          activeTab={investType}
+          setActiveTab={setInvestType}
+        />
         <PanesRoot
           panes={PANES}
-          paneType="powerUp"
+          paneType={investType}
           paneProps={{
             ...props,
           }}
         />
-      </ExchangeContainer>
-    </Section>
-  </Pane>
-);
+      </Section>
+    </Pane>
+  );
+};
+Invest.propTypes = {
+  investType: PropTypes.oneOf([POWERUP, POWERDOWN]).isRequired,
+  setInvestType: PropTypes.func.isRequired,
+};
 export default Invest;

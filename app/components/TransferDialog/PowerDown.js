@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
+import { FormattedHTMLMessage } from 'react-intl';
 
 import { ABP_DECIMALS } from '../../utils/amountFormatter';
 import TransferDialog from '../../containers/TransferDialog';
@@ -14,7 +14,6 @@ const PowerDown = (props) => {
   } = props;
   return (
     <TransferDialog
-      title={<FormattedMessage {...messages.powerDownTitle} />}
       description={
         <FormattedHTMLMessage
           {...messages.powerDownDescr}

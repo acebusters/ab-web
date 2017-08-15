@@ -37,12 +37,14 @@ import {
   INVEST,
   setActiveTab,
   setAmountUnit,
+  setInvestType,
 } from './actions';
 import messages from './messages';
 import { txnsToList } from './txnsToList';
 import {
   getActiveTab,
   getAmountUnit,
+  getInvestType,
   createDashboardTxsSelector,
 } from './selectors';
 import { downRequestsToList } from './downRequestsToList';
@@ -477,8 +479,9 @@ DashboardRoot.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  setActiveTab: (whichTab) => dispatch(setActiveTab(whichTab)),
-  setAmountUnit: (unit) => dispatch(setAmountUnit(unit)),
+  setInvestType,
+  setActiveTab,
+  setAmountUnit,
   notifyCreate: (type, props) => dispatch(notifyCreate(type, props)),
   modalAdd,
   modalDismiss,
@@ -497,6 +500,7 @@ const mapStateToProps = createStructuredSelector({
   signerAddr: makeSignerAddrSelector(),
   privKey: makeSelectPrivKey(),
   amountUnit: getAmountUnit(),
+  investType: getInvestType(),
 });
 
 export default web3Connect(

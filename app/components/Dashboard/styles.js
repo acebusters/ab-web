@@ -15,7 +15,11 @@ export const Pane = styled.div`
 `;
 
 export const Section = styled.div`
+  display: flex;
+  flex-direction: column;
   padding-bottom: 20px;
+  width: 480px;
+  align-self: center;
 
   & + & {
     border-top: 1px solid #ccc;
