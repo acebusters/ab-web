@@ -1,4 +1,4 @@
-// import fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 
 class RequestError extends Error {
   constructor(response) {
@@ -8,12 +8,13 @@ class RequestError extends Error {
   }
 }
 
-export const requestApi = (apiUrl) => async (method, path, params) => {
+export const requestApi = (apiUrl) => async (method, path, params, headers = {}) => {
   const options = {
     method,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: params && JSON.stringify(params),
   };
@@ -24,6 +25,10 @@ export const requestApi = (apiUrl) => async (method, path, params) => {
     return json;
   }
 
-  throw new RequestError(response);
+  if (response.status < 500) {
+    throw new RequestError(response);
+  }
+
+  throw new Error('Server error');
 };
 
