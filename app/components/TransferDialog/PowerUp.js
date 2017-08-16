@@ -1,24 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedHTMLMessage } from 'react-intl';
 
 import TransferDialog from '../../containers/TransferDialog';
 
 const PowerUp = (props) => {
   const {
+    messages,
     account,
     nutzBalance,
     handlePowerUp,
-    messages,
   } = props;
   return (
     <div>
       {!account.isLocked ?
         <TransferDialog
           handleTransfer={handlePowerUp}
+          description={
+            <FormattedHTMLMessage {...messages.powerUpDescr} />
+          }
           maxAmount={nutzBalance}
           hideAddress
-          title={<FormattedMessage {...messages.powerUpTitle} />}
           amountUnit="NTZ"
         />
         :

@@ -80,7 +80,7 @@ export default defineMessages({
   },
   powerUpDescr: {
     id: 'app.containers.Dashboard.powerUpDescr',
-    defaultMessage: 'Power Up will convert NTZ to ABP immediately so you can partake in the Acebuster\'s economy.',
+    defaultMessage: 'Power Up will convert NTZ to ABP immediately so you can invest in the Acebuster\'s economy.',
   },
   powerDownTitle: {
     id: 'app.containers.Dashboard.powerDownTitle',
