@@ -32,24 +32,29 @@ export const AccountIsLocked = ({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        margin: '0 10px 0 0',
+        margin: '0 10px',
         alignItems: 'center',
-        justifyContent: 'flex-end',
       }}
     >
       <WithLoading
         isLoading={!account.proxy || account.proxy === '0x'}
         loadingSize="40px"
-        styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
+        styles={{
+          layout: { transform: 'translateY(-50%)', left: 0 },
+          outer: { marginTop: '20%' },
+        }}
       >
         <QRCode value={qrUrl} size={100} />
       </WithLoading>
       <WithLoading
         isLoading={!account.proxy || account.proxy === '0x'}
         loadingSize="40px"
-        styles={{ layout: { transform: 'translateY(-50%)', left: 0 } }}
+        styles={{
+          layout: { transform: 'translateY(-50%)', left: 0 },
+          outer: { marginTop: 'auto' },
+        }}
       >
-        <Alert style={{ width: 220, marginBottom: 0 }} theme="success">
+        <Alert style={{ width: 220 }} theme="success">
           <Address>{account.proxy}</Address>
         </Alert>
       </WithLoading>
@@ -102,7 +107,12 @@ export const AccountNotLocked = ({
   qrUrl,
 }) => (
   <ReceiveSection>
-    <ReceiveWrapper style={{ margin: '10px 10px 0 0' }}>
+    <ReceiveWrapper
+      style={{
+        alignSelf: 'center',
+        margin: '0 12px',
+      }}
+    >
       <WithLoading
         isLoading={!account.proxy || account.proxy === '0x'}
         loadingSize="40px"
