@@ -35,6 +35,8 @@ import {
   WALLET,
   EXCHANGE,
   INVEST,
+  POWERUP,
+  POWERDOWN,
   setActiveTab,
   setAmountUnit,
   setInvestType,
@@ -370,6 +372,7 @@ class DashboardRoot extends React.Component {
   }
 
   handlePowerUp(amount) {
+    this.props.notifyCreate(POWERUP);
     return this.handleTxSubmit((callback) => {
       this.token.transfer.sendTransaction(
         confParams.pwrAddr,
@@ -380,6 +383,7 @@ class DashboardRoot extends React.Component {
   }
 
   handlePowerDown(amount) {
+    this.props.notifyCreate(POWERDOWN);
     return this.handleTxSubmit((callback) => {
       this.power.transfer.sendTransaction(
         confParams.ntzAddr,
