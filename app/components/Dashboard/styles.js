@@ -26,6 +26,10 @@ export const Section = styled.div`
   }
 `;
 
+export const SectionOverview = styled(Section)`
+  width: 100%;
+`;
+
 // Wallet
 export const WalletContainer = styled.div`
   display: flex;
