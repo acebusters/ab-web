@@ -61,7 +61,7 @@ export function tableReceived(tableAddr) {
   return { type: TABLE_RECEIVED, tableAddr };
 }
 
-export function setPending(tableAddr, handId, pos, data = {}) {
+export function setPending(tableAddr, handId, pos, data) {
   return { type: PENDING_SET, payload: { tableAddr, handId, pos, data } };
 }
 

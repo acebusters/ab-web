@@ -48,14 +48,10 @@ export default function tableReducer(state = initialState, action) {
       return newState;
     }
 
-    case TableActions.TABLE_RECEIVED: {
-      if (!state.has(action.tableAddr)) {
-        return state.set(action.tableAddr, Map({
-          reservation: Map({}),
-        }));
-      }
-      return state;
-    }
+    case TableActions.TABLE_RECEIVED:
+      return state.set(action.tableAddr, state.get(action.tableAddr) || Map({
+        reservation: Map({}),
+      }));
 
     case TableActions.RESERVATION_RECEIVED:
       return state.setIn(
