@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 import { PokerHelper, ReceiptCache } from 'poker-helper';
 import Solver from 'ab-pokersolver';
 import { makeSignerAddrSelector } from '../AccountProvider/selectors';
@@ -240,6 +240,17 @@ const makeHandStateSelector = () => createSelector(
 const makeBoardSelector = () => createSelector(
   makeHandSelector(),
   (hand) => (hand && hand.get('cards')) ? hand.get('cards').toJS() : []
+);
+
+const makeReservationSelector = () => createSelector(
+  [tableStateSelector],
+  (table) => {
+    if (!table || !table.has('reservation')) {
+      return Map();
+    }
+
+    return table.get('reservation');
+  }
 );
 
 const makeLineupSelector = () => createSelector(
@@ -539,6 +550,7 @@ export {
     makeTableDataSelector,
     makeSbSelector,
     makeLineupSelector,
+    makeReservationSelector,
     makeMySitoutSelector,
     makeSelectWinners,
     makeSitoutSelector,
