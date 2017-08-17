@@ -3,6 +3,7 @@
  */
 // react + redux
 import React from 'react';
+import styled from 'styled-components';
 import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
 import Pusher from 'pusher-js';
@@ -13,11 +14,13 @@ import * as storageService from '../../services/sessionStorage';
 
 // components and styles
 import TableDebug from '../../containers/TableDebug';
+import NotFoundPage from '../../containers/NotFoundPage';
 
 import Card from '../../components/Card';
 import { BoardCardWrapper } from '../../components/Table/Board';
 import Seat from '../Seat';
 import Button from '../../components/Button';
+import WithLoading from '../../components/WithLoading';
 import { nickNameByAddress } from '../../services/nicknames';
 import messages from './messages';
 import { formatNtz } from '../../utils/amountFormatter';
@@ -87,12 +90,23 @@ import JoinSlides from '../JoinDialog/slides';
 import InviteDialog from '../InviteDialog';
 import RebuyDialog from '../RebuyDialog';
 
+const SpinnerWrapper = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%)
+`;
+
 const getTableData = async (table, props) => {
   const [lineup, sb, reservation] = await Promise.all([
     table.getLineup.callPromise(),
     table.smallBlind.callPromise(),
     reservationService.lineup(table.address),
   ]);
+
+  if (lineup[1].length === 0) {
+    throw new Error('Table doesn\'t exist');
+  }
 
   props.lineupReceived(table.address, lineup, sb);
   props.reservationReceived(table.address, reservation);
@@ -123,9 +137,14 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.channel = this.pusher.subscribe(this.tableAddr);
     this.tableService = new TableService(this.props.params.tableAddr, this.props.privKey);
 
-    getTableData(this.table, this.props).then(() => {
-      this.channel.bind('update', this.handleUpdate); // bind to future state updates
-    });
+    this.state = {
+      notFound: false,
+    };
+    getTableData(this.table, this.props)
+      .then(
+        () => this.channel.bind('update', this.handleUpdate), // bind to future state updates
+        () => this.setState({ notFound: true }),
+      );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -499,6 +518,10 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   render() {
+    if (this.state.notFound) {
+      return <NotFoundPage />;
+    }
+
     const lineup = (this.props.lineup) ? this.props.lineup.toJS() : null;
     const changed = (this.props.hand) ? this.props.hand.get('changed') : null;
     const seats = this.renderSeats(lineup, changed);
@@ -518,6 +541,19 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
           params={this.props.params}
           contract={this.table}
         />
+
+        {!this.props.state &&
+          <SpinnerWrapper>
+            <WithLoading
+              loadingSize="30px"
+              type="inline"
+              styles={{
+                spinner: { color: '#FFF' },
+              }}
+              isLoading
+            />
+          </SpinnerWrapper>
+        }
 
         {this.props.state &&
           <TableComponent
