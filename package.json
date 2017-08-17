@@ -1,6 +1,6 @@
 {
   "name": "ab-web",
-  "version": "0.7.0-rc1",
+  "version": "0.7.1",
   "description": "A web app housing accounts, economy, and poker.",
   "repository": {
     "type": "git",
@@ -195,6 +195,7 @@
     },
     "collectCoverageFrom": [
       "app/containers/Table/*.{js,jsx}",
+      "!app/containers/Table/messages.js",
       "!app/**/*.test.{js,jsx}",
       "!app/*/RbGenerated*/*.{js,jsx}",
       "!app/app.js",
