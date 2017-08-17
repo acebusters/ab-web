@@ -79,8 +79,8 @@ class ActionBarContainer extends React.Component {
     // after handleClickButton saga updates state to execute action
     if (executeAction) {
       const handId = this.props.latestHand;
-      this.resetActionBar();
       this.disableTemporarilyAfterAction();
+      this.resetActionBar();
       switch (mode) {
         case ALL_IN:
           return this.handleAllIn();
@@ -122,6 +122,7 @@ class ActionBarContainer extends React.Component {
   }
 
   resetActionBar() {
+    this.setState({ amount: this.props.minRaise });
     this.props.updateActionBar({
       executeAction: false,
       mode: '',
