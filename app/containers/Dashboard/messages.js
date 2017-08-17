@@ -90,6 +90,10 @@ export default defineMessages({
     id: 'app.containers.Dashboard.powerDownDescr',
     defaultMessage: 'Power Down will convert ABP back to NTZ over a period of 3 month.<br />Minimal power down amount: {min} ABP',
   },
+  powerDownPrereq: {
+    id: 'app.containers.Dashboard.powerDownPrereq',
+    defaultMessage: 'To Power Down, first Power Up and purchase ABP',
+  },
   sellTitle: {
     id: 'app.containers.Dashboard.sellTitle',
     defaultMessage: 'Exchange NTZ for ETH',
@@ -149,5 +153,9 @@ export default defineMessages({
   powerDownPayoutStatus: {
     id: 'app.containers.Dashboard.powerDownPayoutStatus',
     defaultMessage: 'Power Down Payout',
+  },
+  upgradeAccount: {
+    id: 'app.containers.Dashboard.upgradeAccount',
+    defaultMessage: 'Upgrade to Shark account',
   },
 });

@@ -29,7 +29,8 @@ const PANES = {
 };
 
 const Invest = (props) => {
-  const { setInvestType, investType } = props;
+  const { account, setInvestType, investType } = props;
+  const disabledTabs = account.isLocked ? [POWERDOWN] : [];
   return (
     <Pane name="dashboard-invest" >
       <Section>
@@ -37,6 +38,7 @@ const Invest = (props) => {
           tabs={TABS}
           activeTab={investType}
           setActiveTab={setInvestType}
+          disabledTabs={disabledTabs}
         />
         <PanesRoot
           panes={PANES}
@@ -50,6 +52,7 @@ const Invest = (props) => {
   );
 };
 Invest.propTypes = {
+  account: PropTypes.object.isRequired,
   investType: PropTypes.oneOf([POWERUP, POWERDOWN]).isRequired,
   setInvestType: PropTypes.func.isRequired,
 };

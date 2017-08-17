@@ -4,6 +4,11 @@ import { FormattedHTMLMessage } from 'react-intl';
 
 import TransferDialog from '../../containers/TransferDialog';
 
+import Alert from '../Alert';
+import BtnUpgrade from '../Dashboard/BtnUpgrade';
+
+import { Description } from './styles';
+
 const PowerUp = (props) => {
   const {
     messages,
@@ -13,18 +18,20 @@ const PowerUp = (props) => {
   } = props;
   return (
     <div>
+      <Description>
+        <FormattedHTMLMessage {...messages.powerUpDescr} />
+      </Description>
       {!account.isLocked ?
         <TransferDialog
           handleTransfer={handlePowerUp}
-          description={
-            <FormattedHTMLMessage {...messages.powerUpDescr} />
-          }
           maxAmount={nutzBalance}
           hideAddress
           amountUnit="NTZ"
         />
         :
-        <div>hello</div>
+        <Alert theme="warning">
+          <BtnUpgrade {...props} /> to Power Up.
+        </Alert>
       }
     </div>
   );

@@ -153,6 +153,15 @@ export const TabButton = styled(Button)`
   }
 `;
 
+export const TabButtonDisabled = styled(TabButton)`
+  &:hover {
+    cursor: not-allowed;
+    color: ${gray};
+    background-color: inherit;
+    border-bottom: inherit;
+  }
+`;
+
 export const TabIcon = styled.i`
   padding-right: .6em;
   &:before {
