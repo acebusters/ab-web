@@ -83,7 +83,7 @@ import {
 
 import TableComponent from '../../components/Table';
 import web3Connect from '../AccountProvider/web3Connect';
-import TableService, { getHand } from '../../services/tableService';
+import TableService, { getHand, fetchTableState } from '../../services/tableService';
 import * as reservationService from '../../services/reservationService';
 import JoinDialog from '../JoinDialog';
 import JoinSlides from '../JoinDialog/slides';
@@ -98,17 +98,20 @@ const SpinnerWrapper = styled.div`
 `;
 
 const getTableData = async (table, props) => {
-  const [lineup, sb, reservation] = await Promise.all([
-    table.getLineup.callPromise(),
-    table.smallBlind.callPromise(),
-    reservationService.lineup(table.address),
-  ]);
+  const lineup = await table.getLineup.callPromise();
 
   if (lineup[1].length === 0) {
-    throw new Error('Table doesn\'t exist');
+    throw new Error('Table doesn\'t exists');
   }
 
+  const [sb, reservation, tableState] = await Promise.all([
+    table.smallBlind.callPromise(),
+    reservationService.lineup(table.address),
+    fetchTableState(table.address),
+  ]);
+
   props.lineupReceived(table.address, lineup, sb);
+  props.updateReceived(table.address, tableState);
   props.reservationReceived(table.address, reservation);
 };
 
