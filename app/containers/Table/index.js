@@ -156,21 +156,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
     // show winner and forward browser to url of next hand
     this.pushed = (this.pushed) ? this.pushed : {};
-    // if (nextProps.latestHand) {
-    //   const nextHandStr = nextProps.latestHand.toString();
-    //   if (nextProps.latestHand > handId && !this.pushed[nextHandStr]) {
-    //     this.pushed[nextHandStr] = true;
-    //     setTimeout(() => {
-    //       browserHistory.push(`/table/${this.tableAddr}/hand/${nextHandStr}`);
-    //     }, 2000);
-    //   }
-    // }
-
-    if (!this.props.latestHand && nextProps.latestHand) {
-      console.log(this.props.latestHand, nextProps.latestHand);
-      this.props.handRequest(this.tableAddr, nextProps.latestHand); // get initial state
-    }
-
 
     // fetch hands that we might need for stack calculation
     if (nextProps.missingHands && nextProps.missingHands.length > 0) {
@@ -603,7 +588,6 @@ Table.propTypes = {
   myPos: React.PropTypes.any,
   potSize: React.PropTypes.number,
   modalAdd: React.PropTypes.func,
-  handRequest: React.PropTypes.func,
   setPending: React.PropTypes.func,
   setExitHand: React.PropTypes.func,
   modalDismiss: React.PropTypes.func,

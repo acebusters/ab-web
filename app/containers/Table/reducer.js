@@ -71,7 +71,7 @@ export default function tableReducer(state = initialState, action) {
       // The 2nd case will provide a handId, and we'll use it to update lineup data in 'hand'
       if (action.handId) {
         const table = state.get(action.tableAddr);
-        let hand = table.get(action.handId);
+        let hand = table.get(String(action.handId));
 
         for (let j = 0; j < action.lineup.length; j += 1) {
           if (hand.getIn(['lineup', j, 'address']) !== action.lineup[1][j]) {
