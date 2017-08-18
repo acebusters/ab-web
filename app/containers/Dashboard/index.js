@@ -246,7 +246,7 @@ class DashboardRoot extends React.Component {
         this.props.accountLoaded({ proxy, owner, isLocked });
       });
 
-      events.stopWatching();
+      events.stopWatching(() => null);
     });
   }
 
