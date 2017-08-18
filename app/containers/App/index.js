@@ -29,8 +29,6 @@ export function App({ notifications, loggedIn, modal, ...props }) {
   const pathname = props.location.pathname;
   const isNotTable = pathname.indexOf('table') === -1;
   const showNotifications = pathname.match(/table|lobby|dashboard|login/);
-  console.log('fixed', props.fixed);
-  console.log('showNavigation', !loggedIn || notifications.length > 0);
 
   return (
     <div name="app-container">
