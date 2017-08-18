@@ -40,10 +40,10 @@ const Content = styled.div`
   transition: ${transitionSpeed} ${transitionFn}, width ${transitionSpeed} ${transitionFn};
 
   /* fixed layout */
-  margin-top: inherit;
   padding-top: ${(props) => {
+    if (props.isTable) return 'none';
     if (props.fixed) return navbarHeight;
-    if (props.showNavigation) return '60px';
+    if (props.shiftForNotification) return '60px';
     return '20px';
   }
   }

@@ -30,6 +30,7 @@ export function App({ notifications, loggedIn, modal, ...props }) {
   const isNotTable = pathname.indexOf('table') === -1;
   const showNotifications = pathname.match(/table|lobby|dashboard|login/);
   console.log('fixed', props.fixed);
+  console.log('showNavigation', !loggedIn || notifications.length > 0);
 
   return (
     <div name="app-container">
@@ -43,7 +44,8 @@ export function App({ notifications, loggedIn, modal, ...props }) {
         }
 
         <Content
-          showNavigation={!loggedIn || notifications.length > 0}
+          isTable={!isNotTable}
+          shiftForNotification={notifications.length > 0}
           fixed={props.fixed}
           name="content-wrapper"
         >
