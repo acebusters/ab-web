@@ -151,7 +151,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   componentWillReceiveProps(nextProps) {
-    const handId = parseInt(this.props.params.handId, 10);
+    const handId = this.props.latestHand;
     const { isMyTurn } = nextProps;
     // # if player <out of turn>: send usual <timeout>
     if (
@@ -163,6 +163,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       // take care of timing out players
       if (this.timeOut) {
         clearTimeout(this.timeOut);
+        this.timeOut = null;
       }
 
       let passed = Math.floor(Date.now() / 1000) - nextProps.hand.get('changed');
@@ -179,6 +180,11 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
             } });
           });
         }, timeOut);
+      }
+    } else if (isMyTurn) { // # if player <in turn>: somebody else send <timeout>
+      if (this.timeOut) {
+        clearTimeout(this.timeOut);
+        this.timeOut = null;
       }
     }
 
@@ -228,7 +234,8 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
   componentWillUnmount() {
     if (this.timeOut) {
-      clearInterval(this.timeOut);
+      clearTimeout(this.timeOut);
+      this.timeOut = null;
     }
     this.channel.unbind('update', this.handleUpdate);
 
@@ -308,7 +315,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.props.modalAdd(slides);
     this.props.setPending(
       this.tableAddr,
-      this.props.params.handId,
+      this.props.latestHand,
       pos,
       { signerAddr: this.props.signerAddr, stackSize: amount }
     );

@@ -78,6 +78,7 @@ class ActionBarContainer extends React.Component {
     if (isMyTurn && canICheck) {
       if (this.checkTimeOut) {
         clearTimeout(this.checkTimeOut);
+        this.checkTimeOut = null;
       }
 
       let passed = Math.floor(Date.now() / 1000) - nextProps.hand.get('changed');
@@ -130,6 +131,7 @@ class ActionBarContainer extends React.Component {
   componentWillUnmount() {
     if (this.checkTimeOut) {
       clearTimeout(this.checkTimeOut);
+      this.checkTimeOut = null;
     }
   }
 
