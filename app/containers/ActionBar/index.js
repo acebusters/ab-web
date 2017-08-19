@@ -45,8 +45,6 @@ import {
   makeMessagesSelector,
   makePlayersCountSelector,
   makeLatestHandSelector,
-  makeAmountToCallSelector,
-  makeMyStackSelector,
 } from '../Table/selectors';
 
 import {
