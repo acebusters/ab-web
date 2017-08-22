@@ -1,5 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import A from 'components/A';
+import { Icon } from 'containers/Dashboard/styles';
 import Link from '../../components/Link';
+import { conf } from '../../app.config';
 
 export const TRANSFER_NTZ = 'transfer_ntz';
 export const TRANSFER_ETH = 'transfer_eth';
@@ -18,6 +22,22 @@ export const PURCHASE_NTZ = 'pruchase_ntz';
  *  type: 'success' | 'info' | 'warning' | 'danger';
  * }
  */
+const confParams = conf();
+
+export const InfoIcon = ({ transactionHash }) => (
+  <A
+    href={`${confParams.etherscanUrl}tx/${transactionHash}`}
+    target="_blank"
+  >
+    <Icon
+      className="fa fa-info-circle"
+      aria-hidden="true"
+    />
+  </A>
+);
+InfoIcon.propTypes = {
+  transactionHash: PropTypes.string.isRequired,
+};
 
 export const notLoggedIn = {
   txId: 'AUTH_NOT_LOGGED_IN',

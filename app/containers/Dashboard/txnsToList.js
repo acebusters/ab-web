@@ -109,4 +109,3 @@ function txDescription(event, tableAddrs, proxyAddr) {
 
   return <FormattedMessage {...messages.transferStatus} />;
 }
-

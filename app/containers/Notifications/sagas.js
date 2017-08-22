@@ -48,6 +48,7 @@ import {
   transferSuccess,
   exchangePending,
   exchangeSuccess,
+  InfoIcon,
 } from './constants';
 
 import { waitForTx } from '../../utils/waitForTx';
@@ -228,6 +229,7 @@ function* exchangeSellPending(pendMethod, successEvent, details) {
     if (methodName === pendMethod) {
       const note = exchangePending;
       note.txId = txHash;
+      note.infoIcon = <InfoIcon transactionHash={txHash} />;
       note.details = details;
       yield* createPersistNotification(note);
       finished = true;
