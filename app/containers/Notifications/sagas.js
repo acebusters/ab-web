@@ -32,7 +32,7 @@ import {
   CONTRACT_EVENTS,
 } from '../AccountProvider/actions';
 import { getWeb3 } from '../AccountProvider/utils';
-import { POWERUP } from '../Dashboard/actions';
+import { POWERUP, POWERDOWN } from '../Dashboard/actions';
 import { makeLatestHandSelector } from '../Table/selectors';
 
 import {
@@ -85,6 +85,12 @@ function* createNotification(action) {
     const pendMethod = 'transfer';
     const successEvent = 'Transfer';
     const details = 'NTZ for ABP';
+    yield* exchangeSellPending(pendMethod, successEvent, details);
+  }
+  if (action.notifyType === POWERDOWN) {
+    const pendMethod = 'transfer';
+    const successEvent = 'Transfer';
+    const details = 'ABP for NTZ';
     yield* exchangeSellPending(pendMethod, successEvent, details);
   }
   // throw error?
