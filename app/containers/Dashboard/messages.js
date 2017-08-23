@@ -64,7 +64,7 @@ export default defineMessages({
   },
   ethAlert: {
     id: 'app.containers.Dashboard.ethAlert',
-    defaultMessage: 'Never send real ether to this address. It is a Rinkeby Testnet Address. Only send Rinkaby TestEther to this Address. Otherwise your Ether will be lost',
+    defaultMessage: 'Never send real ether to this address. It is a Rinkeby Testnet Address. Only send Rinkeby TestEther to this Address. Otherwise your Ether will be lost',
   },
   ntzTransferTitle: {
     id: 'app.containers.Dashboard.ntzTransferTitle',
@@ -88,7 +88,7 @@ export default defineMessages({
   },
   powerDownDescr: {
     id: 'app.containers.Dashboard.powerDownDescr',
-    defaultMessage: 'Power Down will convert ABP back to NTZ over a period of 3 month.<br />Minimal power down amount: {min} ABP',
+    defaultMessage: 'Power Down will convert ABP back to NTZ over a period of 3 months.<br />Minimum Power Down amount: {min} ABP',
   },
   powerDownPrereq: {
     id: 'app.containers.Dashboard.powerDownPrereq',
