@@ -54,6 +54,10 @@ export default defineMessages({
     id: 'app.containers.Dashboard.powerDownRequests',
     defaultMessage: 'Power Down Requests',
   },
+  ethPayout: {
+    id: 'app.containers.Dashboard.ethPayout',
+    defaultMessage: 'ETH Payout',
+  },
   transactionErrorTitle: {
     id: 'app.containers.Dashboard.transactionErrorTitle',
     defaultMessage: 'Transaction error',

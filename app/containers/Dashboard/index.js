@@ -113,6 +113,7 @@ class DashboardRoot extends React.Component {
     this.handleNTZPurchase = this.handleNTZPurchase.bind(this);
     this.handleNTZSell = this.handleNTZSell.bind(this);
     this.handleETHTransfer = this.handleETHTransfer.bind(this);
+    this.handleETHPayout = this.handleETHPayout.bind(this);
     this.handlePowerUp = this.handlePowerUp.bind(this);
     this.handlePowerDown = this.handlePowerDown.bind(this);
     this.web3 = props.web3Redux.web3;
@@ -120,6 +121,14 @@ class DashboardRoot extends React.Component {
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
     this.power = this.web3.eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
     this.tableFactory = this.web3.eth.contract(ABI_TABLE_FACTORY).at(confParams.tableFactory);
+
+    this.token.pullAddr.callPromise().then((pullAddr) => {
+      this.pullPayment = this.web3.eth.contract(ABI_PULL_PAYMENT_CONTRACT).at(pullAddr);
+
+      if (this.props.account.proxy) {
+        this.pullPayment.paymentOf.call(this.props.account.proxy);
+      }
+    });
 
     this.tableFactory.getTables.call();
     if (this.props.account.proxy) {
@@ -142,14 +151,9 @@ class DashboardRoot extends React.Component {
       this.watchTokenEvents(nextAccount.proxy);
       this.power.balanceOf.call(nextAccount.proxy);
 
-      // Check if we have unfinished sell
-      this.getPullPaymentContract()
-        .then((pullPayment) => pullPayment.balanceOf.callPromise(nextAccount.proxy))
-        .then((value) => {
-          if (!value.eq(0)) {
-            this.handleETHClaim(nextAccount.proxy);
-          }
-        });
+      if (this.pullPayment) {
+        this.pullPayment.balanceOf.call(nextAccount.proxy);
+      }
     }
 
     if (this.props.dashboardTxs.txError !== nextProps.dashboardTxs.txError && nextProps.dashboardTxs.txError) {
@@ -167,16 +171,6 @@ class DashboardRoot extends React.Component {
         </div>
       );
     }
-  }
-
-  async getPullPaymentContract() {
-    if (this.pullPayment) {
-      return this.pullPayment;
-    }
-    const pullAddr = await this.token.pullAddr.callPromise();
-    this.pullPayment = this.web3.eth.contract(ABI_PULL_PAYMENT_CONTRACT).at(pullAddr);
-
-    return this.pullPayment;
   }
 
   watchProxyEvents(proxyAddr) {
@@ -247,8 +241,8 @@ class DashboardRoot extends React.Component {
         this.web3.eth.getBalance(proxyAddr);
         const { pendingSell = [] } = this.props.dashboardTxs;
 
-        if (pendingSell.indexOf(event.transactionHash) > -1) {
-          this.handleETHClaim(proxyAddr);
+        if (pendingSell.indexOf(event.transactionHash) > -1 && this.pullPayment) {
+          this.pullPayment.paymentOf(proxyAddr);
         }
       }
     });
@@ -296,9 +290,8 @@ class DashboardRoot extends React.Component {
       .then((requests) => this.setState({ downRequests: requests }));
   }
 
-  async handleETHClaim(proxyAddr) {
-    const pullPayment = await this.getPullPaymentContract();
-    pullPayment.withdraw.sendTransaction({ from: proxyAddr });
+  async handleETHPayout(proxyAddr) {
+    this.pullPayment.withdraw.sendTransaction({ from: proxyAddr });
   }
 
   handleTxSubmit(txFn) {
@@ -400,6 +393,7 @@ class DashboardRoot extends React.Component {
     const babzBalance = this.token.balanceOf(account.proxy);
     const nutzBalance = babzBalance && babzBalance.div(NTZ_DECIMALS);
     const pwrBalance = this.power.balanceOf(account.proxy);
+    const [ethAllowance, ethPayoutDate] = (this.pullPayment && this.pullPayment.paymentOf(account.proxy)) || [];
     const floor = this.token.floor();
     const ceiling = this.token.ceiling();
     const tables = this.tableFactory.getTables();
@@ -431,6 +425,8 @@ class DashboardRoot extends React.Component {
             ceiling,
             babzBalance,
             ethBalance,
+            ethAllowance,
+            ethPayoutDate,
             pwrBalance,
             nutzBalance,
             totalSupply,
@@ -446,6 +442,7 @@ class DashboardRoot extends React.Component {
             handleNTZPurchase: this.handleNTZPurchase,
             handleNTZTransfer: this.handleNTZTransfer,
             handleETHTransfer: this.handleETHTransfer,
+            handleETHPayout: this.handleETHPayout,
             handlePowerDown: this.handlePowerDown,
             handlePowerUp: this.handlePowerUp,
             ...this.props,

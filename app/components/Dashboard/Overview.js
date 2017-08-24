@@ -1,19 +1,42 @@
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 import messages from '../../containers/Dashboard/messages';
+import { formatEth } from '../../utils/amountFormatter';
 
 import H2 from '../H2';
 import List from '../List';
+import TimedButton from '../TimedButton';
 
 import { Pane, SectionOverview } from './styles';
 
 const Overview = (props) => {
-  const { account, listTxns, downRequests } = props;
+  const { account, listTxns, downRequests, ethAllowance, ethPayoutDate, handleETHPayout } = props;
   const requestColumnStyle = { width: 20, textAlign: 'left', whiteSpace: 'nowrap' };
 
   return (
     <Pane name="dashboard-overview">
+      {ethAllowance && ethAllowance.toNumber() > 0 && ethPayoutDate &&
+        <SectionOverview
+          name="eth-payout"
+          style={{
+            alignItems: 'center',
+          }}
+        >
+          <H2><FormattedMessage {...messages.ethPayout} /></H2>
+          <p style={{ fontSize: 18, margin: '-5px 0 10px' }}>
+            {formatEth(ethAllowance)} ETH
+          </p>
+          <TimedButton
+            until={ethPayoutDate.toNumber()}
+            onClick={handleETHPayout}
+          >
+            Execute Pay-out
+          </TimedButton>
+        </SectionOverview>
+      }
+
       {!account.isLocked && downRequests && downRequests.length > 0 &&
         <SectionOverview name="power-down-requests">
           <H2><FormattedMessage {...messages.powerDownRequests} /></H2>
@@ -67,6 +90,9 @@ Overview.propTypes = {
   account: PropTypes.object,
   listTxns: PropTypes.array,
   downRequests: PropTypes.array,
+  ethAllowance: PropTypes.object,
+  ethPayoutDate: PropTypes.object,
+  handleETHPayout: PropTypes.func,
 };
 
 export default Overview;
