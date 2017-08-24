@@ -9,12 +9,12 @@ import { ErrorMessage } from '../FormMessages';
 import SubmitButton from '../SubmitButton';
 import FormField from '../Form/FormField';
 import TokenAmountField from '../Form/TokenAmountField';
-import AmountField from '../AmountField';
 
 class TokenDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.normalizer = this.normalizer.bind(this);
   }
 
   handleSubmit(values) {
@@ -24,6 +24,9 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
     ).then(() => this.props.reset());
   }
 
+  normalizer(value) {
+    return value.replace(/[^0-9.]/g, '');
+  }
 
   render() {
     const {
@@ -39,7 +42,8 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
     return (
       <div style={{ maxWidth: 480 }}>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          <AmountField
+          <Field
+            normalize={this.normalizer}
             name="amount"
             component={TokenAmountField}
             label="Amount"

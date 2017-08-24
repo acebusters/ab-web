@@ -27,7 +27,6 @@ const Wallet = (props) => {
   } = props;
   return (
     <Pane name="dashboard-wallet">
-
       <Section
         style={{ alignSelf: 'center', maxWidth: 480 }}
         name="wallet-receive"
