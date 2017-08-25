@@ -262,6 +262,7 @@ function* transferPendingNtz() {
       finished = true;
       const note = transferPending;
       note.txId = txHash;
+      note.infoIcon = <InfoIcon transactionHash={txHash} />;
       note.details = `Sending ${formatNtz(args[1])} NTZ`;
       yield* createPersistNotification(note);
       yield* transferSuccessNtz();
@@ -289,6 +290,7 @@ function* exchangePurPending() {
   const note = exchangePending;
   note.txId = txHash;
   note.details = 'ETH for NTZ';
+  note.infoIcon = <InfoIcon transactionHash={txHash} />;
   yield* createPersistNotification(note);
   yield* exchangePurSuccess();
 }
