@@ -1,5 +1,7 @@
+import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form/immutable';
+import { FormattedMessage } from 'react-intl';
 
 import ExchangeDialog from '../../components/ExchangeDialog';
 import messages from './messages';
@@ -9,10 +11,18 @@ import {
   makeSelectNetworkSupported,
 } from '../AccountProvider/selectors';
 
-const validate = (values) => {
+const validate = (values, props) => {
   const errors = {};
-  if (!values.get('amount')) {
-    errors.amount = 'Required';
+  const amount = parseFloat(values.get('amount'));
+  const { maxAmount, minAmount = 0 } = props;
+  if (!amount) {
+    errors.amount = <FormattedMessage {...messages.amountRequired} />;
+  }
+  if (amount <= minAmount) {
+    errors.amount = <FormattedMessage {...messages.amountTooLow} values={{ minAmount }} />;
+  }
+  if (maxAmount && maxAmount.lt(amount)) {
+    errors.amount = <FormattedMessage {...messages.amountTooHigh} values={{ maxAmount }} />;
   }
 
   return errors;

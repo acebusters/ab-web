@@ -4,8 +4,9 @@ import ethUtil from 'ethereumjs-util';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-
 import { reduxForm } from 'redux-form/immutable';
+
+import { normalizerFloat } from '../../utils/amountFormatter';
 
 import { makeSelectHasWeb3, makeSelectNetworkSupported } from '../../containers/AccountProvider/selectors';
 
@@ -13,9 +14,6 @@ import DefaultDialog from '../../components/TransferDialog/Default';
 import TokenDialog from '../../components/TransferDialog/TokenDialog';
 
 const isEthereumAddress = (address) => ethUtil.isValidAddress(address) || ethUtil.isValidChecksumAddress(address);
-
-// only allow digits and one dot
-const normalizer = (value) => value.replace(',', '.').replace(/[^0-9.]/g, '').replace(/\./, 'x').replace(/\./g, '').replace(/x/, '.');
 
 const validate = (values, props) => {
   const errors = {};
@@ -57,7 +55,7 @@ const TransferDialogContainer = (props) => {
   return (
     <SpecifiedDialog
       name="transfer-dialog"
-      normalizer={normalizer}
+      normalizer={normalizerFloat}
       {...props}
     />
   );

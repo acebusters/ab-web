@@ -1,6 +1,18 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  amountRequired: {
+    id: 'app.containers.ExchangeDialog.amountRequired',
+    defaultMessage: 'The amount field cannot be empty',
+  },
+  amountTooLow: {
+    id: 'app.containers.ExchangeDialog.amountTooLow',
+    defaultMessage: 'The amount must be greater than {minAmount}',
+  },
+  amountTooHigh: {
+    id: 'app.containers.ExchangeDialog.amountTooHigh',
+    defaultMessage: 'The amount must be less than {maxAmount}',
+  },
   expectedAmount: {
     id: 'app.containers.ExchangeDialog.expectedAmount',
     defaultMessage: 'Receive: {amount}',
