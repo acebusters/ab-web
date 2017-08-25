@@ -55,6 +55,7 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
             amountUnit={this.props.amountUnit}
             setAmountUnit={this.props.setAmountUnit}
             reset={this.props.reset}
+            placeholder="0.00"
           />
 
           <Field

@@ -35,7 +35,7 @@ export function ErrorMessage(props) {
 }
 
 ErrorMessage.propTypes = {
-  error: React.PropTypes.string,
+  error: React.PropTypes.any,
 };
 
 export function WarningMessage(props) {
@@ -49,4 +49,3 @@ export function WarningMessage(props) {
 WarningMessage.propTypes = {
   warning: React.PropTypes.string,
 };
-
