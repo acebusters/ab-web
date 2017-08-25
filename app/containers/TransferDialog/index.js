@@ -14,6 +14,9 @@ import TokenDialog from '../../components/TransferDialog/TokenDialog';
 
 const isEthereumAddress = (address) => ethUtil.isValidAddress(address) || ethUtil.isValidChecksumAddress(address);
 
+// only allow digits and one dot
+const normalizer = (value) => value.replace(',', '.').replace(/[^0-9.]/g, '').replace(/\./, 'x').replace(/\./g, '').replace(/x/, '.');
+
 const validate = (values, props) => {
   const errors = {};
   const { messages, maxAmount, minAmount = 0 } = props;
@@ -51,7 +54,13 @@ const DIALOGS = {
 
 const TransferDialogContainer = (props) => {
   const SpecifiedDialog = DIALOGS[props.type];
-  return <SpecifiedDialog name="transfer-dialog" {...props} />;
+  return (
+    <SpecifiedDialog
+      name="transfer-dialog"
+      normalizer={normalizer}
+      {...props}
+    />
+  );
 };
 TransferDialogContainer.propTypes = {
   type: PropTypes.oneOf(['default', 'token']),

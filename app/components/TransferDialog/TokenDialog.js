@@ -14,7 +14,6 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.normalizer = this.normalizer.bind(this);
   }
 
   handleSubmit(values) {
@@ -22,10 +21,6 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
       values.get('amount'),
       values.get('address'),
     ).then(() => this.props.reset());
-  }
-
-  normalizer(value) {
-    return value.replace(/[^0-9.]/g, '');
   }
 
   render() {
@@ -38,12 +33,13 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
       invalid,
       hasWeb3,
       networkSupported,
+      normalizer,
     } = this.props;
     return (
       <div style={{ maxWidth: 480 }}>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <Field
-            normalize={this.normalizer}
+            normalize={normalizer}
             name="amount"
             component={TokenAmountField}
             label="Amount"
@@ -97,6 +93,7 @@ TokenDialog.propTypes = {
   amountUnit: PropTypes.string,
   setAmountUnit: PropTypes.func,
   reset: PropTypes.func,
+  normalizer: PropTypes.func,
 };
 TokenDialog.defaultProps = {
   minAmount: new BigNumber(0),
