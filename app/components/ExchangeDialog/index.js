@@ -42,6 +42,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
       invalid,
       hasWeb3,
       networkSupported,
+      placeholder,
     } = this.props;
     const expectedAmountUnit = amountUnit.toLowerCase() === 'ntz' ? 'eth' : 'ntz';
     const formatExpValue = expectedAmountUnit === 'ntz' ? formatNtz : formatEth;
@@ -65,7 +66,7 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
             amountUnit={this.props.amountUnit}
             setAmountUnit={this.props.setAmountUnit}
             reset={this.props.reset}
-            placeholder="0.00"
+            placeholder={placeholder}
           />
 
           {calcExpectedAmount && expectedAmountUnit &&
@@ -115,6 +116,7 @@ ExchangeDialog.propTypes = {
   title: PropTypes.node,
   amountUnit: PropTypes.string.isRequired,
   reset: PropTypes.func,
+  placeholder: PropTypes.string,
 };
 
 export default ExchangeDialog;

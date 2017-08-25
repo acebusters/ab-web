@@ -34,6 +34,7 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
       hasWeb3,
       networkSupported,
       normalizer,
+      placeholder,
     } = this.props;
     return (
       <div style={{ maxWidth: 480 }}>
@@ -51,7 +52,7 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
             amountUnit={this.props.amountUnit}
             setAmountUnit={this.props.setAmountUnit}
             reset={this.props.reset}
-            placeholder="0.00"
+            placeholder={placeholder}
           />
 
           <Field
@@ -94,6 +95,7 @@ TokenDialog.propTypes = {
   setAmountUnit: PropTypes.func,
   reset: PropTypes.func,
   normalizer: PropTypes.func,
+  placeholder: PropTypes.string,
 };
 TokenDialog.defaultProps = {
   minAmount: new BigNumber(0),

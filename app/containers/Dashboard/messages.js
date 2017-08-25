@@ -90,6 +90,10 @@ export default defineMessages({
     id: 'app.containers.Dashboard.ethTransferTitle',
     defaultMessage: 'Transfer ETH',
   },
+  powerUpAmountLabel: {
+    id: 'app.containers.Dashboard.powerUpAmountLabel',
+    defaultMessage: 'Amount NTZ',
+  },
   powerUpTitle: {
     id: 'app.containers.Dashboard.powerUpTitle',
     defaultMessage: 'Power Up',
@@ -97,6 +101,10 @@ export default defineMessages({
   powerUpDescr: {
     id: 'app.containers.Dashboard.powerUpDescr',
     defaultMessage: 'Power Up will convert NTZ to ABP immediately so you can invest in the Acebuster\'s economy.',
+  },
+  powerDownAmountLabel: {
+    id: 'app.containers.Dashboard.powerDownAmountLabel',
+    defaultMessage: 'Amount ABP',
   },
   powerDownTitle: {
     id: 'app.containers.Dashboard.powerDownTitle',

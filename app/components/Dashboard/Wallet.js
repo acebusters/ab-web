@@ -47,6 +47,7 @@ const Wallet = (props) => {
               handleTransfer={handleETHTransfer}
               maxAmount={ethBalance}
               type="token"
+              placeholder="0.00"
               {...props}
             />
           :
@@ -54,6 +55,7 @@ const Wallet = (props) => {
               handleTransfer={handleNTZTransfer}
               maxAmount={nutzBalance}
               type="token"
+              placeholder="0"
               {...props}
             />
           }

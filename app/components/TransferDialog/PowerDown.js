@@ -36,7 +36,9 @@ const PowerDown = (props) => {
           maxAmount={pwrBalance.div(ABP_DECIMALS)}
           minAmount={totalSupply.div(10000).div(ABP_DECIMALS).ceil()}
           hideAddress
+          label={<FormattedMessage {...messages.powerDownAmountLabel} />}
           amountUnit="ABP"
+          placeholder="0.00"
           {...props}
         />
       }
