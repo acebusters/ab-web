@@ -46,11 +46,8 @@ const Notification = ({
   </Container>
 );
 Notification.propTypes = {
-  category: PropTypes.string,
-  details: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-  ]),
+  category: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  details: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   dismissable: PropTypes.bool,
   isNotTable: PropTypes.bool,
   infoIcon: PropTypes.node,

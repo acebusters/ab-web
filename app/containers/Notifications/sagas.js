@@ -9,11 +9,6 @@ import * as storageService from '../../services/sessionStorage';
 import WithLoading from '../../components/WithLoading';
 
 import {
-  formatNtz,
-  formatEth,
-} from '../../utils/amountFormatter';
-
-import {
   NOTIFY_CREATE,
   NOTIFY_REMOVE,
   notifyAdd,
@@ -67,16 +62,17 @@ function* createPersistNotification(note) {
 }
 
 function* createNotification({ notifyProps, notifyType }) {
+  const { amount } = notifyProps;
   if (notifyType === TRANSFER_ETH) {
     const pendingMsg = {
       ...txPending,
       category: <FormattedMessage {...msgs.transferPending} />,
-      details: `Sending ${formatEth(notifyProps.amount)} ETH`,
+      details: <FormattedMessage values={{ amount }} {...msgs.transferEthPend} />,
     };
     const successMsg = {
       ...txSuccess,
-      category: 'Transfer Success: ',
-      details: `Sent ${formatEth(notifyProps.amount)} ETH`,
+      category: <FormattedMessage {...msgs.transferSuccess} />,
+      details: <FormattedMessage values={{ amount }} {...msgs.transferEthSuccess} />,
     };
     yield* transferPendingEth(pendingMsg);
     yield* transferSuccessEth(successMsg);
@@ -85,12 +81,12 @@ function* createNotification({ notifyProps, notifyType }) {
     const pendingMsg = {
       ...txPending,
       category: <FormattedMessage {...msgs.transferPending} />,
-      details: `Sending ${formatNtz(notifyProps.amount)} NTZ`,
+      details: <FormattedMessage values={{ amount }} {...msgs.transferNtzPend} />,
     };
     const successMsg = {
       ...txSuccess,
-      category: 'Transfer Success: ',
-      details: `Sent ${formatNtz(notifyProps.amont)} NTZ`,
+      category: <FormattedMessage {...msgs.transferSuccess} />,
+      details: <FormattedMessage values={{ amount }} {...msgs.transferNtzSuccess} />,
     };
     yield* exchangeSellPending('transfer', pendingMsg);
     yield* exchangeSellSuccess('Transfer', successMsg);
@@ -98,13 +94,13 @@ function* createNotification({ notifyProps, notifyType }) {
   if (notifyType === PURCHASE_NTZ) {
     const pendingMsg = {
       ...txPending,
-      category: 'Exchange Pending: ',
-      details: 'ETH for NTZ',
+      category: <FormattedMessage {...msgs.exchangePending} />,
+      details: <FormattedMessage {...msgs.exchangeEthToNtz} />,
     };
     const successMsg = {
       ...txSuccess,
-      category: 'Exchange Success: ',
-      details: 'ETH for NTZ',
+      category: <FormattedMessage {...msgs.exchangeSuccess} />,
+      details: <FormattedMessage {...msgs.exchangeEthToNtz} />,
     };
     yield* transferPendingEth(pendingMsg);
     yield* transferSuccessEth(successMsg);
@@ -112,13 +108,13 @@ function* createNotification({ notifyProps, notifyType }) {
   if (notifyType === SELL_NTZ) {
     const pendingMsg = {
       ...txPending,
-      category: 'Transfer Pending: ',
-      details: 'NTZ for ETH',
+      category: <FormattedMessage {...msgs.exchangePending} />,
+      details: <FormattedMessage {...msgs.exchangeNtzToEth} />,
     };
     const successMsg = {
       ...txSuccess,
-      category: 'Transfer Success: ',
-      details: 'NTZ for ETH',
+      category: <FormattedMessage {...msgs.exchangeSuccess} />,
+      details: <FormattedMessage {...msgs.exchangeNtzToEth} />,
     };
     yield* exchangeSellPending('transfer', pendingMsg);
     yield* exchangeSellSuccess('Sell', successMsg);
@@ -126,27 +122,27 @@ function* createNotification({ notifyProps, notifyType }) {
   if (notifyType === POWERUP) {
     const pendingMsg = {
       ...txPending,
-      category: 'Transfer Pending: ',
-      details: 'NTZ for ABP',
+      category: <FormattedMessage {...msgs.exchangePending} />,
+      details: <FormattedMessage {...msgs.exchangeNtzToAbp} />,
     };
     const successMsg = {
       ...txSuccess,
-      category: 'Transfer Success: ',
-      details: 'NTZ for ABP',
+      category: <FormattedMessage {...msgs.exchangeSuccess} />,
+      details: <FormattedMessage {...msgs.exchangeNtzToAbp} />,
     };
     yield* exchangeSellPending('transfer', pendingMsg);
-    yield* exchangeSellSuccess('Tranfer', successMsg);
+    yield* exchangeSellSuccess('Transfer', successMsg);
   }
   if (notifyType === POWERDOWN) {
     const pendingMsg = {
       ...txPending,
-      category: 'Transfer Pending: ',
-      details: 'ABP for NTZ',
+      category: <FormattedMessage {...msgs.exchangePending} />,
+      details: <FormattedMessage {...msgs.exchangeAbpToNtz} />,
     };
     const successMsg = {
       ...txSuccess,
-      category: 'Transfer Success: ',
-      details: 'ABP for NTZ',
+      category: <FormattedMessage {...msgs.exchangeSuccess} />,
+      details: <FormattedMessage {...msgs.exchangeAbpToNtz} />,
     };
     yield* exchangeSellPending('transfer', pendingMsg);
     yield* exchangeSellSuccess('Transfer', successMsg);
