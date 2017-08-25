@@ -49,6 +49,8 @@ import {
   exchangePending,
   exchangeSuccess,
   InfoIcon,
+  pending,
+  success,
 } from './constants';
 
 import { waitForTx } from '../../utils/waitForTx';
@@ -66,29 +68,51 @@ function* createPersistNotification(note) {
   yield put(notifyAdd(note));
 }
 
-function* createNotification(action) {
-  if (action.notifyType === TRANSFER_ETH) {
-    yield* transferPendingEth();
+function* createNotification({ notifyProps, notifyType }) {
+  if (notifyType === TRANSFER_ETH) {
+    const pendingMsg = {
+      ...pending,
+      category: 'Transfer Pending: ',
+      details: `Sending ${formatEth(notifyProps.amount)} ETH`,
+    };
+    const successMsg = {
+      ...success,
+      category: 'Transfer Success: ',
+      details: `Sent ${formatEth(notifyProps.amount)} ETH`,
+    };
+    yield* transferPendingEth(pendingMsg);
+    yield* transferSuccessEth(successMsg);
   }
-  if (action.notifyType === TRANSFER_NTZ) {
+  if (notifyType === PURCHASE_NTZ) {
+    const pendingMsg = {
+      ...pending,
+      category: 'Exchange Pending: ',
+      details: 'ETH for NTZ',
+    };
+    const successMsg = {
+      ...success,
+      category: 'Exchange Success: ',
+      details: 'ETH for NTZ',
+    };
+    yield* transferPendingEth(pendingMsg);
+    yield* transferSuccessEth(successMsg);
+  }
+  if (notifyType === TRANSFER_NTZ) {
     yield* transferPendingNtz();
   }
-  if (action.notifyType === SELL_NTZ) {
+  if (notifyType === SELL_NTZ) {
     const pendMethod = 'transfer';
     const successEvent = 'Sell';
     const details = 'NTZ for ETH';
     yield* exchangeSellPending(pendMethod, successEvent, details);
   }
-  if (action.notifyType === PURCHASE_NTZ) {
-    yield* exchangePurPending();
-  }
-  if (action.notifyType === POWERUP) {
+  if (notifyType === POWERUP) {
     const pendMethod = 'transfer';
     const successEvent = 'Transfer';
     const details = 'NTZ for ABP';
     yield* exchangeSellPending(pendMethod, successEvent, details);
   }
-  if (action.notifyType === POWERDOWN) {
+  if (notifyType === POWERDOWN) {
     const pendMethod = 'transfer';
     const successEvent = 'Transfer';
     const details = 'ABP for NTZ';
@@ -285,50 +309,22 @@ function* transferSuccessNtz() {
   }
 }
 
-function* exchangePurPending() {
+function* transferPendingEth(msg) {
   const { payload: { txHash } } = yield take(ETH_TRANSFER_SUCCESS);
-  const note = exchangePending;
+  const note = msg;
   note.txId = txHash;
-  note.details = 'ETH for NTZ';
   note.infoIcon = <InfoIcon transactionHash={txHash} />;
-  yield* createPersistNotification(note);
-  yield* exchangePurSuccess();
+  yield* createPersistNotification(msg);
 }
 
-function* exchangePurSuccess() {
+function* transferSuccessEth(msg) {
   let finished;
   while (!finished) {
     const { payload } = yield take(PROXY_EVENTS);
     const { transactionHash, event } = payload[0];
     if (event === 'Withdrawal') {
-      finished = true;
       yield* removeNotification({ txId: transactionHash });
-      const note = exchangeSuccess;
-      note.details = 'ETH for NTZ';
-      yield* createTempNotification(note);
-    }
-  }
-}
-
-function* transferPendingEth() {
-  const { payload: { txHash, amount } } = yield take(ETH_TRANSFER_SUCCESS);
-  const note = transferPending;
-  note.txId = txHash;
-  note.details = `Sending ${formatEth(amount)} ETH`;
-  yield* createPersistNotification(note);
-  yield* transferSuccessEth();
-}
-
-function* transferSuccessEth() {
-  let finished;
-  while (!finished) {
-    const { payload } = yield take(PROXY_EVENTS);
-    const { args, transactionHash, event } = payload[0];
-    if (event === 'Withdrawal') {
-      yield* removeNotification({ txId: transactionHash });
-      const note = transferSuccess;
-      note.details = `Sent ${formatEth(args.value)} ETH`;
-      yield* createTempNotification(note);
+      yield* createTempNotification(msg);
       finished = true;
     }
   }

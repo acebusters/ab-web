@@ -125,3 +125,17 @@ export const exchangeSuccess = {
   date: new Date(),
   type: 'success',
 };
+
+export const pending = {
+  removing: false,
+  dismissable: false,
+  date: new Date(),
+  type: 'info',
+};
+
+export const success = {
+  removing: false,
+  dismissable: true,
+  date: new Date(),
+  type: 'success',
+};

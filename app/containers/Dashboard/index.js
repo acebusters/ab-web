@@ -296,7 +296,7 @@ class DashboardRoot extends React.Component {
   }
 
   handleNTZTransfer(amount, to) {
-    this.props.notifyCreate(TRANSFER_NTZ);
+    this.props.notifyCreate(TRANSFER_NTZ, { amount });
     return this.handleTxSubmit((callback) => {
       this.token.transfer.sendTransaction(
         to,
@@ -307,7 +307,7 @@ class DashboardRoot extends React.Component {
   }
 
   handleNTZSell(amount) {
-    this.props.notifyCreate(SELL_NTZ);
+    this.props.notifyCreate(SELL_NTZ, { amount });
     return this.handleTxSubmit((callback) => {
       this.token.transfer.sendTransaction(
         confParams.ntzAddr,
@@ -319,7 +319,7 @@ class DashboardRoot extends React.Component {
   }
 
   handleNTZPurchase(amount) {
-    this.props.notifyCreate(PURCHASE_NTZ);
+    this.props.notifyCreate(PURCHASE_NTZ, { amount });
     return this.handleTxSubmit((callback) => {
       this.props.transferETH({
         dest: confParams.ntzAddr,
@@ -330,7 +330,7 @@ class DashboardRoot extends React.Component {
   }
 
   handleETHTransfer(amount, dest) {
-    this.props.notifyCreate(TRANSFER_ETH);
+    this.props.notifyCreate(TRANSFER_ETH, { amount });
     return this.handleTxSubmit((callback) => {
       this.props.transferETH({
         dest,
@@ -341,7 +341,7 @@ class DashboardRoot extends React.Component {
   }
 
   handlePowerUp(amount) {
-    this.props.notifyCreate(POWERUP);
+    this.props.notifyCreate(POWERUP, { amount });
     return this.handleTxSubmit((callback) => {
       this.token.transfer.sendTransaction(
         confParams.pwrAddr,
@@ -352,7 +352,7 @@ class DashboardRoot extends React.Component {
   }
 
   handlePowerDown(amount) {
-    this.props.notifyCreate(POWERDOWN);
+    this.props.notifyCreate(POWERDOWN, { amount });
     return this.handleTxSubmit((callback) => {
       this.power.transfer.sendTransaction(
         confParams.ntzAddr,
