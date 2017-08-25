@@ -27,6 +27,7 @@ const PowerUp = (props) => {
           maxAmount={nutzBalance}
           hideAddress
           amountUnit="NTZ"
+          {...props}
         />
         :
         <Alert theme="warning">

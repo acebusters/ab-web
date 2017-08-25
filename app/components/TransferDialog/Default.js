@@ -8,7 +8,6 @@ import UnsupportedNetworkMessage from '../Web3Alerts/UnsupportedNetwork';
 import { ErrorMessage } from '../FormMessages';
 import SubmitButton from '../SubmitButton';
 import FormField from '../Form/FormField';
-import AmountField from '../AmountField';
 import H2 from '../H2';
 
 class DefaultDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -38,6 +37,7 @@ class DefaultDialog extends React.Component { // eslint-disable-line react/prefe
       invalid,
       hasWeb3,
       networkSupported,
+      normalizer,
     } = this.props;
 
     return (
@@ -45,7 +45,8 @@ class DefaultDialog extends React.Component { // eslint-disable-line react/prefe
         {title && <H2>{title}</H2>}
         {description && <p>{description}</p>}
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          <AmountField
+          <Field
+            normalize={normalizer}
             name="amount"
             component={FormField}
             label={`Amount (${amountUnit})`}
@@ -95,6 +96,7 @@ DefaultDialog.propTypes = {
   handleTransfer: PropTypes.func,
   error: PropTypes.any,
   reset: PropTypes.func,
+  normalizer: PropTypes.func.isRequired,
 };
 
 DefaultDialog.defaultProps = {

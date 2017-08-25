@@ -21,6 +21,9 @@ const validate = (values, props) => {
   if (amount <= minAmount) {
     errors.amount = <FormattedMessage {...messages.amountTooLow} values={{ minAmount }} />;
   }
+  if (amount === 0) {
+    errors.amount = <FormattedMessage {...messages.amountZero} />;
+  }
   if (maxAmount && maxAmount.lt(amount)) {
     errors.amount = <FormattedMessage {...messages.amountTooHigh} values={{ maxAmount }} />;
   }

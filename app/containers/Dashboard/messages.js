@@ -18,6 +18,10 @@ export default defineMessages({
     id: 'app.containers.Dashboard.amountTooHigh',
     defaultMessage: 'The amount must be less than {maxAmount}',
   },
+  amountZero: {
+    id: 'app.containers.Dashboard.amountZero',
+    defaultMessage: 'The amount must be greater than 0',
+  },
   send: {
     id: 'app.containers.Dashboard.send',
     defaultMessage: 'Send',

@@ -13,6 +13,10 @@ export default defineMessages({
     id: 'app.containers.ExchangeDialog.amountTooHigh',
     defaultMessage: 'The amount must be less than {maxAmount}',
   },
+  amountZero: {
+    id: 'app.containers.ExchangeDialog.amountZero',
+    defaultMessage: 'The amount must be greater than 0',
+  },
   expectedAmount: {
     id: 'app.containers.ExchangeDialog.expectedAmount',
     defaultMessage: 'Receive: {amount}',
