@@ -20,6 +20,7 @@ export const PURCHASE_NTZ = 'pruchase_ntz';
  *  dismissable: boolean;
  *  date: Date;
  *  type: 'success' | 'info' | 'warning' | 'danger';
+ *  infoIcon: null | node
  * }
  */
 const confParams = conf();
@@ -82,58 +83,14 @@ export const noWeb3Danger = {
   type: 'danger',
 };
 
-export const transferPending = {
-  // txId: null,
-  notifyType: 'TX_TRANSFER_PENDING',
-  category: 'Transfer Pending',
-  details: null,
+export const txPending = {
   removing: false,
   dismissable: false,
   date: new Date(),
   type: 'info',
 };
 
-export const transferSuccess = {
-  // txId: temp, so no txId
-  notifyType: 'TX_TRANSFER_SUCCESS',
-  category: 'Transfer Success',
-  details: null,
-  removing: false,
-  dismissable: true,
-  date: new Date(),
-  type: 'success',
-};
-
-export const exchangePending = {
-  // txId: null,
-  notifyType: 'TX_EXCHANGE_PENDING',
-  category: 'Exchange Pending',
-  details: null,
-  removing: false,
-  dismissable: false,
-  date: new Date(),
-  type: 'info',
-};
-
-export const exchangeSuccess = {
-  // txId: temp, so no txId
-  notifyType: 'TX_EXCHANGE_SUCCESS',
-  category: 'Exchange Success',
-  details: null,
-  removing: false,
-  dismissable: true,
-  date: new Date(),
-  type: 'success',
-};
-
-export const pending = {
-  removing: false,
-  dismissable: false,
-  date: new Date(),
-  type: 'info',
-};
-
-export const success = {
+export const txSuccess = {
   removing: false,
   dismissable: true,
   date: new Date(),
