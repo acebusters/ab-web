@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form/immutable';
 import { FormattedMessage } from 'react-intl';
+import BigNumber from 'bignumber.js';
 
 import ExchangeDialog from '../../components/ExchangeDialog';
 import messages from './messages';
@@ -13,8 +14,11 @@ import {
 
 const validate = (values, props) => {
   const errors = {};
-  const amount = parseFloat(values.get('amount'));
   const { maxAmount, minAmount = 0 } = props;
+  const amount = values.get('amount');
+  const stringMaxAmount = new BigNumber(maxAmount.toString());
+  const stringAmount = amount ? new BigNumber(amount) : '0';
+
   if (!amount) {
     errors.amount = <FormattedMessage {...messages.amountRequired} />;
   }
@@ -24,7 +28,7 @@ const validate = (values, props) => {
   if (amount === 0) {
     errors.amount = <FormattedMessage {...messages.amountZero} />;
   }
-  if (maxAmount && maxAmount.lt(amount)) {
+  if (stringMaxAmount && stringMaxAmount.lt(stringAmount)) {
     errors.amount = <FormattedMessage {...messages.amountTooHigh} values={{ maxAmount }} />;
   }
 

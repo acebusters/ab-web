@@ -391,9 +391,8 @@ class DashboardRoot extends React.Component {
     const floor = this.token.floor();
     const ceiling = this.token.ceiling();
     const tables = this.tableFactory.getTables();
-    const calcETHAmount = (ntz) => new BigNumber(ntz).div(floor);
-    const calcNTZAmount = (eth) => ceiling.mul(eth);
-
+    const calcETHAmount = (ntz) => new BigNumber(ntz.toString()).div(floor);
+    const calcNTZAmount = (eth) => ceiling.mul(eth.toString());
     const listTxns = txnsToList(
       this.props.dashboardTxs.dashboardEvents,
       tables,

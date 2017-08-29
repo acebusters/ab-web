@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { reduxForm } from 'redux-form/immutable';
+import BigNumber from 'bignumber.js';
 
 import { normalizerFloat } from '../../utils/amountFormatter';
 
@@ -18,7 +19,10 @@ const isEthereumAddress = (address) => ethUtil.isValidAddress(address) || ethUti
 const validate = (values, props) => {
   const errors = {};
   const { messages, maxAmount, minAmount = 0 } = props;
-  const amount = parseFloat(values.get('amount'));
+  const amount = values.get('amount');
+  const stringMaxAmount = new BigNumber(maxAmount.toString());
+  const stringAmount = amount ? new BigNumber(amount) : '0';
+
   // amount validation
   if (!amount) {
     errors.amount = <FormattedMessage {...messages.amountRequired} />;
@@ -29,7 +33,7 @@ const validate = (values, props) => {
   if (amount === 0) {
     errors.amount = <FormattedMessage {...messages.amountZero} />;
   }
-  if (maxAmount && maxAmount.lt(amount)) {
+  if (stringMaxAmount && stringMaxAmount.lt(stringAmount)) {
     errors.amount = <FormattedMessage {...messages.amountTooHigh} values={{ maxAmount }} />;
   }
 
