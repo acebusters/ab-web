@@ -22,7 +22,6 @@ function* contractTransactionSecureSend(action) {
   const proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
   const txArgs = yield call(getTxArgs, action.payload);
 
-
   return new Promise((resolve, reject) => {
     proxy.forward.estimateGas(
       ...txArgs,

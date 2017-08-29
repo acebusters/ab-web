@@ -327,8 +327,8 @@ class DashboardRoot extends React.Component {
 
     return this.handleTxSubmit((callback) => {
       this.token.sell.sendTransaction(
-        new BigNumber(amount).mul(NTZ_DECIMALS),
         floor,
+        new BigNumber(amount).mul(NTZ_DECIMALS),
         { from: this.props.account.proxy },
         callback
       );

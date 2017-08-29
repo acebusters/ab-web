@@ -72,7 +72,7 @@ function* createNotification(action) {
     yield* transferPendingNtz();
   }
   if (action.notifyType === SELL_NTZ) {
-    const pendMethod = 'transfer';
+    const pendMethod = 'sell';
     const successEvent = 'Sell';
     const details = 'NTZ for ETH';
     yield* exchangeSellPending(pendMethod, successEvent, details);

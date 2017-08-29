@@ -169,7 +169,7 @@ function addPending(state, { methodName, args, txHash, address }) {
         transactionHash: txHash,
       }),
     );
-  } else if (methodName === 'transfer' && args[0] === confParams.ntzAddr) {
+  } else if (methodName === 'sell') {
     return state.setIn(
       ['events', txHash],
       fromJS({
