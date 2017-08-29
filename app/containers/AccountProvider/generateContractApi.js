@@ -40,34 +40,19 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         method: contractInstance[methodName].call,
       }),
       // creates receipt for to invoke contract
-      sendTransaction: (...args) => {
-        console.log({
-          args,
-          methodName,
-          key: getMethodKey({ methodName, args }),
-          dest: address,
-          data: (
-            !isForward(methodName, contractInstance)
-              ? contractInstance[methodName].getData(...args)
-              : ''
-          ),
-          privKey: getState().get('privKey'),
-          callback: typeof last(args) === 'function' ? last(args) : undefined,
-        });
-        return contractTxSend({
-          args,
-          methodName,
-          key: getMethodKey({ methodName, args }),
-          dest: address,
-          data: (
-            !isForward(methodName, contractInstance)
-              ? contractInstance[methodName].getData(...args)
-              : ''
-          ),
-          privKey: getState().get('privKey'),
-          callback: typeof last(args) === 'function' ? last(args) : undefined,
-        });
-      },
+      sendTransaction: (...args) => contractTxSend({
+        args,
+        methodName,
+        key: getMethodKey({ methodName, args }),
+        dest: address,
+        data: (
+          !isForward(methodName, contractInstance)
+            ? contractInstance[methodName].getData(...args)
+            : ''
+        ),
+        privKey: getState().get('privKey'),
+        callback: typeof last(args) === 'function' ? last(args) : undefined,
+      }),
     }, dispatch);
     // base getter
     // reads cached contract method call from state

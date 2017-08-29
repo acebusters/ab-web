@@ -5,7 +5,6 @@ import {
   CONTRACT_EVENTS,
   PROXY_EVENTS,
   CONTRACT_TX_SUCCESS,
-  ETH_TRANSFER_SUCCESS,
   CONTRACT_TX_ERROR,
 } from '../AccountProvider/actions';
 
@@ -23,6 +22,7 @@ import {
 import { composeReducers } from '../../utils/composeReducers';
 
 import { conf } from '../../app.config';
+import { last } from '../../utils';
 
 const confParams = conf();
 
@@ -72,13 +72,7 @@ function dashboardReducer(state = initialState, action) {
       return state.set('proxy', action.payload.proxy);
 
     case CONTRACT_TX_SUCCESS:
-      return addNTZPending(
-        initEvents(state),
-        payload
-      );
-
-    case ETH_TRANSFER_SUCCESS:
-      return addETHPending(
+      return addPending(
         initEvents(state),
         payload
       );
@@ -131,26 +125,39 @@ function completePending(state, event) {
   return state.deleteIn(['events', event.transactionHash]);
 }
 
-function addETHPending(state, { txHash, amount, address }) {
-  return state.setIn(
-    ['events', txHash],
-    fromJS({
-      address,
-      value: amount.toString ? amount.toString() : amount,
-      type: 'outcome',
-      unit: 'eth',
-      pending: true,
-      transactionHash: txHash,
-    }),
-  );
-}
-
-function addNTZPending(state, { methodName, args, txHash, address }) {
+function addPending(state, { methodName, args, txHash, address }) {
   if (address === confParams.pwrAddr) {
     return state;
   }
 
-  if (methodName === 'transfer' && args[0] !== confParams.ntzAddr) {
+  if (methodName === 'forward' && args[2] === '') { // eth transfer
+    const amount = args[1];
+    return state.setIn(
+      ['events', txHash],
+      fromJS({
+        address,
+        value: amount.toString ? amount.toString() : amount,
+        type: 'outcome',
+        unit: 'eth',
+        pending: true,
+        transactionHash: txHash,
+      }),
+    );
+  } else if (methodName === 'purchase') {
+    const options = typeof last(args) === 'function' ? args[args.length - 2] : last(args);
+    const amount = options.value;
+    return state.setIn(
+      ['events', txHash],
+      fromJS({
+        address,
+        value: amount.toString ? amount.toString() : amount,
+        type: 'outcome',
+        unit: 'eth',
+        pending: true,
+        transactionHash: txHash,
+      }),
+    );
+  } else if (methodName === 'transfer' && args[0] !== confParams.ntzAddr) {
     return state.setIn(
       ['events', txHash],
       fromJS({
