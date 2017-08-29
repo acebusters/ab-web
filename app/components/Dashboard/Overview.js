@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 import messages from '../../containers/Dashboard/messages';
+import WithLoading from '../../components/WithLoading';
 import { formatEth } from '../../utils/amountFormatter';
 
 import H2 from '../H2';
@@ -12,7 +13,7 @@ import TimedButton from '../TimedButton';
 import { Pane, SectionOverview } from './styles';
 
 const Overview = (props) => {
-  const { account, listTxns, downRequests, ethAllowance, ethPayoutDate, handleETHPayout } = props;
+  const { account, listTxns, downRequests, ethAllowance, ethPayoutDate, ethPayoutPending, handleETHPayout } = props;
   const requestColumnStyle = { width: 20, textAlign: 'left', whiteSpace: 'nowrap' };
 
   return (
@@ -31,8 +32,17 @@ const Overview = (props) => {
           <TimedButton
             until={ethPayoutDate.toNumber()}
             onClick={handleETHPayout}
+            disabled={ethPayoutPending}
           >
             Execute Pay-out
+            {ethPayoutPending &&
+              <WithLoading
+                isLoading
+                loadingSize="14px"
+                type="inline"
+                styles={{ outer: { marginLeft: 5 } }}
+              />
+            }
           </TimedButton>
         </SectionOverview>
       }
@@ -91,6 +101,7 @@ Overview.propTypes = {
   listTxns: PropTypes.array,
   downRequests: PropTypes.array,
   ethAllowance: PropTypes.object,
+  ethPayoutPending: PropTypes.bool,
   ethPayoutDate: PropTypes.object,
   handleETHPayout: PropTypes.func,
 };

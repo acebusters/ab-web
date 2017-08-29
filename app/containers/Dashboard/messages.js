@@ -114,13 +114,13 @@ export default defineMessages({
     id: 'app.containers.Dashboard.tableLeave',
     defaultMessage: 'Table leave',
   },
-  sellStart: {
-    id: 'app.containers.Dashboard.sellStart',
-    defaultMessage: 'Sell start',
+  sellStatus: {
+    id: 'app.containers.Dashboard.sellStatus',
+    defaultMessage: 'Sell',
   },
-  sellEnd: {
-    id: 'app.containers.Dashboard.sellEnd',
-    defaultMessage: 'Sell end',
+  ethPayoutStatus: {
+    id: 'app.containers.Dashboard.ethPayoutStatus',
+    defaultMessage: 'ETH Payout',
   },
   purchaseStart: {
     id: 'app.containers.Dashboard.purchaseStart',
@@ -137,6 +137,10 @@ export default defineMessages({
   powerContract: {
     id: 'app.containers.Dashboard.powerContract',
     defaultMessage: 'Power contract',
+  },
+  pullContract: {
+    id: 'app.containers.Dashboard.pullContract',
+    defaultMessage: 'PullPayment contract',
   },
   me: {
     id: 'app.containers.Dashboard.me',

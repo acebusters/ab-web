@@ -39,6 +39,7 @@ import {
   TRANSFER_NTZ,
   SELL_NTZ,
   PURCHASE_NTZ,
+  ETH_PAYOUT,
   loggedInSuccess,
   noWeb3Danger,
   firstLogin,
@@ -47,9 +48,12 @@ import {
   transferSuccess,
   exchangePending,
   exchangeSuccess,
+  ethPayoutPending,
+  ethPayoutSuccess,
 } from './constants';
 
 import { waitForTx } from '../../utils/waitForTx';
+import { conf } from '../../app.config';
 
 function* createTempNotification(note) {
   yield put(notifyAdd(note));
@@ -67,6 +71,9 @@ function* createPersistNotification(note) {
 function* createNotification(action) {
   if (action.notifyType === TRANSFER_ETH) {
     yield* transferPendingEth();
+  }
+  if (action.notifyType === ETH_PAYOUT) {
+    yield* transferPendingEthPayout();
   }
   if (action.notifyType === TRANSFER_NTZ) {
     yield* transferPendingNtz();
@@ -215,62 +222,59 @@ function* visitorModeNotification({ payload: { pathname = '' } }) {
 }
 
 function* exchangeSellPending(pendMethod, successEvent, details) {
-  let finished;
-  while (!finished) {
+  while (true) { // eslint-disable-line no-constant-condition
     const { payload: { methodName, txHash } } = yield take(CONTRACT_TX_SUCCESS);
     if (methodName === pendMethod) {
-      const note = exchangePending;
-      note.txId = txHash;
-      note.details = details;
-      yield* createPersistNotification(note);
-      finished = true;
+      yield* createPersistNotification({
+        ...exchangePending,
+        txId: txHash,
+        details,
+      });
       yield* exchangeSellSuccess(successEvent, details);
+      break;
     }
   }
 }
 
 function* exchangeSellSuccess(successEvent, details) {
   // remove pending and create success notification
-  let finished;
-  while (!finished) {
+  while (true) { // eslint-disable-line no-constant-condition
     const { payload } = yield take(CONTRACT_EVENTS);
     const { transactionHash, event } = payload[0];
     if (event === successEvent) {
       yield* removeNotification({ txId: transactionHash });
-      const note2 = exchangeSuccess;
-      note2.details = details;
-      yield* createTempNotification(note2);
-      finished = true;
+      yield* createTempNotification({ ...exchangeSuccess, details });
+      break;
     }
   }
 }
 
 function* transferPendingNtz() {
-  let finished;
-  while (!finished) {
+  while (true) { // eslint-disable-line no-constant-condition
     const { payload: { args, txHash, methodName } } = yield take(CONTRACT_TX_SUCCESS);
     if (methodName === 'transfer') {
-      finished = true;
-      const note = transferPending;
-      note.txId = txHash;
-      note.details = `Sending ${formatNtz(args[1])} NTZ`;
-      yield* createPersistNotification(note);
+      yield* createPersistNotification({
+        ...transferPending,
+        txId: txHash,
+        details: `Sending ${formatNtz(args[1])} NTZ`,
+      });
       yield* transferSuccessNtz();
+      break;
     }
   }
 }
 
 function* transferSuccessNtz() {
-  let finished;
-  while (!finished) {
+  while (true) { // eslint-disable-line no-constant-condition
     const { payload } = yield take(CONTRACT_EVENTS);
     const { args, transactionHash, event } = payload[0];
     if (event === 'Transfer') {
-      finished = true;
       yield* removeNotification({ txId: transactionHash });
-      const note = transferSuccess;
-      note.details = `Sent ${formatNtz(args.value)} NTZ`;
-      yield* createTempNotification(note);
+      yield* createTempNotification({
+        ...transferSuccess,
+        details: `Sent ${formatNtz(args.value)} NTZ`,
+      });
+      break;
     }
   }
 }
@@ -278,25 +282,50 @@ function* transferSuccessNtz() {
 function* exchangePurPending() {
   const { payload: { txHash, methodName } } = yield take(CONTRACT_TX_SUCCESS);
   if (methodName === 'purchase') {
-    const note = exchangePending;
-    note.txId = txHash;
-    note.details = 'ETH for NTZ';
-    yield* createPersistNotification(note);
+    yield* createPersistNotification({
+      ...exchangePending,
+      txId: txHash,
+      details: 'ETH for NTZ',
+    });
     yield* exchangePurSuccess();
   }
 }
 
 function* exchangePurSuccess() {
-  let finished;
-  while (!finished) {
+  while (true) { // eslint-disable-line no-constant-condition
     const { payload } = yield take(PROXY_EVENTS);
     const { transactionHash, event } = payload[0];
     if (event === 'Withdrawal') {
-      finished = true;
       yield* removeNotification({ txId: transactionHash });
-      const note = exchangeSuccess;
-      note.details = 'ETH for NTZ';
-      yield* createTempNotification(note);
+
+      yield* createTempNotification({
+        ...exchangeSuccess,
+        details: 'ETH for NTZ',
+      });
+      break;
+    }
+  }
+}
+
+function* transferPendingEthPayout() {
+  const { payload: { txHash, methodName, address } } = yield take(CONTRACT_TX_SUCCESS);
+  if (methodName === 'withdraw' && address === conf().pullAddr) {
+    yield* createPersistNotification({
+      ...ethPayoutPending,
+      txId: txHash,
+    });
+    yield* transferSuccessEthPayout();
+  }
+}
+
+function* transferSuccessEthPayout() {
+  while (true) { // eslint-disable-line no-constant-condition
+    const { payload } = yield take(PROXY_EVENTS);
+    const { transactionHash, event } = payload[0];
+    if (event === 'Deposit') {
+      yield* removeNotification({ txId: transactionHash });
+      yield* createTempNotification(ethPayoutSuccess);
+      break;
     }
   }
 }
@@ -304,25 +333,26 @@ function* exchangePurSuccess() {
 function* transferPendingEth() {
   const { payload: { txHash, args, methodName } } = yield take(CONTRACT_TX_SUCCESS);
   if (methodName === 'forward' && args[2] === '') { // transfer eth
-    const note = transferPending;
-    note.txId = txHash;
-    note.details = `Sending ${formatEth(args[1])} ETH`;
-    yield* createPersistNotification(note);
+    yield* createPersistNotification({
+      ...transferPending,
+      txId: txHash,
+      details: `Sending ${formatEth(args[1])} ETH`,
+    });
     yield* transferSuccessEth();
   }
 }
 
 function* transferSuccessEth() {
-  let finished;
-  while (!finished) {
+  while (true) { // eslint-disable-line no-constant-condition
     const { payload } = yield take(PROXY_EVENTS);
     const { args, transactionHash, event } = payload[0];
     if (event === 'Withdrawal') {
       yield* removeNotification({ txId: transactionHash });
-      const note = transferSuccess;
-      note.details = `Sent ${formatEth(args.value)} ETH`;
-      yield* createTempNotification(note);
-      finished = true;
+      yield* createTempNotification({
+        ...transferSuccess,
+        details: `Sent ${formatEth(args.value)} ETH`,
+      });
+      break;
     }
   }
 }

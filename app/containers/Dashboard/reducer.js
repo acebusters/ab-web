@@ -143,6 +143,17 @@ function addPending(state, { methodName, args, txHash, address }) {
         transactionHash: txHash,
       }),
     );
+  } else if (methodName === 'withdraw') {
+    return state.setIn(
+      ['events', txHash],
+      fromJS({
+        address: confParams.pullAddr,
+        type: 'income',
+        unit: 'eth',
+        pending: true,
+        transactionHash: txHash,
+      }),
+    );
   } else if (methodName === 'purchase') {
     const options = typeof last(args) === 'function' ? args[args.length - 2] : last(args);
     const amount = options.value;
@@ -177,21 +188,6 @@ function addPending(state, { methodName, args, txHash, address }) {
         value: args[1].toString ? args[1].toString() : args[1],
         type: 'outcome',
         unit: 'ntz',
-        pending: true,
-        transactionHash: txHash,
-      }),
-    );
-  } else if ( // eth claim
-    methodName === 'transferFrom' &&
-    args[0] === confParams.ntzAddr &&
-    args[2] === 0
-  ) {
-    return state.setIn(
-      ['events', txHash],
-      fromJS({
-        address: confParams.ntzAddr,
-        type: 'income',
-        unit: 'eth',
         pending: true,
         transactionHash: txHash,
       }),

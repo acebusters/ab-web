@@ -20,6 +20,7 @@ import {
   TRANSFER_ETH,
   SELL_NTZ,
   PURCHASE_NTZ,
+  ETH_PAYOUT,
 } from '../Notifications/constants';
 
 import { modalAdd, modalDismiss } from '../App/actions';
@@ -146,9 +147,7 @@ class DashboardRoot extends React.Component {
       this.watchTokenEvents(nextAccount.proxy);
       this.power.balanceOf.call(nextAccount.proxy);
 
-      if (this.pullPayment) {
-        this.pullPayment.balanceOf.call(nextAccount.proxy);
-      }
+      this.pullPayment.paymentOf.call(nextAccount.proxy);
     }
 
     if (this.props.dashboardTxs.txError !== nextProps.dashboardTxs.txError && nextProps.dashboardTxs.txError) {
@@ -169,8 +168,7 @@ class DashboardRoot extends React.Component {
   }
 
   watchProxyEvents(proxyAddr) {
-    const web3 = getWeb3();
-    this.proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
+    this.proxy = this.web3.eth.contract(ABI_PROXY).at(proxyAddr);
 
     this.web3.eth.getBlockNumber((err, blockNumber) => {
       this.proxy.allEvents({
@@ -193,11 +191,16 @@ class DashboardRoot extends React.Component {
       toBlock: 'latest',
     }).watch((error, event) => {
       if (!error && event) {
+        if (event.event === 'Deposit') {
+          this.pullPayment.paymentOf.call(proxyAddr);
+        }
+
         addEventsDate([event])
           .then((events) => this.props.proxyEvents(events, proxyAddr));
         this.web3.eth.getBalance(proxyAddr);
       }
     });
+
     this.power.downtime.call();
     this.power.totalSupply.call();
     this.power.allEvents({
@@ -231,14 +234,13 @@ class DashboardRoot extends React.Component {
       toBlock: 'latest',
     }).watch((watchError, event) => {
       if (!watchError && isUserEvent(proxyAddr)(event)) {
+        if (event.event === 'Sell') {
+          this.pullPayment.paymentOf.call(proxyAddr);
+        }
+
         this.power.balanceOf.call(proxyAddr);
         this.token.balanceOf.call(proxyAddr);
         this.web3.eth.getBalance(proxyAddr);
-        const { pendingSell = [] } = this.props.dashboardTxs;
-
-        if (pendingSell.indexOf(event.transactionHash) > -1 && this.pullPayment) {
-          this.pullPayment.paymentOf(proxyAddr);
-        }
       }
     });
   }
@@ -285,8 +287,9 @@ class DashboardRoot extends React.Component {
       .then((requests) => this.setState({ downRequests: requests }));
   }
 
-  async handleETHPayout(proxyAddr) {
-    this.pullPayment.withdraw.sendTransaction({ from: proxyAddr });
+  async handleETHPayout() {
+    this.props.notifyCreate(ETH_PAYOUT);
+    this.pullPayment.withdraw.sendTransaction({ from: this.proxy.address });
   }
 
   handleTxSubmit(txFn) {
@@ -361,9 +364,8 @@ class DashboardRoot extends React.Component {
 
   handleETHTransfer(amount, dest) {
     this.props.notifyCreate(TRANSFER_ETH);
-    const proxy = this.web3.eth.contract(ABI_PROXY).at(this.props.account.proxy);
     return this.handleTxSubmit((callback) => {
-      proxy.forward.sendTransaction(
+      this.proxy.forward.sendTransaction(
         dest,
         new BigNumber(amount).mul(ETH_DECIMALS),
         '',
@@ -447,6 +449,7 @@ class DashboardRoot extends React.Component {
             ethBalance,
             ethAllowance,
             ethPayoutDate,
+            ethPayoutPending: this.props.dashboardTxs.pendingETHPayout,
             pwrBalance,
             nutzBalance,
             totalSupply,
