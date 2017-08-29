@@ -24,6 +24,7 @@ export function conf() {
       txUrl: '',
       accountUrl: '',
       reservationUrl: '',
+      gasStatUrl: '',
       ntzAddr: '',
       pwrAddr: '',
       accountFactory: '',
@@ -46,6 +47,7 @@ export function conf() {
       txUrl: 'https://h5fb9klhzc.execute-api.eu-west-1.amazonaws.com/v0',
       accountUrl: 'https://vps13t4f7e.execute-api.eu-west-1.amazonaws.com/v0',
       reservationUrl: 'https://uiw0k5puaf.execute-api.eu-west-1.amazonaws.com/v0',
+      gasStatUrl: 'https://l70xam4hh9.execute-api.eu-west-1.amazonaws.com/v0',
       ntzAddr: '0x8895dc6374f3198ac298857bc4a85ac225a87c6c',
       pwrAddr: '0x4a7ec091d4a28f8b2e6ed687bad330c2c8fe9846',
       accountFactory: '0x46a7e61dedd2abad8caf98d4da1205f830f62815',
@@ -67,6 +69,7 @@ export function conf() {
     txUrl: 'https://khengvfg6c.execute-api.eu-west-1.amazonaws.com/v0',
     accountUrl: 'https://hsqkzjp3m8.execute-api.eu-west-1.amazonaws.com/v0',
     reservationUrl: 'https://6er5q4s7b0.execute-api.eu-west-1.amazonaws.com/v0',
+    gasStatUrl: 'https://4by2hfw9mg.execute-api.eu-west-1.amazonaws.com/v0',
     ntzAddr: '0x179237e4e955369a69bd26499e3b89f6df9e5d7b',
     pwrAddr: '0xff2aae8ac40d291b70b5f011c5eacb37f17eb9e4',
     accountFactory: '0x12a023f15ef0a1763f2a6736cc88a1ef9f0556f1',
@@ -168,17 +171,24 @@ export const ABI_TABLE_FACTORY = [{ constant: false, inputs: [{ name: '_newOwner
 
 export const TIMEOUT_PERIOD = 60;
 
+function bn(num) {
+  return num * 1000000000000;
+}
+
 // chip values and colors
 export const chipValues = [
-  [50000000000000000, '#f056c5'],
-  [10000000000000000, '#e7e401'],
-  [5000000000000000, '#774ac1'],
-  [1000000000000000, '#ac2a2a'],
-  [500000000000000, '#328eee'],
-  [100000000000000, '#745f2a'],
-  [10000000000000, '#FF0080'],
-  [1000000000000, '#FFFFFF'],
+  [bn(25000), '#53353f'],
+  [bn(5000), '#f056c5'],
+  [bn(1000), '#e7e401'],
+  [bn(500), '#774ac1'],
+  [bn(100), '#000000'],
+  [bn(50), '#328eee'],
+  [bn(25), '#027707'],
+  [bn(5), '#d48b30'],
+  [bn(1), '#FFFFFF'],
 ];
+
+export const seatChipColor = '#E01E40';
 
 export const SEAT_COORDS = [
   [10, 40, 0],
