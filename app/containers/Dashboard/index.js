@@ -23,7 +23,7 @@ import {
 } from '../Notifications/constants';
 
 import { modalAdd, modalDismiss } from '../App/actions';
-import { contractEvents, accountLoaded, transferETH, proxyEvents } from '../AccountProvider/actions';
+import { contractEvents, accountLoaded, proxyEvents } from '../AccountProvider/actions';
 import makeSelectAccountData, {
   makeSignerAddrSelector,
   makeSelectPrivKey,
@@ -361,12 +361,14 @@ class DashboardRoot extends React.Component {
 
   handleETHTransfer(amount, dest) {
     this.props.notifyCreate(TRANSFER_ETH);
+    const proxy = this.web3.eth.contract(ABI_PROXY).at(this.props.account.proxy);
     return this.handleTxSubmit((callback) => {
-      this.props.transferETH({
+      proxy.forward.sendTransaction(
         dest,
-        amount: new BigNumber(amount).mul(ETH_DECIMALS),
-        callback,
-      });
+        new BigNumber(amount).mul(ETH_DECIMALS),
+        '',
+        callback
+      );
     });
   }
 
@@ -478,7 +480,6 @@ DashboardRoot.propTypes = {
   modalAdd: PropTypes.func,
   modalDismiss: PropTypes.func,
   proxyEvents: PropTypes.func,
-  transferETH: PropTypes.func,
   web3Redux: PropTypes.any,
   notifyCreate: PropTypes.func,
 };
@@ -490,7 +491,6 @@ const mapDispatchToProps = (dispatch) => ({
   notifyCreate: (type, props) => dispatch(notifyCreate(type, props)),
   modalAdd,
   modalDismiss,
-  transferETH,
   proxyEvents,
   contractEvents,
   accountLoaded,
