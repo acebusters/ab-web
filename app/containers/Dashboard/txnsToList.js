@@ -39,12 +39,10 @@ export function txnsToList(events, tableAddrs, proxyAddr) {
 const cutAddress = (addr) => addr.substring(2, 8);
 
 function formatTxAddress(address, tableAddrs, proxyAddr) {
-  if (address === confParams.pwrAddr) {
-    return <FormattedMessage {...messages.powerContract} />;
-  } else if (address === confParams.pullAddr) {
-    return <FormattedMessage {...messages.pullContract} />;
-  } else if (address === confParams.ntzAddr) {
-    return <FormattedMessage {...messages.nutzContract} />;
+  const economyAddrs = [confParams.pwrAddr, confParams.pullAddr, confParams.ntzAddr];
+
+  if (economyAddrs.indexOf(address) > -1) {
+    return <FormattedMessage {...messages.acebusters} />;
   } else if (tableAddrs.indexOf(address) > -1) {
     return (
       <FormattedMessage

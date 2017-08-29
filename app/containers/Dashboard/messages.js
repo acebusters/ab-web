@@ -130,21 +130,13 @@ export default defineMessages({
     id: 'app.containers.Dashboard.purchaseEnd',
     defaultMessage: 'Purchase end',
   },
-  nutzContract: {
-    id: 'app.containers.Dashboard.nutzContract',
-    defaultMessage: 'Nutz contract',
-  },
-  powerContract: {
-    id: 'app.containers.Dashboard.powerContract',
-    defaultMessage: 'Power contract',
-  },
-  pullContract: {
-    id: 'app.containers.Dashboard.pullContract',
-    defaultMessage: 'PullPayment contract',
+  acebusters: {
+    id: 'app.containers.Dashboard.acebusters',
+    defaultMessage: 'Acebusters',
   },
   me: {
     id: 'app.containers.Dashboard.me',
-    defaultMessage: 'Nutz contract',
+    defaultMessage: 'Me',
   },
   tableAddress: {
     id: 'app.containers.Dashboard.tableAddress',
