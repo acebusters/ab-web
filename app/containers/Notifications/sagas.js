@@ -24,7 +24,6 @@ import {
   SET_AUTH,
   ACCOUNT_LOADED,
   INJECT_ACCOUNT_UPDATE,
-  ETH_TRANSFER_SUCCESS,
   PROXY_EVENTS,
   CONTRACT_TX_SEND,
   CONTRACT_TX_SUCCESS,
@@ -277,12 +276,14 @@ function* transferSuccessNtz() {
 }
 
 function* exchangePurPending() {
-  const { payload: { txHash } } = yield take(ETH_TRANSFER_SUCCESS);
-  const note = exchangePending;
-  note.txId = txHash;
-  note.details = 'ETH for NTZ';
-  yield* createPersistNotification(note);
-  yield* exchangePurSuccess();
+  const { payload: { txHash, methodName } } = yield take(CONTRACT_TX_SUCCESS);
+  if (methodName === 'purchase') {
+    const note = exchangePending;
+    note.txId = txHash;
+    note.details = 'ETH for NTZ';
+    yield* createPersistNotification(note);
+    yield* exchangePurSuccess();
+  }
 }
 
 function* exchangePurSuccess() {
@@ -301,12 +302,14 @@ function* exchangePurSuccess() {
 }
 
 function* transferPendingEth() {
-  const { payload: { txHash, amount } } = yield take(ETH_TRANSFER_SUCCESS);
-  const note = transferPending;
-  note.txId = txHash;
-  note.details = `Sending ${formatEth(amount)} ETH`;
-  yield* createPersistNotification(note);
-  yield* transferSuccessEth();
+  const { payload: { txHash, args, methodName } } = yield take(CONTRACT_TX_SUCCESS);
+  if (methodName === 'forward' && args[2] === '') { // transfer eth
+    const note = transferPending;
+    note.txId = txHash;
+    note.details = `Sending ${formatEth(args[1])} ETH`;
+    yield* createPersistNotification(note);
+    yield* transferSuccessEth();
+  }
 }
 
 function* transferSuccessEth() {
