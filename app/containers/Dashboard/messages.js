@@ -120,7 +120,7 @@ export default defineMessages({
   },
   ethPayoutStatus: {
     id: 'app.containers.Dashboard.ethPayoutStatus',
-    defaultMessage: 'ETH Payout',
+    defaultMessage: 'ETH Pay-out',
   },
   purchaseStart: {
     id: 'app.containers.Dashboard.purchaseStart',
