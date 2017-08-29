@@ -1,4 +1,5 @@
 import React from 'react';
+import { SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { FormattedMessage } from 'react-intl';
@@ -121,20 +122,14 @@ class DashboardRoot extends React.Component {
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
     this.power = this.web3.eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
     this.tableFactory = this.web3.eth.contract(ABI_TABLE_FACTORY).at(confParams.tableFactory);
-
-    this.token.pullAddr.callPromise().then((pullAddr) => {
-      this.pullPayment = this.web3.eth.contract(ABI_PULL_PAYMENT_CONTRACT).at(pullAddr);
-
-      if (this.props.account.proxy) {
-        this.pullPayment.paymentOf.call(this.props.account.proxy);
-      }
-    });
+    this.pullPayment = this.web3.eth.contract(ABI_PULL_PAYMENT_CONTRACT).at(confParams.pullAddr);
 
     this.tableFactory.getTables.call();
     if (this.props.account.proxy) {
       this.watchProxyEvents(this.props.account.proxy);
       this.watchTokenEvents(this.props.account.proxy);
       this.power.balanceOf.call(this.props.account.proxy);
+      this.pullPayment.paymentOf.call(this.props.account.proxy);
     }
 
     this.state = {
@@ -318,26 +313,49 @@ class DashboardRoot extends React.Component {
     });
   }
 
-  handleNTZSell(amount) {
+  async handleNTZSell(amount) {
     this.props.notifyCreate(SELL_NTZ);
+
+    const floor = await this.token.floor.callPromise();
+
+    if (!floor.eq(this.token.floor())) {
+      this.token.floor.call();
+      throw new SubmissionError({
+        amount: 'Floor price was changed',
+      });
+    }
+
     return this.handleTxSubmit((callback) => {
-      this.token.transfer.sendTransaction(
-        confParams.ntzAddr,
+      this.token.sell.sendTransaction(
         new BigNumber(amount).mul(NTZ_DECIMALS),
+        floor,
         { from: this.props.account.proxy },
         callback
       );
     });
   }
 
-  handleNTZPurchase(amount) {
+  async handleNTZPurchase(amount) {
     this.props.notifyCreate(PURCHASE_NTZ);
-    return this.handleTxSubmit((callback) => {
-      this.props.transferETH({
-        dest: confParams.ntzAddr,
-        amount: new BigNumber(amount).mul(ETH_DECIMALS),
-        callback,
+
+    const ceiling = await this.token.ceiling.callPromise();
+
+    if (!ceiling.eq(this.token.ceiling())) {
+      this.token.ceiling.call();
+      throw new SubmissionError({
+        amount: 'Ceiling was changed',
       });
+    }
+
+    return this.handleTxSubmit((callback) => {
+      this.token.purchase.sendTransaction(
+        ceiling,
+        {
+          from: this.props.account.proxy,
+          value: new BigNumber(amount).mul(ETH_DECIMALS),
+        },
+        callback
+      );
     });
   }
 
@@ -393,7 +411,7 @@ class DashboardRoot extends React.Component {
     const babzBalance = this.token.balanceOf(account.proxy);
     const nutzBalance = babzBalance && babzBalance.div(NTZ_DECIMALS);
     const pwrBalance = this.power.balanceOf(account.proxy);
-    const [ethAllowance, ethPayoutDate] = (this.pullPayment && this.pullPayment.paymentOf(account.proxy)) || [];
+    const [ethAllowance, ethPayoutDate] = this.pullPayment.paymentOf(account.proxy) || [];
     const floor = this.token.floor();
     const ceiling = this.token.ceiling();
     const tables = this.tableFactory.getTables();
