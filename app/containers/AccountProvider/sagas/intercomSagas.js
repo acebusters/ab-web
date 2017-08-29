@@ -1,4 +1,6 @@
-import { select } from 'redux-saga/effects';
+import { select, takeEvery } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import { SET_AUTH, ACCOUNT_LOADED } from '../actions';
 
 import { makeSelectAccountData } from '../selectors';
 
@@ -27,4 +29,17 @@ export function* restartIntercomOnLogout(action) {
     window.Intercom('shutdown');
     window.Intercom('boot');
   }
+}
+
+export default function* intercomSaga() {
+  if (window.Intercom) {
+    window.intercomSettings = {
+      app_id: 'z9xn3a6h',
+    };
+    window.Intercom('boot');
+  }
+
+  yield takeEvery(SET_AUTH, restartIntercomOnLogout);
+  yield takeEvery(LOCATION_CHANGE, updateIntercomOnLocationChange);
+  yield takeEvery(ACCOUNT_LOADED, updateIntercomUser);
 }
