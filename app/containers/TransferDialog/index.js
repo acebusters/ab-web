@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import ethUtil from 'ethereumjs-util';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 import { reduxForm } from 'redux-form/immutable';
-import BigNumber from 'bignumber.js';
 
 import { normalizerFloat } from '../../utils/amountFormatter';
+import { validateFloat } from '../../utils/inputValidators';
 
 import { makeSelectHasWeb3, makeSelectNetworkSupported } from '../../containers/AccountProvider/selectors';
 
@@ -20,22 +19,8 @@ const validate = (values, props) => {
   const errors = {};
   const { messages, maxAmount, minAmount = 0 } = props;
   const amount = values.get('amount');
-  const stringMaxAmount = new BigNumber(maxAmount.toString());
-  const stringAmount = amount ? new BigNumber(amount) : '0';
 
-  // amount validation
-  if (!amount) {
-    errors.amount = <FormattedMessage {...messages.amountRequired} />;
-  }
-  if (amount <= minAmount) {
-    errors.amount = <FormattedMessage {...messages.amountTooLow} values={{ minAmount }} />;
-  }
-  if (amount === 0) {
-    errors.amount = <FormattedMessage {...messages.amountZero} />;
-  }
-  if (stringMaxAmount && stringMaxAmount.lt(stringAmount)) {
-    errors.amount = <FormattedMessage {...messages.amountTooHigh} values={{ maxAmount }} />;
-  }
+  validateFloat(messages, errors, amount, minAmount, maxAmount);
 
   // address validation
   if (!values.get('address') && !props.hideAddress) {
