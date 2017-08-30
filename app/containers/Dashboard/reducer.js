@@ -197,9 +197,12 @@ function addPending(state, { methodName, args, txHash, address }) {
   return state;
 }
 
+function hasConflict(state, event) {
+  return state.hasIn(['events', event.transactionHash]) && !state.getIn(['events', event.transactionHash, 'pending']);
+}
+
 function addProxyContractEvent(state, event) {
-  const hasConflict = !state.getIn(['events', event.transactionHash, 'pending']);
-  const path = hasConflict ? ['events', `${event.transactionHash}-${event.event}`] : ['events', event.transactionHash];
+  const path = hasConflict(state, event) ? ['events', `${event.transactionHash}-${event.event}`] : ['events', event.transactionHash];
   const isDeposit = event.event === 'Deposit';
   return state.setIn(
     path,
@@ -212,8 +215,7 @@ function addProxyContractEvent(state, event) {
 }
 
 function addNutzContractEvent(state, event) {
-  const hasConflict = !state.getIn(['events', event.transactionHash, 'pending']);
-  const path = hasConflict ? ['events', `${event.transactionHash}-${event.event}`] : ['events', event.transactionHash];
+  const path = hasConflict(state, event) ? ['events', `${event.transactionHash}-${event.event}`] : ['events', event.transactionHash];
   if (event.event === 'Transfer') {
     if (event.address === conf().pwrAddr) {
       return state;
