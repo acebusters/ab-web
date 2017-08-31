@@ -122,7 +122,7 @@ ExchangeDialog.propTypes = {
   handleSubmit: PropTypes.func,
   handleExchange: PropTypes.func, // eslint-disable-line
   stopSubmit: PropTypes.func,
-  amount: PropTypes.number,
+  amount: PropTypes.string,
   title: PropTypes.node,
   amountUnit: PropTypes.string.isRequired,
   reset: PropTypes.func,

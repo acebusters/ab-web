@@ -287,8 +287,8 @@ class DashboardRoot extends React.Component {
       .then((requests) => this.setState({ downRequests: requests }));
   }
 
-  async handleETHPayout() {
-    this.props.notifyCreate(ETH_PAYOUT);
+  async handleETHPayout(amount) {
+    this.props.notifyCreate(ETH_PAYOUT, { amount });
     this.pullPayment.withdraw.sendTransaction({ from: this.proxy.address });
   }
 
@@ -317,7 +317,6 @@ class DashboardRoot extends React.Component {
   }
 
   async handleNTZSell(amount) {
-    this.props.notifyCreate(SELL_NTZ);
     this.props.notifyCreate(SELL_NTZ, { amount });
 
     const floor = await this.token.floor.callPromise();

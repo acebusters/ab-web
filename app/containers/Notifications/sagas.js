@@ -44,8 +44,6 @@ import {
   InfoIcon,
   txPending,
   txSuccess,
-  ethPayoutPending,
-  ethPayoutSuccess,
 } from './constants';
 
 import { waitForTx } from '../../utils/waitForTx';
@@ -78,7 +76,7 @@ function* createNotification({ notifyProps, notifyType }) {
       details: <FormattedMessage values={{ amount }} {...msgs.transferEthSuccess} />,
     };
     yield* transferPendingEth(pendingMsg);
-    yield* transferSuccessEth(successMsg);
+    yield* transferSuccessEth('Withdrawal', successMsg);
   }
   if (notifyType === TRANSFER_NTZ) {
     const pendingMsg = {
@@ -108,9 +106,6 @@ function* createNotification({ notifyProps, notifyType }) {
     yield* exchangeSellPending('purchase', pendingMsg);
     yield* exchangePurSuccess('Withdrawal', successMsg);
   }
-  if (notifyType === ETH_PAYOUT) {
-    yield* transferPendingEthPayout();
-  }
   if (notifyType === SELL_NTZ) {
     const pendingMsg = {
       ...txPending,
@@ -125,6 +120,20 @@ function* createNotification({ notifyProps, notifyType }) {
     yield* exchangeSellPending('sell', pendingMsg);
     yield* exchangeSellSuccess('Sell', successMsg);
   }
+  if (notifyType === ETH_PAYOUT) {
+    const pendingMsg = {
+      ...txPending,
+      category: <FormattedMessage {...msgs.payoutPending} />,
+      details: <FormattedMessage values={{ amount }} {...msgs.ethPayout} />,
+    };
+    const successMsg = {
+      ...txSuccess,
+      category: <FormattedMessage {...msgs.payoutSuccess} />,
+      details: <FormattedMessage values={{ amount }} {...msgs.ethPayout} />,
+    };
+    yield* transferPendingEthPayout('withdraw', pendingMsg);
+    yield* transferSuccessEth('Deposit', successMsg);
+  }
   if (notifyType === POWERUP) {
     const pendingMsg = {
       ...txPending,
@@ -136,7 +145,7 @@ function* createNotification({ notifyProps, notifyType }) {
       category: <FormattedMessage {...msgs.exchangeSuccess} />,
       details: <FormattedMessage {...msgs.exchangeNtzToAbp} />,
     };
-    yield* exchangeSellPending('transfer', pendingMsg);
+    yield* exchangeSellPending('powerUp', pendingMsg);
     yield* exchangeSellSuccess('Transfer', successMsg);
   }
   if (notifyType === POWERDOWN) {
@@ -331,11 +340,11 @@ function* transferPendingEth(msg) {
   }
 }
 
-function* transferSuccessEth(msg) {
+function* transferSuccessEth(method, msg) {
   while (true) { // eslint-disable-line no-constant-condition
     const { payload } = yield take(PROXY_EVENTS);
     const { transactionHash, event } = payload[0];
-    if (event === 'Withdrawal') {
+    if (event === method) {
       yield* removeNotification({ txId: transactionHash });
       yield* createTempNotification(msg);
       break;
@@ -343,27 +352,14 @@ function* transferSuccessEth(msg) {
   }
 }
 
-function* transferPendingEthPayout() {
+function* transferPendingEthPayout(method, msg) {
   const { payload: { txHash, methodName, address } } = yield take(CONTRACT_TX_SUCCESS);
-  if (methodName === 'withdraw' && address === conf().pullAddr) {
+  if (methodName === method && address === conf().pullAddr) {
     yield* createPersistNotification({
-      ...ethPayoutPending,
+      ...msg,
       txId: txHash,
       infoIcon: <InfoIcon transactionHash={txHash} />,
     });
-    yield* transferSuccessEthPayout();
-  }
-}
-
-function* transferSuccessEthPayout() {
-  while (true) { // eslint-disable-line no-constant-condition
-    const { payload } = yield take(PROXY_EVENTS);
-    const { transactionHash, event } = payload[0];
-    if (event === 'Deposit') {
-      yield* removeNotification({ txId: transactionHash });
-      yield* createTempNotification(ethPayoutSuccess);
-      break;
-    }
   }
 }
 
