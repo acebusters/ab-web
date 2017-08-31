@@ -1,6 +1,6 @@
 import React from 'react';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { put, takeEvery, take, select, call } from 'redux-saga/effects';
+import { put, takeEvery, take, select, call, race } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import { FormattedMessage } from 'react-intl';
 
@@ -23,11 +23,13 @@ import {
   INJECT_ACCOUNT_UPDATE,
   PROXY_EVENTS,
   CONTRACT_TX_SEND,
-  CONTRACT_TX_SUCCESS,
+  CONTRACT_TX_SENDED,
   CONTRACT_TX_ERROR,
+  CONTRACT_TX_MINED,
+  CONTRACT_TX_FAILED,
+  CONTRACT_TX_NOT_EXISTS,
   CONTRACT_EVENTS,
 } from '../AccountProvider/actions';
-import { getWeb3 } from '../AccountProvider/utils';
 import { POWERUP, POWERDOWN } from '../Dashboard/actions';
 import { makeLatestHandSelector } from '../Table/selectors';
 
@@ -46,7 +48,6 @@ import {
   txSuccess,
 } from './constants';
 
-import { waitForTx } from '../../utils/waitForTx';
 import { conf } from '../../app.config';
 
 function* createTempNotification(note) {
@@ -226,25 +227,49 @@ function* tableNotifications(sendAction) {
     }
 
     while (true) { // eslint-disable-line no-constant-condition
-      const finalAction = yield take([CONTRACT_TX_ERROR, CONTRACT_TX_SUCCESS]);
+      const finalAction = yield take([CONTRACT_TX_ERROR, CONTRACT_TX_SENDED]);
       try {
         if (tableAddr === finalAction.payload.args[0]) {
-          if (finalAction.type === CONTRACT_TX_SUCCESS) {
+          if (finalAction.type === CONTRACT_TX_SENDED) {
             if (!isLocked) { // show notification for sharks (after submitting tx in metamask)
               yield* createPersistNotification(pendingNotification);
             }
 
-            const web3 = yield call(getWeb3);
-            yield call(waitForTx, web3, finalAction.payload.txHash);
-            yield* removeNotification({ txId: tableAddr });
-            yield* createTempNotification({
-              txId: tableAddr,
-              category: isRebuy ? 'Successful Rebuy' : 'Table Joined',
-              details: 'Good luck!',
-              dismissable: true,
-              date: new Date(),
-              type: 'success',
+            const { success, notExists, fail } = yield race({
+              success: take((action) => action.type === CONTRACT_TX_MINED && action.meta.txHash === finalAction.payload.txHash),
+              notExists: take((action) => action.type === CONTRACT_TX_NOT_EXISTS && action.meta.txHash === finalAction.payload.txHash),
+              fail: take((action) => action.type === CONTRACT_TX_FAILED && action.meta.txHash === finalAction.payload.txHash),
             });
+            yield* removeNotification({ txId: tableAddr });
+
+            if (success) {
+              yield* createTempNotification({
+                txId: tableAddr,
+                category: isRebuy ? 'Successful Rebuy' : 'Table Joined',
+                details: 'Good luck!',
+                dismissable: true,
+                date: new Date(),
+                type: 'success',
+              });
+            } else if (notExists) {
+              yield* createTempNotification({
+                txId: tableAddr,
+                category: 'Error',
+                details: 'Something wrong with transaction, check metamask',
+                dismissable: true,
+                date: new Date(),
+                type: 'danger',
+              });
+            } else if (fail) {
+              yield* createTempNotification({
+                txId: tableAddr,
+                category: 'Transaction failed',
+                details: 'Maybe the seat is already busy',
+                dismissable: true,
+                date: new Date(),
+                type: 'danger',
+              });
+            }
           } else {
             throw finalAction;
           }
@@ -291,7 +316,7 @@ function* visitorModeNotification({ payload: { pathname = '' } }) {
 
 function* exchangeSellPending(pendMethod, pendingMsg) {
   while (true) { // eslint-disable-line no-constant-condition
-    const { payload: { methodName, txHash } } = yield take(CONTRACT_TX_SUCCESS);
+    const { payload: { methodName, txHash } } = yield take(CONTRACT_TX_SENDED);
     if (methodName === pendMethod) {
       yield* createPersistNotification({
         ...pendingMsg,
@@ -330,7 +355,7 @@ function* exchangePurSuccess(successEvent, successMsg) {
 }
 
 function* transferPendingEth(msg) {
-  const { payload: { txHash, args, methodName } } = yield take(CONTRACT_TX_SUCCESS);
+  const { payload: { txHash, args, methodName } } = yield take(CONTRACT_TX_SENDED);
   if (methodName === 'forward' && args[2] === '') { // transfer eth
     yield* createPersistNotification({
       ...msg,
@@ -353,7 +378,7 @@ function* transferSuccessEth(method, msg) {
 }
 
 function* transferPendingEthPayout(method, msg) {
-  const { payload: { txHash, methodName, address } } = yield take(CONTRACT_TX_SUCCESS);
+  const { payload: { txHash, methodName, address } } = yield take(CONTRACT_TX_SENDED);
   if (methodName === method && address === conf().pullAddr) {
     yield* createPersistNotification({
       ...msg,

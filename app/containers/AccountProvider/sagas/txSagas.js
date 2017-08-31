@@ -7,7 +7,7 @@ import { sendTx } from '../../../services/transactions';
 
 import { getWeb3 } from '../utils';
 
-import { CONTRACT_TX_SEND, contractTxSuccess, contractTxError } from '../actions';
+import { CONTRACT_TX_SEND, contractTxSended, contractTxError } from '../actions';
 import { makeSelectAccountData } from '../selectors';
 
 function getTxArgs({ data, dest, args, methodName }) {
@@ -69,7 +69,7 @@ export function* contractTransactionSendSaga() {
         txHash = yield yield call(contractTransactionSecureSend, action);
       }
       yield call(callback, null, txHash);
-      yield put(contractTxSuccess({ address: dest, txHash, key, args, methodName }));
+      yield put(contractTxSended({ address: dest, txHash, key, args, methodName }));
     } catch (err) {
       const error = err.message || err;
       yield call(callback, error);
