@@ -23,10 +23,19 @@ class ExchangeDialog extends React.Component { // eslint-disable-line react/pref
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(values) {
-    return this.props.handleExchange(
-      values.get('amount')
-    ).then(() => this.props.reset());
+  async handleSubmit(values) {
+    try {
+      await this.props.handleExchange(
+        values.get('amount')
+      );
+      this.props.reset();
+    } catch (err) {
+      if (err.errors) {
+        setTimeout(() => this.props.stopSubmit(err.errors));
+      } else {
+        throw err;
+      }
+    }
   }
 
   render() {
@@ -111,8 +120,9 @@ ExchangeDialog.propTypes = {
   maxAmount: PropTypes.object, // BigNumber
   calcExpectedAmount: PropTypes.func,
   handleSubmit: PropTypes.func,
-  handleExchange: PropTypes.func,
-  amount: PropTypes.any,
+  handleExchange: PropTypes.func, // eslint-disable-line
+  stopSubmit: PropTypes.func,
+  amount: PropTypes.number,
   title: PropTypes.node,
   amountUnit: PropTypes.string.isRequired,
   reset: PropTypes.func,

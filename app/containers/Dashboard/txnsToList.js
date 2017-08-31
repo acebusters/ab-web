@@ -10,7 +10,7 @@ import { formatEth, formatNtz } from '../../utils/amountFormatter';
 
 import { Icon, TypeIcon, typeIcons } from './styles';
 import messages from './messages';
-import { isSellStartEvent, isSellEndEvent, isPurchaseStartEvent, isPurchaseEndEvent, formatDate } from './utils';
+import { isSellEvent, isETHPayoutEvent, isPurchaseStartEvent, isPurchaseEndEvent, formatDate } from './utils';
 
 const confParams = conf();
 
@@ -20,7 +20,13 @@ export function txnsToList(events, tableAddrs, proxyAddr) {
   }
 
   const [pending, completed] = partition(
-    events.sort((a, b) => b.blockNumber - a.blockNumber),
+    events.sort((a, b) => {
+      if ((b.blockNumber - a.blockNumber) === 0) {
+        return (b.unit === 'eth' ? 0 : 1) - (a.unit === 'eth' ? 0 : 1);
+      }
+
+      return b.blockNumber - a.blockNumber;
+    }),
     (event) => event.pending,
   );
   return pending.concat(completed)
@@ -39,10 +45,10 @@ export function txnsToList(events, tableAddrs, proxyAddr) {
 const cutAddress = (addr) => addr.substring(2, 8);
 
 function formatTxAddress(address, tableAddrs, proxyAddr) {
-  if (address === confParams.pwrAddr) {
-    return <FormattedMessage {...messages.powerContract} />;
-  } else if (address === confParams.ntzAddr) {
-    return <FormattedMessage {...messages.nutzContract} />;
+  const economyAddrs = [confParams.pwrAddr, confParams.pullAddr, confParams.ntzAddr];
+
+  if (economyAddrs.indexOf(address) > -1) {
+    return <FormattedMessage {...messages.acebusters} />;
   } else if (tableAddrs.indexOf(address) > -1) {
     return (
       <FormattedMessage
@@ -97,10 +103,10 @@ function txDescription(event, tableAddrs, proxyAddr) {
         {...(event.type === 'income' ? messages.powerDownPayoutStatus : messages.powerUpStatus)}
       />
     );
-  } else if (isSellEndEvent(event)) {
-    return <FormattedMessage {...messages.sellEnd} />;
-  } else if (isSellStartEvent(event)) {
-    return <FormattedMessage {...messages.sellStart} />;
+  } else if (isETHPayoutEvent(event)) {
+    return <FormattedMessage {...messages.ethPayoutStatus} />;
+  } else if (isSellEvent(event)) {
+    return <FormattedMessage {...messages.sellStatus} />;
   } else if (isPurchaseEndEvent(event, proxyAddr)) {
     return <FormattedMessage {...messages.purchaseEnd} />;
   } else if (isPurchaseStartEvent(event)) {
