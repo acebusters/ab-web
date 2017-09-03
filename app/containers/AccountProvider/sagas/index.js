@@ -27,7 +27,6 @@ export function* accountSaga() {
   yield fork(contractTransactionSendSaga);
   yield fork(injectedWeb3ListenerSaga);
   yield fork(unsupportedNetworkDetectSaga);
-  yield fork(intercomSaga);
 }
 
 export default [
