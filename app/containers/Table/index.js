@@ -46,7 +46,6 @@ import {
   setExitHand,
   sitOutToggle,
   bet,
-  fishTxHash,
 } from './actions';
 // selectors
 import makeSelectAccountData, {
@@ -134,7 +133,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.tableEvents.watch(this.watchTable);
 
     // getting table data from oracle
-    this.pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
+    this.pusher = new Pusher(conf().pusherApiKey, { cluster: 'eu', encrypted: true });
     this.channel = this.pusher.subscribe(this.tableAddr);
     this.tableService = new TableService(this.props.params.tableAddr, this.props.privKey);
 
@@ -253,8 +252,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       this.props.seatReserved(this.tableAddr, event.payload);
     } else if (event.type === 'seatsRelease') {
       this.props.seatsReleased(this.tableAddr, event.payload);
-    } else if (event.type === 'txHash') {
-      this.props.fishTxHash(event.payload);
     }
   }
 
@@ -311,8 +308,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     );
 
     if (account.isLocked) {
-      const signerChannel = this.pusher.subscribe(signerAddr);
-      signerChannel.bind('update', this.handleUpdate);
       await reserveSeat();
     }
   }
@@ -599,7 +594,6 @@ export function mapDispatchToProps() {
     setExitHand,
     updateReceived,
     addMessage,
-    fishTxHash,
     seatReserved,
   };
 }
@@ -664,7 +658,6 @@ Table.propTypes = {
   seatsReleased: React.PropTypes.func,
   updateReceived: React.PropTypes.func,
   addMessage: React.PropTypes.func,
-  fishTxHash: React.PropTypes.func,
   location: React.PropTypes.object,
   account: React.PropTypes.object,
   myPendingSeat: React.PropTypes.number,

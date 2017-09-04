@@ -50,7 +50,7 @@ const warn = (values) => {
 };
 
 function waitForAccountTxHash(signerAddr) {
-  const pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
+  const pusher = new Pusher(conf().pusherApiKey, { cluster: 'eu', encrypted: true });
   const channel = pusher.subscribe(signerAddr);
   return new Promise((resolve) => {
     channel.bind('update', (event) => {
