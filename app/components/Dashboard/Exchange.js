@@ -15,7 +15,6 @@ const Exchange = (props) => {
     ETH_FISH_LIMIT,
     messages,
     account,
-    babzBalance,
     ethBalance,
     calcETHAmount,
     calcNTZAmount,
@@ -30,7 +29,7 @@ const Exchange = (props) => {
     <Pane name="dashboard-exchange" >
       <Section>
         <ExchangeContainer>
-          {amountUnit === NTZ && babzBalance && floor &&
+          {amountUnit === NTZ && nutzBalance && floor &&
             <ExchangeDialog
               title={<FormattedMessage {...messages.sellTitle} />}
               amountUnit={NTZ}
@@ -71,7 +70,6 @@ Exchange.propTypes = {
   ETH_FISH_LIMIT: PropTypes.object,
   amountUnit: PropTypes.oneOf([ETH, NTZ]),
   account: PropTypes.object,
-  babzBalance: PropTypes.object,
   ethBalance: PropTypes.object,
   calcETHAmount: PropTypes.func,
   calcNTZAmount: PropTypes.func,
