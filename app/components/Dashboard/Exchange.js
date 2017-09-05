@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import BigNumber from 'bignumber.js';
 
-
 import ExchangeDialog from '../../containers/ExchangeDialog';
 import { ETH, NTZ } from '../../containers/Dashboard/actions';
+import { formatNtz, NTZ_DECIMALS } from '../../utils/amountFormatter';
 
 import { Pane, Section, ExchangeContainer } from './styles';
 
@@ -23,7 +23,6 @@ const Exchange = (props) => {
     floor,
     handleNTZSell,
     handleNTZPurchase,
-    weiBalance,
   } = props;
   return (
     <Pane name="dashboard-exchange" >
@@ -32,6 +31,7 @@ const Exchange = (props) => {
           {amountUnit === NTZ && nutzBalance && floor &&
             <ExchangeDialog
               title={<FormattedMessage {...messages.sellTitle} />}
+              descr={<FormattedMessage {...messages.floorPrice} values={{ amount: formatNtz(floor.mul(NTZ_DECIMALS)) }} />}
               amountUnit={NTZ}
               calcExpectedAmount={calcETHAmount}
               handleExchange={handleNTZSell}
@@ -45,9 +45,10 @@ const Exchange = (props) => {
               {...props}
             />
           }
-          {amountUnit === ETH && weiBalance && ceiling &&
+          {amountUnit === ETH && ethBalance && ceiling &&
             <ExchangeDialog
               title={<FormattedMessage {...messages.purchaseTitle} />}
+              descr={<FormattedMessage {...messages.ceilingPrice} values={{ amount: formatNtz(ceiling.mul(NTZ_DECIMALS)) }} />}
               amountUnit={ETH}
               calcExpectedAmount={calcNTZAmount}
               handleExchange={handleNTZPurchase}
@@ -79,7 +80,6 @@ Exchange.propTypes = {
   floor: PropTypes.object,
   handleNTZSell: PropTypes.func,
   handleNTZPurchase: PropTypes.func,
-  weiBalance: PropTypes.object,
 };
 
 export default Exchange;
