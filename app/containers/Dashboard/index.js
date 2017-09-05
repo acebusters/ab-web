@@ -129,6 +129,7 @@ class DashboardRoot extends React.Component {
     if (this.props.account.proxy) {
       this.watchProxyEvents(this.props.account.proxy);
       this.watchTokenEvents(this.props.account.proxy);
+      this.watchPowerEvents(this.props.account.proxy);
       this.power.balanceOf.call(this.props.account.proxy);
       this.pullPayment.paymentOf.call(this.props.account.proxy);
     }
@@ -145,6 +146,7 @@ class DashboardRoot extends React.Component {
     if (account.proxy === undefined && nextAccount.proxy) {
       this.watchProxyEvents(nextAccount.proxy);
       this.watchTokenEvents(nextAccount.proxy);
+      this.watchPowerEvents(nextAccount.proxy);
       this.power.balanceOf.call(nextAccount.proxy);
 
       this.pullPayment.paymentOf.call(nextAccount.proxy);
@@ -178,13 +180,6 @@ class DashboardRoot extends React.Component {
         addEventsDate(eventList.filter(isUserEvent(proxyAddr)))
           .then((events) => this.props.proxyEvents(events, proxyAddr));
       });
-      this.power.allEvents({
-        fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
-        toBlock: 'latest',
-      }).get((error, eventList) => {
-        addEventsDate(eventList.filter(isUserEvent(proxyAddr)))
-          .then((events) => this.props.contractEvents(events, proxyAddr));
-      });
     });
 
     this.proxy.allEvents({
@@ -201,17 +196,28 @@ class DashboardRoot extends React.Component {
       }
     });
 
+    this.loadDownRequests();
+  }
+
+  watchPowerEvents(proxyAddr) {
+    this.web3.eth.getBlockNumber((err, blockNumber) => {
+      this.power.allEvents({
+        fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
+        toBlock: 'latest',
+      }).get((error, eventList) => {
+        addEventsDate(eventList.filter(isUserEvent(proxyAddr)))
+          .then((events) => this.props.contractEvents(events, proxyAddr));
+      });
+    });
+
     this.power.downtime.call();
     this.power.totalSupply.call();
     this.power.allEvents({
       toBlock: 'latest',
     }).watch((error, event) => {
-      if (!error && event.args.from === proxyAddr) {
-        this.props.contractEvents([event], proxyAddr);
-      }
+      addEventsDate([event])
+        .then((events) => this.props.contractEvents(events, proxyAddr));
     });
-
-    this.loadDownRequests();
   }
 
   watchTokenEvents(proxyAddr) {
@@ -287,8 +293,8 @@ class DashboardRoot extends React.Component {
       .then((requests) => this.setState({ downRequests: requests }));
   }
 
-  async handleETHPayout() {
-    this.props.notifyCreate(ETH_PAYOUT);
+  async handleETHPayout(amount) {
+    this.props.notifyCreate(ETH_PAYOUT, { amount });
     this.pullPayment.withdraw.sendTransaction({ from: this.proxy.address });
   }
 
@@ -306,7 +312,7 @@ class DashboardRoot extends React.Component {
   }
 
   handleNTZTransfer(amount, to) {
-    this.props.notifyCreate(TRANSFER_NTZ);
+    this.props.notifyCreate(TRANSFER_NTZ, { amount });
     return this.handleTxSubmit((callback) => {
       this.token.transfer.sendTransaction(
         to,
@@ -317,7 +323,7 @@ class DashboardRoot extends React.Component {
   }
 
   async handleNTZSell(amount) {
-    this.props.notifyCreate(SELL_NTZ);
+    this.props.notifyCreate(SELL_NTZ, { amount });
 
     const floor = await this.token.floor.callPromise();
 
@@ -339,7 +345,7 @@ class DashboardRoot extends React.Component {
   }
 
   async handleNTZPurchase(amount) {
-    this.props.notifyCreate(PURCHASE_NTZ);
+    this.props.notifyCreate(PURCHASE_NTZ, { amount });
 
     const ceiling = await this.token.ceiling.callPromise();
 
@@ -363,7 +369,7 @@ class DashboardRoot extends React.Component {
   }
 
   handleETHTransfer(amount, dest) {
-    this.props.notifyCreate(TRANSFER_ETH);
+    this.props.notifyCreate(TRANSFER_ETH, { amount });
     return this.handleTxSubmit((callback) => {
       this.proxy.forward.sendTransaction(
         dest,
@@ -375,10 +381,9 @@ class DashboardRoot extends React.Component {
   }
 
   handlePowerUp(amount) {
-    this.props.notifyCreate(POWERUP);
+    this.props.notifyCreate(POWERUP, { amount });
     return this.handleTxSubmit((callback) => {
-      this.token.transfer.sendTransaction(
-        confParams.pwrAddr,
+      this.token.powerUp.sendTransaction(
         new BigNumber(amount).mul(NTZ_DECIMALS),
         callback
       );
@@ -386,10 +391,10 @@ class DashboardRoot extends React.Component {
   }
 
   handlePowerDown(amount) {
-    this.props.notifyCreate(POWERDOWN);
+    this.props.notifyCreate(POWERDOWN, { amount });
     return this.handleTxSubmit((callback) => {
       this.power.transfer.sendTransaction(
-        confParams.ntzAddr,
+        0,
         new BigNumber(amount).mul(ABP_DECIMALS),
         callback
       );
@@ -419,9 +424,8 @@ class DashboardRoot extends React.Component {
     const floor = this.token.floor();
     const ceiling = this.token.ceiling();
     const tables = this.tableFactory.getTables();
-    const calcETHAmount = (ntz) => new BigNumber(ntz).div(floor);
-    const calcNTZAmount = (eth) => ceiling.mul(eth);
-
+    const calcETHAmount = (ntz) => new BigNumber(ntz.toString()).div(floor);
+    const calcNTZAmount = (eth) => ceiling.mul(eth.toString());
     const listTxns = txnsToList(
       this.props.dashboardTxs.dashboardEvents,
       tables,

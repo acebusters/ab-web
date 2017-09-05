@@ -8,7 +8,6 @@ import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
 import Pusher from 'pusher-js';
 import Raven from 'raven-js';
-import { FormattedMessage } from 'react-intl';
 import { Receipt } from 'poker-helper';
 import * as storageService from '../../services/sessionStorage';
 
@@ -22,7 +21,6 @@ import Seat from '../Seat';
 import Button from '../../components/Button';
 import WithLoading from '../../components/WithLoading';
 import { nickNameByAddress } from '../../services/nicknames';
-import messages from './messages';
 import { formatNtz } from '../../utils/amountFormatter';
 import { promisifyContractCall } from '../../utils/promisifyContractCall';
 
@@ -86,7 +84,6 @@ import web3Connect from '../AccountProvider/web3Connect';
 import TableService, { getHand, fetchTableState } from '../../services/tableService';
 import * as reservationService from '../../services/reservationService';
 import JoinDialog from '../JoinDialog';
-import JoinSlides from '../JoinDialog/slides';
 import InviteDialog from '../InviteDialog';
 import RebuyDialog from '../RebuyDialog';
 
@@ -136,7 +133,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.tableEvents.watch(this.watchTable);
 
     // getting table data from oracle
-    this.pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
+    this.pusher = new Pusher(conf().pusherApiKey, { cluster: 'eu', encrypted: true });
     this.channel = this.pusher.subscribe(this.tableAddr);
     this.tableService = new TableService(this.props.params.tableAddr, this.props.privKey);
 
@@ -302,17 +299,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       await reserveSeat();
     }
 
-    const slides = (
-      <div>
-        <JoinSlides />
-        <Button size="large" onClick={this.props.modalDismiss}>
-          <FormattedMessage {...messages.joinModal.buttonDismiss} />
-        </Button>
-      </div>
-    );
-
     this.props.modalDismiss();
-    this.props.modalAdd(slides);
     this.props.setPending(
       this.tableAddr,
       this.props.latestHand,

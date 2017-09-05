@@ -50,7 +50,7 @@ const warn = (values) => {
 };
 
 function waitForAccountTxHash(signerAddr) {
-  const pusher = new Pusher('d4832b88a2a81f296f53', { cluster: 'eu', encrypted: true });
+  const pusher = new Pusher(conf().pusherApiKey, { cluster: 'eu', encrypted: true });
   const channel = pusher.subscribe(signerAddr);
   return new Promise((resolve) => {
     channel.bind('update', (event) => {
@@ -97,8 +97,8 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
     const newSignerAddr = wallet.address;
 
     try {
-      const backedAccount = await accountService.getAccount(receipt.accountId);
-      const backendWallet = JSON.parse(backedAccount.wallet);
+      const backendAccount = await accountService.getAccount(receipt.accountId);
+      const backendWallet = JSON.parse(backendAccount.wallet);
 
       const acc = await getAccount(backendWallet.address);
       const proxyAddr = acc[0];
@@ -108,8 +108,10 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
       let txHash;
       if (isLocked) {
         const forwardReceipt = new Receipt(proxyAddr).forward(0, factory.address, 0, data).sign(privKey);
-        const result = await sendTx(forwardReceipt, confCode);
-        txHash = result.txHash;
+        [txHash] = await Promise.all([
+          waitForAccountTxHash(wallet.address),
+          await sendTx(forwardReceipt, confCode),
+        ]);
       } else {
         const proxy = getWeb3(true).eth.contract(ABI_PROXY).at(proxyAddr);
         const forward = promisifyContractCall(proxy.forward.sendTransaction);

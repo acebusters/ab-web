@@ -3,8 +3,8 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 
 import { conf } from '../../../app.config';
 
-import { SET_AUTH, ACCOUNT_LOADED } from '../actions';
-import { makeSelectAccountData } from '../selectors';
+import { SET_AUTH, ACCOUNT_LOADED } from '../../AccountProvider/actions';
+import { makeSelectAccountData } from '../../AccountProvider/selectors';
 
 export function* updateIntercomUser(action) {
   const account = yield select(makeSelectAccountData());
@@ -12,6 +12,9 @@ export function* updateIntercomUser(action) {
     window.Intercom('update', {
       email: account.email,
       user_id: action.payload.signer,
+      proxy: action.payload.proxy,
+      fish: action.payload.isLocked,
+      nickname: action.payload.nickName,
     });
   }
 }

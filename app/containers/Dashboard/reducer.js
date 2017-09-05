@@ -4,7 +4,7 @@ import {
   ACCOUNT_LOADED,
   CONTRACT_EVENTS,
   PROXY_EVENTS,
-  CONTRACT_TX_SUCCESS,
+  CONTRACT_TX_SENDED,
   CONTRACT_TX_ERROR,
 } from '../AccountProvider/actions';
 
@@ -71,7 +71,7 @@ function dashboardReducer(state = initialState, action) {
     case ACCOUNT_LOADED:
       return state.set('proxy', action.payload.proxy);
 
-    case CONTRACT_TX_SUCCESS:
+    case CONTRACT_TX_SENDED:
       return addPending(
         initEvents(state),
         payload
@@ -172,12 +172,12 @@ function addPending(state, { methodName, args, txHash, address }) {
         transactionHash: txHash,
       }),
     );
-  } else if (methodName === 'transfer' && args[0] !== confParams.ntzAddr) {
+  } else if (methodName === 'powerUp') {
     return state.setIn(
       ['events', txHash],
       fromJS({
-        address: args[0],
-        value: args[1].toString ? args[1].toString() : args[1],
+        address: conf().pwrAddr,
+        value: args[0].toString ? args[0].toString() : args[0],
         type: 'outcome',
         unit: 'ntz',
         pending: true,
@@ -221,11 +221,23 @@ function addProxyContractEvent(state, event) {
 function addNutzContractEvent(state, event) {
   const path = hasConflict(state, event) ? ['events', `${event.transactionHash}-${event.event}`] : ['events', event.transactionHash];
   if (event.event === 'Transfer') {
+    const isIncome = event.args.to === state.get('proxy');
+
     if (event.address === conf().pwrAddr) {
+      if (isIncome) { // power up
+        return state.setIn(
+          path,
+          makeDashboardEvent(event, {
+            address: conf().pwrAddr,
+            unit: 'abp',
+            type: 'income',
+          }),
+        );
+      }
+
       return state;
     }
 
-    const isIncome = event.args.to === state.get('proxy');
     return state.setIn(
       path,
       makeDashboardEvent(event, {

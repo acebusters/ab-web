@@ -14,7 +14,7 @@ import {
 } from './styles';
 import { AccountIsLocked, AccountNotLocked } from './SectionReceive';
 
-const Wallet = (props) => {
+function Wallet(props) {
   const {
     account,
     // babzBalance,
@@ -25,9 +25,9 @@ const Wallet = (props) => {
     amountUnit,
     // weiBalance,
   } = props;
+
   return (
     <Pane name="dashboard-wallet">
-
       <Section
         style={{ alignSelf: 'center', maxWidth: 480 }}
         name="wallet-receive"
@@ -48,32 +48,31 @@ const Wallet = (props) => {
               handleTransfer={handleETHTransfer}
               maxAmount={ethBalance}
               type="token"
+              placeholder="0.00"
               {...props}
             />
-          :
+            :
             <TransferDialog
               handleTransfer={handleNTZTransfer}
               maxAmount={nutzBalance}
               type="token"
+              placeholder="0"
               {...props}
             />
           }
         </SendContainer>
       </Section>
-
     </Pane>
   );
-};
+}
 
 Wallet.propTypes = {
   account: PropTypes.object,
-  // babzBalance: PropTypes.object,
   ethBalance: PropTypes.object,
   nutzBalance: PropTypes.object,
   handleNTZTransfer: PropTypes.func,
   handleETHTransfer: PropTypes.func,
   amountUnit: PropTypes.string,
-  // weiBalance: PropTypes.object,
 };
 
 export default Wallet;

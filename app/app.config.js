@@ -6,6 +6,9 @@
 
 const DEFAULT_REF_CODE = '00000000';
 
+export const MAIN_NET_GENESIS_BLOCK = '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3';
+export const RINKEBY_GENESIS_BLOCK = '0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177';
+
 export function conf() {
   let sub = '';
   if (window && window.location && window.location.host) {
@@ -14,25 +17,26 @@ export function conf() {
   // ### PRODUCTION ENVIRONMENT CONFIG
   if (sub === 'dapp') {
     return {
-      recaptchaKey: '',
+      recaptchaKey: '6LcE0RQUAAAAAEf6UWFsHEPedPBmRPAQiaSiWynN',
       defaultRefCode: DEFAULT_REF_CODE,
       etherscanUrl: 'https://etherscan.io/',
-      gethUrl: '',
-      firstBlockHash: '',
-      networkName: '',
-      oracleUrl: '',
-      txUrl: '',
-      accountUrl: '',
-      reservationUrl: '',
+      gethUrl: 'wss://mainnet.acebusters.com:443',
+      firstBlockHash: MAIN_NET_GENESIS_BLOCK,
+      networkName: 'Ethereum Main Net',
+      oracleUrl: 'https://lzckarzxxa.execute-api.eu-west-1.amazonaws.com/v0',
+      accountUrl: 'https://k7j57cmm86.execute-api.eu-west-1.amazonaws.com/v0',
+      reservationUrl: 'https://6j6m8132w7.execute-api.eu-west-1.amazonaws.com/v0',
       gasStatUrl: '',
-      ntzAddr: '',
-      pwrAddr: '',
-      pullAddr: '',
-      accountFactory: '',
-      tableFactory: '',
+      ntzAddr: '0x49c95e30fe50470c12d658d81b33d5be95b610e3',
+      pwrAddr: '0xe54700f8bdb1640ad945bae67e8a9cbdf650188a',
+      pullAddr: '0x36cda1038a9556ebe626bcd7bab4e46f38d896ec',
+      accountFactory: '0x271ccdc5e304a3d76a4cfbee3e594d63bc051da0',
+      tableFactory: '0x9508817ad157c1fdc2c9fafc2090a6bfe443c912',
       sentryDSN: 'https://8c3e021848b247ddaf627c8040f94e07@sentry.io/153017',
       gaProperty: 'UA-98848213-1',
-      intercomAppId: '',
+      intercomAppId: 'z9xn3a6h',
+      changellyMerchantId: '',
+      pusherApiKey: 'd4832b88a2a81f296f53',
     };
   }
 
@@ -43,21 +47,22 @@ export function conf() {
       defaultRefCode: DEFAULT_REF_CODE,
       etherscanUrl: 'https://rinkeby.etherscan.io/',
       gethUrl: 'wss://rinkeby3.acebusters.com:443',
-      firstBlockHash: '0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177',
+      firstBlockHash: RINKEBY_GENESIS_BLOCK,
       networkName: 'Rinkeby Testnet',
       oracleUrl: 'https://v83iq1161a.execute-api.eu-west-1.amazonaws.com/v0',
-      txUrl: 'https://h5fb9klhzc.execute-api.eu-west-1.amazonaws.com/v0',
       accountUrl: 'https://vps13t4f7e.execute-api.eu-west-1.amazonaws.com/v0',
       reservationUrl: 'https://uiw0k5puaf.execute-api.eu-west-1.amazonaws.com/v0',
       gasStatUrl: 'https://l70xam4hh9.execute-api.eu-west-1.amazonaws.com/v0',
-      ntzAddr: '0x8895dc6374f3198ac298857bc4a85ac225a87c6c',
-      pwrAddr: '0x4a7ec091d4a28f8b2e6ed687bad330c2c8fe9846',
-      pullAddr: '0x4a7ec091d4a28f8b2e6ed687bad330c2c8fe9846',
+      ntzAddr: '0x91e59449a0888e47b7c9e9432d58e24710dd81e8',
+      pwrAddr: '0xe715cca08969433b85764601a38589762f799a8e',
+      pullAddr: '0x82237f0bd620aeb98fa2bfc4241a477b4196bfca',
       accountFactory: '0x46a7e61dedd2abad8caf98d4da1205f830f62815',
       tableFactory: '0x9020237ffcc244a2d4bb202663494e0c0a3f9672',
       sentryDSN: 'https://8c3e021848b247ddaf627c8040f94e07@sentry.io/153017',
       gaProperty: 'UA-98848213-1',
       intercomAppId: '',
+      changellyMerchantId: '',
+      pusherApiKey: 'd4832b88a2a81f296f53',
     };
   }
 
@@ -67,14 +72,13 @@ export function conf() {
     defaultRefCode: DEFAULT_REF_CODE,
     etherscanUrl: 'https://rinkeby.etherscan.io/',
     gethUrl: 'wss://rinkeby3.acebusters.com:443',
-    firstBlockHash: '0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177',
+    firstBlockHash: RINKEBY_GENESIS_BLOCK,
     networkName: 'Rinkeby Testnet',
     oracleUrl: 'https://evm4rumeob.execute-api.eu-west-1.amazonaws.com/v0',
-    txUrl: 'https://khengvfg6c.execute-api.eu-west-1.amazonaws.com/v0',
     accountUrl: 'https://hsqkzjp3m8.execute-api.eu-west-1.amazonaws.com/v0',
     reservationUrl: 'https://6er5q4s7b0.execute-api.eu-west-1.amazonaws.com/v0',
     gasStatUrl: 'https://4by2hfw9mg.execute-api.eu-west-1.amazonaws.com/v0',
-    ntzAddr: '0x43dc8adf76bef236a3adb9073462fedda133cbe2',
+    ntzAddr: '0x889802a69b2c408819f028331443bcf8711ea6d8',
     pwrAddr: '0x5059721ecc85868ac07224d0ba40043d2541f0d6',
     pullAddr: '0xefe5522bb845f5479cd373ca82ac60a582a6731b',
     accountFactory: '0x12a023f15ef0a1763f2a6736cc88a1ef9f0556f1',
@@ -82,6 +86,8 @@ export function conf() {
     sentryDSN: 'https://8c3e021848b247ddaf627c8040f94e07@sentry.io/153017',
     gaProperty: 'UA-XXXXX-Y',
     intercomAppId: 'z9xn3a6h',
+    changellyMerchantId: '1b495d1ecc26',
+    pusherApiKey: 'd4832b88a2a81f296f53',
   };
 }
 
