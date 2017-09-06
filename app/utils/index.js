@@ -21,6 +21,7 @@ export function isSupportedBrowser() {
   const isChromium = /cros i686/i.test(navigator.platform); // chrome extension should work for chromium
   const isFirefox = 'InstallTrigger' in window;
   const isEdge = window.navigator.userAgent.indexOf('Edge') > -1;
+  const isDesktop = !('ontouchstart' in window || !!navigator.msMaxTouchPoints);
 
-  return isChromeOpera || isChromium || isFirefox || isEdge;
+  return (isChromeOpera && isDesktop) || isChromium || isFirefox || isEdge;
 }
