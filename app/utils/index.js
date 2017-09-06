@@ -17,10 +17,10 @@ export function isSupportedBrowser() {
     return true;
   }
 
-  const isChrome = !!window.chrome && /google/i.test(navigator.vendor);
+  const isChromeOpera = !!window.chrome;
   const isChromium = /cros i686/i.test(navigator.platform); // chrome extension should work for chromium
   const isFirefox = 'InstallTrigger' in window;
   const isEdge = window.navigator.userAgent.indexOf('Edge') > -1;
 
-  return isChrome || isChromium || isFirefox || isEdge;
+  return isChromeOpera || isChromium || isFirefox || isEdge;
 }
