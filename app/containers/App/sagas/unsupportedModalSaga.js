@@ -10,7 +10,7 @@ import UnsupportedBrowser from '../UnsupportedBrowser';
 export default function* unsupportedModalSaga() {
   const isSupported = yield call(isSupportedBrowser);
   const latestShow = Number(yield call(getItem, 'bro_support_show_ts'));
-  if (!isSupported && (Date.now() - (latestShow || 0)) > 3600 * 24 * 1000) {
+  if (!isSupported && (Date.now() - (latestShow || 0)) > 3600 * 1000) {
     yield put(modalAdd(
       <UnsupportedBrowser />
     ));

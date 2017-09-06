@@ -11,8 +11,8 @@ function UnsupportedBrowser({ onClose }) {
   return (
     <div>
       <H2>Your browser is not supported</H2>
-      <p>Most features should work, but you will be not able to upgrade and secure your account.</p>
-      <p>Currently we are support: Chrome, Opera, Edge, Firefox, Mist.</p>
+      <p>Some features may not work as intended, and you will not be able to upgrade and secure your account. For an optimal experience, please change to a supported browser.</p>
+      <p>Supported browsers: Chrome (Desktop), Opera (Desktop), Edge, Firefox (Desktop and Android) and Mist</p>
       <SubmitButton onClick={onClose}>
         Got it
       </SubmitButton>
