@@ -34,8 +34,9 @@ export function conf() {
       tableFactory: '0x9508817ad157c1fdc2c9fafc2090a6bfe443c912',
       sentryDSN: 'https://8c3e021848b247ddaf627c8040f94e07@sentry.io/153017',
       gaProperty: 'UA-98848213-1',
+      gtmId: 'GTM-T7SBXCK',
       intercomAppId: 'z9xn3a6h',
-      changellyMerchantId: '',
+      changellyMerchantId: '1b495d1ecc26',
       pusherApiKey: 'd4832b88a2a81f296f53',
     };
   }
@@ -60,7 +61,8 @@ export function conf() {
       tableFactory: '0x9020237ffcc244a2d4bb202663494e0c0a3f9672',
       sentryDSN: 'https://8c3e021848b247ddaf627c8040f94e07@sentry.io/153017',
       gaProperty: 'UA-98848213-1',
-      intercomAppId: '',
+      gtmId: 'GTM-T7SBXCK',
+      intercomAppId: 'm6zcmwwq',
       changellyMerchantId: '',
       pusherApiKey: 'd4832b88a2a81f296f53',
     };
@@ -85,8 +87,9 @@ export function conf() {
     tableFactory: '0xbeb2f096f9438a4723b541db402d2dbf6bd86b17',
     sentryDSN: 'https://8c3e021848b247ddaf627c8040f94e07@sentry.io/153017',
     gaProperty: 'UA-XXXXX-Y',
-    intercomAppId: 'z9xn3a6h',
-    changellyMerchantId: '1b495d1ecc26',
+    gtmId: 'GTM-XXXX',
+    intercomAppId: 'm6zcmwwq',
+    changellyMerchantId: '',
     pusherApiKey: 'd4832b88a2a81f296f53',
   };
 }
