@@ -53,7 +53,7 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
   }
 
   handleSubmit(values, dispatch) {
-    const maxAttemptCount = 3;
+    const maxAttemptCount = 7;
     const threshold = 1000 * 60 * 5;
     const now = Date.now();
     const lastLoginAttempt = parseInt(storageService.getItem('_l') || 0, 10);
@@ -95,7 +95,7 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
 
           return data;
         })
-        .then((wallet) => {
+        .then(({ wallet, id }) => {
           this.props.walletImport({
             json: wallet,
             password: values.get('password'),
@@ -121,6 +121,7 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
                 this.props.setAuthState({
                   privKey: workerRsp.payload.hexSeed,
                   email: values.get('email'),
+                  accountId: id,
                   loggedIn: true,
                 });
 
