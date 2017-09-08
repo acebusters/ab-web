@@ -34,13 +34,18 @@ export const AccountIsLocked = (props) => {
   return (
     <ReceiveSection>
       <ReceiveWrapper
-        style={{ margin: '0 10px' }}
+        style={{
+          margin: '12px 10px',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
       >
         <WithLoading
           isLoading={!account.proxy || account.proxy === '0x'}
           loadingSize="40px"
           styles={{
             layout: { transform: 'translateY(-50%)', left: 0 },
+            outer: { margin: 'auto' },
           }}
         >
           <QRCode value={qrUrl} size={100} />
@@ -54,7 +59,7 @@ export const AccountIsLocked = (props) => {
           }}
         >
           <Alert theme="success">
-            <Address>{account.proxy}</Address>
+            <Address style={{ width: 180 }}>{account.proxy}</Address>
           </Alert>
 
           <a
