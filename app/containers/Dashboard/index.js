@@ -265,45 +265,13 @@ class DashboardRoot extends React.Component {
   }
 
   loadDownRequests() {
+    const { account } = this.props;
     const power = getWeb3().eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
-    const result = [];
-    const batchSize = 20;
-    let stop = false;
-    const promise = new Promise((resolve, reject) => {
-      const runBatch = (base) => {
-        // ToDo: find a bug with batch and use it
-        // const batch = getWeb3().createBatch();
-        for (let i = 0; i < batchSize; i += 1) {
-          // batch.add(
-          power.downs.call(base + i, (err, request) => { // eslint-disable-line
-            if (err) {
-              reject(err);
-              return;
-            }
-            if (request[0] !== '0x') {
-              result[base + i] = [base + i, ...request];
-            } else {
-              stop = true;
-            }
-
-            if (i + 1 === batchSize) {
-              if (stop) {
-                resolve(result);
-              } else {
-                runBatch(base + batchSize);
-              }
-            }
-          });
-        }
-        // batch.execute();
-      };
-
-      runBatch(0);
+    power.downs.call(account.proxy, (err, downRequests) => {
+      if (!err) {
+        this.setState({ downRequests });
+      }
     });
-
-    promise
-      .then((requests) => requests.filter((r) => r[1] === this.props.account.proxy))
-      .then((requests) => this.setState({ downRequests: requests }));
   }
 
   async handleETHPayout(amount) {
@@ -415,7 +383,8 @@ class DashboardRoot extends React.Component {
   }
 
   handleTickClick(pos) {
-    this.power.downTick.sendTransaction(pos, (err, result) => {
+    const { account } = this.props;
+    this.power.downTick.sendTransaction(account.proxy, pos, (err, result) => {
       if (result) {
         waitForTx(getWeb3(), result).then(() => this.loadDownRequests());
       }
