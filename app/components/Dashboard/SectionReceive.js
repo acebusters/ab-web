@@ -80,7 +80,7 @@ export const AccountIsLocked = (props) => {
 
         {ethBalance && nutzBalance && floor &&
           <Alert theme="warning">
-            <FormattedMessage values={{ limit: ETH_FISH_LIMIT.toString() }} {...messages.ethLimit} />
+            <FormattedMessage values={{ limit: ETH_FISH_LIMIT.toString() }} {...messages.ethLimit} /> <br />
             <BtnUpgrade {...props} />
             <AccountProgress
               ethBalance={ethBalance}
