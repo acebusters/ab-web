@@ -75,8 +75,8 @@ export const AccountIsLocked = (props) => {
 
         {ethBalance && nutzBalance && floor &&
           <Alert theme="warning">
-            Warning: account limit {ETH_FISH_LIMIT.toString()} ETH<br />
-            <BtnUpgrade {...props} /> to deposit more.
+            <FormattedMessage values={{ limit: ETH_FISH_LIMIT.toString() }} {...messages.ethLimit} />
+            <BtnUpgrade {...props} />
             <AccountProgress
               ethBalance={ethBalance}
               nutzBalance={nutzBalance}
