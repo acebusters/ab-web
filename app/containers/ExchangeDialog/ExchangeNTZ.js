@@ -24,7 +24,7 @@ const warn = () => {
   return warnings;
 };
 
-const valueSelector = formValueSelector('exchange');
+const valueSelector = formValueSelector('exchangeNTZ');
 
 const mapStateToProps = (state) => ({
   messages,
@@ -40,7 +40,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default reduxForm({
-  form: 'exchange',
+  form: 'exchangeNTZ',
   validate,
   warn,
 })(
