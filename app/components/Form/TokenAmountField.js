@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { Field } from 'redux-form/immutable';
 
 import messages from '../../containers/Dashboard/messages';
 import { ETH, NTZ } from '../../containers/Dashboard/actions';
@@ -83,8 +82,7 @@ class TokenAmountField extends React.Component {
             <Unit name="unit">{amountUnit}</Unit>
           </FieldGroup>
           <FieldGroup style={{ width: 180 }} focus={this.state.unitFocus}>
-            <Field
-              component={Dropdown}
+            <Dropdown
               selected={amountUnit}
               onSelect={setAmountUnit}
               options={tokens}
