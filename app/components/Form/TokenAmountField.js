@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import { Field } from 'redux-form/immutable';
 
 import messages from '../../containers/Dashboard/messages';
 import { ETH, NTZ } from '../../containers/Dashboard/actions';
@@ -42,7 +43,6 @@ class TokenAmountField extends React.Component {
     this.state = { amountFocus: false };
     this.handleAmountFocus = this.handleAmountFocus.bind(this);
     this.handleAmountBlur = this.handleAmountBlur.bind(this);
-    this.handleUnitFocus = this.handleUnitFocus.bind(this);
   }
 
   handleAmountFocus() {
@@ -51,10 +51,6 @@ class TokenAmountField extends React.Component {
 
   handleAmountBlur() {
     this.setState({ amountFocus: false });
-  }
-
-  handleUnitFocus() {
-    this.props.reset();
   }
 
   render() {
@@ -87,11 +83,11 @@ class TokenAmountField extends React.Component {
             <Unit name="unit">{amountUnit}</Unit>
           </FieldGroup>
           <FieldGroup style={{ width: 180 }} focus={this.state.unitFocus}>
-            <Dropdown
+            <Field
+              component={Dropdown}
               selected={amountUnit}
               onSelect={setAmountUnit}
               options={tokens}
-              handleFocus={this.handleUnitFocus}
               {...this.props}
             />
           </FieldGroup>
@@ -110,7 +106,6 @@ TokenAmountField.propTypes = {
   meta: PropTypes.object,
   amountUnit: PropTypes.string,
   setAmountUnit: PropTypes.func,
-  reset: PropTypes.func.isRequired,
   maxAmount: PropTypes.object,
 };
 
