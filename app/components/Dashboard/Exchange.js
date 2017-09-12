@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import BigNumber from 'bignumber.js';
 
-import ExchangeNTZDialog from '../../containers/ExchangeDialog/ExchangeNTZ';
-import ExchangeETHDialog from '../../containers/ExchangeDialog/ExchangeETH';
+import ExchangeDialog from '../../containers/ExchangeDialog';
 import { ETH, NTZ } from '../../containers/Dashboard/actions';
 import { formatNtz, NTZ_DECIMALS } from '../../utils/amountFormatter';
 
@@ -30,7 +29,8 @@ const Exchange = (props) => {
       <Section>
         <ExchangeContainer>
           {amountUnit === NTZ && nutzBalance && floor &&
-            <ExchangeNTZDialog
+            <ExchangeDialog
+              form="exchangeNTZ"
               title={<FormattedMessage {...messages.sellTitle} />}
               descr={<FormattedMessage {...messages.floorPrice} values={{ amount: formatNtz(floor.mul(NTZ_DECIMALS)) }} />}
               amountUnit={NTZ}
@@ -47,7 +47,8 @@ const Exchange = (props) => {
             />
           }
           {amountUnit === ETH && ethBalance && ceiling &&
-            <ExchangeETHDialog
+            <ExchangeDialog
+              form="exchangeETH"
               title={<FormattedMessage {...messages.purchaseTitle} />}
               descr={<FormattedMessage {...messages.ceilingPrice} values={{ amount: formatNtz(ceiling.mul(NTZ_DECIMALS)) }} />}
               amountUnit={ETH}

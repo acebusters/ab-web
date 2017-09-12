@@ -24,23 +24,23 @@ const warn = () => {
   return warnings;
 };
 
-const valueSelector = formValueSelector('exchangeNTZ');
-
-const mapStateToProps = (state) => ({
-  messages,
-  amount: valueSelector(state, 'amount'),
-  hasWeb3: makeSelectHasWeb3()(state),
-  networkSupported: makeSelectNetworkSupported()(state),
-});
-
-function mapDispatchToProps(dispatch) {
+const mapStateToProps = (state, ownProps) => {
+  const valueSelector = formValueSelector(ownProps.form);
   return {
-    stopSubmit: (errors) => dispatch(stopSubmit('exchange', errors)),
+    messages,
+    amount: valueSelector(state, 'amount'),
+    hasWeb3: makeSelectHasWeb3()(state),
+    networkSupported: makeSelectNetworkSupported()(state),
+  };
+};
+
+function mapDispatchToProps(dispatch, ownProps) {
+  return {
+    stopSubmit: (errors) => dispatch(stopSubmit(ownProps.form, errors)),
   };
 }
 
 export default reduxForm({
-  form: 'exchangeNTZ',
   validate,
   warn,
 })(
