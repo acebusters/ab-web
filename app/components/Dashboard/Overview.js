@@ -15,10 +15,40 @@ import { Pane, SectionOverview } from './styles';
 const Overview = (props) => {
   const { account, listTxns, downRequests, ethAllowance, ethPayoutDate, ethPayoutPending, handleETHPayout } = props;
   const requestColumnStyle = { width: 20, textAlign: 'left', whiteSpace: 'nowrap' };
+  const numberColumnStyle = { textAlign: 'right', whiteSpace: 'nowrap' };
+  const emptyColumnStyle = { width: 20 };
   const ethAmount = formatEth(ethAllowance);
 
   return (
     <Pane name="dashboard-overview">
+      {account.refs && account.refs.length &&
+        <SectionOverview
+          name="refs"
+          style={{
+            alignItems: 'center',
+          }}
+        >
+          <H2><FormattedMessage {...messages.refs} /></H2>
+          <List
+            items={account.refs.map((ref) => ['', ref.id, '', ref.allowance, ''])}
+            headers={[
+              '',
+              'Code',
+              '',
+              'Invitations left',
+              '',
+            ]}
+            columnsStyle={{
+              0: emptyColumnStyle,
+              1: requestColumnStyle,
+              2: emptyColumnStyle,
+              3: numberColumnStyle,
+              4: emptyColumnStyle,
+            }}
+          />
+        </SectionOverview>
+      }
+
       {ethAllowance && ethAllowance.toNumber() > 0 && ethPayoutDate &&
         <SectionOverview
           name="eth-payout"
@@ -84,11 +114,11 @@ const Overview = (props) => {
             '',
           ]}
           columnsStyle={{
-            0: { width: 20 },
+            0: emptyColumnStyle,
             1: { textAlign: 'left', width: 10, whiteSpace: 'nowrap' },
-            2: { width: 20 },
+            2: emptyColumnStyle,
             3: { textAlign: 'left', whiteSpace: 'nowrap' },
-            4: { textAlign: 'right', whiteSpace: 'nowrap' },
+            4: numberColumnStyle,
             5: { width: '100%', textAlign: 'left' },
           }}
           noDataMsg="No Transactions Yet"

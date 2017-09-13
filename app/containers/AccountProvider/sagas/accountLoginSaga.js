@@ -1,6 +1,6 @@
 import React from 'react';
 import ethUtil from 'ethereumjs-util';
-import { select, put, fork, take } from 'redux-saga/effects';
+import { select, put, fork, take, call } from 'redux-saga/effects';
 import Raven from 'raven-js';
 
 import { createBlocky } from '../../../services/blockies';
@@ -14,6 +14,9 @@ import { getWeb3 } from '../utils';
 import { SET_AUTH, WEB3_CONNECTED, accountLoaded } from '../actions';
 
 import { ethEventListenerSaga } from './ethEventListenerSaga';
+
+import { makeSelectAccountData } from '../selectors';
+import { getRefs } from '../../../services/account';
 
 const getAccount = (web3, signer) => {
   const factoryContract = web3.eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
@@ -62,12 +65,16 @@ export function* accountLoginSaga() {
         ));
       }
 
+      const account = yield select(makeSelectAccountData());
+      const refs = yield call(getRefs, account.accountId);
+
       // write data into the state
       yield put(accountLoaded({
         proxy,
         owner,
         isLocked,
         signer,
+        refs,
         blocky: createBlocky(signer),
         nickName: nickNameByAddress(signer),
       }));
