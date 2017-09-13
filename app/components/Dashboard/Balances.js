@@ -29,7 +29,7 @@ const Balances = ({
         type="inline"
         styles={{ layout: { marginLeft: '15px' } }}
       >
-        {babzBalance && GloryNumber({ number: toNtz(babzBalance), postfix: (<Bold>NTZ</Bold>), decimals: 0 })}
+        {babzBalance && <GloryNumber number={toNtz(babzBalance)} postfix={<Bold>NTZ</Bold>} decimals={0} />}
       </WithLoading>
     </BalanceWrapper>
 
@@ -40,7 +40,7 @@ const Balances = ({
         type="inline"
         styles={{ layout: { marginLeft: '15px' } }}
       >
-        {weiBalance && GloryNumber({ number: toEth(weiBalance), postfix: (<Bold>ETH</Bold>) })}
+        {weiBalance && <GloryNumber number={toEth(weiBalance)} postfix={<Bold>ETH</Bold>} />}
       </WithLoading>
     </BalanceWrapper>
 
