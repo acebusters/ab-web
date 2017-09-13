@@ -5,7 +5,6 @@ import { notifyDelete } from '../actions';
 import { loggedInSuccess, noWeb3Danger, firstLogin, notLoggedIn } from '../constants';
 
 import { createTempNotification, createPersistNotification, removeNotification } from './utils';
-import { selectNotifications } from '../selectors';
 
 export function* authNotification({ newAuthState }) {
   const { loggedIn } = newAuthState;
@@ -13,9 +12,6 @@ export function* authNotification({ newAuthState }) {
     yield* removeNotification({ txId: notLoggedIn.txId });
     yield* removeNotification({ txId: firstLogin.txId });
     yield* createTempNotification(loggedInSuccess);
-  } else {
-    const notifications = yield select(selectNotifications());
-    yield* notifications.map((notification) => removeNotification({ txId: notification.txId }));
   }
 }
 
