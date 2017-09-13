@@ -18,6 +18,7 @@ import { selectNotifications } from '../Notifications/selectors';
 import { makeSelectLoggedIn } from '../AccountProvider/selectors';
 import Header from '../Header';
 import { setAuthState } from '../AccountProvider/actions';
+import { clearExpiringStorage } from '../../services/expiringLocalStorage';
 
 import {
   makeSelectProgress,
@@ -96,6 +97,7 @@ App.propTypes = {
 function mapDispatchToProps(dispatch) {
   return {
     handleClickLogout: () => {
+      clearExpiringStorage();
       browserHistory.push('/login');
       return dispatch(setAuthState({ loggedIn: false }));
     },

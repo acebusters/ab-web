@@ -1,7 +1,7 @@
 import * as storageService from './localStorage';
 
 const storageKey = 'exp';
-const storage = {};
+let storage = {};
 let loaded = false;
 
 function check() {
@@ -44,4 +44,10 @@ export function removeItem(key) {
   check();
   delete storage[key];
   storageService.setItem(storageKey, storage);
+}
+
+export function clearExpiringStorage() {
+  loaded = false;
+  storage = {};
+  storageService.removeItem(storageKey);
 }
