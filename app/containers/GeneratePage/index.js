@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+// import ethUtil from 'ethereumjs-util';
 import { connect } from 'react-redux';
 import { Form, Field, reduxForm, SubmissionError, propTypes, change, formValueSelector } from 'redux-form/immutable';
 import { browserHistory } from 'react-router';
@@ -92,16 +93,31 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
     this.setState({ entropySaved: true });
   }
 
-  createTx(wallet, receipt, confCode) {
+  async createTx(wallet, receipt, confCode) {
     const { injectedAccount, networkSupported } = this.props;
     if (injectedAccount && networkSupported) {
       const web3 = getWeb3(true);
-      const factory = web3.eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
-      const create = promisifyWeb3Call(factory.create.sendTransaction);
-      return (
-        create(wallet.address, 0, { from: injectedAccount })
-          .then((txHash) => accountService.addWallet(confCode, wallet, txHash).then(() => txHash))
+      const proxy = web3.eth.contract(ABI_PROXY);
+
+      // const getTransactionCount = promisifyWeb3Call(web3.eth.getTransactionCount);
+      // const txCount = await getTransactionCount(injectedAccount);
+      // const proxyAddr = ethUtil.bufferToHex(ethUtil.generateAddress(injectedAccount, txCount));
+
+      const gas = 41154 + 489800; // estimated by remix
+      const create = (...args) => new Promise((resolve, reject) => {
+        proxy.new(...args, { from: injectedAccount, gas }, (err, result) => {
+          if (err) { reject(err); } else { resolve(result); }
+        });
+      });
+      const { transactionHash } = await create(wallet.address, 0);
+
+      await accountService.addWallet(
+        confCode,
+        wallet,
+        // proxyAddr
       );
+
+      return transactionHash;
     }
 
     return Promise.all([
