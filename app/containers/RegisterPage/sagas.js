@@ -1,30 +1,13 @@
 import { delay } from 'redux-saga';
-import { take, put, call, fork, cancel, select } from 'redux-saga/effects';
+import { take, put, call, fork, cancel } from 'redux-saga/effects';
 import { startSubmit, stopSubmit, startAsyncValidation, stopAsyncValidation, change, touch } from 'redux-form/immutable';
 import { CHANGE, INITIALIZE } from 'redux-form/lib/actionTypes';
 import { push } from 'react-router-redux';
-import ethUtil from 'ethereumjs-util';
 import * as accountService from '../../services/account';
 import { setProgress } from '../App/actions';
-import { makeSelectInjected, makeSelectNetworkSupported } from '../AccountProvider/selectors';
-import { getWeb3 } from '../AccountProvider/utils';
 import { conf } from '../../app.config';
-import { promisifyWeb3Call } from '../../utils/promisifyWeb3Call';
 
 import { REGISTER } from './constants';
-
-function* getProxyAddr() {
-  const injectedAccount = yield select(makeSelectInjected());
-  const networkSupported = yield select(makeSelectNetworkSupported());
-
-  if (injectedAccount && networkSupported) {
-    const getTransactionCount = promisifyWeb3Call(getWeb3(true).eth.getTransactionCount);
-    const txCount = yield call(getTransactionCount, injectedAccount);
-    return ethUtil.bufferToHex(ethUtil.generateAddress(injectedAccount, txCount));
-  }
-
-  return undefined;
-}
 
 export function* registerSaga() {
   while (true) { // eslint-disable-line no-constant-condition
@@ -34,14 +17,12 @@ export function* registerSaga() {
     yield put(startSubmit('register'));
 
     try {
-      const proxyAddr = yield call(getProxyAddr);
       yield call(
         accountService.register,
         payload.email,
         payload.captchaResponse,
         payload.origin,
-        payload.referral,
-        proxyAddr
+        payload.referral
       );
 
       yield put(push('/confirm'));

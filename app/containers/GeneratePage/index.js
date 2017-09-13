@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import ethUtil from 'ethereumjs-util';
+import ethUtil from 'ethereumjs-util';
 import { connect } from 'react-redux';
 import { Form, Field, reduxForm, SubmissionError, propTypes, change, formValueSelector } from 'redux-form/immutable';
 import { browserHistory } from 'react-router';
@@ -20,6 +20,7 @@ import * as storageService from '../../services/localStorage';
 import { makeSelectInjected, makeSelectNetworkSupported } from '../../containers/AccountProvider/selectors';
 import { getWeb3 } from '../../containers/AccountProvider/utils';
 import { conf, ABI_PROXY } from '../../app.config';
+import { promisifyWeb3Call } from '../../utils/promisifyWeb3Call';
 
 import { walletExport, register, accountTxHashReceived } from './actions';
 
@@ -96,22 +97,22 @@ export class GeneratePage extends React.Component { // eslint-disable-line react
       const web3 = getWeb3(true);
       const proxy = web3.eth.contract(ABI_PROXY);
 
-      // const getTransactionCount = promisifyWeb3Call(web3.eth.getTransactionCount);
-      // const txCount = await getTransactionCount(injectedAccount);
-      // const proxyAddr = ethUtil.bufferToHex(ethUtil.generateAddress(injectedAccount, txCount));
-
-      const gas = 41154 + 489800; // estimated by remix
+      const getTransactionCount = promisifyWeb3Call(getWeb3(true).eth.getTransactionCount);
       const create = (...args) => new Promise((resolve, reject) => {
+        const gas = 41154 + 489800; // estimated by remix
         proxy.new(...args, { from: injectedAccount, gas }, (err, result) => {
           if (err) { reject(err); } else { resolve(result); }
         });
       });
+
+      const txCount = await getTransactionCount(injectedAccount);
+      const proxyAddr = ethUtil.bufferToHex(ethUtil.generateAddress(injectedAccount, txCount));
       const { transactionHash } = await create(wallet.address, 0);
 
       await accountService.addWallet(
         confCode,
         wallet,
-        // proxyAddr
+        proxyAddr
       );
 
       return transactionHash;

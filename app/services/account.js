@@ -21,14 +21,13 @@ export function checkReferral(code) {
   return request('get', code ? `referral/${encodeURIComponent(code)}` : 'referral/');
 }
 
-export function register(email, recapResponse, origin, refCode, nextContractAddr) {
+export function register(email, recapResponse, origin, refCode) {
   const accountId = uuid();
   return request('post', `account/${accountId}`, {
     email,
     recapResponse,
     origin,
     refCode,
-    nextContractAddr,
   });
 }
 
@@ -44,11 +43,11 @@ export function confirm(sessionReceipt) {
   return request('post', 'confirm', { sessionReceipt });
 }
 
-export function addWallet(sessionReceipt, wallet) {
+export function addWallet(sessionReceipt, wallet, proxyAddr) {
   return request('post', 'wallet', {
     sessionReceipt,
     wallet: JSON.stringify(wallet),
-    // txHash,
+    proxyAddr,
   });
 }
 
