@@ -19,6 +19,12 @@ const Overview = (props) => {
 
   return (
     <Pane name="dashboard-overview">
+      <button
+        onClick={props.toggleInvestTour}
+        style={{ backgroundColor: 'pink' }}
+      >
+        <i className="fa fa-graduation-cap" /> Learn how to invest
+      </button>
       {ethAllowance && ethAllowance.toNumber() > 0 && ethPayoutDate &&
         <SectionOverview
           name="eth-payout"
@@ -105,6 +111,7 @@ Overview.propTypes = {
   ethPayoutPending: PropTypes.bool,
   ethPayoutDate: PropTypes.object,
   handleETHPayout: PropTypes.func,
+  toggleInvestTour: PropTypes.func.isRequired,
 };
 
 export default Overview;

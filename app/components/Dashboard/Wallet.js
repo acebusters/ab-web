@@ -31,6 +31,7 @@ function Wallet(props) {
       <Section
         style={{ alignSelf: 'center', maxWidth: 480 }}
         name="wallet-receive"
+        data-tour="wallet-receive"
       >
         <H2><ModeIcon className="fa fa-inbox" />Deposit</H2>
         <AccComponent {...props} />

@@ -14,6 +14,7 @@ import {
   SET_ACTIVE_TAB,
   SET_AMOUNT_UNIT,
   SET_INVEST_TYPE,
+  TOGGLE_INVEST_TOUR,
   OVERVIEW,
   NTZ,
   POWERUP,
@@ -36,6 +37,7 @@ const confParams = conf();
  *   transactionHash: string;
  *   timestamp?: number;
  *   pending?: boolean;
+ *   investTour: false;
  * }
  */
 const initialState = fromJS({
@@ -45,6 +47,7 @@ const initialState = fromJS({
   activeTab: OVERVIEW,
   amountUnit: NTZ,
   investType: POWERUP,
+  investTour: false,
 });
 
 function formatTxErrorMessage(error) {
@@ -67,6 +70,9 @@ function dashboardReducer(state = initialState, action) {
 
     case SET_INVEST_TYPE:
       return state.set('investType', action.which);
+
+    case TOGGLE_INVEST_TOUR:
+      return state.set('investTour', !state.get('investTour'));
 
     case ACCOUNT_LOADED:
       return state.set('proxy', action.payload.proxy);
