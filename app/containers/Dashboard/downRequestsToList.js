@@ -9,7 +9,7 @@ export function downRequestsToList(
   downtime,
   onTickClick
 ) {
-  return downtime && downRequests && downRequests.map((r) => [
+  return downtime && downRequests && downRequests[0].filter((r) => !r[0]).map((r) => [
     `${formatAbp(r[0])} ABP`,
     `${formatAbp(r[0].sub(r[1]))} ABP`,
     formatDate(r[2].toNumber()),
