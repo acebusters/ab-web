@@ -8,7 +8,6 @@ import {
   navbarHeight,
   navbarPaddingHorizontal,
   navbarPaddingVertical,
-  screenXsMin,
   screenXsMax,
   navbarColorCurrent,
   baseColor,
@@ -55,10 +54,6 @@ export const StyledUserName = styled.span`
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently not supported by any browser */
-
-  @media (max-width: ${screenXsMin}) {
-    display: none;
-  }
 `;
 
 // Header
