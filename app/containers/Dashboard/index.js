@@ -251,8 +251,10 @@ class DashboardRoot extends React.Component {
     const { account } = this.props;
     const power = getWeb3().eth.contract(ABI_POWER_CONTRACT).at(confParams.pwrAddr);
     power.downs.call(account.proxy, (err, downRequests) => {
-      if (!err) {
-        this.setState({ downRequests });
+      if (!err && downRequests) {
+        this.setState({
+          downRequests: downRequests[0].slice(0, Number(downRequests[1])),
+        });
       }
     });
   }
