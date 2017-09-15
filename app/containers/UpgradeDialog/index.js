@@ -94,7 +94,7 @@ class UpgradeDialog extends React.Component {
     return (
       <div>
         <H2>
-          Upgrade your account &nbsp;
+          Unlock your account &nbsp;
           <A
             href="http://help.acebusters.com/quick-guide-to-acebusters/winning-the-pots/how-to-upgrade-to-a-shark-account"
             target="_blank"
@@ -113,7 +113,7 @@ class UpgradeDialog extends React.Component {
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           {account.injected && !submitting && !success &&
             <div>
-              <p>This will upgrade your account</p>
+              <p>This will unlock your account</p>
               <Field
                 name="accept"
                 type="checkbox"
@@ -124,17 +124,17 @@ class UpgradeDialog extends React.Component {
           }
 
           {submitting &&
-            <p>Account upgrade tx pending...</p>
+            <p>Account unlock tx pending...</p>
           }
 
-          {success && <p>Account upgraded successful</p>}
+          {success && <p>Account unlocked successful</p>}
 
           {!success &&
             <SubmitButton
               disabled={!account.injected || invalid}
               submitting={submitting}
             >
-              Upgrade
+              Unlock
             </SubmitButton>
           }
           {success &&
