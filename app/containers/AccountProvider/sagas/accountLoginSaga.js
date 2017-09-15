@@ -14,6 +14,7 @@ import { getWeb3 } from '../utils';
 import { SET_AUTH, WEB3_CONNECTED, accountLoaded } from '../actions';
 
 import { ethEventListenerSaga } from './ethEventListenerSaga';
+import { clearExpiringStorage } from '../../../services/expiringLocalStorage';
 
 const getAccount = (web3, signer) => {
   const factoryContract = web3.eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
@@ -76,6 +77,8 @@ export function* accountLoginSaga() {
       // mostly auth errors
       const accFactoryContract = getWeb3().eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
       yield fork(ethEventListenerSaga, accFactoryContract);
+    } else {
+      clearExpiringStorage();
     }
   }
 }

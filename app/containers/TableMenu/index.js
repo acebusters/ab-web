@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
 import { setAuthState } from '../AccountProvider/actions';
-import { clearExpiringStorage } from '../../services/expiringLocalStorage';
 
 import {
   makeSelectOpen,
@@ -37,7 +36,6 @@ TableMenuContainer.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   handleClickLogout: () => {
-    clearExpiringStorage();
     browserHistory.push('/login');
     return dispatch(setAuthState({ loggedIn: false }));
   },
