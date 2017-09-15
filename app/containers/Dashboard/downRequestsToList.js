@@ -10,9 +10,9 @@ export function downRequestsToList(
   onTickClick
 ) {
   return downtime && downRequests && downRequests.map((r) => [
-    `${formatAbp(r[2])} ABP`,
-    `${formatAbp(r[2].sub(r[3]))} ABP`,
-    formatDate(r[4].toNumber()),
+    `${formatAbp(r[0])} ABP`,
+    `${formatAbp(r[0].sub(r[1]))} ABP`,
+    formatDate(r[2].toNumber()),
     <PayoutDate request={r} downtime={downtime} />,
     <TimedButton
       until={nextPayout(r, downtime)}
@@ -24,14 +24,12 @@ export function downRequestsToList(
 }
 
 function nextPayout(request, downtime) {
-  const total = request[2];
-  const left = request[3];
-  const start = request[4].toNumber();
+  const [total, left, start] = request;
   const nextStep = Math.floor(total.sub(left).div(total.mul(0.1)).toNumber()) + 1;
 
   return Math.min(
-    start + downtime.div(10).mul(nextStep).toNumber(),
-    start + downtime.toNumber()
+    Number(start) + downtime.div(10).mul(nextStep).toNumber(),
+    Number(start) + downtime.toNumber()
   );
 }
 
