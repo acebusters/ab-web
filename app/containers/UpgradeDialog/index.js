@@ -14,6 +14,8 @@ import FormGroup from '../../components/Form/FormGroup';
 import { CheckBox } from '../../components/Input';
 import Label from '../../components/Label';
 import H2 from '../../components/H2';
+import A from '../../components/A';
+import { Icon } from '../../containers/Dashboard/styles';
 
 import { accountUnlocked } from '../AccountProvider/actions';
 
@@ -91,7 +93,18 @@ class UpgradeDialog extends React.Component {
 
     return (
       <div>
-        <H2>Upgrade your account</H2>
+        <H2>
+          Upgrade your account &nbsp;
+          <A
+            href="http://help.acebusters.com/quick-guide-to-acebusters/winning-the-pots/how-to-upgrade-to-a-shark-account"
+            target="_blank"
+          >
+            <Icon
+              className="fa fa-info-circle"
+              aria-hidden="true"
+            />
+          </A>
+        </H2>
 
         {!account.injected && <NoWeb3Message />}
         {account.injected && !account.onSupportedNetwork &&
