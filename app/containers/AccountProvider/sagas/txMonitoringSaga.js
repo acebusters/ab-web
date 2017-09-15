@@ -1,9 +1,9 @@
 import { delay } from 'redux-saga';
-import { call, put } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import { promisifyWeb3Call } from '../../../utils/promisifyWeb3Call';
 import { waitForTx } from '../../../utils/waitForTx';
 import { getWeb3 } from '../utils';
-import { contractTxNotExists, contractTxFailed, contractTxMined, contractTxAppeared } from '../actions';
+import { contractTxNotExists, contractTxFailed, contractTxMined, contractTxAppeared, CONTRACT_TX_SENDED } from '../actions';
 
 const TX_TIMEOUT = 10000;
 const TX_CHECK_DELAY = 500;
@@ -38,7 +38,7 @@ function* waitForTxMined(txHash) {
   }
 }
 
-export function* txMonitoringSaga(action) {
+function* sendedTxMonitoring(action) {
   const { txHash } = action.payload;
   try {
     yield call(getTransaction, txHash);
@@ -48,4 +48,8 @@ export function* txMonitoringSaga(action) {
   } catch (err) {
     yield put(err);
   }
+}
+
+export function* txMonitoringSaga() {
+  yield takeEvery(CONTRACT_TX_SENDED, sendedTxMonitoring);
 }

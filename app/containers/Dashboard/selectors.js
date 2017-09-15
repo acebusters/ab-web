@@ -20,6 +20,11 @@ export const createDashboardTxsSelector = () => createSelector(
   }),
 );
 
+export const createPendingsSelector = () => createSelector(
+  selectDashboard,
+  (dashboard) => dashboard.get('events') && dashboard.get('events').filter((item) => item.get('pending')).toMap(),
+);
+
 export const getActiveTab = () => createSelector(
   selectDashboard,
   (dashboard) => dashboard.get('activeTab'),
