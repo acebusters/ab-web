@@ -15,7 +15,7 @@ export const createDashboardTxsSelector = () => createSelector(
     dashboardEvents: dashboard.get('events') && dashboard.get('events').toList().toJS(),
     pendingETHPayout: (
       (dashboard.get('events') || fromJS({})).toList().toJS()
-        .filter((event) => event.pending && isETHPayoutEvent(event)).length > 0
+        .filter((event) => event.pending && !event.error && isETHPayoutEvent(event)).length > 0
     ),
   }),
 );
