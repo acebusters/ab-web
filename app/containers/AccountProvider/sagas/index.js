@@ -11,6 +11,7 @@ import { updateLoggedInStatusSaga } from './updateLoggedInStatusSaga';
 import { web3MethodCallSaga, contractMethodCallSaga } from './web3CallsSagas';
 import { contractTransactionSendSaga } from './txSagas';
 import { txMonitoringSaga } from './txMonitoringSaga';
+import { persistentTxSaga } from './persistentTxSaga';
 
 export { getWeb3 } from '../utils';
 
@@ -21,6 +22,7 @@ export function* accountSaga() {
   yield takeEvery(CONTRACT_METHOD_CALL, contractMethodCallSaga);
   yield takeEvery(SET_AUTH, updateLoggedInStatusSaga);
   yield fork(txMonitoringSaga);
+  yield fork(persistentTxSaga);
   yield fork(websocketSaga);
   yield fork(accountLoginSaga);
   yield fork(contractTransactionSendSaga);

@@ -13,8 +13,6 @@ export const SET_ACTIVE_TAB = 'acebusters/Dashboard/SET_ACTIVE_TAB';
 export const SET_AMOUNT_UNIT = 'acebusters/Dashboard/SET_AMOUNT_UNIT';
 export const SET_INVEST_TYPE = 'acebusters/Dashboard/SET_INVEST_TYPE';
 
-export const RESTORE_PENDINGS = 'acebusters/Dashboard/RESTORE_PENDINGS';
-
 export const setActiveTab = (whichTab) => ({
   type: SET_ACTIVE_TAB,
   whichTab,
@@ -30,7 +28,3 @@ export const setInvestType = (which) => ({
   which,
 });
 
-export const restorePendings = (pendings) => ({
-  type: RESTORE_PENDINGS,
-  payload: pendings,
-});

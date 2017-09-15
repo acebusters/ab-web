@@ -17,7 +17,6 @@ import {
   OVERVIEW,
   ETH,
   POWERUP,
-  RESTORE_PENDINGS,
 } from './actions';
 
 import { composeReducers } from '../../utils/composeReducers';
@@ -60,11 +59,6 @@ function dashboardReducer(state = initialState, action) {
   const { payload, meta = {} } = action;
 
   switch (action.type) {
-    case RESTORE_PENDINGS:
-      return state.set(
-        'events',
-        fromJS(payload).mergeWith(state.get('events')),
-      );
     case SET_ACTIVE_TAB:
       return state.set('activeTab', action.whichTab);
 
