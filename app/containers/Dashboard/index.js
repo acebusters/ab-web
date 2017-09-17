@@ -118,6 +118,7 @@ class DashboardRoot extends React.Component {
     this.handleETHPayout = this.handleETHPayout.bind(this);
     this.handlePowerUp = this.handlePowerUp.bind(this);
     this.handlePowerDown = this.handlePowerDown.bind(this);
+    this.fishWarn = this.fishWarn.bind(this);
     this.web3 = props.web3Redux.web3;
 
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
@@ -130,12 +131,11 @@ class DashboardRoot extends React.Component {
       this.watchProxyEvents(this.props.account.proxy);
       this.watchTokenEvents(this.props.account.proxy);
       this.watchPowerEvents(this.props.account.proxy);
-      this.power.balanceOf.call(this.props.account.proxy);
-      this.pullPayment.paymentOf.call(this.props.account.proxy);
     }
 
     this.state = {
       downRequests: null,
+      isFishWarned: false,
     };
   }
 
@@ -147,9 +147,6 @@ class DashboardRoot extends React.Component {
       this.watchProxyEvents(nextAccount.proxy);
       this.watchTokenEvents(nextAccount.proxy);
       this.watchPowerEvents(nextAccount.proxy);
-      this.power.balanceOf.call(nextAccount.proxy);
-
-      this.pullPayment.paymentOf.call(nextAccount.proxy);
     }
 
     if (this.props.dashboardTxs.txError !== nextProps.dashboardTxs.txError && nextProps.dashboardTxs.txError) {
@@ -169,9 +166,14 @@ class DashboardRoot extends React.Component {
     }
   }
 
-  watchProxyEvents(proxyAddr) {
-    this.proxy = this.web3.eth.contract(ABI_PROXY).at(proxyAddr);
+  fishWarn() {
+    this.setState({ isFishWarned: true });
+  }
 
+  watchProxyEvents(proxyAddr) {
+    this.pullPayment.paymentOf.call(proxyAddr);
+
+    this.proxy = this.web3.eth.contract(ABI_PROXY).at(proxyAddr);
     this.web3.eth.getBlockNumber((err, blockNumber) => {
       this.proxy.allEvents({
         fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
@@ -181,7 +183,6 @@ class DashboardRoot extends React.Component {
           .then((events) => this.props.proxyEvents(events, proxyAddr));
       });
     });
-
     this.proxy.allEvents({
       toBlock: 'latest',
     }).watch((error, event) => {
@@ -200,6 +201,7 @@ class DashboardRoot extends React.Component {
   }
 
   watchPowerEvents(proxyAddr) {
+    this.power.balanceOf.call(proxyAddr);
     this.web3.eth.getBlockNumber((err, blockNumber) => {
       this.power.allEvents({
         fromBlock: blockNumber - LOOK_BEHIND_PERIOD,
@@ -411,7 +413,7 @@ class DashboardRoot extends React.Component {
 
   render() {
     const { account } = this.props;
-    const { downRequests } = this.state;
+    const { downRequests, isFishWarned } = this.state;
     const qrUrl = `ether:${account.proxy}`;
     const downtime = this.power.downtime();
     const totalSupply = this.power.totalSupply();
@@ -460,6 +462,7 @@ class DashboardRoot extends React.Component {
             listTxns,
             qrUrl,
             messages,
+            isFishWarned,
             downRequests: downRequestsToList(
               downRequests,
               downtime,
@@ -472,6 +475,7 @@ class DashboardRoot extends React.Component {
             handleETHPayout: this.handleETHPayout,
             handlePowerDown: this.handlePowerDown,
             handlePowerUp: this.handlePowerUp,
+            fishWarn: this.fishWarn,
             ...this.props,
           }}
         />
