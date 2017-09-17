@@ -1,33 +1,18 @@
-import React from 'react';
 import ethUtil from 'ethereumjs-util';
-import { select, put, fork, take, call } from 'redux-saga/effects';
+import { select, put, take, call } from 'redux-saga/effects';
 import Raven from 'raven-js';
 
 import { createBlocky } from '../../../services/blockies';
 import { nickNameByAddress } from '../../../services/nicknames';
-import { ABI_ACCOUNT_FACTORY, conf } from '../../../app.config';
-import { indentity } from '../../../utils';
-import { modalAdd } from '../../../containers/App/actions';
+import { ABI_PROXY } from '../../../app.config';
+import { makeSelectProxyAddr } from '../../../containers/AccountProvider/selectors';
 import { promisifyWeb3Call } from '../../../utils/promisifyWeb3Call';
 
 import { getWeb3 } from '../utils';
 import { SET_AUTH, WEB3_CONNECTED, accountLoaded } from '../actions';
 
-import { ethEventListenerSaga } from './ethEventListenerSaga';
-
 import { makeSelectAccountData } from '../selectors';
 import { getRefs } from '../../../services/account';
-
-const getAccount = (web3, signer) => {
-  const factoryContract = web3.eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
-  return (
-    promisifyWeb3Call(factoryContract.getAccount.call)(signer)
-      .then(
-        indentity,
-        () => Promise.reject('login error')
-      )
-  );
-};
 
 export function* accountLoginSaga() {
   let initialLoad = true;
@@ -53,24 +38,21 @@ export function* accountLoginSaga() {
     if (loggedIn) {
       const privKeyBuffer = new Buffer(privKey.replace('0x', ''), 'hex');
       const signer = `0x${ethUtil.privateToAddress(privKeyBuffer).toString('hex')}`;
+      const proxyAddr = yield select(makeSelectProxyAddr());
+      const web3 = getWeb3();
+      const proxy = web3.eth.contract(ABI_PROXY).at(proxyAddr);
       Raven.setUserContext({ id: signer });
-      // this reads account data from the account factory
-      const [proxy, owner, isLocked] = yield getAccount(getWeb3(), signer);
 
-      if (proxy === '0x') {
-        yield put(modalAdd(
-          <div>
-            Seems proxy contract is not deployed yet
-          </div>
-        ));
-      }
+      const [isLocked, owner] = yield Promise.all([
+        promisifyWeb3Call(proxy.isLocked.call)(),
+        promisifyWeb3Call(proxy.getOwner.call)(),
+      ]);
 
       const account = yield select(makeSelectAccountData());
       const refs = yield call(getRefs, account.accountId);
 
       // write data into the state
       yield put(accountLoaded({
-        proxy,
         owner,
         isLocked,
         signer,
@@ -78,11 +60,6 @@ export function* accountLoginSaga() {
         blocky: createBlocky(signer),
         nickName: nickNameByAddress(signer),
       }));
-
-      // start listen on the account factory for events
-      // mostly auth errors
-      const accFactoryContract = getWeb3().eth.contract(ABI_ACCOUNT_FACTORY).at(conf().accountFactory);
-      yield fork(ethEventListenerSaga, accFactoryContract);
     }
   }
 }

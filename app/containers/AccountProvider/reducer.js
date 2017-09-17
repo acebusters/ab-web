@@ -55,13 +55,15 @@ function accountProviderReducer(state = initialState, action) {
       return state.set('proxyTxHash', action.payload);
 
     case ACCOUNT_LOADED:
-      return state.set('proxy', action.payload.proxy)
-        .set('isLocked', action.payload.isLocked)
-        .set('owner', action.payload.owner)
-        .set('blocky', action.payload.blocky)
-        .set('nickName', action.payload.nickName)
-        .set('signerAddr', action.payload.signer)
-        .set('refs', action.payload.refs);
+      return (
+        state
+          .set('isLocked', action.payload.isLocked)
+          .set('owner', action.payload.owner)
+          .set('blocky', action.payload.blocky)
+          .set('nickName', action.payload.nickName)
+          .set('signerAddr', action.payload.signer)
+          .set('refs', action.payload.refs)
+      );
 
     case WEB3_METHOD_SUCCESS:
       return state.setIn(['web3', 'methods', action.key], fromJS(action.payload));
@@ -95,6 +97,8 @@ function accountProviderReducer(state = initialState, action) {
             return newState
               .delete('privKey')
               .delete('email')
+              .delete('accountId')
+              .delete('proxy')
               .set('blocky', null)
               .set('nickName', null)
               .set('signerAddr', null)
@@ -104,6 +108,7 @@ function accountProviderReducer(state = initialState, action) {
           return newState
             .set('privKey', action.newAuthState.privKey)
             .set('accountId', action.newAuthState.accountId)
+            .set('proxy', action.newAuthState.proxyAddr)
             .set('email', action.newAuthState.email);
         })
         .set('loggedIn', action.newAuthState.loggedIn);
