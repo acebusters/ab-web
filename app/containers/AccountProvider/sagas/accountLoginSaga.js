@@ -5,13 +5,12 @@ import Raven from 'raven-js';
 import { createBlocky } from '../../../services/blockies';
 import { nickNameByAddress } from '../../../services/nicknames';
 import { ABI_PROXY } from '../../../app.config';
-import { makeSelectProxyAddr } from '../../../containers/AccountProvider/selectors';
+import { makeSelectProxyAddr, makeSelectAccountData } from '../selectors';
 import { promisifyWeb3Call } from '../../../utils/promisifyWeb3Call';
 
 import { getWeb3 } from '../utils';
 import { SET_AUTH, WEB3_CONNECTED, accountLoaded } from '../actions';
 
-import { makeSelectAccountData } from '../selectors';
 import { getRefs } from '../../../services/account';
 
 export function* accountLoginSaga() {
