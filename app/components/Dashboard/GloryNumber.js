@@ -8,7 +8,7 @@ const countDecimals = (value) =>
   Math.floor(value.toNumber()) === value.toNumber() ? 0 : value.toString().split('.')[1].length || 0;
 
 export default ({ number = 0, decimals = 2, postfix = '' } = {}) =>
-  [decimals, 0].includes(countDecimals(number))
+  countDecimals(number) <= decimals
     ? <span>{number.toFormat()} {postfix}</span>
     : (
       <span>
