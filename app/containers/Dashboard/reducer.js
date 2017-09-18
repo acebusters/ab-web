@@ -16,7 +16,7 @@ import {
   SET_INVEST_TYPE,
   TOGGLE_INVEST_TOUR,
   OVERVIEW,
-  NTZ,
+  ETH,
   POWERUP,
 } from './actions';
 
@@ -45,7 +45,7 @@ const initialState = fromJS({
   failedTx: null,
   events: null,
   activeTab: OVERVIEW,
-  amountUnit: NTZ,
+  amountUnit: ETH,
   investType: POWERUP,
   investTour: false,
 });
