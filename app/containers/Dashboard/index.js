@@ -469,13 +469,14 @@ class DashboardRoot extends React.Component {
             <li>Fund your MetaMask wallet with ether</li>
             <li>Click the &#39;Unlock your Account&#39; button</li>
           </ol>
+          (Make sure that MetaMask is using the &#39;Ethereum Main Net&#39;!)
         </div>),
         showNavigationNumber: false,
         style: stepStyle,
       },
       {
         selector: '[data-tour="wallet-receive"]',
-        content: 'From the MetaMask wallet, eeposit ether to your account address (in green). There will be a confirmation in the "Overview" tab',
+        content: 'From the MetaMask wallet, deposit ether to your account address (in green). There will be a confirmation in the "Overview" tab',
         style: stepStyle,
       },
       {
