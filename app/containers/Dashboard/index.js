@@ -7,6 +7,7 @@ import Tour from 'reactour';
 import BigNumber from 'bignumber.js';
 
 import A from '../../components/A';
+import Alert from '../../components/Alert';
 
 import web3Connect from '../AccountProvider/web3Connect';
 import { getWeb3 } from '../AccountProvider/sagas';
@@ -439,6 +440,12 @@ class DashboardRoot extends React.Component {
       account.proxy
     );
     const stepStyle = { borderRadius: 10 };
+    const metaMaskWarning = (<Alert theme="danger">
+      <i>Make sure that MetaMask is using the &#39;Ethereum Main Net&#39;!</i>
+    </Alert>);
+    const confirmationNote = (<Alert theme="info">
+      You will confirmation in the &#39;Overview&#39; tab.
+    </Alert>);
     const STEPS = [
       {
         selector: '[data-tour="tour-begin"]',
@@ -455,7 +462,7 @@ class DashboardRoot extends React.Component {
       },
       {
         selector: '[data-tour="wallet"]',
-        content: 'Goto the "Wallet" tab',
+        content: <div>Goto the &#39;Wallet&#39; tab</div>,
         showNavigationNumber: false,
         action: () => this.props.setActiveTab(WALLET),
         style: stepStyle,
@@ -463,25 +470,29 @@ class DashboardRoot extends React.Component {
       {
         selector: '[data-tour="wallet-receive"]',
         content: (<div>
-          Unlock your account by
+          Unlock your account:
           <ol>
             <li>Install the <A href="https://metamask.io/" target="_blank">MetaMask</A> plugin for Chrome, Edge, Firefox or Opera</li>
             <li>Fund your MetaMask wallet with ether</li>
             <li>Click the &#39;Unlock your Account&#39; button</li>
           </ol>
-          (Make sure that MetaMask is using the &#39;Ethereum Main Net&#39;!)
+          {metaMaskWarning}
         </div>),
         showNavigationNumber: false,
         style: stepStyle,
       },
       {
         selector: '[data-tour="wallet-receive"]',
-        content: 'From the MetaMask wallet, deposit ether to your account address (in green). There will be a confirmation in the "Overview" tab',
+        content: (<div>
+          <p>From the MetaMask wallet, deposit ether to your account address (in green).</p>
+          {confirmationNote}
+          {metaMaskWarning}
+        </div>),
         style: stepStyle,
       },
       {
         selector: '[data-tour="exchange"]',
-        content: 'Goto the "Exchange" tab',
+        content: <div>Goto the &#39;Exchange&#39; tab</div>,
         action: () => {
           this.props.setActiveTab(EXCHANGE);
           this.props.setAmountUnit('eth');
@@ -490,12 +501,15 @@ class DashboardRoot extends React.Component {
       },
       {
         selector: '[data-tour="exchange-eth-form"]',
-        content: 'Select the "Ethereum" from the dropdown, and use the form to exchange ETH for NTZ. You will receive a confirmation in the "Overview" tab',
+        content: (<div>
+          <p>Select the &#39;Ethereum&#39; from the dropdown, and use the form to exchange ETH for NTZ.</p>
+          {confirmationNote}
+        </div>),
         style: stepStyle,
       },
       {
         selector: '[data-tour="invest"]',
-        content: 'Goto the "Invest" tab',
+        content: <div>Goto the &#39;Invest&#39; tab</div>,
         action: () => {
           this.props.setActiveTab(INVEST);
           this.props.setInvestType('powerUp');
@@ -504,7 +518,10 @@ class DashboardRoot extends React.Component {
       },
       {
         selector: '[data-tour="dashboard-invest-powerUp"]',
-        content: 'Using the Power Up form, Power Up your NTZ, and receive ABP. Again, you will receive confirmation in the "Overview" tab',
+        content: (<div>
+          <p>Using the Power Up form, Power Up your NTZ, and receive ABP.</p>
+          {confirmationNote}
+        </div>),
         style: stepStyle,
       },
       {
