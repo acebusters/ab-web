@@ -15,6 +15,7 @@ import { Pane, SectionOverview } from './styles';
 const Overview = (props) => {
   const { account, listTxns, downRequests, ethAllowance, ethPayoutDate, ethPayoutPending, handleETHPayout } = props;
   const requestColumnStyle = { width: 20, textAlign: 'left', whiteSpace: 'nowrap' };
+  const emptyColumnStyle = { width: 20 };
   const ethAmount = formatEth(ethAllowance);
 
   return (
@@ -25,6 +26,7 @@ const Overview = (props) => {
       >
         <i className="fa fa-graduation-cap" /> Learn how to invest
       </button>
+
       {ethAllowance && ethAllowance.toNumber() > 0 && ethPayoutDate &&
         <SectionOverview
           name="eth-payout"
@@ -90,9 +92,9 @@ const Overview = (props) => {
             '',
           ]}
           columnsStyle={{
-            0: { width: 20 },
+            0: emptyColumnStyle,
             1: { textAlign: 'left', width: 10, whiteSpace: 'nowrap' },
-            2: { width: 20 },
+            2: emptyColumnStyle,
             3: { textAlign: 'left', whiteSpace: 'nowrap' },
             4: { textAlign: 'right', whiteSpace: 'nowrap' },
             5: { width: '100%', textAlign: 'left' },

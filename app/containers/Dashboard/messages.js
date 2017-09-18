@@ -74,6 +74,10 @@ export default defineMessages({
     id: 'app.containers.Dashboard.ethPayout',
     defaultMessage: 'ETH Payout',
   },
+  refs: {
+    id: 'app.containers.Dashboard.refs',
+    defaultMessage: 'Promo codes',
+  },
   transactionErrorTitle: {
     id: 'app.containers.Dashboard.transactionErrorTitle',
     defaultMessage: 'Transaction error',
@@ -192,6 +196,6 @@ export default defineMessages({
   },
   upgradeAccount: {
     id: 'app.containers.Dashboard.upgradeAccount',
-    defaultMessage: 'Upgrade to Shark account',
+    defaultMessage: 'Unlock your Account',
   },
 });

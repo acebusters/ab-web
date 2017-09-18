@@ -237,7 +237,7 @@ function transformNutzContractEvent(state, event) {
         });
       }
 
-      return state;
+      return null;
     }
 
     return makeDashboardEvent(event, {
