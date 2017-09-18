@@ -6,6 +6,8 @@ import { FormattedMessage } from 'react-intl';
 import Tour from 'reactour';
 import BigNumber from 'bignumber.js';
 
+import A from '../../components/A';
+
 import web3Connect from '../AccountProvider/web3Connect';
 import { getWeb3 } from '../AccountProvider/sagas';
 import { addEventsDate, isUserEvent } from '../AccountProvider/utils';
@@ -436,21 +438,78 @@ class DashboardRoot extends React.Component {
       tables,
       account.proxy
     );
+    const stepStyle = { borderRadius: 10 };
     const STEPS = [
       {
-        selector: '[data-tour="wallet-receive"]',
-        content: 'Deposit ETH',
-        position: 'top',
-        action: () => {
-          this.props.setActiveTab(WALLET);
-        },
+        selector: '[data-tour="tour-begin"]',
+        content: (<div>
+          To invest in Acebusters, follow these easy steps:
+          <ol>
+            <li>Unlock your account</li>
+            <li>Deposit ether</li>
+            <li>Exchange ether for nutz</li>
+            <li>Power Up!</li>
+          </ol>
+        </div>),
+        style: stepStyle,
+      },
+      {
+        selector: '[data-tour="wallet"]',
+        content: 'Goto the "Wallet" tab',
+        showNavigationNumber: false,
+        action: () => this.props.setActiveTab(WALLET),
+        style: stepStyle,
       },
       {
         selector: '[data-tour="wallet-receive"]',
-        content: 'Yoo, change tabs',
+        content: (<div>
+          Unlock your account by
+          <ol>
+            <li>Install the <A href="https://metamask.io/" target="_blank">MetaMask</A> plugin for Chrome, Edge, Firefox or Opera</li>
+            <li>Fund your MetaMask wallet with ether</li>
+            <li>Click the &#39;Unlock your Account&#39; button</li>
+          </ol>
+        </div>),
+        showNavigationNumber: false,
+        style: stepStyle,
+      },
+      {
+        selector: '[data-tour="wallet-receive"]',
+        content: 'From the MetaMask wallet, eeposit ether to your account address (in green). There will be a confirmation in the "Overview" tab',
+        style: stepStyle,
+      },
+      {
+        selector: '[data-tour="exchange"]',
+        content: 'Goto the "Exchange" tab',
         action: () => {
-          // this.props.setActiveTab(EXCHANGE);
+          this.props.setActiveTab(EXCHANGE);
+          this.props.setAmountUnit('eth');
         },
+        style: stepStyle,
+      },
+      {
+        selector: '[data-tour="exchange-eth-form"]',
+        content: 'Select the "Ethereum" from the dropdown, and use the form to exchange ETH for NTZ. You will receive a confirmation in the "Overview" tab',
+        style: stepStyle,
+      },
+      {
+        selector: '[data-tour="invest"]',
+        content: 'Goto the "Invest" tab',
+        action: () => {
+          this.props.setActiveTab(INVEST);
+          this.props.setInvestType('powerUp');
+        },
+        style: stepStyle,
+      },
+      {
+        selector: '[data-tour="dashboard-invest-powerUp"]',
+        content: 'Using the Power Up form, Power Up your NTZ, and receive ABP. Again, you will receive confirmation in the "Overview" tab',
+        style: stepStyle,
+      },
+      {
+        selector: '[data-tour="dashboard-invest-powerUp"]',
+        content: 'Congratuations! You are now part of the Acebusters economy',
+        style: stepStyle,
       },
     ];
     return (
@@ -503,6 +562,13 @@ class DashboardRoot extends React.Component {
           steps={STEPS}
           isOpen={this.props.investTour}
           onRequestClose={this.props.toggleInvestTour}
+          onBeforeClose={() => this.props.setActiveTab(OVERVIEW)}
+          scrollDuration={20}
+          showNavigationNumber={false}
+          showNavigation
+          showNumber={false}
+          startAt={0}
+          lastStepNextButton="Done"
         />
       </Container>
     );
@@ -519,6 +585,8 @@ DashboardRoot.propTypes = {
   web3Redux: PropTypes.any,
   notifyCreate: PropTypes.func,
   setActiveTab: PropTypes.func,
+  setAmountUnit: PropTypes.func,
+  setInvestType: PropTypes.func,
   investTour: PropTypes.bool.isRequired,
   toggleInvestTour: PropTypes.func.isRequired,
 };

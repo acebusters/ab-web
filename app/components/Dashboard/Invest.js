@@ -32,8 +32,8 @@ const Invest = (props) => {
   const { account, setInvestType, investType } = props;
   const disabledTabs = account.isLocked ? [POWERDOWN] : [];
   return (
-    <Pane name="dashboard-invest" >
-      <Section>
+    <Pane name="dashboard-invest">
+      <Section data-tour={`dashboard-invest-${investType}`}>
         <Tabs
           tabs={TABS}
           activeTab={investType}

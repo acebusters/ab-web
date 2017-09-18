@@ -30,17 +30,15 @@ const Overview = (props) => {
           alignItems: 'center',
         }}
       >
-        <Button
-          size="medium"
-          disabled
-        >
+        <div style={{ margin: '1em' }}>
           <strong>Account email:</strong>&nbsp;{account.email}
-        </Button>
+        </div>
         <Button
           size="medium"
           onClick={props.toggleInvestTour}
+          data-tour="tour-begin"
         >
-          <i className="fa fa-graduation-cap" /> Learn how to invest
+          <i className="fa fa-graduation-cap" />&nbsp;Invest Tutorial
         </Button>
       </SectionOverview>
       {account.refs && account.refs.length &&
