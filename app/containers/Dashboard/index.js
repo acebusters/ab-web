@@ -3,11 +3,9 @@ import { SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { FormattedMessage } from 'react-intl';
-import Tour from 'reactour';
 import BigNumber from 'bignumber.js';
 
-import A from '../../components/A';
-import Alert from '../../components/Alert';
+import InvestTour from '../../components/Dashboard/InvestTour';
 
 import web3Connect from '../AccountProvider/web3Connect';
 import { getWeb3 } from '../AccountProvider/sagas';
@@ -439,97 +437,6 @@ class DashboardRoot extends React.Component {
       tables,
       account.proxy
     );
-    const stepStyle = { borderRadius: 10 };
-    const metaMaskWarning = (<Alert theme="danger">
-      <i>Make sure that MetaMask is using the &#39;Ethereum Main Net&#39;!</i>
-    </Alert>);
-    const confirmationNote = (<Alert theme="info">
-      You will confirmation in the &#39;Overview&#39; tab.
-    </Alert>);
-    const STEPS = [
-      {
-        selector: '[data-tour="tour-begin"]',
-        content: (<div>
-          To invest in Acebusters, follow these easy steps:
-          <ol>
-            <li>Unlock your account</li>
-            <li>Deposit ether</li>
-            <li>Exchange ether for nutz</li>
-            <li>Power Up!</li>
-          </ol>
-        </div>),
-        style: stepStyle,
-      },
-      {
-        selector: '[data-tour="wallet"]',
-        content: <div>Goto the &#39;Wallet&#39; tab</div>,
-        showNavigationNumber: false,
-        action: () => this.props.setActiveTab(WALLET),
-        style: stepStyle,
-      },
-      {
-        selector: '[data-tour="wallet-receive"]',
-        content: (<div>
-          Unlock your account:
-          <ol>
-            <li>Install the <A href="https://metamask.io/" target="_blank">MetaMask</A> plugin for Chrome, Edge, Firefox or Opera</li>
-            <li>Fund your MetaMask wallet with ether</li>
-            <li>Click the &#39;Unlock your Account&#39; button</li>
-          </ol>
-          {metaMaskWarning}
-        </div>),
-        showNavigationNumber: false,
-        style: stepStyle,
-      },
-      {
-        selector: '[data-tour="wallet-receive"]',
-        content: (<div>
-          <p>From the MetaMask wallet, deposit ether to your account address (in green).</p>
-          {confirmationNote}
-          {metaMaskWarning}
-        </div>),
-        style: stepStyle,
-      },
-      {
-        selector: '[data-tour="exchange"]',
-        content: <div>Goto the &#39;Exchange&#39; tab</div>,
-        action: () => {
-          this.props.setActiveTab(EXCHANGE);
-          this.props.setAmountUnit('eth');
-        },
-        style: stepStyle,
-      },
-      {
-        selector: '[data-tour="exchange-eth-form"]',
-        content: (<div>
-          <p>Select the &#39;Ethereum&#39; from the dropdown, and use the form to exchange ETH for NTZ.</p>
-          {confirmationNote}
-        </div>),
-        style: stepStyle,
-      },
-      {
-        selector: '[data-tour="invest"]',
-        content: <div>Goto the &#39;Invest&#39; tab</div>,
-        action: () => {
-          this.props.setActiveTab(INVEST);
-          this.props.setInvestType('powerUp');
-        },
-        style: stepStyle,
-      },
-      {
-        selector: '[data-tour="dashboard-invest-powerUp"]',
-        content: (<div>
-          <p>Using the Power Up form, Power Up your NTZ, and receive ABP.</p>
-          {confirmationNote}
-        </div>),
-        style: stepStyle,
-      },
-      {
-        selector: '[data-tour="dashboard-invest-powerUp"]',
-        content: 'Congratuations! You are now part of the Acebusters economy',
-        style: stepStyle,
-      },
-    ];
     return (
       <Container>
         <Tabs tabs={TABS} {...this.props} />
@@ -576,18 +483,7 @@ class DashboardRoot extends React.Component {
             ...this.props,
           }}
         />
-        <Tour
-          steps={STEPS}
-          isOpen={this.props.investTour}
-          onRequestClose={this.props.toggleInvestTour}
-          onBeforeClose={() => this.props.setActiveTab(OVERVIEW)}
-          scrollDuration={20}
-          showNavigationNumber={false}
-          showNavigation
-          showNumber={false}
-          startAt={0}
-          lastStepNextButton="Done"
-        />
+        <InvestTour {...this.props} />
       </Container>
     );
   }
@@ -602,11 +498,6 @@ DashboardRoot.propTypes = {
   proxyEvents: PropTypes.func,
   web3Redux: PropTypes.any,
   notifyCreate: PropTypes.func,
-  setActiveTab: PropTypes.func,
-  setAmountUnit: PropTypes.func,
-  setInvestType: PropTypes.func,
-  investTour: PropTypes.bool.isRequired,
-  toggleInvestTour: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
