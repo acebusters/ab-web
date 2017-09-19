@@ -33,7 +33,7 @@ const Invest = (props) => {
   const disabledTabs = account.isLocked ? [POWERDOWN] : [];
   return (
     <Pane name="dashboard-invest">
-      <Section data-tour={`dashboard-invest-${investType}`}>
+      <Section >
         <Tabs
           tabs={TABS}
           activeTab={investType}

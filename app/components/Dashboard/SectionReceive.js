@@ -98,7 +98,7 @@ export const AccountIsLocked = (props) => {
               outer: { marginTop: 'auto' },
             }}
           >
-            <Alert theme="success">
+            <Alert theme="success" data-tour="wallet-address">
               <Address style={{ width: 180 }}>{account.proxy}</Address>
             </Alert>
 
@@ -122,7 +122,7 @@ export const AccountIsLocked = (props) => {
         }
 
         {ethBalance && nutzBalance && floor &&
-          <Alert theme="warning">
+          <Alert theme="warning" data-tour="wallet-unlock">
             <FormattedMessage values={{ limit: ETH_FISH_LIMIT.toString() }} {...messages.ethLimit} />
             <BtnUpgrade {...props} />
             <AccountProgress
@@ -174,7 +174,11 @@ export const AccountNotLocked = ({
     </ReceiveWrapper>
 
     <ReceiveWrapper>
-      <Alert style={{ marginTop: 0, marginBottom: 10 }} theme="success">
+      <Alert
+        style={{ marginTop: 0, marginBottom: 10 }}
+        theme="success"
+        data-tour="wallet-address"
+      >
         <Address>{account.proxy}</Address>
       </Alert>
       {conf().firstBlockHash !== MAIN_NET_GENESIS_BLOCK &&
