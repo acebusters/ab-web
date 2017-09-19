@@ -343,7 +343,7 @@
     "pre-commit": "1.2.2",
     "react-addons-shallow-compare": "^15.6.0",
     "react-addons-test-utils": "15.6.0",
-    "redux-saga-tester": "^1.0.186",
+    "redux-saga-tester": "1.0.186",
     "rimraf": "2.6.1",
     "shelljs": "0.7.7",
     "sinon": "2.3.2",
