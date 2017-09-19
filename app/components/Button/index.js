@@ -48,7 +48,6 @@ const SharedButton = styled.button`
   }
 `;
 
-
 const Small = styled(SharedButton)`
   padding: 0.1em 0.5em;
   font-size: 16px;

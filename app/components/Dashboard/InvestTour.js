@@ -57,7 +57,7 @@ const InvestTour = ({
       style: stepStyle,
     },
     {
-      selector: '',
+      selector: '[data-tour="wallet"]',
       content: (
         <div>
           Unlock your account:<span style={{ float: 'right' }}>[1/2]</span>
@@ -135,7 +135,7 @@ const InvestTour = ({
       style: stepStyle,
     },
     {
-      selector: '',
+      selector: '[data-tour="powerUp"]',
       content: (
         <div>
           <Alert theme="success">
