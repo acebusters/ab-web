@@ -38,7 +38,8 @@ const Overview = (props) => {
           onClick={props.toggleInvestTour}
           data-tour="tour-begin"
         >
-          <i className="fa fa-graduation-cap" />&nbsp;Invest Tutorial
+          <i className="fa fa-graduation-cap" />&nbsp;
+          <FormattedMessage {...messages.investTutButton} />
         </Button>
       </SectionOverview>
       {account.refs && account.refs.length &&
