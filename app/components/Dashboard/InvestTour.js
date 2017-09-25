@@ -6,7 +6,6 @@ import {
   OVERVIEW,
   WALLET,
   EXCHANGE,
-  INVEST,
 } from '../../containers/Dashboard/actions';
 
 import A from '../A';
@@ -15,7 +14,6 @@ import Alert from '../Alert';
 const InvestTour = ({
   setActiveTab,
   setAmountUnit,
-  setInvestType,
   investTour,
   toggleInvestTour,
 }) => {
@@ -44,8 +42,10 @@ const InvestTour = ({
             <li>Unlock your account</li>
             <li>Deposit ether</li>
             <li>Exchange ether for nutz</li>
+            <li>Wait for the crowdsale to finish</li>
             <li>Power Up!</li>
           </ol>
+          <A href="http://help.acebusters.com/how-to-participate-in-the-crowdsale/invest-using-the-acebusters-dapp-recommended" target="_blank">Read the FAQ for more info.</A>
         </div>
       ),
       style: stepStyle,
@@ -117,6 +117,18 @@ const InvestTour = ({
       style: stepStyle,
     },
     {
+      selector: '[data-tour="exchange-eth-form"]',
+      content: (
+        <div>
+          <i style={{ margin: '10px auto 10px 40%' }} className="fa fa-4x fa-clock-o" />
+          <p>Wait for the crowdsale to finish. You will be notified by email.</p>
+          <p>Once notified you can Power Up and become and investor!</p>
+        </div>
+      ),
+      style: stepStyle,
+    },
+    /* commented-out until end of ICO
+    {
       selector: '[data-tour="invest"]',
       content: <div>Goto the &#39;Invest&#39; tab</div>,
       action: () => {
@@ -148,6 +160,7 @@ const InvestTour = ({
       ),
       style: stepStyle,
     },
+    */
   ];
   return (
     <Tour
@@ -170,7 +183,6 @@ const InvestTour = ({
 InvestTour.propTypes = {
   setActiveTab: PropTypes.func,
   setAmountUnit: PropTypes.func,
-  setInvestType: PropTypes.func,
   investTour: PropTypes.bool.isRequired,
   toggleInvestTour: PropTypes.func.isRequired,
 };
