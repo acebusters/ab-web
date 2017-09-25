@@ -17,7 +17,6 @@ const Economy = (props) => {
     babzBalance,
     messages,
   } = props;
-  // const testRatio = nutzBalance && totalSupplyBabz && nutzBalance.toNumber() / totalSupplyBabz.toNumber();
   const pwrPercentage = pwrBalance && totalSupplyPwr && pwrBalance.div(totalSupplyPwr).mul(100).toFormat(6);
   const nutzPercentage = babzBalance && totalSupplyBabz && babzBalance.div(totalSupplyBabz).mul(100).toFormat(6);
   const ECONOMY_LIST = [
@@ -82,13 +81,11 @@ const Economy = (props) => {
     2: { textAlign: 'left', width: 10, whiteSpace: 'nowrap' },
   };
   return (
-    <div>
-      <List
-        items={ECONOMY_LIST}
-        headers={['', 'Nutz', 'Power']}
-        columnsStyle={COL_STYLE}
-      />
-    </div>
+    <List
+      items={ECONOMY_LIST}
+      headers={['', 'Nutz', 'Power']}
+      columnsStyle={COL_STYLE}
+    />
   );
 };
 Economy.propTypes = {
