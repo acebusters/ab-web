@@ -443,7 +443,11 @@ class DashboardRoot extends React.Component {
     );
     return (
       <Container>
-        <Tabs tabs={TABS} {...this.props} />
+        <Tabs
+          tabs={TABS}
+          disabledTabs={[INVEST]}
+          {...this.props}
+        />
         <Balances
           babzBalance={babzBalance}
           pwrBalance={pwrBalance}
