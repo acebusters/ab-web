@@ -73,6 +73,7 @@ import {
   ABI_PROXY,
   ABI_TABLE_FACTORY,
   ABI_PULL_PAYMENT_CONTRACT,
+  MAIN_NET_GENESIS_BLOCK,
   conf,
 } from '../../app.config';
 
@@ -407,21 +408,12 @@ class DashboardRoot extends React.Component {
       account.proxy
     );
     // before crowdsale end, disable INVEST tab on production
-    const disabledTabs = () => {
-      let sub = '';
-      if (window && window.location && window.location.host) {
-        sub = window.location.host.split('.')[0];
-      }
-      if (sub === 'dapp') {
-        return [INVEST];
-      }
-      return [];
-    };
+    const disabledTabs = conf().firstBlockHash === MAIN_NET_GENESIS_BLOCK ? [INVEST] : [];
     return (
       <Container>
         <Tabs
           tabs={TABS}
-          disabledTabs={disabledTabs()}
+          disabledTabs={disabledTabs}
           {...this.props}
         />
         <Balances
