@@ -447,11 +447,22 @@ class DashboardRoot extends React.Component {
       tables,
       account.proxy
     );
+    // before crowdsale end, disable INVEST tab on production
+    const disabledTabs = () => {
+      let sub = '';
+      if (window && window.location && window.location.host) {
+        sub = window.location.host.split('.')[0];
+      }
+      if (sub === 'dapp') {
+        return [INVEST];
+      }
+      return [];
+    };
     return (
       <Container>
         <Tabs
           tabs={TABS}
-          disabledTabs={[INVEST]}
+          disabledTabs={disabledTabs()}
           {...this.props}
         />
         <Balances
