@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BigNumber from 'bignumber.js';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 
 import { ABP_DECIMALS } from '../../utils/amountFormatter';
@@ -15,26 +14,18 @@ import { Description } from './styles';
 const PowerDown = (props) => {
   const {
     messages,
-    totalSupplyPwr,
-    totalSupplyBabz,
     pwrBalance,
     handlePowerDown,
+    powerDownMinAbp,
+    calcABPtoNTZ,
   } = props;
-  const adjustmentFactor = (amount) => amount / 2;
-  const calcABPtoNTZ = (amount) => {
-    const abpAmount = new BigNumber(amount);
-    const ntzAmount = abpAmount.div(totalSupplyPwr).mul(totalSupplyBabz);
-    const adjNtzAmount = ntzAmount.div(2);
-    return adjNtzAmount.toFormat(0);
-  };
-  const minPowerDownPwr = totalSupplyPwr.div(adjustmentFactor(10000)).div(ABP_DECIMALS).round(3, BigNumber.ROUND_UP);
   return (
     <div>
       <Description>
         <FormattedHTMLMessage {...messages.powerDownDescr} />
         <Alert theme="info">
           <FormattedMessage
-            values={{ min: minPowerDownPwr }}
+            values={{ min: powerDownMinAbp }}
             {...messages.powerDownMin}
           />
         </Alert>
@@ -48,13 +39,13 @@ const PowerDown = (props) => {
           form="exchangeABPtoNTZ"
           handleExchange={handlePowerDown}
           maxAmount={pwrBalance.div(ABP_DECIMALS)}
-          minAmount={minPowerDownPwr}
+          minAmount={powerDownMinAbp}
           hideAddress
           label={<FormattedMessage {...messages.powerDownAmountLabel} />}
-          calcExpectedAmount={calcABPtoNTZ}
+          calcExpectedAmount={(num) => calcABPtoNTZ(num).toFormat(0)}
           expectedAmountUnit={NTZ}
           amountUnit={ABP}
-          placeholder="0.00"
+          placeholder="0.000"
           component={FormField}
           {...props}
         />
@@ -64,10 +55,10 @@ const PowerDown = (props) => {
 };
 PowerDown.propTypes = {
   messages: PropTypes.object.isRequired,
-  totalSupplyPwr: PropTypes.object.isRequired,
-  totalSupplyBabz: PropTypes.object.isRequired,
   handlePowerDown: PropTypes.func.isRequired,
   pwrBalance: PropTypes.object,
+  powerDownMinAbp: PropTypes.object.isRequired,
+  calcABPtoNTZ: PropTypes.func.isRequired,
 };
 
 export default PowerDown;

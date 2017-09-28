@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BigNumber from 'bignumber.js';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 
-import { formatAmount, toNtz, ABP_DECIMALS, NTZ_DECIMALS } from '../../utils/amountFormatter';
+import { formatAmount, toNtz, ABP_DECIMALS } from '../../utils/amountFormatter';
 
 import { ABP, NTZ } from '../../containers/Dashboard/actions';
 import ExchangeDialog from '../../containers/ExchangeDialog';
@@ -20,22 +19,12 @@ const PowerUp = (props) => {
     account,
     nutzBalance,
     handlePowerUp,
-    totalSupplyPwr,
-    totalSupplyBabz,
-    activeSupplyPwr,
+    totalAvailPwr,
+    powerUpRate,
+    powerUpMinNtz,
+    powerUpMaxBabz,
+    calcNTZtoABP,
   } = props;
-  const adjustmentFactor = (amount) => amount.mul(2);
-  const calcNTZtoABP = (amount) => {
-    const ntzAmount = new BigNumber(amount);
-    const abpAmount = totalSupplyPwr.mul(ntzAmount.div(totalSupplyBabz));
-    const adjustedAbp = adjustmentFactor(abpAmount);
-    return adjustedAbp.toFormat(3);
-  };
-  const totalAvailPwr = totalSupplyPwr.minus(activeSupplyPwr);
-  const powerUpRate = totalSupplyBabz.div(adjustmentFactor(totalSupplyPwr));
-  // ensure that more ABP than exists can not be requested
-  const powerUpMaxNtz = toNtz(totalAvailPwr.mul(totalSupplyBabz.div(adjustmentFactor(totalSupplyPwr)))).div(1000).round(0, BigNumber.ROUND_DOWN).mul(1000);
-  const powerUpMinNtz = totalSupplyBabz.div(NTZ_DECIMALS.mul(10000)).ceil();
   return (
     <div>
       <Description>
@@ -63,13 +52,13 @@ const PowerUp = (props) => {
         <ExchangeDialog
           form="exchangeNTZtoABP"
           handleExchange={handlePowerUp}
-          maxAmount={nutzBalance || powerUpMaxNtz}
+          maxAmount={nutzBalance || toNtz(powerUpMaxBabz)}
           minAmount={powerUpMinNtz}
           label={<FormattedMessage {...messages.powerUpAmountLabel} />}
           hideAddress
           amountUnit={NTZ}
           placeholder="0"
-          calcExpectedAmount={calcNTZtoABP}
+          calcExpectedAmount={(num) => calcNTZtoABP(num).toFormat(3)}
           expectedAmountUnit={ABP}
           component={FormField}
           {...props}
@@ -88,9 +77,11 @@ PowerUp.propTypes = {
   nutzBalance: PropTypes.object,
   messages: PropTypes.object.isRequired,
   handlePowerUp: PropTypes.func,
-  totalSupplyPwr: PropTypes.object.isRequired,
-  totalSupplyBabz: PropTypes.object.isRequired,
-  activeSupplyPwr: PropTypes.object.isRequired,
+  totalAvailPwr: PropTypes.object.isRequired,
+  powerUpRate: PropTypes.object.isRequired,
+  powerUpMinNtz: PropTypes.object.isRequired,
+  powerUpMaxBabz: PropTypes.object.isRequired,
+  calcNTZtoABP: PropTypes.func.isRequired,
 };
 
 export default PowerUp;
