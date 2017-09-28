@@ -86,7 +86,6 @@ import web3Connect from '../AccountProvider/web3Connect';
 import TableService, { getHand, fetchTableState } from '../../services/tableService';
 import JoinDialog from '../JoinDialog';
 import InviteDialog from '../InviteDialog';
-import RebuyDialog from '../RebuyDialog';
 
 const SpinnerWrapper = styled.div`
   position: absolute;
@@ -210,20 +209,26 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
     const toggleKey = this.tableAddr + handId;
     // display Rebuy modal if state === 'waiting' and user stack is no greater than 0
-    if (nextProps.state === 'waiting' && nextProps.myStack !== null && nextProps.myStack <= 0
-        && (nextProps.state !== this.props.state || nextProps.myStack !== this.props.myStack)
-        && !nextProps.standingUp && !storageService.getItem(`rebuyModal[${toggleKey}]`)) {
+    if (
+      nextProps.state === 'waiting' &&
+      nextProps.myStack !== null && nextProps.myStack <= 0 &&
+      (
+        nextProps.state !== this.props.state ||
+        (nextProps.myStack !== this.props.myStack && this.props.myStack > 0)
+      ) &&
+      !nextProps.standingUp && !storageService.getItem(`rebuyModal[${toggleKey}]`)
+    ) {
       const balance = this.balance;
 
       this.props.modalDismiss();
       this.props.modalAdd(
-        <RebuyDialog
-          pos={this.props.myPos}
-          handleRebuy={this.handleRebuy}
-          handleLeave={this.handleLeave}
+        <JoinDialog
+          onJoin={this.handleRebuy}
+          onLeave={() => this.handleLeave(this.props.myPos)}
           modalDismiss={this.props.modalDismiss}
           params={this.props.params}
           balance={balance && Number(balance.toString())}
+          rebuy
         />,
         { closeHandler: this.handleLeave }
       );
@@ -269,10 +274,10 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       `0x0${(myPos).toString(16)}${signerAddr.replace('0x', '')}`
     );
 
-    storageService.removeItem(`rebuyModal[${toggleKey}]`);
 
     return Promise.resolve(account.isLocked ? null : promise).then(() => {
       this.props.modalDismiss();
+      storageService.removeItem(`rebuyModal[${toggleKey}]`);
     });
   }
 
@@ -333,8 +338,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     if (open && myPos === undefined && !pending) {
       this.props.modalAdd((
         <JoinDialog
-          pos={pos}
-          handleJoin={this.handleJoin}
+          onJoin={(amount) => this.handleJoin(pos, amount)}
           modalDismiss={this.props.modalDismiss}
           params={this.props.params}
           balance={balance}
