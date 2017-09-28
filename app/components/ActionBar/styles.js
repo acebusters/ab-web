@@ -241,11 +241,22 @@ const FlagShared = styled.div`
 
 export const FlagBet = styled(FlagShared)`
   z-index: 1;
+  width: 80px;
+  padding: 0;
   ${(props) => props.sliderOpen ?
     `transform: translate(-26px, 30px);
     transition-delay: 0.3s;
     ` : `
     transform: translate(0px, 60px);`
+  }
+
+  input {
+    width: 100%;
+    font-weight: bold;
+    padding: 6px 10px 6px 10px;
+    outline: none;
+    background: #FFF;
+    border-radius: 4px 4px 0 0;
   }
 `;
 
