@@ -9,6 +9,7 @@ import { TableStriped } from 'components/List';
 import H2 from 'components/H2';
 import { createStructuredSelector } from 'reselect';
 import LobbyItem from '../LobbyItem';
+import LobbyMessage from '../LobbyMessage';
 import { tableReceived, lineupReceived, updateReceived } from '../Table/actions';
 import { makeSelectLobby } from './selectors';
 import web3Connect from '../AccountProvider/web3Connect';
@@ -105,6 +106,10 @@ class LobbyComponent extends React.PureComponent { // eslint-disable-line
             }}
           />
         </Button>
+
+        <LobbyMessage
+          bookmark="lobby-msg"
+        />
       </Container>
     );
   }
