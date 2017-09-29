@@ -251,12 +251,48 @@ export const FlagBet = styled(FlagShared)`
   }
 
   input {
+    -moz-appearance: textfield;
     width: 100%;
     font-weight: bold;
-    padding: 6px 10px 6px 10px;
+    padding: 6px 10px;
     outline: none;
     background: #FFF;
     border-radius: 4px 4px 0 0;
+    text-align: center;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  button {
+    font-weight: bold;
+
+    position: absolute;
+    z-index: 1;
+    top: 0;
+
+    width: 20px;
+    height: 100%;
+
+    line-height: 100%;
+    
+    outline: none;
+    cursor: pointer;
+    opacity: 0.7;
+
+    &:first-child {
+      left: 0;
+    }
+
+    &:last-child {
+      right: 0;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
   }
 `;
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import BigNumber from 'bignumber.js';
 
 import { FlagBet } from './styles';
 import { toNtz, NTZ_DECIMALS } from '../../utils/amountFormatter';
@@ -28,16 +29,23 @@ class FlagAmountBet extends React.Component {
       mode,
       active,
       disabled,
+      myStack,
+      minRaise,
     } = this.props;
     return (
       <FlagBet sliderOpen={sliderOpen}>
+        <button onClick={() => updateAmount(BigNumber.max(amount - NTZ_DECIMALS.toNumber(), minRaise))}>
+          -
+        </button>
         <input
           ref={(input) => {
             this.input = input;
           }}
           type="number"
           value={toNtz(amount)}
-          onChange={(e) => updateAmount(NTZ_DECIMALS.mul(parseInt(e.target.value, 10)))}
+          onChange={(e) => updateAmount(
+            BigNumber.min(BigNumber.max(NTZ_DECIMALS.mul(parseInt(e.target.value, 10)), minRaise), myStack)
+          )}
           onKeyUp={(e) => {
             if (e.keyCode === 13) {
               if (!active || disabled || mode === BET) return;
@@ -46,12 +54,17 @@ class FlagAmountBet extends React.Component {
             }
           }}
         />
+        <button onClick={() => updateAmount(BigNumber.min(amount + NTZ_DECIMALS.toNumber(), myStack))}>
+          +
+        </button>
       </FlagBet>
     );
   }
 }
 FlagAmountBet.propTypes = {
   amount: PropTypes.number,
+  myStack: PropTypes.number,
+  minRaise: PropTypes.number,
   updateAmount: PropTypes.func,
   sliderOpen: PropTypes.bool,
   handleClickButton: PropTypes.func,
