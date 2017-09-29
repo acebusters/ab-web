@@ -58,7 +58,6 @@ export default class LobbyMessage extends React.Component {
 
   render() {
     const { document } = this.state;
-    console.log(document);
 
     if (!document) {
       return null;
