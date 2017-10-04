@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import Footer from 'components/Footer';
-import Modal from 'components/Modal';
 import Header from 'containers/Header';
 import GoogleTagManager from 'containers/GTM';
+import Modal from 'containers/Modal';
 import Notifications from 'containers/Notifications';
 import App from '../index';
 

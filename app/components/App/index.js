@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import Content from 'components/Content';
 import Footer from 'components/Footer';
-import Modal from 'components/Modal';
 import GoogleTagManager from 'containers/GTM';
+import Modal from 'containers/Modal';
 import Notifications from 'containers/Notifications';
 import Header from 'containers/Header';
 import { conf } from '../../app.config';
