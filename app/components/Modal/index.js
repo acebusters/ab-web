@@ -5,12 +5,12 @@ import ModalContainer from './Container';
 import ModalDialog from './Dialog';
 import ModalsTransitionGroup from './ModalsTransitionGroup';
 
-const Modal = ({ modal, modalDismiss, handleClose }) => (
+const Modal = ({ modal, handleClose }) => (
   <ModalsTransitionGroup>
     {modal &&
       <ModalContainer
         style={{ zIndex: 7 }}
-        onClick={modal.backdrop ? (modal.closeHandler || modalDismiss) : null}
+        onClick={modal.backdrop ? handleClose : null}
       >
         <ModalDialog handleClose={handleClose}>
           {modal.node}
@@ -20,7 +20,6 @@ const Modal = ({ modal, modalDismiss, handleClose }) => (
   </ModalsTransitionGroup>
 );
 Modal.propTypes = {
-  modalDismiss: PropTypes.func,
   modal: PropTypes.shape({
     node: PropTypes.any,
     closeHandler: PropTypes.func,
