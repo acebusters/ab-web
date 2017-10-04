@@ -24,7 +24,7 @@ const XButton = () => (
 
 const Modal = ({ modal, handleClose }) => (
   <ModalsTransitionGroup>
-    {modal &&
+    {modal && // required for leaveAnim
       <ContainerTransitionGroup component={Wrapper} style={{ zIndex: 7 }}>
         <DialogTransitionGroup component={Modals}>
           <Background onClick={modal.backdrop ? handleClose : null} />
