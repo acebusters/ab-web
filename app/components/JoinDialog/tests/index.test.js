@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { JoinDialog } from '../index';
+import JoinDialog from '../index';
 
 describe('Join Dialog', () => {
   it('should not render the appropiate modal when balance is not sufficient ', () => {
