@@ -44,10 +44,7 @@ class ModalContainer extends React.Component {
 
   render() {
     return (
-      <Modal
-        handleClose={this.handleClose}
-        {...this.props}
-      />
+      <Modal handleClose={this.handleClose} {...this.props} />
     );
   }
 }
