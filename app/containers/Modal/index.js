@@ -18,6 +18,8 @@ class ModalContainer extends React.Component {
   componentWillUpdate(nextProps) {
     if (nextProps.modal) {
       window.addEventListener('keyup', this.handleKeyUp);
+    } else {
+      window.removeEventListener('keyup', this.handleKeyUp);
     }
   }
 
