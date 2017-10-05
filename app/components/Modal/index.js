@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import JoinDialog from 'containers/JoinDialog';
-import { JOIN_DIALOG } from 'containers/Modal/constants';
+import UpgradeDialog from 'containers/UpgradeDialog';
+import { JOIN_DIALOG, UPGRADE_DIALOG } from 'containers/Modal/constants';
 import ModalsTransitionGroup from './ModalsTransitionGroup';
 import { DialogTransitionGroup } from './DialogTransitionGroup';
 import { ContainerTransitionGroup } from './ContainerTransitionGroup';
@@ -25,6 +26,7 @@ const XButton = () => (
 
 const MODALS = {
   [JOIN_DIALOG]: JoinDialog,
+  [UPGRADE_DIALOG]: UpgradeDialog,
 };
 
 const Modal = ({ modal, handleClose }) => {
