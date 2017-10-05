@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import JoinDialog from 'containers/JoinDialog';
 import UpgradeDialog from 'containers/UpgradeDialog';
-import { JOIN_DIALOG, UPGRADE_DIALOG } from 'containers/Modal/constants';
+import * as modals from 'containers/Modal/constants';
+import FishWarningDialog from './FishWarningDialog';
 import ModalsTransitionGroup from './ModalsTransitionGroup';
 import { DialogTransitionGroup } from './DialogTransitionGroup';
 import { ContainerTransitionGroup } from './ContainerTransitionGroup';
@@ -25,8 +26,9 @@ const XButton = () => (
 );
 
 const MODALS = {
-  [JOIN_DIALOG]: JoinDialog,
-  [UPGRADE_DIALOG]: UpgradeDialog,
+  [modals.JOIN_DIALOG]: JoinDialog,
+  [modals.UPGRADE_DIALOG]: UpgradeDialog,
+  [modals.FISH_WARNING_DIALOG]: FishWarningDialog,
 };
 
 const Modal = ({ modal, handleClose }) => {
