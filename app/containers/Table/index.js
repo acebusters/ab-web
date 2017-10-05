@@ -21,6 +21,8 @@ import { nickNameByAddress } from '../../services/nicknames';
 import { formatNtz } from '../../utils/amountFormatter';
 import { promisifyWeb3Call } from '../../utils/promisifyWeb3Call';
 
+import { JOIN_DIALOG } from '../Modal/constants';
+
 // config data
 import {
   ABI_TABLE,
@@ -309,15 +311,16 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     }
 
     if (open && myPos === undefined && !pending) {
-      this.props.modalAdd(
-        <JoinDialog
-          onJoin={(amount) => this.handleJoin(pos, amount)}
-          modalDismiss={this.props.modalDismiss}
-          params={this.props.params}
-          balance={balance}
-        />,
-        { backdrop: true },
-      );
+      this.props.modalAdd({
+        modalType: JOIN_DIALOG,
+        modalProps: {
+          onJoin: (amount) => this.handleJoin(pos, amount),
+          modalDismiss: this.props.modalDismiss,
+          params: this.props.params,
+          balance,
+        },
+        backdrop: true,
+      });
     } else if (open && this.props.myPos !== undefined && !pending) {
       this.props.modalAdd((
         <InviteDialog />

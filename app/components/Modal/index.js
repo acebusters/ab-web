@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import JoinDialog from 'containers/JoinDialog';
+import { JOIN_DIALOG } from 'containers/Modal/constants';
 import ModalsTransitionGroup from './ModalsTransitionGroup';
 import { DialogTransitionGroup } from './DialogTransitionGroup';
 import { ContainerTransitionGroup } from './ContainerTransitionGroup';
@@ -22,28 +23,37 @@ const XButton = () => (
   </svg>
 );
 
-const Modal = ({ modal, handleClose }) => (
-  <ModalsTransitionGroup>
-    {modal && // required for leaveAnim
-      <ContainerTransitionGroup component={Wrapper} style={{ zIndex: 7 }}>
-        <DialogTransitionGroup component={Modals}>
-          <Background onClick={modal.backdrop ? handleClose : null} />
-          <DialogWrapper>
-            {modal.node}
+const MODALS = {
+  [JOIN_DIALOG]: JoinDialog,
+};
 
-            <CloseButton onClick={handleClose}>
-              <XButton />
-            </CloseButton>
-          </DialogWrapper>
-        </DialogTransitionGroup>
-      </ContainerTransitionGroup>
-    }
-  </ModalsTransitionGroup>
-);
+const Modal = ({ modal, handleClose }) => {
+  let SpecifiedModal; // required for leaveAnim
+  if (modal) {
+    SpecifiedModal = MODALS[modal.modalType];
+  }
+  return (
+    <ModalsTransitionGroup>
+      {modal && // required for leaveAnim
+        <ContainerTransitionGroup component={Wrapper} style={{ zIndex: 7 }}>
+          <DialogTransitionGroup component={Modals}>
+            <Background onClick={modal.modalProps.backdrop ? handleClose : null} />
+            <DialogWrapper>
+              <SpecifiedModal {...modal.modalProps} />
+              <CloseButton onClick={handleClose}>
+                <XButton />
+              </CloseButton>
+            </DialogWrapper>
+          </DialogTransitionGroup>
+        </ContainerTransitionGroup>
+      }
+    </ModalsTransitionGroup>
+  );
+};
 Modal.propTypes = {
   modal: PropTypes.shape({
-    node: PropTypes.any,
-    closeHandler: PropTypes.func,
+    modalType: PropTypes.string,
+    modalProps: PropTypes.object,
     backdrop: PropTypes.bool,
   }),
   handleClose: PropTypes.func,
