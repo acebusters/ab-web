@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import JoinDialog from 'containers/JoinDialog';
 import UpgradeDialog from 'containers/UpgradeDialog';
+import SelectToken from 'components/Modal/SelectToken';
 import * as modals from 'containers/Modal/constants';
 import FishWarningDialog from './FishWarningDialog';
 import ModalsTransitionGroup from './ModalsTransitionGroup';
@@ -29,6 +30,7 @@ const MODALS = {
   [modals.JOIN_DIALOG]: JoinDialog,
   [modals.UPGRADE_DIALOG]: UpgradeDialog,
   [modals.FISH_WARNING_DIALOG]: FishWarningDialog,
+  [modals.SELECT_TOKEN]: SelectToken,
 };
 
 const Modal = ({ modal, handleClose }) => {
