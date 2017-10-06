@@ -452,13 +452,10 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
         if (errorCode === 4) {
           msg = 'Sorry the Seat is taken';
         }
-
-        const errorElement = (
-          <div>
-            <h2>{msg}</h2>
-          </div>);
-
-        this.props.modalAdd(errorElement);
+        this.props.modalAdd({
+          modalType: CONFIRM_DIALOG,
+          modalProps: { msg, onSubmit: this.props.modalDismiss, buttonText: 'OK!' },
+        });
         break;
       }
 
