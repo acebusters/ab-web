@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import JoinDialog from 'containers/JoinDialog';
 import UpgradeDialog from 'containers/UpgradeDialog';
-import SelectToken from 'components/Modal/SelectToken';
 import * as modals from 'containers/Modal/constants';
+import ConfirmDialog from './ConfirmDialog';
+import SelectToken from './SelectToken';
 import FishWarningDialog from './FishWarningDialog';
 import ModalsTransitionGroup from './ModalsTransitionGroup';
 import { DialogTransitionGroup } from './DialogTransitionGroup';
@@ -27,6 +28,7 @@ const XButton = () => (
 );
 
 const MODALS = {
+  [modals.CONFIRM_DIALOG]: ConfirmDialog,
   [modals.JOIN_DIALOG]: JoinDialog,
   [modals.UPGRADE_DIALOG]: UpgradeDialog,
   [modals.FISH_WARNING_DIALOG]: FishWarningDialog,

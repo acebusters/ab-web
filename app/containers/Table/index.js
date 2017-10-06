@@ -15,13 +15,12 @@ import NotFoundPage from '../../containers/NotFoundPage';
 import Card from '../../components/Card';
 import { BoardCardWrapper } from '../../components/Table/Board';
 import Seat from '../Seat';
-import Button from '../../components/Button';
 import WithLoading from '../../components/WithLoading';
 import { nickNameByAddress } from '../../services/nicknames';
 import { formatNtz } from '../../utils/amountFormatter';
 import { promisifyWeb3Call } from '../../utils/promisifyWeb3Call';
 
-import { JOIN_DIALOG } from '../Modal/constants';
+import { CONFIRM_DIALOG, JOIN_DIALOG } from '../Modal/constants';
 
 // config data
 import {
@@ -366,17 +365,16 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     }
 
     this.props.setExitHand(this.tableAddr, this.props.latestHand, pos, exitHand);
-    const statusElement = (<div>
-      <p>
-        Please wait until your leave request is processed!
-        Until then your status will be shown as pending.
-      </p>
-      <Button onClick={this.props.modalDismiss}>OK!</Button>
-    </div>);
-
     storageService.removeItem(`rebuyModal[${this.tableAddr + handId}]`);
     this.props.modalDismiss();
-    this.props.modalAdd(statusElement);
+    this.props.modalAdd({
+      modalType: CONFIRM_DIALOG,
+      modalProps: {
+        msg: 'Please wait until your leave request is processed! Until then your status will be shown as pending.',
+        onSubmit: this.props.modalDismiss,
+        buttonText: 'OK!',
+      },
+    });
 
     if (!this.props.sitout) {
       await this.handleSitout();
