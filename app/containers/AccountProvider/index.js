@@ -70,7 +70,7 @@ function mapDispatchToProps(dispatch) {
   return {
     web3Connect: () => dispatch(web3Connect()),
     clearWeb3Error: () => dispatch(clearWeb3Error()),
-    modalAdd: (node) => dispatch(modalAdd(node)),
+    modalAdd: (payload) => dispatch(modalAdd(payload)),
     modalDismiss: () => dispatch(modalDismiss()),
   };
 }

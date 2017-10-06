@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import InviteDialog from 'containers/InviteDialog';
 import JoinDialog from 'containers/JoinDialog';
 import UpgradeDialog from 'containers/UpgradeDialog';
 import * as modals from 'containers/Modal/constants';
@@ -29,10 +30,11 @@ const XButton = () => (
 
 const MODALS = {
   [modals.CONFIRM_DIALOG]: ConfirmDialog,
-  [modals.JOIN_DIALOG]: JoinDialog,
-  [modals.UPGRADE_DIALOG]: UpgradeDialog,
   [modals.FISH_WARNING_DIALOG]: FishWarningDialog,
+  [modals.INVITE_DIALOG]: InviteDialog,
+  [modals.JOIN_DIALOG]: JoinDialog,
   [modals.SELECT_TOKEN]: SelectToken,
+  [modals.UPGRADE_DIALOG]: UpgradeDialog,
 };
 
 const Modal = ({ modal, handleClose }) => {

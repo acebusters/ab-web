@@ -20,7 +20,7 @@ import { nickNameByAddress } from '../../services/nicknames';
 import { formatNtz } from '../../utils/amountFormatter';
 import { promisifyWeb3Call } from '../../utils/promisifyWeb3Call';
 
-import { CONFIRM_DIALOG, JOIN_DIALOG } from '../Modal/constants';
+import { CONFIRM_DIALOG, JOIN_DIALOG, INVITE_DIALOG } from '../Modal/constants';
 
 // config data
 import {
@@ -82,8 +82,6 @@ import {
 import TableComponent from '../../components/Table';
 import web3Connect from '../AccountProvider/web3Connect';
 import TableService from '../../services/tableService';
-import JoinDialog from '../JoinDialog';
-import InviteDialog from '../InviteDialog';
 
 const SpinnerWrapper = styled.div`
   position: absolute;
@@ -195,17 +193,18 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       const balance = this.balance;
 
       this.props.modalDismiss();
-      this.props.modalAdd(
-        <JoinDialog
-          onJoin={this.handleRebuy}
-          onLeave={() => this.handleLeave(this.props.myPos)}
-          modalDismiss={this.props.modalDismiss}
-          params={this.props.params}
-          balance={balance && Number(balance.toString())}
-          rebuy
-        />,
-        { closeHandler: this.handleLeave }
-      );
+      this.props.modalAdd({
+        modalType: JOIN_DIALOG,
+        modalProps: {
+          onJoin: this.handleRebuy,
+          onLeave: () => this.handleLeave(this.props.myPos),
+          modalDismiss: this.props.modalDismiss,
+          params: this.props.params,
+          balance: balance && Number(balance.toString()),
+          rebuy: true,
+        },
+        closeHandler: this.handleLeave,
+      });
     }
   }
 
@@ -321,9 +320,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
         backdrop: true,
       });
     } else if (open && this.props.myPos !== undefined && !pending) {
-      this.props.modalAdd((
-        <InviteDialog />
-      ));
+      this.props.modalAdd({ modalType: INVITE_DIALOG });
     }
   }
 
