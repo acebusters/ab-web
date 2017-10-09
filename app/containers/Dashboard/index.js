@@ -220,8 +220,8 @@ class DashboardRoot extends React.Component {
     this.power.downtime.call();
     this.power.totalSupply.call();
     this.power.activeSupply.call();
-    if (typeof this.power.minimumPowerUpSizeBabz === 'function') {
-      this.power.minimumPowerUpSizeBabz.call();
+    if (typeof this.controller.minimumPowerUpSizeBabz === 'function') {
+      this.controller.minimumPowerUpSizeBabz.call();
     }
     this.power.allEvents({
       toBlock: 'latest',
@@ -397,8 +397,8 @@ class DashboardRoot extends React.Component {
     const totalSupplyPwr = this.power.totalSupply();
     const activeSupplyPwr = this.power.activeSupply();
     const activeSupplyBabz = this.token.activeSupply();
-    if (typeof this.power.minimumPowerUpSizeBabz === 'function') {
-      minPowerUpBabz = this.power.minimumPowerUpSizeBabz();
+    if (typeof this.controller.minimumPowerUpSizeBabz === 'function') {
+      minPowerUpBabz = this.controller.minimumPowerUpSizeBabz();
     } else {
       minPowerUpBabz = 10000;
     }
