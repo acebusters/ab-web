@@ -399,12 +399,20 @@ const makeMySitoutSelector = () => createSelector(
 );
 
 const makeMyPosSelector = () => createSelector(
-  [makeLineupSelector(), makeSignerAddrSelector()],
-  (lineup, myAddress) => {
+  [makeLineupSelector(), makeReservationSelector(), makeSignerAddrSelector()],
+  (lineup, reservation, myAddress) => {
     try {
       return pokerHelper.getMyPos(lineup.toJS(), myAddress);
     } catch (e) {
-      return undefined;
+      const reservationLineup = reservation.map((item) => ({
+        address: item.get('signerAddr'),
+      })).toList().toJS();
+
+      try {
+        return pokerHelper.getMyPos(reservationLineup, myAddress);
+      } catch (e2) {
+        return undefined;
+      }
     }
   }
 );
