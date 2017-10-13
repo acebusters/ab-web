@@ -99,6 +99,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
     this.handleSitout = this.handleSitout.bind(this);
+    this.handleOpponentCall = this.handleOpponentCall.bind(this);
     this.handleJoin = this.handleJoin.bind(this);
     this.handleRebuy = this.handleRebuy.bind(this);
     this.isTaken = this.isTaken.bind(this);
@@ -325,6 +326,10 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
         <InviteDialog />
       ));
     }
+  }
+
+  handleOpponentCall() {
+    this.tableService.callOpponent();
   }
 
   handleSitout() {
@@ -561,6 +566,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
             potSize={this.props.potSize}
             onLeave={() => this.handleLeave(this.props.myPos)}
             onSitout={this.handleSitout}
+            onCallOpponent={this.handleOpponentCall}
           />
         }
       </div>
