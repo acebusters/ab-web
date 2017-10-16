@@ -9,6 +9,8 @@ import { normalizerFloat } from '../../utils/amountFormatter';
 import { validateFloat } from '../../utils/inputValidators';
 
 import { makeSelectCanSendTx } from '../../containers/AccountProvider/selectors';
+import { modalAdd, modalDismiss } from '../../containers/App/actions';
+import { setAmountUnit } from '../../containers/Dashboard/actions';
 
 import TokenDialog from '../../components/TransferDialog/TokenDialog';
 
@@ -59,7 +61,11 @@ const mapStateToProps = createStructuredSelector({
   canSendTx: makeSelectCanSendTx(),
 });
 
-export default connect(mapStateToProps)(
+export default connect(mapStateToProps, {
+  modalAdd,
+  modalDismiss,
+  setAmountUnit,
+})(
   reduxForm({
     form: 'transfer',
     validate,

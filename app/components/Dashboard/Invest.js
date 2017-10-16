@@ -41,6 +41,10 @@ const Invest = (props) => {
     totalSupplyPwr,
     activeSupplyPwr,
     minPowerUpBabz,
+    pwrBalance,
+    nutzBalance,
+    handlePowerUp,
+    handlePowerDown,
   } = props;
   const disabledTabs = account.isLocked ? [POWERDOWN] : [];
   const adjTotalSupplyPwr = totalSupplyPwr.mul(2);
@@ -72,14 +76,19 @@ const Invest = (props) => {
           panes={PANES}
           paneType={investType}
           paneProps={{
+            account,
             powerDownMinAbp,
             calcABPtoNTZ,
             calcNTZtoABP,
             powerUpRate,
+            nutzBalance,
             powerUpMaxBabz,
             powerUpMinNtz,
             totalAvailPwr,
-            ...props,
+            messages,
+            handlePowerUp,
+            handlePowerDown,
+            pwrBalance,
           }}
         />
       </Section>
@@ -94,5 +103,9 @@ Invest.propTypes = {
   totalSupplyPwr: PropTypes.object.isRequired,
   minPowerUpBabz: PropTypes.object.isRequired,
   activeSupplyPwr: PropTypes.object.isRequired,
+  pwrBalance: PropTypes.object.isRequired,
+  nutzBalance: PropTypes.object.isRequired,
+  handlePowerUp: PropTypes.func.isRequired,
+  handlePowerDown: PropTypes.func.isRequired,
 };
 export default Invest;

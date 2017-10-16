@@ -53,6 +53,15 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         privKey: getState().get('privKey'),
         callback: typeof last(args) === 'function' ? last(args) : undefined,
       }),
+      estimateGas: (...args) => new Promise((resolve, reject) => {
+        contractInstance[methodName].estimateGas(...args, (err, gas) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(Math.round(gas * 1.9));
+          }
+        });
+      }),
     }, dispatch);
     // base getter
     // reads cached contract method call from state

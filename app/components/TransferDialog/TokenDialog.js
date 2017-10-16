@@ -33,6 +33,7 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
       canSendTx,
       normalizer,
       placeholder,
+      submitWarning,
     } = this.props;
     return (
       <div style={{ maxWidth: 480 }}>
@@ -64,6 +65,8 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
 
           <Web3Alerts />
 
+          {submitWarning}
+
           <SubmitButton
             type="submit"
             disabled={invalid || !canSendTx}
@@ -92,6 +95,7 @@ TokenDialog.propTypes = {
   reset: PropTypes.func,
   normalizer: PropTypes.func,
   placeholder: PropTypes.string,
+  submitWarning: PropTypes.any,
 };
 TokenDialog.defaultProps = {
   minAmount: new BigNumber(0),

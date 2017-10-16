@@ -3,12 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import BigNumber from 'bignumber.js';
 
-import {
-  NTZ_DECIMALS,
-  ETH_DECIMALS,
-  formatNtz,
-  formatEth,
-} from '../../utils/amountFormatter';
+import { NTZ_DECIMALS, ETH_DECIMALS, formatNtz, formatEth } from '../../utils/amountFormatter';
 import { round } from '../../utils';
 
 import ExchangeDialog from '../../containers/ExchangeDialog';
@@ -19,10 +14,11 @@ import Alert from '../Alert';
 
 import { Pane, Section, ExchangeContainer } from './styles';
 
+import { ETH_FISH_LIMIT } from '../../app.config';
+
 const Exchange = (props) => {
   const {
     amountUnit,
-    ETH_FISH_LIMIT,
     messages,
     account,
     ethBalance,
@@ -65,7 +61,7 @@ const Exchange = (props) => {
               )}
               placeholder="0"
               expectedAmountUnit={ETH}
-              {...props}
+              messages={props.messages}
             />
           }
           {amountUnit === ETH && ethBalance && ceiling &&
@@ -93,7 +89,7 @@ const Exchange = (props) => {
               )}
               placeholder="0.00"
               expectedAmountUnit={NTZ}
-              {...props}
+              messages={props.messages}
             />
           }
         </ExchangeContainer>
@@ -102,7 +98,6 @@ const Exchange = (props) => {
   );
 };
 Exchange.propTypes = {
-  ETH_FISH_LIMIT: PropTypes.object,
   amountUnit: PropTypes.oneOf([ETH, NTZ]),
   account: PropTypes.object,
   ethBalance: PropTypes.object,
