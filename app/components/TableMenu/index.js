@@ -52,7 +52,6 @@ class TableMenu extends React.Component {
     super(props);
     this.state = {
       calledOpponent: false,
-      hideCallOpponent: false,
     };
 
     this.handleOpponentCall = this.handleOpponentCall.bind(this);
@@ -69,7 +68,6 @@ class TableMenu extends React.Component {
     if (typeof this.props.onCallOpponent === 'function') {
       this.props.onCallOpponent();
       this.setState({ calledOpponent: true });
-      setTimeout(() => this.setState({ hideCallOpponent: true }), 2000);
     }
   }
 
@@ -78,7 +76,7 @@ class TableMenu extends React.Component {
       loggedIn, open, sitout, isMuted,
       handleClickLogout, onLeave, onSitout, handleClickMuteToggle,
     } = this.props;
-    const { calledOpponent, hideCallOpponent } = this.state;
+    const { calledOpponent } = this.state;
 
     const isSitoutFlag = typeof sitout === 'number';
     const menuClose = [
@@ -105,13 +103,13 @@ class TableMenu extends React.Component {
       },
     ];
 
-    if (!hideCallOpponent) {
+    if (!calledOpponent) {
       menuClose.push({
         name: 'call-opponent',
         icon: 'fa fa-bullhorn',
-        title: calledOpponent ? 'Called' : 'Call an opponent',
+        title: 'Call an opponent',
         onClick: this.handleOpponentCall,
-        disabled: calledOpponent,
+        disabled: false,
       });
     }
 

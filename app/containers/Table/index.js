@@ -329,6 +329,12 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   handleOpponentCall() {
+    this.props.modalAdd(
+      <div style={{ textAlign: 'center' }}>
+        <p>Request sent. Wait for an opponent several minutes</p>
+        <Button onClick={this.props.modalDismiss}>OK</Button>
+      </div>
+    );
     this.tableService.callOpponent();
   }
 
