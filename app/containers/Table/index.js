@@ -98,6 +98,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
     this.handleSitout = this.handleSitout.bind(this);
+    this.handleOpponentCall = this.handleOpponentCall.bind(this);
     this.handleJoin = this.handleJoin.bind(this);
     this.handleRebuy = this.handleRebuy.bind(this);
     this.isTaken = this.isTaken.bind(this);
@@ -324,6 +325,16 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     } else if (open && this.props.myPos !== undefined && !pending) {
       this.props.modalAdd({ modalType: INVITE_DIALOG });
     }
+  }
+
+  handleOpponentCall() {
+    this.props.modalAdd(
+      <div style={{ textAlign: 'center' }}>
+        <p>Request sent. Wait for an opponent several minutes</p>
+        <Button onClick={this.props.modalDismiss}>OK</Button>
+      </div>
+    );
+    this.tableService.callOpponent();
   }
 
   handleSitout() {
@@ -556,6 +567,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
             potSize={this.props.potSize}
             onLeave={() => this.handleLeave(this.props.myPos)}
             onSitout={this.handleSitout}
+            onCallOpponent={this.handleOpponentCall}
           />
         }
       </div>
