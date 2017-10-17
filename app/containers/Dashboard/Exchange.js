@@ -24,7 +24,9 @@ class Exchange extends React.Component {
     super(props);
 
     this.handleNTZPurchase = this.handleNTZPurchase.bind(this);
+    this.estimateNTZPurchase = this.estimateNTZPurchase.bind(this);
     this.handleNTZSell = this.handleNTZSell.bind(this);
+    this.estimateNTZSell = this.estimateNTZSell.bind(this);
 
     this.web3 = props.web3Redux.web3;
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
@@ -65,6 +67,15 @@ class Exchange extends React.Component {
     });
   }
 
+  estimateNTZSell(amount) {
+    const floor = this.token.floor();
+    return this.token.sell.estimateGas(
+      floor,
+      new BigNumber(amount).mul(NTZ_DECIMALS),
+      { from: this.props.account.proxy },
+    );
+  }
+
   async handleNTZPurchase(amount) {
     this.props.notifyCreate(PURCHASE_NTZ, { amount });
 
@@ -89,27 +100,37 @@ class Exchange extends React.Component {
     });
   }
 
+  estimateNTZPurchase(amount) {
+    const ceiling = this.token.ceiling();
+
+    return this.token.purchase.estimateGas(
+      ceiling,
+      {
+        from: this.props.account.proxy,
+        value: new BigNumber(amount).mul(ETH_DECIMALS),
+      },
+    );
+  }
+
   render() {
     const { account, amountUnit } = this.props;
     const weiBalance = this.web3.eth.balance(account.proxy);
-    const ethBalance = weiBalance && weiBalance.div(ETH_DECIMALS);
     const babzBalance = this.token.balanceOf(account.proxy);
-    const nutzBalance = babzBalance && babzBalance.div(NTZ_DECIMALS);
-    const floor = this.token.floor();
-    const ceiling = this.token.ceiling();
 
     return (
       <ExchangeComponent
         {...{
           account,
           amountUnit,
-          floor,
-          ceiling,
-          ethBalance,
-          nutzBalance,
+          floor: this.token.floor(),
+          ceiling: this.token.ceiling(),
+          ethBalance: weiBalance && weiBalance.div(ETH_DECIMALS),
+          nutzBalance: babzBalance && babzBalance.div(NTZ_DECIMALS),
           messages,
           handleNTZSell: this.handleNTZSell,
+          estimateNTZSell: this.estimateNTZSell,
           handleNTZPurchase: this.handleNTZPurchase,
+          estimateNTZPurchase: this.estimateNTZPurchase,
         }}
       />
     );

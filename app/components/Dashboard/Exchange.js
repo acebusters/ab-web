@@ -26,7 +26,9 @@ const Exchange = (props) => {
     ceiling,
     floor,
     handleNTZSell,
+    estimateNTZSell,
     handleNTZPurchase,
+    estimateNTZPurchase,
   } = props;
   const calcETHAmount = (ntz) => new BigNumber(ntz.toString()).div(floor);
   const calcNTZAmount = (eth) => ceiling.mul(eth.toString());
@@ -53,6 +55,7 @@ const Exchange = (props) => {
               amountUnit={NTZ}
               calcExpectedAmount={calcExpectedAmountETH}
               handleExchange={handleNTZSell}
+              estimateExchange={estimateNTZSell}
               maxAmount={BigNumber.min(
                 account.isLocked
                   ? BigNumber.max(ETH_FISH_LIMIT.sub(ethBalance), 0).mul(floor)
@@ -81,6 +84,7 @@ const Exchange = (props) => {
               amountUnit={ETH}
               calcExpectedAmount={calcExpectedAmountNTZ}
               handleExchange={handleNTZPurchase}
+              estimateExchange={estimateNTZPurchase}
               maxAmount={BigNumber.min(
                 account.isLocked
                   ? BigNumber.max(ETH_FISH_LIMIT.sub(calcETHAmount(nutzBalance)), 0)
@@ -106,7 +110,9 @@ Exchange.propTypes = {
   ceiling: PropTypes.object,
   floor: PropTypes.object,
   handleNTZSell: PropTypes.func,
+  estimateNTZSell: PropTypes.func,
   handleNTZPurchase: PropTypes.func,
+  estimateNTZPurchase: PropTypes.func,
 };
 
 export default Exchange;
