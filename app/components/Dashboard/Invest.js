@@ -44,7 +44,9 @@ const Invest = (props) => {
     pwrBalance,
     nutzBalance,
     handlePowerUp,
+    estimatePowerUp,
     handlePowerDown,
+    estimatePowerDown,
   } = props;
   const disabledTabs = account.isLocked ? [POWERDOWN] : [];
   const adjTotalSupplyPwr = totalSupplyPwr.mul(2);
@@ -87,7 +89,9 @@ const Invest = (props) => {
             totalAvailPwr,
             messages,
             handlePowerUp,
+            estimatePowerUp,
             handlePowerDown,
+            estimatePowerDown,
             pwrBalance,
           }}
         />
@@ -106,6 +110,8 @@ Invest.propTypes = {
   pwrBalance: PropTypes.object.isRequired,
   nutzBalance: PropTypes.object.isRequired,
   handlePowerUp: PropTypes.func.isRequired,
+  estimatePowerUp: PropTypes.func.isRequired,
   handlePowerDown: PropTypes.func.isRequired,
+  estimatePowerDown: PropTypes.func.isRequired,
 };
 export default Invest;

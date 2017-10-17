@@ -49,7 +49,9 @@ class Invest extends React.Component {
     super(props);
 
     this.handlePowerUp = this.handlePowerUp.bind(this);
+    this.estimatePowerUp = this.estimatePowerUp.bind(this);
     this.handlePowerDown = this.handlePowerDown.bind(this);
+    this.estimatePowerDown = this.estimatePowerDown.bind(this);
 
     this.web3 = props.web3Redux.web3;
     this.controller = this.web3.eth.contract(ABI_CONTROLLER_CONTRACT).at(confParams.contrAddr);
@@ -80,6 +82,12 @@ class Invest extends React.Component {
     });
   }
 
+  estimatePowerUp(amount) {
+    return this.token.powerUp.estimateGas(
+      new BigNumber(amount).mul(NTZ_DECIMALS),
+    );
+  }
+
   handlePowerDown(amount) {
     this.props.notifyCreate(POWERDOWN, { amount });
     return this.handleTxSubmit((callback) => {
@@ -91,34 +99,35 @@ class Invest extends React.Component {
     });
   }
 
+  estimatePowerDown(amount) {
+    return this.power.transfer.estimateGas(
+      0,
+      new BigNumber(amount).mul(ABP_DECIMALS),
+    );
+  }
+
   render() {
     const { account, investType } = this.props;
-    const completeSupplyBabz = this.controller.completeSupply();
-    const totalSupplyPwr = this.power.totalSupply();
-    const activeSupplyPwr = this.power.activeSupply();
-    const activeSupplyBabz = this.token.activeSupply();
-    const minPowerUpBabz = this.controller.minimumPowerUpSizeBabz();
     const babzBalance = this.token.balanceOf(account.proxy);
-    const nutzBalance = babzBalance && babzBalance.div(NTZ_DECIMALS);
-    const pwrBalance = this.power.balanceOf(account.proxy);
 
     return (
       <InvestComponent
         {...{
           account,
           setInvestType: this.props.setInvestType,
-          minPowerUpBabz,
-          babzBalance,
-          pwrBalance,
-          nutzBalance,
-          totalSupplyPwr,
-          completeSupplyBabz,
-          activeSupplyPwr,
-          activeSupplyBabz,
+          minPowerUpBabz: this.controller.minimumPowerUpSizeBabz(),
+          pwrBalance: this.power.balanceOf(account.proxy),
+          nutzBalance: babzBalance && babzBalance.div(NTZ_DECIMALS),
+          totalSupplyPwr: this.power.totalSupply(),
+          completeSupplyBabz: this.controller.completeSupply(),
+          activeSupplyPwr: this.power.activeSupply(),
+          activeSupplyBabz: this.token.activeSupply(),
           messages,
           investType,
-          handlePowerDown: this.handlePowerDown,
           handlePowerUp: this.handlePowerUp,
+          estimatePowerUp: this.estimatePowerUp,
+          handlePowerDown: this.handlePowerDown,
+          estimatePowerDown: this.estimatePowerDown,
         }}
       />
     );

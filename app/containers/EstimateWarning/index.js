@@ -36,14 +36,15 @@ class EstimateWarning extends React.Component {
 
   render() {
     const { injected } = this.props;
+    const { gas } = this.state;
 
-    if (!injected) {
+    if (!injected || !gas) {
       return null;
     }
 
     return (
       <Alert>
-        Be sure to give at least <FormattedNumber value={this.state.gas} /> gas limit for your transaction.
+        Be sure to give at least <FormattedNumber value={gas} /> gas limit for your transaction.
         Otherwise&nbsp;transaction can be failed
       </Alert>
     );
