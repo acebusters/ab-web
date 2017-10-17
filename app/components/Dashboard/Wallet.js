@@ -21,6 +21,8 @@ function Wallet(props) {
     nutzBalance,
     handleNTZTransfer,
     handleETHTransfer,
+    estimateNTZTransfer,
+    estimateETHTransfer,
     amountUnit,
   } = props;
 
@@ -42,6 +44,7 @@ function Wallet(props) {
           {amountUnit === ETH && ethBalance &&
             <TransferDialog
               handleTransfer={handleETHTransfer}
+              estimateTransfer={estimateETHTransfer}
               maxAmount={ethBalance}
               type="token"
               placeholder="0.00"
@@ -53,6 +56,7 @@ function Wallet(props) {
           {amountUnit === NTZ && nutzBalance &&
             <TransferDialog
               handleTransfer={handleNTZTransfer}
+              estimateTransfer={estimateNTZTransfer}
               maxAmount={nutzBalance}
               type="token"
               placeholder="0"
@@ -71,7 +75,9 @@ Wallet.propTypes = {
   ethBalance: PropTypes.object,
   nutzBalance: PropTypes.object,
   handleNTZTransfer: PropTypes.func,
+  estimateNTZTransfer: PropTypes.func,
   handleETHTransfer: PropTypes.func,
+  estimateETHTransfer: PropTypes.func,
   amountUnit: PropTypes.string,
   messages: PropTypes.object,
 };

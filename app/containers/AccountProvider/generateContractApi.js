@@ -1,7 +1,9 @@
 import { bindActionCreators } from 'redux';
+import BigNumber from 'bignumber.js';
 import { contractMethodCall, contractTxSend } from './actions';
 import { getWeb3 } from './sagas';
 import { last } from '../../utils';
+import { promisifyWeb3Call } from '../../utils/promisifyWeb3Call';
 
 import { ABI_PROXY } from '../../app.config';
 
@@ -19,6 +21,15 @@ export function getMethodKey({ groupName, methodName, args }) {
 
 function isForward(methodName, contractInstance) {
   return methodName === 'forward' && contractInstance.abi === ABI_PROXY;
+}
+
+function proxyInstance(proxyAddr) {
+  proxyInstance.cache = proxyInstance.cache || {};
+  if (!proxyInstance.cache[proxyAddr]) {
+    proxyInstance.cache[proxyAddr] = getWeb3().eth.contract(ABI_PROXY).at(proxyAddr);
+  }
+
+  return proxyInstance.cache[proxyAddr];
 }
 
 function generateContractInstanceApi({ abi, address, getState, dispatch }) {
@@ -53,15 +64,6 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         privKey: getState().get('privKey'),
         callback: typeof last(args) === 'function' ? last(args) : undefined,
       }),
-      estimateGas: (...args) => new Promise((resolve, reject) => {
-        contractInstance[methodName].estimateGas(...args, (err, gas) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(Math.round(gas * 1.9));
-          }
-        });
-      }),
     }, dispatch);
     // base getter
     // reads cached contract method call from state
@@ -80,9 +82,21 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         return resolve(value);
       });
     });
+    const estimateGas = (...args) => {
+      const options = typeof last(args) === 'function' ? args[args.length - 2] : last(args);
+      const isForwardCall = isForward(methodName, contractInstance);
+      const data = !isForwardCall ? contractInstance[methodName].getData(...args) : '';
+      const txArgs = isForwardCall ? args.slice(0, 3) : [address, options.value || new BigNumber(0), data];
+      const proxy = proxyInstance(getState().get('proxy'));
+
+      return promisifyWeb3Call(proxy.forward.estimateGas)(...txArgs, {
+        from: getState().get('injected'),
+      }).then((gas) => Math.round(gas * 1.9));
+    };
     // add actions to base getter
     contractMethod.call = actions.call;
     contractMethod.sendTransaction = actions.sendTransaction;
+    contractMethod.estimateGas = estimateGas;
     contractMethod.callPromise = callPromise;
     // // reduce with added actions
     return { ...o, [methodName]: contractMethod };

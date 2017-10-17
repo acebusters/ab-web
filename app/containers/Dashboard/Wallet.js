@@ -24,7 +24,9 @@ class Wallet extends React.Component {
     super(props);
 
     this.handleNTZTransfer = this.handleNTZTransfer.bind(this);
+    this.estimateNTZTransfer = this.estimateNTZTransfer.bind(this);
     this.handleETHTransfer = this.handleETHTransfer.bind(this);
+    this.estimateETHTransfer = this.estimateETHTransfer.bind(this);
 
     this.web3 = props.web3Redux.web3;
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
@@ -75,16 +77,24 @@ class Wallet extends React.Component {
     });
   }
 
-  handleETHTransfer(amount, dest) {
+  estimateNTZTransfer(amount, to) {
+    return this.token.transfer.estimateGas(to, new BigNumber(amount).mul(NTZ_DECIMALS));
+  }
+
+  handleETHTransfer(amount, to) {
     this.props.notifyCreate(TRANSFER_ETH, { amount });
     return this.handleTxSubmit((callback) => {
       this.proxy.forward.sendTransaction(
-        dest,
+        to,
         new BigNumber(amount).mul(ETH_DECIMALS),
         '',
         callback
       );
     });
+  }
+
+  estimateETHTransfer(amount, to) {
+    return this.proxy.forward.estimateGas(to, new BigNumber(amount).mul(ETH_DECIMALS), '');
   }
 
   render() {
@@ -108,7 +118,9 @@ class Wallet extends React.Component {
           messages,
           isFishWarned,
           handleNTZTransfer: this.handleNTZTransfer,
+          estimateNTZTransfer: this.estimateNTZTransfer,
           handleETHTransfer: this.handleETHTransfer,
+          estimateETHTransfer: this.estimateETHTransfer,
           fishWarn: this.fishWarn,
           amountUnit,
         }}

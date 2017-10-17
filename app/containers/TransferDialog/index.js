@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ethUtil from 'ethereumjs-util';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form/immutable';
+import { reduxForm, formValueSelector } from 'redux-form/immutable';
 
 import { normalizerFloat } from '../../utils/amountFormatter';
 import { validateFloat } from '../../utils/inputValidators';
@@ -57,8 +57,12 @@ TransferDialogContainer.defaultProps = {
   type: 'default',
 };
 
+const valueSelector = formValueSelector('transfer');
+const fieldSelector = (field) => (state) => valueSelector(state, field);
 const mapStateToProps = createStructuredSelector({
   canSendTx: makeSelectCanSendTx(),
+  amount: fieldSelector('amount'),
+  address: fieldSelector('address'),
 });
 
 export default connect(mapStateToProps, {

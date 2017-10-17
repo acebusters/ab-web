@@ -4,12 +4,13 @@ import { Form, Field } from 'redux-form/immutable';
 import BigNumber from 'bignumber.js';
 
 import Web3Alerts from '../../containers/Web3Alerts';
+import EstimateWarning from '../../containers/EstimateWarning';
 import { ErrorMessage } from '../FormMessages';
 import SubmitButton from '../SubmitButton';
 import FormField from '../Form/FormField';
 import TokenAmountField from '../Form/TokenAmountField';
 
-class TokenDialog extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class TokenDialog extends React.Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,6 +27,9 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
     const {
       error,
       handleSubmit,
+      estimateTransfer,
+      amount,
+      address,
       submitting,
       maxAmount,
       minAmount,
@@ -33,8 +37,8 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
       canSendTx,
       normalizer,
       placeholder,
-      submitWarning,
     } = this.props;
+
     return (
       <div style={{ maxWidth: 480 }}>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
@@ -65,7 +69,12 @@ class TokenDialog extends React.Component { // eslint-disable-line react/prefer-
 
           <Web3Alerts />
 
-          {submitWarning}
+          {!invalid && canSendTx && amount && address &&
+            <EstimateWarning
+              estimate={estimateTransfer}
+              args={[amount, address]}
+            />
+          }
 
           <SubmitButton
             type="submit"
@@ -95,7 +104,9 @@ TokenDialog.propTypes = {
   reset: PropTypes.func,
   normalizer: PropTypes.func,
   placeholder: PropTypes.string,
-  submitWarning: PropTypes.any,
+  estimateTransfer: PropTypes.func,
+  amount: PropTypes.string,
+  address: PropTypes.string,
 };
 TokenDialog.defaultProps = {
   minAmount: new BigNumber(0),
