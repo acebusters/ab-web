@@ -29,7 +29,7 @@ class EstimateWarning extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.estimate !== this.props.estimate && props.args !== this.props.args) {
+    if (props.estimate !== this.props.estimate || props.args !== this.props.args) {
       this.runEstimate(props.estimate, props.args);
     }
   }
