@@ -43,7 +43,6 @@ const confParams = conf();
  */
 const initialState = fromJS({
   proxy: null,
-  failedTx: null,
   events: null,
   activeTab: OVERVIEW,
   amountUnit: ETH,
