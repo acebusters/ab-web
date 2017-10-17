@@ -385,9 +385,9 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     this.props.modalAdd({
       modalType: CONFIRM_DIALOG,
       modalProps: {
-        msg: 'Please wait until your leave request is processed! Until then your status will be shown as pending.',
+        msg: <FormattedMessage {...messages.leaveInProgress} />,
         onSubmit: this.props.modalDismiss,
-        buttonText: 'OK!',
+        buttonText: <FormattedMessage {...messages.ok} />,
       },
     });
 
