@@ -49,7 +49,7 @@ class EstimateWarning extends React.Component {
     return (
       <Alert>
         Be sure to give at least <FormattedNumber value={gas} /> gas limit for your transaction.
-        Otherwise&nbsp;transaction can be failed
+        Otherwise&nbsp;transaction can fail
       </Alert>
     );
   }
