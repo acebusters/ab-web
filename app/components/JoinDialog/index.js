@@ -4,9 +4,9 @@ import { FormattedMessage } from 'react-intl';
 import { Form, Field } from 'redux-form/immutable';
 import SubmitButton from 'components/SubmitButton';
 import RangeSlider from 'components/Slider/RangeSlider';
-import H2 from 'components/H2';
 import Web3Alerts from 'containers/Web3Alerts';
 import messages from 'containers/JoinDialog/messages';
+import RebuyDialog from 'components/RebuyDialog';
 
 import { formatNtz } from '../../utils/amountFormatter';
 
@@ -27,7 +27,6 @@ export class JoinDialog extends React.Component {
       sb,
       canSendTx,
       balance,
-      modalDismiss,
       handleSubmit,
       amount,
       submitting,
@@ -39,15 +38,7 @@ export class JoinDialog extends React.Component {
     const tableMax = sb * 200;
     const max = (balance < tableMax) ? balance - (balance % sb) : tableMax;
     if (balance < min) {
-      return (
-        <div style={{ minWidth: '20em' }}>
-          <H2><FormattedMessage {...messages.sorry} /></H2>
-          <p><FormattedMessage {...(rebuy ? messages.balanceOutRebuy : messages.balanceOutJoin)} /></p>
-          <SubmitButton onClick={modalDismiss}>
-            <FormattedMessage {...messages.ok} />
-          </SubmitButton>
-        </div>
-      );
+      return <RebuyDialog messages={messages} {...this.props} />;
     }
     return (
       <Form style={{ minWidth: '20em' }} onSubmit={handleSubmit(this.handleSubmit)}>
@@ -85,7 +76,6 @@ JoinDialog.propTypes = {
   onLeave: PropTypes.func,
   rebuy: PropTypes.bool,
   handleSubmit: PropTypes.func,
-  modalDismiss: PropTypes.func,
   canSendTx: PropTypes.bool,
   sb: PropTypes.number,
   submitting: PropTypes.bool,

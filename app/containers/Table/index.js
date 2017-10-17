@@ -204,7 +204,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
         modalProps: {
           onJoin: this.handleRebuy,
           onLeave: () => this.handleLeave(this.props.myPos),
-          modalDismiss: this.props.modalDismiss,
           params: this.props.params,
           balance: balance && Number(balance.toString()),
           rebuy: true,
@@ -319,7 +318,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
         modalType: JOIN_DIALOG,
         modalProps: {
           onJoin: (amount) => this.handleJoin(pos, amount),
-          modalDismiss: this.props.modalDismiss,
           params: this.props.params,
           balance,
         },
@@ -487,12 +485,11 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       return seats;
     }
     for (let i = 0; i < lineup.length; i += 1) {
-      const sitout = lineup[i].sitout;
       seats.push(
         <Seat
           key={i}
           pos={i}
-          sitout={sitout}
+          sitout={lineup[i].sitout}
           signerAddr={lineup[i].address}
           params={this.props.params}
           changed={changed}
@@ -580,8 +577,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 }
 
-
-export function mapDispatchToProps() {
+function mapDispatchToProps() {
   return {
     loadTable,
     handRequest,

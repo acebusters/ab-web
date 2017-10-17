@@ -5,11 +5,12 @@ import { reduxForm, formValueSelector } from 'redux-form/immutable';
 import 'react-rangeslider/lib/index.css';
 import { createStructuredSelector } from 'reselect';
 
+import { modalDismiss } from '../App/actions';
 import { makeSbSelector } from '../Table/selectors';
 import { makeSelectProxyAddr, makeSelectCanSendTx } from '../AccountProvider/selectors';
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatch,
+  modalDismiss: () => dispatch(modalDismiss()),
 });
 
 const valueSelector = formValueSelector('join');
