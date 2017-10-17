@@ -34,7 +34,9 @@ class Overview extends React.Component {
     super(props);
 
     this.handleETHPayout = this.handleETHPayout.bind(this);
+    this.estimateETHPayout = this.estimateETHPayout.bind(this);
     this.handleABPPayout = this.handleABPPayout.bind(this);
+    this.estimateABPPayout = this.estimateABPPayout.bind(this);
 
     this.web3 = props.web3Redux.web3;
     this.controller = this.web3.eth.contract(ABI_CONTROLLER_CONTRACT).at(confParams.contrAddr);
@@ -51,6 +53,10 @@ class Overview extends React.Component {
     this.pullPayment.withdraw.sendTransaction({ from: this.props.account.proxyAddr });
   }
 
+  estimateETHPayout() {
+    return this.pullPayment.withdraw.estimateGas({ from: this.props.account.proxyAddr });
+  }
+
   handleABPPayout() {
     const { account } = this.props;
     this.power.downTick.sendTransaction(account.proxy, (err, txHash) => {
@@ -58,6 +64,11 @@ class Overview extends React.Component {
         waitForTx(getWeb3(), txHash).then(() => this.power.downs.call(account.proxy));
       }
     });
+  }
+
+  estimateABPPayout() {
+    const { account } = this.props;
+    return this.power.downTick.estimateGas(account.proxy);
   }
 
   render() {
@@ -97,7 +108,9 @@ class Overview extends React.Component {
           toggleInvestTour: this.props.toggleInvestTour,
           downs: downs && [...downs],
           handleETHPayout: this.handleETHPayout,
+          estimateETHPayout: this.estimateETHPayout,
           handleABPPayout: this.handleABPPayout,
+          estimateABPPayout: this.estimateABPPayout,
         }}
       />
     );

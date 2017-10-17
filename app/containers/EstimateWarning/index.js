@@ -11,7 +11,11 @@ class EstimateWarning extends React.Component {
   static propTypes = {
     estimate: PropTypes.func.isRequired,
     args: PropTypes.array.isRequired,
-    injected: PropTypes.string.isRequired,
+    injected: PropTypes.string,
+  };
+
+  static defaultProps = {
+    args: [],
   };
 
   constructor(props) {

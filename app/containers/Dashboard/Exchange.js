@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import web3Connect from '../AccountProvider/web3Connect';
 import { ETH_DECIMALS, NTZ_DECIMALS } from '../../utils/amountFormatter';
 import { SELL_NTZ, PURCHASE_NTZ } from '../Notifications/constants';
+import { notifyCreate } from '../Notifications/actions';
 
 import makeSelectAccountData from '../AccountProvider/selectors';
 
@@ -148,4 +149,4 @@ const mapStateToProps = createStructuredSelector({
   amountUnit: getAmountUnit(),
 });
 
-export default web3Connect(mapStateToProps, () => ({}))(Exchange);
+export default web3Connect(mapStateToProps, () => ({ notifyCreate }))(Exchange);
