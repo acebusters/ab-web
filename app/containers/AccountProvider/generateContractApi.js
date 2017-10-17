@@ -56,6 +56,7 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         methodName,
         key: getMethodKey({ methodName, args }),
         dest: address,
+        estimateGas: estimateGas(...args),
         data: (
           !isForward(methodName, contractInstance)
             ? contractInstance[methodName].getData(...args)
@@ -91,7 +92,7 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
 
       return promisifyWeb3Call(proxy.forward.estimateGas)(...txArgs, {
         from: getState().get('injected'),
-      }).then((gas) => Math.round(gas * 1.1));
+      }).then((gas) => Math.round((gas * 1.1) / 1000) * 1000);
     };
     // add actions to base getter
     contractMethod.call = actions.call;

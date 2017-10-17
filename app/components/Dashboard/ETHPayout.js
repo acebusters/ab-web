@@ -23,12 +23,14 @@ export default function ETHPayout({ payoutDate, amount, handlePayout, estimatePa
       <p style={{ fontSize: 18, margin: '-5px 0 10px' }}>
         {amount} ETH
       </p>
-      <Timed until={payoutDate.toNumber()}>
-        <EstimateWarning
-          estimate={estimatePayout}
-          args={[amount]}
-        />
-      </Timed>
+      {!pending &&
+        <Timed until={payoutDate.toNumber()}>
+          <EstimateWarning
+            estimate={estimatePayout}
+            args={[amount]}
+          />
+        </Timed>
+      }
       <TimedButton
         until={payoutDate.toNumber()}
         onClick={() => handlePayout(amount)}

@@ -34,9 +34,11 @@ export default function ABPPayout({ downs, downtime, handlePayout, estimatePayou
         <PayoutDate request={downs} downtime={downtime} />
       </div>
 
-      <Timed until={nextPayoutDate}>
-        <EstimateWarning estimate={estimatePayout} />
-      </Timed>
+      {!pending &&
+        <Timed until={nextPayoutDate}>
+          <EstimateWarning estimate={estimatePayout} />
+        </Timed>
+      }
 
       <TimedButton
         until={nextPayoutDate}
