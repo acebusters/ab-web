@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
 import Pusher from 'pusher-js';
@@ -29,6 +30,8 @@ import {
   TIMEOUT_PERIOD,
   conf,
 } from '../../app.config';
+
+import messages from './messages';
 
 import { modalAdd, modalDismiss } from '../App/actions';
 // actions
@@ -328,12 +331,14 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   handleOpponentCall() {
-    this.props.modalAdd(
-      <div style={{ textAlign: 'center' }}>
-        <p>Request sent. Wait for an opponent several minutes</p>
-        <Button onClick={this.props.modalDismiss}>OK</Button>
-      </div>
-    );
+    this.props.modalAdd({
+      modalType: CONFIRM_DIALOG,
+      modalProps: {
+        msg: <FormattedMessage {...messages.opponentCallSent} />,
+        onSubmit: this.props.modalDismiss,
+        buttonText: <FormattedMessage {...messages.ok} />,
+      },
+    });
     this.tableService.callOpponent();
   }
 
