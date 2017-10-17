@@ -15,7 +15,7 @@ const ConfirmDialog = ({ title, msg, buttonText, onSubmit }) => (
 );
 ConfirmDialog.propTypes = {
   title: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-  msg: PropTypes.string.isRequired,
+  msg: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired,
   buttonText: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
