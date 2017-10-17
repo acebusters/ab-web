@@ -6,7 +6,6 @@ import {
   PROXY_EVENTS,
   CONTRACT_TX_SENDED,
   CONTRACT_TX_FAILED,
-  CONTRACT_TX_ERROR,
   SET_AUTH,
 } from '../AccountProvider/actions';
 
@@ -52,14 +51,6 @@ const initialState = fromJS({
   investTour: false,
 });
 
-function formatTxErrorMessage(error) {
-  if (typeof error === 'string' && error.indexOf('Error: MetaMask Tx Signature') > -1) {
-    return 'Transaction denied';
-  }
-
-  return error;
-}
-
 function dashboardReducer(state = initialState, action) {
   const { payload, meta = {} } = action;
 
@@ -87,12 +78,6 @@ function dashboardReducer(state = initialState, action) {
         initEvents(state),
         payload
       );
-
-    case CONTRACT_TX_ERROR:
-      return state.set('failedTx', fromJS({
-        ...payload,
-        error: formatTxErrorMessage(payload.error),
-      }));
 
     case CONTRACT_TX_FAILED:
       return state.withMutations((st) => {

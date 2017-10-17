@@ -107,13 +107,14 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
   return api;
 }
 
-export default function generateContractAPI({ getState, dispatch }) {
+export default function generateContractAPI({ getState, dispatch, web3 }) {
   const cache = {};
   return (abi) => {
     const api = {
       at(address) {
         if (!cache[address]) {
           cache[address] = generateContractInstanceApi({ abi, address, getState, dispatch });
+          cache[address].web3 = web3;
         }
         return cache[address];
       },
