@@ -10,14 +10,13 @@ import messages from '../messages';
 export function* errorModalSaga(dispatch) {
   while (true) { // eslint-disable-line
     const { payload } = yield take(CONTRACT_TX_ERROR);
-    const error = formatTxErrorMessage(payload.error);
 
     yield put(modalAdd({
       modalType: CONFIRM_DIALOG,
       modalProps: {
         title: <FormattedMessage {...messages.transactionErrorTitle} />,
-        msg: error,
-        onSubmit: () => dispatch(modalDismiss),
+        msg: formatTxErrorMessage(payload.error),
+        onSubmit: () => dispatch(modalDismiss()),
         buttonText: <FormattedMessage {...messages.ok} />,
       },
     }));
@@ -25,7 +24,7 @@ export function* errorModalSaga(dispatch) {
 }
 
 function formatTxErrorMessage(error) {
-  if (typeof error === 'string' && error.indexOf('Error: MetaMask Tx Signature') > -1) {
+  if (typeof error === 'string' && error.indexOf('MetaMask Tx Signature') > -1) {
     return 'Transaction denied';
   }
 
