@@ -38,7 +38,7 @@ function* contractTransactionSend(action) {
   const sendTransaction = yield call(promisifyWeb3Call, proxy.forward.sendTransaction);
   const gas = yield call(estimateGas, ...txArgs, { from: injectedAddr });
 
-  return yield call(sendTransaction, ...txArgs, { from: injectedAddr, gas: Math.round(gas * 1.9) });
+  return yield call(sendTransaction, ...txArgs, { from: injectedAddr, gas: Math.round(gas * 1.1) });
 }
 
 export function* contractTransactionSendSaga() {
