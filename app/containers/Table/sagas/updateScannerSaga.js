@@ -48,7 +48,7 @@ export function* updateScanner(pokerHelper) {
     }
 
     // reset payedBlind on hand revert after undefined distribution
-    if (action.hand.cards.length === 0) {
+    if (action.hand.cards && action.hand.cards.length === 0) {
       payedBlind[toggleKey] = false;
     }
 
