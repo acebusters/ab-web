@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { Form, Field } from 'redux-form/immutable';
+import Slider from 'components/Form/Slider';
 import SubmitButton from 'components/SubmitButton';
-import RangeSlider from 'components/Slider/RangeSlider';
 import Web3Alerts from 'containers/Web3Alerts';
 import EstimateWarning from 'containers/EstimateWarning';
 import messages from 'containers/JoinDialog/messages';
@@ -25,7 +25,6 @@ export class JoinDialog extends React.Component {
 
   render() {
     const {
-      sb,
       canSendTx,
       balance,
       handleSubmit,
@@ -34,10 +33,12 @@ export class JoinDialog extends React.Component {
       submitting,
       onLeave,
       rebuy,
+      tableStakes: {
+        sb,
+        min,
+        tableMax,
+      },
     } = this.props;
-
-    const min = sb * 40;
-    const tableMax = sb * 200;
     const max = (balance < tableMax) ? balance - (balance % sb) : tableMax;
     if (balance < min) {
       return <RebuyDialog messages={messages} {...this.props} />;
@@ -45,8 +46,11 @@ export class JoinDialog extends React.Component {
     return (
       <Form style={{ maxWidth: '30em' }} onSubmit={handleSubmit(this.handleSubmit)}>
         <Field
-          component={RangeSlider}
+          component={Slider}
           name="amount"
+          value={amount}
+          onAfterChange={(value) => this.props.changeFieldValue('join', 'amount', value)}
+          onChange={(value) => this.props.changeFieldValue('join', 'amount', value)}
           min={min}
           max={max}
           step={sb}
@@ -87,10 +91,11 @@ JoinDialog.propTypes = {
   handleSubmit: PropTypes.func,
   estimate: PropTypes.func,
   canSendTx: PropTypes.bool,
-  sb: PropTypes.number,
+  tableStakes: PropTypes.object,
   submitting: PropTypes.bool,
   amount: PropTypes.number,
-  balance: React.PropTypes.number,
+  balance: PropTypes.number,
+  changeFieldValue: PropTypes.func,
 };
 
 export default JoinDialog;
