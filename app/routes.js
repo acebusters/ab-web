@@ -2,6 +2,8 @@
 // They are all wrapped in the App component, which should contain the navbar etc
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
 // about the code splitting business
+import TableFrame from 'components/Frames/Tables';
+import DashboardFrame from 'components/Frames/Dashboard';
 import { getAsyncInjectors } from './utils/asyncInjectors';
 import { accountSaga } from './containers/AccountProvider/sagas';
 import { tableStateSaga } from './containers/Table/sagas';
@@ -47,7 +49,7 @@ export default function createRoutes(store) {
     appSaga,
   ]);
 
-  return [
+  const dashboard = [
     {
       path: '/',
       name: 'default',
@@ -57,7 +59,8 @@ export default function createRoutes(store) {
           state: { nextPathname: nextState.location.pathname },
         });
       },
-    }, {
+    },
+    {
       path: '/lobby',
       name: 'lobby',
       getComponent(nextState, cb) {
@@ -72,7 +75,8 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-    }, {
+    },
+    {
       onEnter: checkAuth,
       childRoutes: [{
         path: '/dashboard',
@@ -95,24 +99,8 @@ export default function createRoutes(store) {
           importModules.catch(errorLoading);
         },
       }],
-    }, {
-      path: '/table/:tableAddr',
-      name: 'table',
-      getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          import('containers/Table/reducer'),
-          import('containers/Table'),
-        ]);
-        const renderRoute = loadModule(cb);
-
-        importModules.then(([reducer, component]) => {
-          injectReducer('table', reducer.default);
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
-      },
-    }, {
+    },
+    {
       path: '/login',
       name: 'login',
       getComponent(nextState, cb) {
@@ -129,7 +117,8 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-    }, {
+    },
+    {
       path: '/register(/ref/:refCode)',
       name: 'register',
       getComponent(nextState, cb) {
@@ -146,7 +135,8 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-    }, {
+    },
+    {
       path: '/reset',
       name: 'reset',
       getComponent(nextState, cb) {
@@ -161,7 +151,8 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-    }, {
+    },
+    {
       path: '/generate/:confCode',
       name: 'generate',
       getComponent(nextState, cb) {
@@ -178,7 +169,8 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-    }, {
+    },
+    {
       path: '/confirm',
       name: 'confirmPage',
       getComponent(location, cb) {
@@ -186,7 +178,8 @@ export default function createRoutes(store) {
           .then(loadModule(cb))
           .catch(errorLoading);
       },
-    }, {
+    },
+    {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {
@@ -194,6 +187,38 @@ export default function createRoutes(store) {
           .then(loadModule(cb))
           .catch(errorLoading);
       },
+    },
+  ];
+
+  const tables = [
+    {
+      path: '/table/:tableAddr',
+      name: 'table',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/Table/reducer'),
+          import('containers/Table'),
+        ]);
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, component]) => {
+          injectReducer('table', reducer.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+  ];
+
+  return [
+    {
+      component: TableFrame,
+      childRoutes: [...tables],
+    },
+    {
+      component: DashboardFrame,
+      childRoutes: [...dashboard],
     },
   ];
 }
