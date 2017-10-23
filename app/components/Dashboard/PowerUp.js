@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import BigNumber from 'bignumber.js';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 
+import BtnUpgrade from 'containers/Button/BtnUpgrade';
 import { formatAmount, toNtz, ABP_DECIMALS } from '../../utils/amountFormatter';
 
 import { ABP, NTZ } from '../../containers/Dashboard/actions';
@@ -12,7 +13,6 @@ import FormField from '../Form/FormField';
 import Alert from '../Alert';
 
 import { Description } from './styles';
-import BtnUpgrade from './BtnUpgrade';
 
 const PowerUp = (props) => {
   const {
@@ -26,8 +26,6 @@ const PowerUp = (props) => {
     powerUpMaxBabz,
     powerUpMinNtz,
     calcNTZtoABP,
-    modalAdd,
-    modalDismiss,
   } = props;
   return (
     <div>
@@ -71,7 +69,7 @@ const PowerUp = (props) => {
       }
       {account.isLocked &&
         <Alert theme="warning">
-          <BtnUpgrade {...{ account, messages, modalAdd, modalDismiss }} />&nbsp;to Power Up.
+          <BtnUpgrade {...{ account, messages }} />&nbsp;to Power Up.
         </Alert>
       }
     </div>
@@ -88,8 +86,6 @@ PowerUp.propTypes = {
   powerUpMaxBabz: PropTypes.object.isRequired,
   powerUpMinNtz: PropTypes.object.isRequired,
   calcNTZtoABP: PropTypes.func.isRequired,
-  modalAdd: PropTypes.func.isRequired,
-  modalDismiss: PropTypes.func.isRequired,
 };
 
 export default PowerUp;

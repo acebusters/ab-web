@@ -93,8 +93,6 @@ const Invest = (props) => {
             handlePowerDown,
             estimatePowerDown,
             pwrBalance,
-            modalAdd: props.modalAdd,
-            modalDismiss: props.modalDismiss,
           }}
         />
       </Section>
@@ -115,7 +113,5 @@ Invest.propTypes = {
   estimatePowerUp: PropTypes.func.isRequired,
   handlePowerDown: PropTypes.func.isRequired,
   estimatePowerDown: PropTypes.func.isRequired,
-  modalAdd: PropTypes.func.isRequired,
-  modalDismiss: PropTypes.func.isRequired,
 };
 export default Invest;
