@@ -10,9 +10,9 @@ import ExchangeDialog from '../../containers/ExchangeDialog';
 
 import FormField from '../Form/FormField';
 import Alert from '../Alert';
-import BtnUpgrade from '../Dashboard/BtnUpgrade';
 
 import { Description } from './styles';
+import BtnUpgrade from './BtnUpgrade';
 
 const PowerUp = (props) => {
   const {
@@ -26,6 +26,8 @@ const PowerUp = (props) => {
     powerUpMaxBabz,
     powerUpMinNtz,
     calcNTZtoABP,
+    modalAdd,
+    modalDismiss,
   } = props;
   return (
     <div>
@@ -69,7 +71,7 @@ const PowerUp = (props) => {
       }
       {account.isLocked &&
         <Alert theme="warning">
-          <BtnUpgrade {...props} />&nbsp;to Power Up.
+          <BtnUpgrade {...{ account, messages, modalAdd, modalDismiss }} />&nbsp;to Power Up.
         </Alert>
       }
     </div>
@@ -86,6 +88,8 @@ PowerUp.propTypes = {
   powerUpMaxBabz: PropTypes.object.isRequired,
   powerUpMinNtz: PropTypes.object.isRequired,
   calcNTZtoABP: PropTypes.func.isRequired,
+  modalAdd: PropTypes.func.isRequired,
+  modalDismiss: PropTypes.func.isRequired,
 };
 
 export default PowerUp;

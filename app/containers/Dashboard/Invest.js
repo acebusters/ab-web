@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import BigNumber from 'bignumber.js';
 
-import { modalDismiss } from '../App/actions';
+import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
 import {
   NTZ_DECIMALS,
@@ -128,6 +128,8 @@ class Invest extends React.Component {
           estimatePowerUp: this.estimatePowerUp,
           handlePowerDown: this.handlePowerDown,
           estimatePowerDown: this.estimatePowerDown,
+          modalAdd: this.props.modalAdd,
+          modalDismiss: this.props.modalDismiss,
         }}
       />
     );
@@ -136,6 +138,7 @@ class Invest extends React.Component {
 Invest.propTypes = {
   account: PropTypes.object,
   modalDismiss: PropTypes.func.isRequired,
+  modalAdd: PropTypes.func.isRequired,
   web3Redux: PropTypes.any,
   notifyCreate: PropTypes.func.isRequired,
   investType: PropTypes.oneOf([POWERUP, POWERDOWN]).isRequired,
@@ -163,5 +166,6 @@ export default web3Connect(
     setAmountUnit,
     notifyCreate,
     modalDismiss,
+    modalAdd,
   }),
 )(Invest);
