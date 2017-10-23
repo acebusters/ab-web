@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyledDashboard } from 'components/App/styles';
+import Notifications from 'containers/Notifications';
+import { StyledTable } from './styles';
 
 const TableFrame = (props) => (
-  <StyledDashboard params={props.params} name="styled-dashboard">
+  <StyledTable name="styled-dashboard">
+    <Notifications {...{ isNotTable: false, location }} />
     {React.Children.toArray(props.children)}
-  </StyledDashboard>
+  </StyledTable>
 );
 TableFrame.propTypes = {
   children: PropTypes.node,
-  params: PropTypes.object.isRequired,
 };
 
 export default TableFrame;

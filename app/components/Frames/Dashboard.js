@@ -1,19 +1,33 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import Header from 'containers/Header';
 import Footer from 'components/Footer';
-import { StyledDashboard } from 'components/App/styles';
+import Notifications from 'containers/Notifications';
+import { selectNotifications } from 'containers/Notifications/selectors';
+import { StyledDashboard } from './styles';
 
 const DashboardFrame = (props) => (
-  <StyledDashboard params={props.params} name="styled-dashboard">
+  <div>
     <Header {...props} />
-    {React.Children.toArray(props.children)}
+    <Notifications {...{ isNotTable: true, location }} />
+    <StyledDashboard
+      move={props.notifications.length > 0}
+      name="styled-dashboard"
+    >
+      {React.Children.toArray(props.children)}
+    </StyledDashboard>
     <Footer />
-  </StyledDashboard>
+  </div>
 );
 DashboardFrame.propTypes = {
   children: PropTypes.node.isRequired,
-  params: PropTypes.object.isRequired,
+  notifications: PropTypes.array.isRequired,
 };
 
-export default DashboardFrame;
+const mapStateToProps = createStructuredSelector({
+  notifications: selectNotifications(),
+});
+
+export default connect(mapStateToProps)(DashboardFrame);
