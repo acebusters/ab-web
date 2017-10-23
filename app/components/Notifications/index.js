@@ -4,11 +4,9 @@ import Notification from './Notification';
 
 const Notifications = (props) => (
   <div>
-    {props.notifications.length !== 0 &&
-      props.notifications.map(
-        (item, i) => <Notification key={i} {...item} {...props} />,
-      )
-    }
+    {props.notifications.map(
+      (item, i) => <Notification key={i} {...item} {...props} />,
+    )}
   </div>
 );
 Notifications.propTypes = {
