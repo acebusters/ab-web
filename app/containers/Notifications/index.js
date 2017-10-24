@@ -18,7 +18,7 @@ const NotificationsContainer = ({ location: { pathname }, ...props }) => {
   return null;
 };
 NotificationsContainer.propTypes = {
-  location: PropTypes.object.isRequired,
+  location: PropTypes.shape({ pathname: PropTypes.string.isRequired }),
 };
 
 const mapStateToProps = createStructuredSelector({
