@@ -2,6 +2,7 @@
 // They are all wrapped in the App component, which should contain the navbar etc
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
 // about the code splitting business
+import App from 'containers/App';
 import TableFrame from 'components/Frames/Tables';
 import DashboardFrame from 'components/Frames/Dashboard';
 import { getAsyncInjectors } from './utils/asyncInjectors';
@@ -51,15 +52,6 @@ export default function createRoutes(store) {
 
   const dashboard = [
     {
-      path: '/',
-      name: 'default',
-      onEnter: (nextState, replace) => {
-        replace({
-          pathname: '/lobby',
-          state: { nextPathname: nextState.location.pathname },
-        });
-      },
-    }, {
       path: 'lobby',
       name: 'lobby',
       getComponent(nextState, cb) {
@@ -205,6 +197,16 @@ export default function createRoutes(store) {
 
   return [
     {
+      component: App,
+      path: '/',
+      name: 'default',
+      onEnter: (nextState, replace) => {
+        replace({
+          pathname: '/lobby',
+          state: { nextPathname: nextState.location.pathname },
+        });
+      },
+    }, {
       component: TableFrame,
       childRoutes: [...tables],
     }, {
