@@ -60,7 +60,7 @@ export default function createRoutes(store) {
         });
       },
     }, {
-      path: '/lobby',
+      path: 'lobby',
       name: 'lobby',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -77,7 +77,7 @@ export default function createRoutes(store) {
     }, {
       onEnter: checkAuth,
       childRoutes: [{
-        path: '/dashboard',
+        path: 'dashboard',
         name: 'dashboard',
         getComponent(nextState, cb) {
           const importModules = Promise.all([
@@ -98,7 +98,7 @@ export default function createRoutes(store) {
         },
       }],
     }, {
-      path: '/login',
+      path: 'login',
       name: 'login',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -115,7 +115,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/register(/ref/:refCode)',
+      path: 'register(/ref/:refCode)',
       name: 'register',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -132,7 +132,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/reset',
+      path: 'reset',
       name: 'reset',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -147,7 +147,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/generate/:confCode',
+      path: 'generate/:confCode',
       name: 'generate',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -164,7 +164,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/confirm',
+      path: 'confirm',
       name: 'confirmPage',
       getComponent(location, cb) {
         import('containers/ConfirmPage')
@@ -184,7 +184,7 @@ export default function createRoutes(store) {
 
   const tables = [
     {
-      path: '/table/:tableAddr',
+      path: 'table/:tableAddr',
       name: 'table',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
