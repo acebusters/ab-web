@@ -4,13 +4,14 @@ import Notifications from 'containers/Notifications';
 import { StyledTable } from './styles';
 
 const TableFrame = (props) => (
-  <StyledTable name="styled-dashboard">
-    <Notifications {...{ isNotTable: false, location }} />
-    {React.Children.toArray(props.children)}
+  <StyledTable name="styled-table">
+    <Notifications location={props.location} />
+    {props.children}
   </StyledTable>
 );
 TableFrame.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 export default TableFrame;

@@ -11,12 +11,12 @@ import { StyledDashboard } from './styles';
 const DashboardFrame = (props) => (
   <div>
     <Header {...props} />
-    <Notifications {...{ isNotTable: true, location }} />
+    <Notifications location={props.location} />
     <StyledDashboard
       move={props.notifications.length > 0}
       name="styled-dashboard"
     >
-      {React.Children.toArray(props.children)}
+      {props.children}
     </StyledDashboard>
     <Footer />
   </div>
@@ -24,6 +24,7 @@ const DashboardFrame = (props) => (
 DashboardFrame.propTypes = {
   children: PropTypes.node.isRequired,
   notifications: PropTypes.array.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
