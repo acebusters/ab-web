@@ -52,6 +52,15 @@ export default function createRoutes(store) {
 
   const dashboard = [
     {
+      path: '/',
+      name: 'default',
+      onEnter: (nextState, replace) => {
+        replace({
+          pathname: '/lobby',
+          state: { nextPathname: nextState.location.pathname },
+        });
+      },
+    }, {
       path: 'lobby',
       name: 'lobby',
       getComponent(nextState, cb) {
@@ -198,20 +207,15 @@ export default function createRoutes(store) {
   return [
     {
       component: App,
-      path: '/',
-      name: 'default',
-      onEnter: (nextState, replace) => {
-        replace({
-          pathname: '/lobby',
-          state: { nextPathname: nextState.location.pathname },
-        });
-      },
-    }, {
-      component: TableFrame,
-      childRoutes: [...tables],
-    }, {
-      component: DashboardFrame,
-      childRoutes: [...dashboard],
+      childRoutes: [
+        {
+          component: TableFrame,
+          childRoutes: [...tables],
+        }, {
+          component: DashboardFrame,
+          childRoutes: [...dashboard],
+        },
+      ],
     },
   ];
 }
