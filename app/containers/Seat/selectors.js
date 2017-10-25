@@ -140,12 +140,15 @@ const makeMyPendingSeatSelector = () => createSelector(
   [makeLineupSelector(), makeReservationSelector(), makeSignerAddrSelector()],
   (lineup, reservation, signerAddr) => {
     if (lineup) {
-      const pos = lineup.findIndex((seat) => seat.getIn(['pending', 'signerAddr']) === signerAddr);
-      if (pos > -1) {
-        return pos;
+      const pendingPos = lineup.findIndex((seat) => seat.getIn(['pending', 'signerAddr']) === signerAddr);
+      if (pendingPos > -1) {
+        return pendingPos;
       }
 
-      return makeReserveLineup(lineup, reservation).findIndex((seat) => seat.get('address') === signerAddr);
+      const pos = lineup.findIndex((seat) => seat.get('address') === signerAddr);
+      if (pos === -1) {
+        return makeReserveLineup(lineup, reservation).findIndex((seat) => seat.get('address') === signerAddr);
+      }
     }
 
     return -1;

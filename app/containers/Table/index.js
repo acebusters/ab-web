@@ -229,8 +229,10 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   handleBeat() {
     if (
       this.props.state === 'waiting' &&
-      this.props.myPos &&
-      !this.props.myPendingSeat
+      this.props.myPos >= 0 &&
+      this.props.myPendingSeat === -1 &&
+      !this.props.standingUp &&
+      !this.props.sitout
     ) {
       this.tableService.beat();
     }
