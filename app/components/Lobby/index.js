@@ -29,7 +29,9 @@ const Lobby = (props) => {
           <TableStriped>
             <thead>
               <tr>
-                <th key="number">#</th>
+                <th key="name" style={{ textAlign: 'left' }}>
+                  Table
+                </th>
                 <th key="blind">Blinds</th>
                 <th key="play">Players </th>
                 <th key="hand">Hand</th>
