@@ -32,7 +32,7 @@ const styles = {
     margin: '5px 0',
   },
   qrCodeWrapper: {
-    margin: '10px 0 16px 0',
+    margin: '0 0 16px 0',
   },
 };
 
@@ -40,19 +40,19 @@ const DepositDialog = ({ account, handleClose }) => {
   const qrUrl = `ether:${account.proxy}`;
   return (
     <DialogContents>
-      <DialogTitle>Ethereum and Nutz Deposit Info</DialogTitle>
-      <WithLoading
-        isLoading={!account.proxy || account.proxy === '0x'}
-        loadingSize="40px"
-        styles={{ outer: styles.withLoadingOuter }}
-      >
-        <Alert style={styles.address} theme="none">
+      <Alert style={styles.address} theme="none">
+        <DialogTitle>Ethereum and Nutz Deposit</DialogTitle>
+        <WithLoading
+          isLoading={!account.proxy || account.proxy === '0x'}
+          loadingSize="40px"
+          styles={{ outer: styles.withLoadingOuter }}
+        >
           <div style={styles.qrCodeWrapper}>
             <QRCode value={qrUrl} size={160} />
           </div>
           {ethUtil.toChecksumAddress(account.proxy)}
-        </Alert>
-      </WithLoading>
+        </WithLoading>
+      </Alert>
 
       {conf().firstBlockHash !== MAIN_NET_GENESIS_BLOCK && (
         <Alert style={styles.alertMargins} theme="danger">
