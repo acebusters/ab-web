@@ -13,10 +13,13 @@ import Button from '../Button';
 
 class DepositInfo extends React.Component {
   static propTypes = {
-    account: PropTypes.object.isRequired,
+    account: PropTypes.shape({ isLocked: PropTypes.bool }),
     isFishWarned: PropTypes.bool.isRequired,
     modalAdd: PropTypes.func.isRequired,
   };
+  static defaultProps = {
+    account: { isLocked: true },
+  }
 
   constructor(props) {
     super(props);
@@ -25,7 +28,8 @@ class DepositInfo extends React.Component {
   }
 
   handleClick() {
-    if (!this.props.isFishWarned) {
+    const { isFishWarned, account: { isLocked } } = this.props;
+    if (!isFishWarned && isLocked) {
       return this.props.modalAdd({
         modalType: FISH_WARNING_DIALOG,
         modalProps: {

@@ -22,14 +22,17 @@ const styles = {
     alignItems: 'center',
   },
   address: {
-    fontSize: '18',
+    fontSize: '1.2em',
     width: '100%',
     textAlign: 'center',
-    padding: '12px 0',
+    padding: '12px 0 16px 0',
     margin: '5px 0',
   },
   alertMargins: {
     margin: '5px 0',
+  },
+  qrCodeWrapper: {
+    margin: '10px 0 16px 0',
   },
 };
 
@@ -43,10 +46,10 @@ const DepositDialog = ({ account, handleClose }) => {
         loadingSize="40px"
         styles={{ outer: styles.withLoadingOuter }}
       >
-        <div style={{ marginBottom: '10px' }}>
-          <QRCode value={qrUrl} size={160} />
-        </div>
-        <Alert style={styles.address} theme="success">
+        <Alert style={styles.address} theme="none">
+          <div style={styles.qrCodeWrapper}>
+            <QRCode value={qrUrl} size={160} />
+          </div>
           {ethUtil.toChecksumAddress(account.proxy)}
         </Alert>
       </WithLoading>
