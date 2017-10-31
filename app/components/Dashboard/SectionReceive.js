@@ -12,7 +12,7 @@ import shapeshiftButton from './shapeshift.png';
 import Alert from '../Alert';
 
 import DepositInfo from './DepositInfo';
-import { ReceiveWrapper, ReceiveSection } from './styles';
+import { ReceiveSection } from './styles';
 
 function handleShapeshiftClick(e) {
   e.preventDefault();
@@ -31,37 +31,35 @@ export const SectionReceive = (props) => {
   const { account, ethBalance, nutzBalance, floor } = props;
   return (
     <ReceiveSection>
-      <ReceiveWrapper>
-        <DepositInfo />
+      <DepositInfo />
 
-        {conf().firstBlockHash === MAIN_NET_GENESIS_BLOCK && (
-          <a
-            onClick={handleShapeshiftClick}
-            href={shapeShiftLink(ethUtil.toChecksumAddress(account.proxy))}
-          >
-            <img src={shapeshiftButton} alt="Pay with Shapeshift" />
-          </a>
+      {conf().firstBlockHash === MAIN_NET_GENESIS_BLOCK && (
+        <a
+          onClick={handleShapeshiftClick}
+          href={shapeShiftLink(ethUtil.toChecksumAddress(account.proxy))}
+        >
+          <img src={shapeshiftButton} alt="Pay with Shapeshift" />
+        </a>
+      )}
+
+      {account.isLocked &&
+        ethBalance &&
+        nutzBalance &&
+        floor && (
+          <Alert theme="warning" data-tour="wallet-unlock">
+            <FormattedMessage
+              values={{ limit: ETH_FISH_LIMIT.toString() }}
+              {...messages.ethLimit}
+            />
+            <BtnUpgrade {...{ account, messages }} />
+            <AccountProgress
+              ethBalance={ethBalance}
+              nutzBalance={nutzBalance}
+              floor={floor}
+              ethLimit={ETH_FISH_LIMIT}
+            />
+          </Alert>
         )}
-
-        {account.isLocked &&
-          ethBalance &&
-          nutzBalance &&
-          floor && (
-            <Alert theme="warning" data-tour="wallet-unlock">
-              <FormattedMessage
-                values={{ limit: ETH_FISH_LIMIT.toString() }}
-                {...messages.ethLimit}
-              />
-              <BtnUpgrade {...{ account, messages }} />
-              <AccountProgress
-                ethBalance={ethBalance}
-                nutzBalance={nutzBalance}
-                floor={floor}
-                ethLimit={ETH_FISH_LIMIT}
-              />
-            </Alert>
-          )}
-      </ReceiveWrapper>
     </ReceiveSection>
   );
 };

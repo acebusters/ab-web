@@ -36,6 +36,7 @@ const Modal = ({ modal, handleClose }) => {
   if (modal) {
     SpecifiedModal = MODALS[modal.modalType];
   }
+  // console.log(modal.modalProps)
   return (
     <ModalsTransitionGroup>
       {modal && // required for leaveAnim
@@ -43,7 +44,7 @@ const Modal = ({ modal, handleClose }) => {
           <DialogTransitionGroup component={Modals}>
             <Background onClick={modal.modalProps.backdrop ? handleClose : null} />
             <DialogWrapper>
-              <SpecifiedModal {...modal.modalProps} />
+              <SpecifiedModal {...{ handleClose, ...modal.modalProps }} />
               <CloseButton onClick={handleClose}>
                 <XButton />
               </CloseButton>

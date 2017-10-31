@@ -10,7 +10,7 @@ import { TRANSFER_NTZ, TRANSFER_ETH } from '../Notifications/constants';
 
 import makeSelectAccountData from '../AccountProvider/selectors';
 import messages from './messages';
-import { getAmountUnit, createIsFishWarnedSelector } from './selectors';
+import { getAmountUnit } from './selectors';
 
 import WalletComponent from '../../components/Dashboard/Wallet';
 
@@ -99,7 +99,6 @@ class Wallet extends React.Component {
           ethBalance: weiBalance && weiBalance.div(ETH_DECIMALS),
           nutzBalance: babzBalance && babzBalance.div(NTZ_DECIMALS),
           messages,
-          isFishWarned: this.props.isFishWarned,
           handleNTZTransfer: this.handleNTZTransfer,
           estimateNTZTransfer: this.estimateNTZTransfer,
           handleETHTransfer: this.handleETHTransfer,
@@ -115,13 +114,11 @@ Wallet.propTypes = {
   web3Redux: PropTypes.any,
   notifyCreate: PropTypes.func,
   amountUnit: PropTypes.string,
-  isFishWarned: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   account: makeSelectAccountData(),
   amountUnit: getAmountUnit(),
-  isFishWarned: createIsFishWarnedSelector(),
 });
 
 export default web3Connect(
