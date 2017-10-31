@@ -5,7 +5,11 @@ import { setFishWarned } from 'containers/Dashboard/actions';
 import { modalDismiss } from 'containers/App/actions';
 
 import SubmitButton from 'components/SubmitButton';
-import H2 from 'components/H2';
+import {
+  DialogContents,
+  DialogTitle,
+  DialogButtonWrapper,
+} from 'components/Modal/styles';
 
 const FishWarningDialog = (props) => {
   const handleAcceptClick = () => {
@@ -14,15 +18,15 @@ const FishWarningDialog = (props) => {
     props.showDepositDialog();
   };
   return (
-    <div>
-      <H2>Warning!</H2>
-      <span>Account limit 0.1 ETH. Higher deposits will be rejected.</span>
-      <br />
-      <br />
-      <SubmitButton type="button" onClick={handleAcceptClick}>
-        Accept
-      </SubmitButton>
-    </div>
+    <DialogContents>
+      <DialogTitle>Warning!</DialogTitle>
+      Account limit 0.1 ETH. Higher deposits will be rejected.
+      <DialogButtonWrapper>
+        <SubmitButton type="button" onClick={handleAcceptClick}>
+          Accept
+        </SubmitButton>
+      </DialogButtonWrapper>
+    </DialogContents>
   );
 };
 FishWarningDialog.propTypes = {
