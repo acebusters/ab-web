@@ -44,7 +44,7 @@ function Wallet(props) {
             <TransferDialog
               handleTransfer={handleETHTransfer}
               estimateTransfer={estimateETHTransfer}
-              maxAmount={ethBalance}
+              maxAmount={ethBalance.lt(1) ? ethBalance : ethBalance.round(4)}
               type="token"
               placeholder="0.00"
               messages={props.messages}
@@ -56,7 +56,7 @@ function Wallet(props) {
             <TransferDialog
               handleTransfer={handleNTZTransfer}
               estimateTransfer={estimateNTZTransfer}
-              maxAmount={nutzBalance}
+              maxAmount={nutzBalance.round(4)}
               type="token"
               placeholder="0"
               messages={props.messages}
