@@ -26,7 +26,7 @@ export const TableContainer = styled.div`
 
 export const TableName = styled.h2`
   font-size: 18px;
-  z-index: 10;
+  z-index: 2;
 
   position: absolute;
   top: 10px;
