@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 
 import Card from '../Card';
 
-import { CardContainer } from './styles';
+import { HoleCardContainer } from './styles';
 
 const cardSize = 48;
 
-const CardsComponent = ({
+const HoleCards = ({
   holeCards,
   folded,
 }) => (
-  <CardContainer
+  <HoleCardContainer
     className="card-container"
     empty={holeCards[0] === null || folded}
   >
@@ -25,11 +25,11 @@ const CardsComponent = ({
       folded={folded}
       size={cardSize}
     />
-  </CardContainer>
+  </HoleCardContainer>
 );
-CardsComponent.propTypes = {
+HoleCards.propTypes = {
   folded: PropTypes.bool,
   holeCards: PropTypes.array, // array of cards
 };
 
-export default CardsComponent;
+export default HoleCards;

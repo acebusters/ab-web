@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { VectorCards } from 'ab-vector-cards';
 
-import { CardBack, CardFront, CardStyle } from '../Seat/styles';
+import { HoleBack, HoleFront, CardStyle } from './styles';
 
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k', 'a'];
 const suits = ['clubs', 'diamonds', 'hearts', 'spades'];
@@ -20,25 +20,25 @@ function Card(props) {
   if (!props.folded && props.cardNumber === -1) {
     link = vc.getBackData(props.size, '#32B7D3', '#217C8F');
     return (
-      <CardBack>
+      <HoleBack>
         <CardStyle
           key={suit + value}
           src={link}
           alt=""
         />
-      </CardBack>
+      </HoleBack>
     );
   }
   if (!props.folded && props.cardNumber !== null) {
     link = vc.getCardData(props.size, suit, value);
     return (
-      <CardFront>
+      <HoleFront>
         <CardStyle
           key={suit + value}
           src={link}
           alt=""
         />
-      </CardFront>
+      </HoleFront>
     );
   }
   return null;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import CardsComponent from './CardsComponent';
+import HoleCards from 'components/Card/HoleCards';
 import SeatInfo from './SeatInfo';
 import StatusAction from './StatusAction';
 import { STATUS_MSG } from '../../app.config';
@@ -30,7 +30,7 @@ const Seat = (props) => {
           </StatusSeatWrapper>
         }
         {(!seatStatus || seatStatus === STATUS_MSG.active) &&
-          <CardsComponent {...props} />
+          <HoleCards {...props} />
         }
         <SeatInfo {...props} />
         <StatusAction {...props} />
