@@ -42,9 +42,12 @@ class LobbyItem extends React.PureComponent { // eslint-disable-line
     return (
       <Tr>
         <Td key="ta" style={{ textAlign: 'left' }}>
+          {tableAddr.substr(2, 6)}
+        </Td>
+        <Td key="tn" style={{ textAlign: 'left' }}>
           <Link to={`/table/${tableAddr}`}>
             {tableNameByAddress(tableAddr)}
-          </Link> ({tableAddr.substr(2, 6)})
+          </Link>
         </Td>
         <Td key="sb">{formatNtz(sb)} NTZ / {formatNtz(bb)} NTZ</Td>
         <Td key="np">{`${players}/${data.seats.length}`}</Td>

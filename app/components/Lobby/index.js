@@ -29,6 +29,9 @@ const Lobby = (props) => {
           <TableStriped>
             <thead>
               <tr>
+                <th key="addr" style={{ textAlign: 'left' }}>
+                  #
+                </th>
                 <th key="name" style={{ textAlign: 'left' }}>
                   Table
                 </th>
