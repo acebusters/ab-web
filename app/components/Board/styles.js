@@ -1,10 +1,6 @@
-/**
- * Created by helge on 16.02.17.
- */
-
 import styled from 'styled-components';
 
-export const Board = styled.div`
+export const BoardWrapper = styled.div`
   margin: 0;
   position: absolute;
   top: 50%;
