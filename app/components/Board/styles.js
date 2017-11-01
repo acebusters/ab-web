@@ -10,7 +10,7 @@ export const BoardWrapper = styled.div`
   z-index: 1001;
 `;
 
-export const BoardCardWrapper = styled.div`
+export const CardWrapper = styled.div`
   float: left;
   margin-left: 0.5em;
 `;
