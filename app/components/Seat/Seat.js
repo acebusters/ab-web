@@ -19,6 +19,8 @@ const Seat = (props) => {
     pos,
     myPos,
     seatStatus,
+    holeCards,
+    folded,
   } = props;
 
   return (
@@ -30,7 +32,7 @@ const Seat = (props) => {
           </StatusSeatWrapper>
         }
         {(!seatStatus || seatStatus === STATUS_MSG.active) &&
-          <HoleCards {...props} />
+          <HoleCards {...{ holeCards, folded }} />
         }
         <SeatInfo {...props} />
         <StatusAction {...props} />
@@ -43,6 +45,8 @@ Seat.propTypes = {
   pos: PropTypes.number,
   coords: PropTypes.array,
   seatStatus: PropTypes.object,
+  holeCards: PropTypes.array,
+  folded: PropTypes.bool,
 };
 
 export default Seat;

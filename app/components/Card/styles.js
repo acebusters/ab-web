@@ -2,7 +2,7 @@ import styled, { keyframes } from 'styled-components';
 import { scaleSeat } from '../../utils/styleUtils';
 import { smallShadow } from '../../variables';
 
-const cardAnim = keyframes`
+const boardCardEnterAnim = keyframes`
   0% {
     opacity: 0.3;
     transform: translateY(-500%);
@@ -24,13 +24,22 @@ export const BoardWrapper = styled.div`
   z-index: 1001;
 `;
 
-export const CardWrapper = styled.div`
+export const BoardFront = styled.div`
   float: left;
   margin-left: 0.5em;
-  animation: ${cardAnim} 0.6s cubic-bezier(0.57, 0.2, 0.75, 1.1);
+  animation: ${boardCardEnterAnim} 0.6s cubic-bezier(0.57, 0.2, 0.75, 1.1);
 `;
 
 // HoleCards
+export const HoleCardContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-right: ${scaleSeat(4)};
+  margin-top: ${(props) => props.empty ? scaleSeat(40) : 0};
+
+  background-color: none;
+`;
+
 export const CardShared = styled.div`
   background-color: none;
   margin-right: ${scaleSeat(2)};
@@ -50,14 +59,4 @@ export const CardStyle = styled.img`
   max-width: 100%;
   height: auto;
   box-shadow: ${smallShadow};
-`;
-
-// cards
-export const HoleCardContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-right: ${scaleSeat(4)};
-  margin-top: ${(props) => props.empty ? scaleSeat(40) : 0};
-
-  background-color: none;
 `;

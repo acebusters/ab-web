@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Card from 'components/Card';
-import { BoardWrapper, CardWrapper } from './styles';
+import { BoardWrapper, BoardFront } from './styles';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class BoardCards extends React.Component {
@@ -14,9 +14,13 @@ class BoardCards extends React.Component {
     return (
       <BoardWrapper id="board">
         {this.props.board.map((card, i) => (
-          <CardWrapper key={i}>
-            <Card cardNumber={card} size={cardSize} />
-          </CardWrapper>
+          <BoardFront key={i}>
+            <Card
+              cardNumber={card}
+              size={cardSize}
+              showFront
+            />
+          </BoardFront>
         ))}
       </BoardWrapper>
     );

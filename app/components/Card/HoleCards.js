@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Card from '../Card';
 
-import { HoleCardContainer } from './styles';
+import { HoleCardContainer, HoleBack, HoleFront } from './styles';
 
 const cardSize = 48;
 
@@ -15,16 +15,31 @@ const HoleCards = ({
     className="card-container"
     empty={holeCards[0] === null || folded}
   >
-    <Card
-      cardNumber={holeCards[0]}
-      folded={folded}
-      size={cardSize}
-    />
-    <Card
-      cardNumber={holeCards[1]}
-      folded={folded}
-      size={cardSize}
-    />
+    {holeCards.map((card, i) => {
+      if (!folded && card === -1) {
+        return (
+          <HoleBack key={i}>
+            <Card
+              cardNumber={card}
+              size={cardSize}
+              showFront={false}
+            />
+          </HoleBack>
+        );
+      }
+      if (!folded && card !== null) {
+        return (
+          <HoleFront key={i}>
+            <Card
+              cardNumber={card}
+              size={cardSize}
+              showFront
+            />
+          </HoleFront>
+        );
+      }
+      return null;
+    })}
   </HoleCardContainer>
 );
 HoleCards.propTypes = {
