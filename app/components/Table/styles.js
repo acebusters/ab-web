@@ -18,7 +18,7 @@ export const TableContainer = styled.div`
   padding-top: 5%;
   margin-right: auto;
   margin-left: auto;
-  height: 100%;
+  height: 100vh;
   @media (min-width: ${curtainStickyWidth}) {
     margin-left: ${curtainWidth};
   }
