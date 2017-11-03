@@ -86,3 +86,5 @@ export const curtainStickyWidth = '1168px';
 // shadows
 export const medShadow = '0 2px 4px 0 rgba(0,0,0,0.50)';
 export const smallShadow = '0 1px 4px 0 rgba(0,0,0,0.50)';
+
+export const tableNameWidth = '600px';

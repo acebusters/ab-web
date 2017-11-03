@@ -6,8 +6,10 @@ import ActionBar from '../../containers/ActionBar';
 import tableImage from './tableBG.svg';
 import Pot from '../Pot';
 import Curtain from '../../containers/Curtain';
+import { tableNameByAddress } from '../../services/tableNames';
 
 import {
+  TableName,
   TableContainer,
   TableAndChairs,
   PokerTable,
@@ -20,6 +22,9 @@ const TableComponent = (props) => (
     <Curtain {...props} />
 
     <TableContainer name="table-container">
+      <TableName>
+        {tableNameByAddress(props.params.tableAddr)}
+      </TableName>
 
       <TableAndChairs id="table-and-chairs" >
         <PokerTable>
@@ -38,8 +43,8 @@ const TableComponent = (props) => (
         </PokerTable>
       </TableAndChairs>
 
-      { props.myHand &&
-        <HandBox className="hand-box"> { props.myHand.descr }</HandBox>
+      {props.myHand &&
+        <HandBox className="hand-box">{props.myHand.descr}</HandBox>
       }
 
       <TableMenu {...props} />
@@ -58,6 +63,7 @@ TableComponent.propTypes = {
   winners: PropTypes.array,
   myHand: PropTypes.object,
   sb: PropTypes.number,
+  params: PropTypes.object,
 };
 
 export default TableComponent;
