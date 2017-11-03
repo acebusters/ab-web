@@ -2,17 +2,6 @@ import styled, { keyframes } from 'styled-components';
 import { scaleSeat } from '../../utils/styleUtils';
 import { smallShadow } from '../../variables';
 
-const boardCardEnterAnim = keyframes`
-  0% {
-    opacity: 0.3;
-    transform: translateY(-500%);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0%);
-  }
-`;
-
 const flipAnim = keyframes`
   from { transform: rotateY( 0deg ); }
   to { transform: rotateY( 180deg ); }
@@ -24,21 +13,9 @@ export const CardStyle = styled.img`
   box-shadow: ${smallShadow};
 `;
 
-// BoardCards
-export const BoardWrapper = styled.div`
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 255px;
-  transform: translate(-50%, -50%);
-  z-index: 1001;
-`;
-
 export const BoardFront = styled.div`
   float: left;
   margin-left: 0.5em;
-  animation: ${boardCardEnterAnim} 0.6s cubic-bezier(0.57, 0.2, 0.75, 1.1);
 `;
 
 // HoleCards
