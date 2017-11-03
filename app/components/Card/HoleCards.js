@@ -2,15 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Card from '../Card';
+import FlipCard from './FlipCard';
 
-import { HoleCardContainer, HoleBack, HoleFront } from './styles';
+import { HoleCardContainer, UpContainer, DownContainer } from './styles';
 
 const cardSize = 48;
 
-const HoleCards = ({
-  holeCards,
-  folded,
-}) => (
+const HoleCards = ({ holeCards, folded }) => (
   <HoleCardContainer
     className="card-container"
     empty={holeCards[0] === null || folded}
@@ -18,24 +16,16 @@ const HoleCards = ({
     {holeCards.map((card, i) => {
       if (!folded && card === -1) {
         return (
-          <HoleBack key={i}>
-            <Card
-              cardNumber={card}
-              size={cardSize}
-              showFront={false}
-            />
-          </HoleBack>
+          <DownContainer key={i}>
+            <Card cardNumber={card} size={cardSize} showFront={false} />
+          </DownContainer>
         );
       }
       if (!folded && card !== null) {
         return (
-          <HoleFront key={i}>
-            <Card
-              cardNumber={card}
-              size={cardSize}
-              showFront
-            />
-          </HoleFront>
+          <UpContainer key={i}>
+            <FlipCard {...{ cardSize, card }} />
+          </UpContainer>
         );
       }
       return null;
