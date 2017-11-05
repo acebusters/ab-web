@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Card from '../Card';
-import FlipCard from './FlipCard';
 
 import { HoleCardContainer, UpContainer, DownContainer } from './styles';
 
@@ -24,7 +23,7 @@ const HoleCards = ({ holeCards, folded }) => (
       if (!folded && card !== null) {
         return (
           <UpContainer key={i}>
-            <FlipCard {...{ cardSize, card }} />
+            <Card cardNumber={card} size={cardSize} showFront />
           </UpContainer>
         );
       }
