@@ -3,8 +3,8 @@ import { scaleSeat } from '../../utils/styleUtils';
 import { smallShadow } from '../../variables';
 
 const flipAnim = keyframes`
-  from { transform: rotateY( 0deg ); }
-  to { transform: rotateY( 180deg ); }
+  from { transform: rotateY(180deg); }
+  to { transform: rotateY(0deg); }
 `;
 
 const boardCardEnterAnim = keyframes`
@@ -89,9 +89,7 @@ export const FlipCardWrapper = styled.div`
   height: 100%;
   position: absolute;
   animation: ${flipAnim} 1s;
-  transform: rotateY(180deg);
   transform-style: preserve-3d;
-  transition: transform 1s;
 `;
 
 const FlipCard = styled.figure`
@@ -104,8 +102,8 @@ const FlipCard = styled.figure`
 `;
 
 export const CardFront = styled(FlipCard)`
-  transform: rotateY(180deg);
 `;
 
 export const CardBack = styled(FlipCard)`
+  transform: rotateY(180deg);
 `;
