@@ -2,6 +2,11 @@ import styled, { keyframes } from 'styled-components';
 import { scaleSeat } from '../../utils/styleUtils';
 import { smallShadow } from '../../variables';
 
+const flipAnim = keyframes`
+  from { transform: rotateY(180deg); }
+  to { transform: rotateY(0deg); }
+`;
+
 const boardCardEnterAnim = keyframes`
   0% {
     opacity: 0.3;
@@ -69,4 +74,36 @@ export const DownContainer = styled(CardShared)`
 
 export const UpContainer = styled(CardShared)`
   height: ${scaleSeat(40)};
+`;
+
+// FlipCard
+export const FlipCardContainer = styled.section`
+  height: 100%;
+  width: 100%;
+  perspective: 200px;
+  position: relative;
+`;
+
+export const FlipCardWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  animation: ${flipAnim} 1s;
+  transform-style: preserve-3d;
+`;
+
+const FlipCard = styled.figure`
+  margin: 0;
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+`;
+
+export const CardFront = styled(FlipCard)`
+`;
+
+export const CardBack = styled(FlipCard)`
+  transform: rotateY(180deg);
 `;
