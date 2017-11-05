@@ -18,13 +18,7 @@ const Card = ({ cardNumber, cardHeight }) => {
   //  * -1 stands for back side of cards,
   //  * null stands for no card
   //  * > 0  stands for normal cards
-  return (
-    <CardStyle
-      key={suit + value}
-      src={link}
-      alt=""
-    />
-  );
+  return <CardStyle key={suit + value} src={link} alt="" />;
 };
 Card.propTypes = {
   cardNumber: PropTypes.number.isRequired,

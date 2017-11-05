@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FlipCard from './FlipCard';
 import { BoardContainer, BoardCardWrapper } from './styles';
+
 import { boardCardFall } from './constants';
-
-// const board = [23, 25, 26, 27];
-
 // eslint-disable-next-line react/prefer-stateless-function
 class BoardCards extends React.Component {
   static propTypes = {
