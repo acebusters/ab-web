@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card from 'components/Card';
-import { BoardFront, BoardWrapper } from './styles';
+import FlipCard from './FlipCard';
+import { BoardContainer, BoardCardWrapper } from './styles';
+import { boardCardFall } from './constants';
+
+// const board = [23, 25, 26, 27];
 
 // eslint-disable-next-line react/prefer-stateless-function
 class BoardCards extends React.Component {
@@ -10,19 +13,21 @@ class BoardCards extends React.Component {
   };
 
   render() {
-    const cardSize = 50;
+    const cardHeight = 50;
+    const cardWidth = 37;
     return (
-      <BoardWrapper id="board">
-        {this.props.board.map((card, i) => (
-          <BoardFront key={i} animNumber={i}>
-            <Card
-              cardNumber={card}
-              size={cardSize}
-              showFront
-            />
-          </BoardFront>
+      <BoardContainer id="board">
+        {this.props.board.map((cardNumber, i) => (
+          <BoardCardWrapper
+            key={i}
+            animNumber={i}
+            height={cardHeight}
+            width={cardWidth}
+          >
+            <FlipCard {...{ animDelay: boardCardFall, cardNumber, cardHeight }} />
+          </BoardCardWrapper>
         ))}
-      </BoardWrapper>
+      </BoardContainer>
     );
   }
 }

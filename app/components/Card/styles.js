@@ -2,6 +2,8 @@ import styled, { keyframes } from 'styled-components';
 import { scaleSeat } from '../../utils/styleUtils';
 import { smallShadow } from '../../variables';
 
+import { boardCardFall } from './constants';
+
 const flipAnim = keyframes`
   from { transform: rotateY(180deg); }
   to { transform: rotateY(0deg); }
@@ -33,20 +35,24 @@ const boardCardDelay = (animNumber) => {
   return delay;
 };
 
-export const BoardWrapper = styled.div`
-  margin: 0;
+export const BoardContainer = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  min-width: 255px;
+  display: flex;
+  justify-content: flex-start;
+  width: 255px;
+  height: auto;
   transform: translate(-50%, -50%);
-  z-index: 1001;
+  margin: 0;
 `;
 
-export const BoardFront = styled.div`
-  float: left;
+export const BoardCardWrapper = styled.div`
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
+  perspective: 200px;
   margin-left: 0.5em;
-  animation: ${boardCardEnterAnim} 0.6s cubic-bezier(0.57, 0.2, 0.75, 1.1);
+  animation: ${boardCardEnterAnim} ${boardCardFall} cubic-bezier(0.57, 0.2, 0.75, 1.1);
   animation-delay: ${(props) => boardCardDelay(props.animNumber)};
   animation-fill-mode: both;
 `;
@@ -67,12 +73,12 @@ export const CardShared = styled.section`
   width: ${scaleSeat(36)};
 `;
 
-export const DownContainer = styled(CardShared)`
+export const DownWrapper = styled(CardShared)`
   height: ${scaleSeat(12)};
   margin-top: ${scaleSeat(28)};
 `;
 
-export const UpContainer = styled(CardShared)`
+export const UpWrapper = styled(CardShared)`
   height: ${scaleSeat(40)};
 `;
 
@@ -88,7 +94,9 @@ export const FlipCardWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  animation: ${flipAnim} 1s;
+  animation: ${flipAnim} 800ms;
+  animation-delay: ${(props) => props.animDelay};
+  animation-fill-mode: backwards;
   transform-style: preserve-3d;
 `;
 
@@ -101,8 +109,7 @@ const FlipCard = styled.figure`
   backface-visibility: hidden;
 `;
 
-export const CardFront = styled(FlipCard)`
-`;
+export const CardFront = styled(FlipCard)``;
 
 export const CardBack = styled(FlipCard)`
   transform: rotateY(180deg);

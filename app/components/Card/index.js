@@ -7,13 +7,13 @@ import { CardStyle } from './styles';
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k', 'a'];
 const suits = ['clubs', 'diamonds', 'hearts', 'spades'];
 
-const Card = ({ cardNumber, size, showFront }) => {
+const Card = ({ cardNumber, cardHeight }) => {
   const vc = new VectorCards();
   const suit = suits[Math.floor(cardNumber / 13)];
   const value = values[cardNumber % 13];
-  const link = showFront
-    ? vc.getCardData(size, suit, value)
-    : vc.getBackData(size, '#32B7D3', '#217C8F');
+  const link = cardNumber === null || cardNumber < 0
+    ? vc.getBackData(cardHeight, '#32B7D3', '#217C8F')
+    : vc.getCardData(cardHeight, suit, value);
   // Note: meaning of card numbers
   //  * -1 stands for back side of cards,
   //  * null stands for no card
@@ -27,10 +27,8 @@ const Card = ({ cardNumber, size, showFront }) => {
   );
 };
 Card.propTypes = {
-  cardNumber: PropTypes.number,
-  size: PropTypes.number,
-  showFront: PropTypes.bool,
+  cardNumber: PropTypes.number.isRequired,
+  cardHeight: PropTypes.number.isRequired,
 };
-Card.defaultProps = { showFront: true };
 
 export default Card;

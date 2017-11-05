@@ -9,20 +9,21 @@ import { CardFront, CardBack, FlipCardWrapper, FlipCardContainer } from './style
 // eslint-disable-next-line react/prefer-stateless-function
 class FlipCard extends React.Component {
   static propTypes = {
-    card: PropTypes.number.isRequired,
-    cardSize: PropTypes.number.isRequired,
+    cardNumber: PropTypes.number.isRequired,
+    cardHeight: PropTypes.number.isRequired,
+    animDelay: PropTypes.string.isRequired,
   }
 
   render() {
-    const { cardSize, card } = this.props;
+    const { animDelay, cardHeight, cardNumber } = this.props;
     return (
       <FlipCardContainer>
-        <FlipCardWrapper>
+        <FlipCardWrapper animDelay={animDelay}>
           <CardFront>
-            <Card cardNumber={card} size={cardSize} showFront />
+            <Card {...{ cardNumber, cardHeight }} />
           </CardFront>
           <CardBack>
-            <Card size={cardSize} showFront={false} />
+            <Card {...{ cardNumber: -1, cardHeight }} />
           </CardBack>
         </FlipCardWrapper>
       </FlipCardContainer>

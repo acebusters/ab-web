@@ -4,28 +4,29 @@ import PropTypes from 'prop-types';
 import Card from '../Card';
 import FlipCard from './FlipCard';
 
-import { HoleCardContainer, UpContainer, DownContainer } from './styles';
+import { HoleCardContainer, UpWrapper, DownWrapper } from './styles';
 
-const cardSize = 48;
+const cardHeight = 48;
+const animDelay = '0ms';
 
 const HoleCards = ({ holeCards, folded }) => (
   <HoleCardContainer
     className="card-container"
     empty={holeCards[0] === null || folded}
   >
-    {holeCards.map((card, i) => {
-      if (!folded && card === -1) {
+    {holeCards.map((cardNumber, i) => {
+      if (!folded && cardNumber === -1) {
         return (
-          <DownContainer key={i}>
-            <Card cardNumber={card} size={cardSize} showFront={false} />
-          </DownContainer>
+          <DownWrapper key={i}>
+            <Card {...{ cardNumber, cardHeight }} />
+          </DownWrapper>
         );
       }
-      if (!folded && card !== null) {
+      if (!folded && cardNumber !== null) {
         return (
-          <UpContainer key={i}>
-            <FlipCard {...{ card, cardSize }} />
-          </UpContainer>
+          <UpWrapper key={i}>
+            <FlipCard {...{ animDelay, cardNumber, cardHeight }} />
+          </UpWrapper>
         );
       }
       return null;
