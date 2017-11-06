@@ -44,7 +44,10 @@
     "test:watch": "cross-env NODE_ENV=test jest --watchAll",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "deploy:sandbox": "npm run deploy:sandbox:upload && npm run deploy:sandbox:invalidate-cache",
+    "deploy:sandbox:upload": "aws s3 sync build/ s3://sandbox.acebusters.com/ --delete --acl public-read",
+    "deploy:sandbox:invalidate-cache": "aws cloudfront create-invalidation --distribution-id E3RARTII3ZDPBB --paths '/*'"
   },
   "lint-staged": {
     "*.js": [
