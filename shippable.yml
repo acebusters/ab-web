@@ -40,6 +40,7 @@ build:
         only:
           - master
           - develop
+          - release/*
       on_success: change
       on_failure: always
       on_start: never
