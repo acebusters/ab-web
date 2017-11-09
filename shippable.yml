@@ -23,7 +23,7 @@ build:
 
   post_ci:
     - aws configure set preview.cloudfront true
-    - if [ "$BRANCH" == "develop" ] || [ "$BRANCH" == "master" ]; then DEPLOY=true; fi
+    - if [ "$BRANCH" == "develop" -o "$BRANCH" == "master" ] && [ "$IS_PULL_REQUEST" == "false" ]; then DEPLOY=true; fi
     # Deploy the app to sandbox.acebusters.com
     - if [ "$DEPLOY" ]; then AWS_ACCESS_KEY_ID=$AWS_STAGING_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_STAGING_KEY npm run deploy:sandbox; fi
     # Publish the app zip to S3 for later staging promotion
