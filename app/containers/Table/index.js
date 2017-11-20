@@ -13,7 +13,6 @@ import * as storageService from '../../services/sessionStorage';
 import TableDebug from '../../containers/TableDebug';
 import NotFoundPage from '../../containers/NotFoundPage';
 
-import Seat from '../Seat';
 import WithLoading from '../../components/WithLoading';
 import { nickNameByAddress } from '../../services/nicknames';
 import { formatNtz } from '../../utils/amountFormatter';
@@ -510,26 +509,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     }
   }
 
-  renderSeats(lineup, changed) {
-    const seats = [];
-
-    if (!lineup) {
-      return seats;
-    }
-
-    return lineup.map((seat, i) => (
-      <Seat
-        key={i}
-        pos={i}
-        sitout={seat.sitout}
-        signerAddr={seat.address}
-        params={this.props.params}
-        changed={changed}
-        isTaken={this.isTaken}
-      />
-    ));
-  }
-
   renderWinners() {
     const winners = this.props.winners || [];
     return winners.map((winner, i) => (
@@ -543,11 +522,9 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     if (this.state.notFound) {
       return <NotFoundPage />;
     }
-
-    const lineup = this.props.lineup ? this.props.lineup.toJS() : null;
-    const changed = this.props.hand ? this.props.hand.get('changed') : null;
     const sb = (this.props.data && this.props.data.get('smallBlind')) || 0;
-    const pending = (lineup && lineup[this.props.myPos]) ? lineup[this.props.myPos].pending : false;
+    const seats = this.props.lineup ? this.props.lineup.toJS() : [];
+    const pending = (seats && seats[this.props.myPos]) ? seats[this.props.myPos].pending : false;
 
     return (
       <div>
@@ -578,13 +555,13 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
             myHand={this.props.myHand}
             pending={pending}
             sitout={this.props.sitout}
+            seats={seats}
             board={this.props.board}
-            seats={this.renderSeats(lineup, changed)}
-            hand={this.props.hand}
             potSize={this.props.potSize}
             onLeave={() => this.handleLeaveRequest(this.props.myPos)}
             onSitout={this.handleSitout}
             onCallOpponent={this.handleOpponentCall}
+            isTaken={this.isTaken}
           />
         }
       </div>
