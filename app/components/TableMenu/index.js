@@ -74,6 +74,9 @@ class TableMenu extends React.Component {
     if (typeof this.props.onCallOpponent === 'function') {
       this.props.onCallOpponent();
       this.setState({ calledOpponent: true });
+      setTimeout(() => {
+        this.setState({ calledOpponent: false });
+      }, 5 * 60 * 1000);
     }
   }
 
