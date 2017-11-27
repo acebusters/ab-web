@@ -25,6 +25,7 @@ const TABS = [
     title: <FormattedMessage {...messages[OVERVIEW]} />,
     to: '/dashboard',
     icon: 'fa-tachometer',
+    onlyActiveOnIndex: true,
   },
   {
     name: WALLET,

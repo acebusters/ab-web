@@ -4,7 +4,6 @@ import Link from '../Link';
 
 import {
   Tab,
-  TabButton,
   TabLink,
   TabLinkActive,
   TabButtonDisabled,
@@ -13,7 +12,7 @@ import {
   TabTitle,
 } from './styles';
 
-const Tabs = ({ activeTab, tabs, setActiveTab, disabledTabs }) => (
+const Tabs = ({ tabs, disabledTabs }) => (
   <TabsWrapper name="tabs">
     {tabs.map((tab) => {
       if (disabledTabs && disabledTabs.indexOf(tab.name) !== -1) {
@@ -26,30 +25,18 @@ const Tabs = ({ activeTab, tabs, setActiveTab, disabledTabs }) => (
           </Tab>
         );
       }
-      if (tab.to) {
-        return (
-          <Tab name="tab" key={tab.name} data-tour={tab.name}>
-            <Link
-              to={tab.to}
-              component={TabLink}
-              activeComponent={TabLinkActive}
-              onlyActiveOnIndex
-            >
-              <TabIcon className={`fa ${tab.icon}`} />
-              <TabTitle>{tab.title}</TabTitle>
-            </Link>
-          </Tab>
-        );
-      }
+
       return (
         <Tab name="tab" key={tab.name} data-tour={tab.name}>
-          <TabButton
-            disabled={tab.name === activeTab}
-            onClick={() => setActiveTab(tab.name)}
+          <Link
+            to={tab.to}
+            component={TabLink}
+            activeComponent={TabLinkActive}
+            onlyActiveOnIndex={tab.onlyActiveOnIndex}
           >
             <TabIcon className={`fa ${tab.icon}`} />
             <TabTitle>{tab.title}</TabTitle>
-          </TabButton>
+          </Link>
         </Tab>
       );
     }
@@ -57,10 +44,8 @@ const Tabs = ({ activeTab, tabs, setActiveTab, disabledTabs }) => (
   </TabsWrapper>
 );
 Tabs.propTypes = {
-  activeTab: PropTypes.string.isRequired,
   disabledTabs: PropTypes.array,
   tabs: PropTypes.array.isRequired,
-  setActiveTab: PropTypes.func.isRequired,
 };
 
 export default Tabs;

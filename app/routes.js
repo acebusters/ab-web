@@ -58,7 +58,7 @@ export default function createRoutes(store) {
         const importModules = import('./containers/Dashboard/Wallet');
         const renderRoute = loadModule(cb);
 
-        import('./containers/Dashboard/Wallet').then((component) => {
+        importModules.then((component) => {
           renderRoute(component);
         });
 
@@ -72,7 +72,7 @@ export default function createRoutes(store) {
         const importModules = import('./containers/Dashboard/Exchange');
         const renderRoute = loadModule(cb);
 
-        import('./containers/Dashboard/Exchange').then((component) => {
+        importModules.then((component) => {
           renderRoute(component);
         });
 
@@ -86,12 +86,32 @@ export default function createRoutes(store) {
         const importModules = import('./containers/Dashboard/Invest');
         const renderRoute = loadModule(cb);
 
-        import('./containers/Dashboard/Invest').then((component) => {
+        importModules.then((component) => {
           renderRoute(component);
         });
 
         importModules.catch(errorLoading);
       },
+      indexRoute: {
+        getComponent(nextState, cb) {
+          const importModules = import('./containers/Dashboard/PowerUp');
+          const renderRoute = loadModule(cb);
+          importModules.then((component) => renderRoute(component));
+          importModules.catch(errorLoading);
+        },
+      },
+      childRoutes: [
+        {
+          path: 'powerDown',
+          name: 'powerDown',
+          getComponent(nextState, cb) {
+            const importModules = import('./containers/Dashboard/PowerDown');
+            const renderRoute = loadModule(cb);
+            importModules.then((component) => renderRoute(component));
+            importModules.catch(errorLoading);
+          },
+        },
+      ],
     },
   ];
 
