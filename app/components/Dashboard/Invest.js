@@ -48,6 +48,9 @@ const Invest = (props) => {
     handlePowerDown,
     estimatePowerDown,
   } = props;
+  if (!totalSupplyPwr || !activeSupplyPwr) {
+    return null;
+  }
   const disabledTabs = account.isLocked ? [POWERDOWN] : [];
   const adjTotalSupplyPwr = totalSupplyPwr.mul(2);
   const calcABPtoNTZ = (amount) => {
@@ -58,7 +61,7 @@ const Invest = (props) => {
     const ntzAmount = new BigNumber(amount);
     return adjTotalSupplyPwr.mul(ntzAmount.div(completeSupplyBabz));
   };
-  const totalAvailPwr = totalSupplyPwr.minus(activeSupplyPwr);
+  const totalAvailPwr = totalSupplyPwr.sub(activeSupplyPwr);
   const powerDownMinAbp = calcNTZtoABP(toNtz(minPowerUpBabz));
   const powerUpRate = completeSupplyBabz.div(adjTotalSupplyPwr);
   // ensure that more ABP than exists can not be requested
@@ -103,12 +106,12 @@ Invest.propTypes = {
   account: PropTypes.object.isRequired,
   investType: PropTypes.oneOf([POWERUP, POWERDOWN]).isRequired,
   setInvestType: PropTypes.func.isRequired,
-  completeSupplyBabz: PropTypes.object.isRequired,
-  totalSupplyPwr: PropTypes.object.isRequired,
-  minPowerUpBabz: PropTypes.object.isRequired,
-  activeSupplyPwr: PropTypes.object.isRequired,
-  pwrBalance: PropTypes.object.isRequired,
-  nutzBalance: PropTypes.object.isRequired,
+  completeSupplyBabz: PropTypes.object,
+  totalSupplyPwr: PropTypes.object,
+  minPowerUpBabz: PropTypes.object,
+  activeSupplyPwr: PropTypes.object,
+  pwrBalance: PropTypes.object,
+  nutzBalance: PropTypes.object,
   handlePowerUp: PropTypes.func.isRequired,
   estimatePowerUp: PropTypes.func.isRequired,
   handlePowerDown: PropTypes.func.isRequired,
