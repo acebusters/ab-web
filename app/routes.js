@@ -9,6 +9,7 @@ import { getAsyncInjectors } from './utils/asyncInjectors';
 import { accountSaga } from './containers/AccountProvider/sagas';
 import { tableStateSaga } from './containers/Table/sagas';
 import { selectAccount } from './containers/AccountProvider/selectors';
+import { investIsAvailable } from './containers/Dashboard/utils';
 import { notificationsSaga } from './containers/Notifications/sagas';
 import { actionBarSaga } from './containers/ActionBar/sagas';
 import { tableMenuSaga } from './containers/TableMenu/sagas';
@@ -82,6 +83,12 @@ export default function createRoutes(store) {
     {
       path: 'invest',
       name: 'invest',
+      onEnter: (nextState, replace) => {
+        const { proxyAddr } = selectAccount(store.getState()).toJS();
+        if (!investIsAvailable(proxyAddr)) {
+          replace({ pathname: '/dashboard' });
+        }
+      },
       getComponent(nextState, cb) {
         const importModules = import('./containers/Dashboard/Invest');
         const renderRoute = loadModule(cb);

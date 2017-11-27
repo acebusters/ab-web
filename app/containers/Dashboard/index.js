@@ -14,8 +14,9 @@ import InvestTour from './InvestTour';
 import { OVERVIEW, WALLET, EXCHANGE, INVEST, setActiveTab } from './actions';
 import messages from './messages';
 import { getActiveTab } from './selectors';
+import { investIsAvailable } from './utils';
 
-import { ABI_TOKEN_CONTRACT, ABI_POWER_CONTRACT, MAIN_NET_GENESIS_BLOCK, conf } from '../../app.config';
+import { ABI_TOKEN_CONTRACT, ABI_POWER_CONTRACT, conf } from '../../app.config';
 
 const confParams = conf();
 
@@ -66,13 +67,7 @@ class DashboardRoot extends React.Component {
     const pwrBalance = this.power.balanceOf(account.proxy);
 
     // before crowdsale end, disable INVEST tab on production
-    const isMainnet = conf().firstBlockHash === MAIN_NET_GENESIS_BLOCK;
-    const inWhitelist = [
-      '0x8f3a1e097738a3f6f19c06b97d160df6b3a1801a', // sergey
-      '0x67be75fedee88a84cbdcf5c87616bb1bb746c57e', // johann
-      '0x4a46401df761f2ccc022c83aa7a97aac7a35303a', // sunify
-    ].indexOf(account.proxy) !== -1;
-    const disabledTabs = (isMainnet && !inWhitelist) ? [INVEST] : [];
+    const disabledTabs = !investIsAvailable(account.proxy) ? [INVEST] : [];
     return (
       <Container>
         <Tabs
