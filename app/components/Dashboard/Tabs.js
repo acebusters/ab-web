@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Link from '../Link';
 
 import {
   Tab,
   TabButton,
+  TabLink,
+  TabLinkActive,
   TabButtonDisabled,
   TabsWrapper,
   TabIcon,
@@ -20,6 +23,21 @@ const Tabs = ({ activeTab, tabs, setActiveTab, disabledTabs }) => (
               <TabIcon className={`fa ${tab.icon}`} />
               <TabTitle>{tab.title}</TabTitle>
             </TabButtonDisabled>
+          </Tab>
+        );
+      }
+      if (tab.to) {
+        return (
+          <Tab name="tab" key={tab.name} data-tour={tab.name}>
+            <Link
+              to={tab.to}
+              component={TabLink}
+              activeComponent={TabLinkActive}
+              onlyActiveOnIndex
+            >
+              <TabIcon className={`fa ${tab.icon}`} />
+              <TabTitle>{tab.title}</TabTitle>
+            </Link>
           </Tab>
         );
       }

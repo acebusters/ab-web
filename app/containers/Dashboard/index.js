@@ -7,13 +7,8 @@ import web3Connect from '../AccountProvider/web3Connect';
 import makeSelectAccountData from '../AccountProvider/selectors';
 import Container from '../../components/Container';
 import Balances from '../../components/Dashboard/Balances';
-import PanesRoot from '../../components/Dashboard/PanesRoot';
 import Tabs from '../../components/Dashboard/Tabs';
 
-import Invest from './Invest';
-import Overview from './Overview';
-import Wallet from './Wallet';
-import Exchange from './Exchange';
 import InvestTour from './InvestTour';
 
 import { OVERVIEW, WALLET, EXCHANGE, INVEST, setActiveTab } from './actions';
@@ -24,32 +19,29 @@ import { ABI_TOKEN_CONTRACT, ABI_POWER_CONTRACT, MAIN_NET_GENESIS_BLOCK, conf } 
 
 const confParams = conf();
 
-const PANES = {
-  [OVERVIEW]: Overview,
-  [WALLET]: Wallet,
-  [EXCHANGE]: Exchange,
-  [INVEST]: Invest,
-};
-
 const TABS = [
   {
     name: OVERVIEW,
     title: <FormattedMessage {...messages[OVERVIEW]} />,
+    to: '/dashboard',
     icon: 'fa-tachometer',
   },
   {
     name: WALLET,
     title: <FormattedMessage {...messages[WALLET]} />,
+    to: '/dashboard/wallet',
     icon: 'fa-money',
   },
   {
     name: EXCHANGE,
     title: <FormattedMessage {...messages[EXCHANGE]} />,
+    to: '/dashboard/exchange',
     icon: 'fa-exchange',
   },
   {
     name: INVEST,
     title: <FormattedMessage {...messages[INVEST]} />,
+    to: '/dashboard/invest',
     icon: 'fa-line-chart',
   },
 ];
@@ -92,18 +84,14 @@ class DashboardRoot extends React.Component {
           pwrBalance={pwrBalance}
           weiBalance={weiBalance}
         />
-        <PanesRoot
-          panes={PANES}
-          paneType={this.props.activeTab}
-          paneProps={this.props}
-        />
+        {this.props.children}
         <InvestTour />
       </Container>
     );
   }
 }
 DashboardRoot.propTypes = {
-  activeTab: PropTypes.string,
+  children: PropTypes.any,
   account: PropTypes.object,
   web3Redux: PropTypes.any,
 };
