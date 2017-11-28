@@ -23,7 +23,7 @@ class TxSubmit extends React.Component {
     invalid: PropTypes.bool,
     canSendTx: PropTypes.bool,
     gasThreshold: PropTypes.number,
-    possbileFailReason: PropTypes.any,
+    possibleFailReason: PropTypes.any,
   };
 
   static defaultProps = {
@@ -62,7 +62,7 @@ class TxSubmit extends React.Component {
   }
 
   renderAlert() {
-    const { isLocked, possbileFailReason } = this.props;
+    const { isLocked, possibleFailReason } = this.props;
     const { gas } = this.state;
 
     if (isLocked || !gas) {
@@ -73,8 +73,8 @@ class TxSubmit extends React.Component {
       return (
         <Alert theme="warning" key="error">
           Transaction probably will fail.
-          {possbileFailReason && <br />}
-          {possbileFailReason}
+          {possibleFailReason && <br />}
+          {possibleFailReason}
         </Alert>
       );
     }
