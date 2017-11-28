@@ -68,6 +68,7 @@ export class JoinDialog extends React.Component {
           }
           onCancel={rebuy ? onLeave : undefined}
           cancelButtonLabel={<FormattedMessage {...messages.leave} />}
+          possbileFailReason="Maybe seat is already taken by other player"
         />
       </Form>
     );

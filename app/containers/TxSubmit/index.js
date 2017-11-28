@@ -22,6 +22,12 @@ class TxSubmit extends React.Component {
     submitting: PropTypes.bool,
     invalid: PropTypes.bool,
     canSendTx: PropTypes.bool,
+    gasThreshold: PropTypes.number,
+    possbileFailReason: PropTypes.any,
+  };
+
+  static defaultProps = {
+    gasThreshold: 1000000,
   };
 
   constructor(props) {
@@ -44,6 +50,10 @@ class TxSubmit extends React.Component {
     }
   }
 
+  get gasTooHigh() {
+    return this.state.gas > this.props.gasThreshold;
+  }
+
   runEstimate(props) {
     const { isLocked, invalid, canSendTx, estimate, estimateArgs } = props;
     if (!isLocked && !invalid && canSendTx && estimateArgs) {
@@ -52,15 +62,25 @@ class TxSubmit extends React.Component {
   }
 
   renderAlert() {
-    const { isLocked } = this.props;
+    const { isLocked, possbileFailReason } = this.props;
     const { gas } = this.state;
 
     if (isLocked || !gas) {
       return null;
     }
 
+    if (this.gasTooHigh) {
+      return (
+        <Alert theme="warning" key="error">
+          Transaction probably will fail.
+          {possbileFailReason && <br />}
+          {possbileFailReason}
+        </Alert>
+      );
+    }
+
     return (
-      <Alert>
+      <Alert theme="success" key="estimate">
         Be sure to give at least <FormattedNumber value={gas} /> gas limit for your transaction.
         Otherwise&nbsp;transaction can fail
       </Alert>
@@ -86,7 +106,7 @@ class TxSubmit extends React.Component {
 
         <ButtonContainer>
           <SubmitButton
-            disabled={!canSendTx || !gas || invalid}
+            disabled={!canSendTx || !gas || invalid || this.gasTooHigh}
             submitting={submitting}
             onClick={onSubmit}
             type={onSubmit ? 'button' : 'submit'}
