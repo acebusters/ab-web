@@ -17,6 +17,7 @@ class TxSubmit extends React.Component {
     isLocked: PropTypes.bool,
     submitButtonLabel: PropTypes.any,
     cancelButtonLabel: PropTypes.any,
+    onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
     submitting: PropTypes.bool,
     invalid: PropTypes.bool,
@@ -71,11 +72,13 @@ class TxSubmit extends React.Component {
       submitButtonLabel,
       cancelButtonLabel,
       onCancel,
+      onSubmit,
       submitting,
       canSendTx,
       invalid,
     } = this.props;
     const { gas } = this.state;
+
 
     return (
       <div>
@@ -85,6 +88,8 @@ class TxSubmit extends React.Component {
           <SubmitButton
             disabled={!canSendTx || !gas || invalid}
             submitting={submitting}
+            onClick={onSubmit}
+            type={onSubmit ? 'button' : 'submit'}
           >
             {submitButtonLabel}
           </SubmitButton>
