@@ -64,12 +64,10 @@ TransferDialogContainer.defaultProps = {
   type: 'default',
 };
 
-const valueSelector = formValueSelector('transfer');
-const fieldSelector = (field) => (state) => valueSelector(state, field);
 const mapStateToProps = createStructuredSelector({
   canSendTx: makeSelectCanSendTx(),
-  amount: fieldSelector('amount'),
-  address: fieldSelector('address'),
+  amount: (state, props) => formValueSelector(props.form)(state, 'amount'),
+  address: (state, props) => formValueSelector(props.form)(state, 'address'),
 });
 
 export default connect(mapStateToProps, {
@@ -78,7 +76,6 @@ export default connect(mapStateToProps, {
   setAmountUnit,
 })(
   reduxForm({
-    form: 'transfer',
     validate,
     warn,
   })(TransferDialogContainer)
