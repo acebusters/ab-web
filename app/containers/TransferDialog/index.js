@@ -8,7 +8,6 @@ import { reduxForm, formValueSelector } from 'redux-form/immutable';
 import { normalizerFloat } from '../../utils/amountFormatter';
 import { validateFloat } from '../../utils/inputValidators';
 
-import { makeSelectCanSendTx } from '../../containers/AccountProvider/selectors';
 import { modalAdd, modalDismiss } from '../../containers/App/actions';
 import { setAmountUnit } from '../../containers/Dashboard/actions';
 
@@ -65,7 +64,6 @@ TransferDialogContainer.defaultProps = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  canSendTx: makeSelectCanSendTx(),
   amount: (state, props) => formValueSelector(props.form)(state, 'amount'),
   address: (state, props) => formValueSelector(props.form)(state, 'address'),
 });
