@@ -4,33 +4,33 @@ import Input from '../Input';
 
 import { CopyIcon } from './styles';
 
-function copyLink(el) {
-  el.select();
+function copyText(input) {
+  input.select();
 
   try {
     document.execCommand('copy');
   } finally {
-    el.setSelectionRange(0, 0);
+    input.setSelectionRange(0, 0);
   }
 }
 
 /* eslint-disable jsx-a11y/label-has-for */
-function LinkInput({ link }) {
+function CopyInput({ value }) {
   return (
     <label style={{ position: 'relative' }}>
       <CopyIcon className="fa fa-copy" />
       <Input
-        defaultValue={link}
-        onClick={(e) => copyLink(e.currentTarget)}
+        defaultValue={value}
+        onClick={(e) => copyText(e.currentTarget)}
         readOnly
-        style={{ width: link.length * 9.5 }}
+        style={{ width: value.length * 9.5 }}
       />
     </label>
   );
 }
 
-LinkInput.propTypes = {
-  link: PropTypes.string.isRequired,
+CopyInput.propTypes = {
+  value: PropTypes.string.isRequired,
 };
 
-export default LinkInput;
+export default CopyInput;

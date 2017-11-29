@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import H2 from '../H2';
 
 import { SectionOverview } from './styles';
-import LinkInput from './LinkInput';
+import CopyInput from './CopyInput';
 
 const refLink = ({ id }) => `${window.location.origin}/register/ref/${id}`;
 
@@ -18,10 +18,10 @@ function Refs({ messages, refs }) {
     >
       <H2><FormattedMessage {...messages.refs} values={{ refsCount: refs.length }} /></H2>
       <p style={{ textAlign: 'center', margin: '-10px 0 20px' }}>
-        Share your personal link and get up to 5%<br />of the deposit your referals bring in (coming soon)
+        Share your personal link and get up to 5%<br />of the deposit your referrals bring in (coming soon)
       </p>
 
-      <LinkInput link={refLink(refs[0])} />
+      <CopyInput value={refLink(refs[0])} />
 
       <p>
         <FormattedMessage
