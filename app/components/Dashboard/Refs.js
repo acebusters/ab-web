@@ -18,7 +18,8 @@ function Refs({ messages, refs }) {
     >
       <H2><FormattedMessage {...messages.refs} values={{ refsCount: refs.length }} /></H2>
       <p style={{ textAlign: 'center', margin: '-10px 0 20px' }}>
-        Share your personal link and get up to 5%<br />of the deposit your referrals bring in (coming soon)
+        Share your personal link and get up to 5%<br />
+        bonus of your referrals first Power Up
       </p>
 
       <CopyInput value={refLink(refs[0])} />
