@@ -1,7 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
 import invariant from 'invariant';
+import { createStructuredSelector } from 'reselect';
+
 import A from '../A';
+
+import { makeSelectIsWeb3Connected } from '../../containers/AccountProvider/selectors';
 
 function isLeftClickEvent(event) {
   return event.button === 0;
@@ -48,7 +53,11 @@ class Link extends React.Component {
 
     event.preventDefault();
 
-    router.push(resolveToLocation(this.props.to, router));
+    if (this.props.isConnected) {
+      router.push(resolveToLocation(this.props.to, router));
+    } else {
+      window.location = router.createHref(resolveToLocation(this.props.to, router));
+    }
   }
 
   render() {
@@ -87,6 +96,7 @@ Link.propTypes = {
   activeComponent: PropTypes.any,
   onClick: PropTypes.func,
   target: PropTypes.string,
+  isConnected: PropTypes.bool,
 };
 
 Link.defaultProps = {
@@ -95,4 +105,6 @@ Link.defaultProps = {
   component: A,
 };
 
-export default Link;
+export default connect(createStructuredSelector({
+  isConnected: makeSelectIsWeb3Connected(),
+}))(Link);
