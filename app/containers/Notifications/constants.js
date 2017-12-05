@@ -75,11 +75,22 @@ export const loggedInSuccess = {
 
 export const noWeb3Danger = {
   txId: 'NO_WEB3_MESSAGE',
-  notifyType: 'ACCOUNT_LOADED',
+  notifyType: 'NO_WEB3_MESSAGE',
   category: 'Browser doesn\'t support smart contracts!',
   details: 'Install MetaMask or ethereum browser',
   removing: false,
   dismissable: true,
+  date: new Date(),
+  type: 'danger',
+};
+
+export const noConnectionDanger = {
+  txId: 'NO_CONNECTION_MESSAGE',
+  notifyType: 'NO_CONNECTION_MESSAGE',
+  category: 'Connection lost',
+  details: 'Please check your connection or try to refresh page',
+  removing: false,
+  dismissable: false,
   date: new Date(),
   type: 'danger',
 };

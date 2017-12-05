@@ -1,15 +1,8 @@
-import { put, take, call, select } from 'redux-saga/effects';
+import { put, take, call } from 'redux-saga/effects';
 import { eventChannel, delay } from 'redux-saga';
 
-import { CONFIRM_DIALOG } from '../../../containers/Modal/constants';
-import { modalAdd, modalDismiss } from '../../../containers/App/actions';
-import { makeModalSelector } from '../../../containers/App/selectors';
 import { getWeb3 } from '../utils';
-
-import {
-  web3Error, web3Connected, web3Disconnected,
-  WEB3_CONNECTED, WEB3_DISCONNECTED,
-} from '../actions';
+import { web3Error, web3Connected, web3Disconnected } from '../actions';
 
 function wsEvents(ws, emitter) {
   ws.on('connect', async (e) => { // eslint-disable-line no-unused-vars
@@ -52,20 +45,6 @@ export function* websocketSaga() {
   try {
     while (true) { // eslint-disable-line no-constant-condition
       const action = yield take(chan);
-      if (action.type === WEB3_DISCONNECTED) {
-        yield put(modalAdd({
-          modalType: CONFIRM_DIALOG,
-          modalProps: {
-            msg: 'Connection Lost. Please check your connection or try to refresh page.',
-            buttonText: 'OK!',
-          },
-        }));
-      } else if (action.type === WEB3_CONNECTED) {
-        const modal = yield select(makeModalSelector());
-        if (modal && modal.modalType === CONFIRM_DIALOG) {
-          yield put(modalDismiss());
-        }
-      }
       yield put(action);
     }
   } finally {
