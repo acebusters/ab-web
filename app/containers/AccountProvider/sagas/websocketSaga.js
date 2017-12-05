@@ -56,7 +56,7 @@ export function* websocketSaga() {
         yield put(modalAdd({
           modalType: CONFIRM_DIALOG,
           modalProps: {
-            msg: 'Connection Lost. Please try to refresh the page.',
+            msg: 'Connection Lost. Please check your connection or try to refresh page.',
             buttonText: 'OK!',
           },
         }));
