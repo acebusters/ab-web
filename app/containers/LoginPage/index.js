@@ -110,7 +110,7 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
               .catch((workerErr) => {
                 // If worker failed, ...
                 if (workerErr.payload && workerErr.payload.error === 'invalid password') {
-                  throw new SubmissionError({ email: 'The email or password is incorrect. Please try again.' });
+                  throw new SubmissionError({ _error: 'The email or password is incorrect. Please try again.' });
                 } else {
                   throw new SubmissionError({ _error: `Error: login failed due to worker error: ${workerErr}` });
                 }
@@ -162,7 +162,7 @@ export class LoginPage extends React.PureComponent { // eslint-disable-line reac
           </Form>
 
           <ForgotField>
-            <Link to="reset">
+            <Link to="/reset">
               Forgot password
             </Link>
           </ForgotField>

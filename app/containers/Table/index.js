@@ -188,7 +188,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       ) &&
       !nextProps.standingUp && !storageService.getItem(`rebuyModal[${toggleKey}]`)
     ) {
-      const balance = this.balance;
+      const balance = this.token.balanceOf(nextProps.account.proxy);
 
       this.props.modalDismiss();
       this.props.modalAdd({
@@ -198,7 +198,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
           estimate: this.estimateRebuy,
           onLeave: () => this.handleLeave(this.props.myPos),
           params: this.props.params,
-          balance: balance && Number(balance.toString()),
+          balance,
           rebuy: true,
         },
         closeHandler: () => this.handleLeave(this.props.myPos),
@@ -328,7 +328,9 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   isTaken(open, myPos, pending, pos) {
-    if (!this.props.account.loggedIn) {
+    const { account } = this.props;
+
+    if (!account.loggedIn) {
       const loc = this.props.location;
       const curUrl = `${loc.pathname}${loc.search}${loc.hash}`;
 
@@ -336,11 +338,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       return;
     }
 
-    let balance;
-
-    if (this.balance) {
-      balance = parseInt(this.balance.toString(), 10);
-    }
+    const balance = this.token.balanceOf(account.proxy);
 
     if (open && myPos === undefined && !pending) {
       this.props.modalAdd({
