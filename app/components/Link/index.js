@@ -1,8 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
 import invariant from 'invariant';
-import { createStructuredSelector } from 'reselect';
 
 import A from '../A';
 
@@ -19,6 +17,8 @@ function isModifiedEvent(event) {
 function resolveToLocation(to, router) {
   return typeof to === 'function' ? to(router.location) : to;
 }
+
+const isConnectedSelector = makeSelectIsWeb3Connected();
 
 class Link extends React.Component {
   constructor(props) {
@@ -53,7 +53,8 @@ class Link extends React.Component {
 
     event.preventDefault();
 
-    if (this.props.isConnected) {
+    const isConnected = this.context.store ? isConnectedSelector(this.context.store.getState()) : true;
+    if (isConnected) {
       router.push(resolveToLocation(this.props.to, router));
     } else {
       window.location = router.createHref(resolveToLocation(this.props.to, router));
@@ -87,6 +88,7 @@ class Link extends React.Component {
 
 Link.contextTypes = {
   router: PropTypes.object,
+  store: PropTypes.object,
 };
 
 Link.propTypes = {
@@ -105,6 +107,4 @@ Link.defaultProps = {
   component: A,
 };
 
-export default connect(createStructuredSelector({
-  isConnected: makeSelectIsWeb3Connected(),
-}))(Link);
+export default Link;
