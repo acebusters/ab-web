@@ -88,7 +88,20 @@ export const noConnectionDanger = {
   txId: 'NO_CONNECTION_MESSAGE',
   notifyType: 'NO_CONNECTION_MESSAGE',
   category: 'Connection lost',
-  details: 'Please check your connection or try to refresh page',
+  details: (<p>
+    Please check your connection or try{' '}
+    <a
+      role="button"
+      tabIndex={-1}
+      onClick={() => window.location.reload()}
+      style={{
+        fontWeight: 'bold',
+        cursor: 'pointer',
+      }}
+    >
+      to refresh page
+    </a>
+  </p>),
   removing: false,
   dismissable: false,
   date: new Date(),
