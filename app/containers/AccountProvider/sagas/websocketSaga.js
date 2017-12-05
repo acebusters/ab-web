@@ -2,7 +2,7 @@ import { put, take, call } from 'redux-saga/effects';
 import { eventChannel, delay } from 'redux-saga';
 
 import { getWeb3 } from '../utils';
-import { web3Error, web3Connected, web3Disconnected } from '../actions';
+import { web3Connected, web3Disconnected } from '../actions';
 
 function wsEvents(ws, emitter) {
   ws.on('connect', async (e) => { // eslint-disable-line no-unused-vars
@@ -26,9 +26,9 @@ function wsEvents(ws, emitter) {
     }
   });
 
-  ws.on('error', (e) => {
-    emitter(web3Error(e));
-  });
+  // ws.on('error', (e) => {
+  //   emitter(web3Error(e));
+  // });
 }
 
 function websocketChannel() {
