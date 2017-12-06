@@ -8,6 +8,10 @@ import tableImage from './tableBG.svg';
 import Pot from '../Pot';
 import Curtain from '../../containers/Curtain';
 import { tableNameByAddress } from '../../services/tableNames';
+import { nickNameByAddress } from '../../services/nicknames';
+import { formatNtz } from '../../utils/amountFormatter';
+import { SEAT_COORDS } from '../../app.config';
+import { getPosCoords } from '../../containers/Seat/utils';
 
 import {
   TableName,
@@ -18,37 +22,93 @@ import {
   Winner,
 } from './styles';
 
-// eslint-disable-next-line react/prefer-stateless-function
+const defaultPotPos = { left: '50%', top: '58%' };
+
+const getPosByAddr = (lineup, addr) => lineup.findIndex((seat) => seat.get('address') === addr);
+
 class TableComponent extends React.Component {
-  static propTypes = {
-    board: PropTypes.array,
-    potSize: PropTypes.number,
-    winners: PropTypes.array,
-    myHand: PropTypes.object,
-    sb: PropTypes.number,
-    seats: PropTypes.array.isRequired,
-    params: PropTypes.object,
-    isTaken: PropTypes.func.isRequired,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      win: false,
+      potsPositions: [defaultPotPos],
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.winners && !nextProps.winners) {
+      this.setState({
+        potsPositions: [defaultPotPos],
+      });
+    }
+
+    if (!this.props.winners && nextProps.winners) {
+      this.setState({
+        potsPositions: nextProps.winners.map(() => defaultPotPos),
+      });
+
+      setTimeout(() => {
+        this.setState((state, props) => ({
+          potsPositions: props.winners.map((winner) => {
+            const pos = getPosByAddr(props.lineup, winner.addr);
+            const coords = getPosCoords(SEAT_COORDS, props.lineup.size, pos);
+            return {
+              left: `calc(${coords[0]}% + 15px)`,
+              top: `calc(${coords[1]}% + 75px)`,
+            };
+          }),
+        }));
+      }, 0);
+    }
+  }
+
+  renderWinners() {
+    const winners = this.props.winners || [];
+    return winners.map((winner, i) => (
+      <div key={i}>
+        {nickNameByAddress(winner.addr)} won {formatNtz(winner.amount - winner.maxBet)} NTZ {(winner.hand) ? `with ${winner.hand}` : ''}
+      </div>
+    ));
+  }
 
   render() {
+    const { params, potSize, seats, board, winners, myHand, sb } = this.props;
+    const { potsPositions } = this.state;
+
     return (
       <div name="table-component">
         <Curtain {...this.props} />
 
         <TableContainer name="table-container">
           <TableName>
-            {tableNameByAddress(this.props.params.tableAddr)}
+            {tableNameByAddress(params.tableAddr)}
           </TableName>
 
           <TableAndChairs id="table-and-chairs" >
             <PokerTable>
               <img src={tableImage} alt="" />
-              { this.props.potSize > 0 &&
-                <Pot className="pot" potSize={this.props.potSize} top="58%" left="50%" />
+
+              {potSize > 0 && !winners &&
+                <Pot
+                  className="pot"
+                  potSize={potSize}
+                  top={potsPositions[0].top}
+                  left={potsPositions[0].left}
+                  key={0}
+                />
               }
 
-              {this.props.seats.map((seat, i) => (
+              {winners && winners.map((winner, i) => (
+                <Pot
+                  className="pot"
+                  potSize={winners.length === 1 ? potSize : winner.amount}
+                  top={potsPositions[i].top}
+                  left={potsPositions[i].left}
+                  key={i}
+                />
+              )).filter((el) => el.props.potSize > 0)}
+
+              {seats.map((seat, i) => (
                 <Seat
                   key={i}
                   pos={i}
@@ -59,27 +119,39 @@ class TableComponent extends React.Component {
                 />
               ))}
 
-              <BoardCards board={this.props.board} />
+              <BoardCards board={board} />
 
-              { this.props.winners.length > 0 &&
-                <Winner className="winner">{ this.props.winners }</Winner>
+              {winners &&
+                <Winner className="winner">
+                  {this.renderWinners()}
+                </Winner>
               }
             </PokerTable>
           </TableAndChairs>
 
-          {this.props.myHand &&
-            <HandBox className="hand-box">{this.props.myHand.descr}</HandBox>
+          {myHand &&
+            <HandBox className="hand-box">{myHand.descr}</HandBox>
           }
 
           <TableMenu {...this.props} />
-
-          <ActionBar className="action-bar" {...this.props} sb={this.props.sb}></ActionBar>
-
+          <ActionBar className="action-bar" {...this.props} sb={sb} />
         </TableContainer>
 
       </div>
     );
   }
 }
+
+TableComponent.propTypes = {
+  seats: PropTypes.array.isRequired,
+  isTaken: PropTypes.func.isRequired,
+  board: PropTypes.array,
+  potSize: PropTypes.number,
+  winners: PropTypes.array,
+  myHand: PropTypes.object,
+  sb: PropTypes.number,
+  params: PropTypes.object,
+  lineup: PropTypes.object,
+};
 
 export default TableComponent;

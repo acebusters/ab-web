@@ -14,8 +14,6 @@ import TableDebug from '../../containers/TableDebug';
 import NotFoundPage from '../../containers/NotFoundPage';
 
 import WithLoading from '../../components/WithLoading';
-import { nickNameByAddress } from '../../services/nicknames';
-import { formatNtz } from '../../utils/amountFormatter';
 import { promisifyWeb3Call } from '../../utils/promisifyWeb3Call';
 
 import { CONFIRM_DIALOG, JOIN_DIALOG, INVITE_DIALOG } from '../Modal/constants';
@@ -507,22 +505,12 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     }
   }
 
-  renderWinners() {
-    const winners = this.props.winners || [];
-    return winners.map((winner, i) => (
-      <div key={i}>
-        {nickNameByAddress(winner.addr)} won {formatNtz(winner.amount - winner.maxBet)} NTZ {(winner.hand) ? `with ${winner.hand}` : ''}
-      </div>
-    ));
-  }
-
   render() {
     if (this.state.notFound) {
       return <NotFoundPage />;
     }
-    const sb = (this.props.data && this.props.data.get('smallBlind')) || 0;
-    const seats = this.props.lineup ? this.props.lineup.toJS() : [];
-    const pending = (seats && seats[this.props.myPos]) ? seats[this.props.myPos].pending : false;
+    const { data } = this.props;
+    const lineup = this.props.lineup ? this.props.lineup.toJS() : null;
 
     return (
       <div>
@@ -548,12 +536,12 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
           <TableComponent
             {...this.props}
             id="table"
-            sb={sb}
-            winners={this.renderWinners()}
+            sb={(data && data.get('smallBlind')) || 0}
+            winners={this.props.winners}
             myHand={this.props.myHand}
-            pending={pending}
+            pending={(lineup && lineup[this.props.myPos]) ? lineup[this.props.myPos].pending : false}
             sitout={this.props.sitout}
-            seats={seats}
+            seats={lineup}
             board={this.props.board}
             potSize={this.props.potSize}
             onLeave={() => this.handleLeaveRequest(this.props.myPos)}

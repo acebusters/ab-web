@@ -18,8 +18,19 @@ describe('ActionBar', () => {
         { address: P1_ADDR, cards: [1, 2] },
         { address: P2_ADDR, cards: [-1, -1] },
       ],
+      lineup: [{
+        address: P1_ADDR,
+        cards: [1, 2],
+      }],
+      me: {},
       sb: 1,
-      winners: ["Helge won with a pair of A's"],
+      winners: [
+        {
+          addr: '0x00',
+          amount: 0,
+          maxBet: 0,
+        },
+      ],
     };
     const table = shallow(<Table {...props} />);
     expect(table.find(Winner).length).toBeGreaterThan(0);
