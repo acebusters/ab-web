@@ -65,6 +65,7 @@ import {
   makeAmountInTheMiddleSelector,
   makeBoardSelector,
   makeHandSelector,
+  makePrevHandSelector,
   makeHandStateSelector,
   makeLineupSelector,
   makeMyHandValueSelector,
@@ -87,6 +88,23 @@ const SpinnerWrapper = styled.div`
   top: 40%;
   transform: translate(-50%, -50%)
 `;
+
+function isRebuyNeeded(props, nextProps) {
+  const prevHand = nextProps.prevHand && nextProps.prevHand.toJS();
+  const hand = nextProps.hand && nextProps.hand.toJS();
+
+  if (!prevHand || !hand) {
+    return false;
+  }
+
+  return !!(
+    nextProps.state === 'waiting' &&
+    nextProps.myStack !== null && nextProps.myStack <= 0 &&
+    !nextProps.standingUp &&
+    !storageService.getItem(`rebuyModal[${props.params.tableAddr + hand.handId}]`) &&
+    !!prevHand.distribution
+  );
+}
 
 export class Table extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -175,17 +193,8 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       }
     }
 
-    const toggleKey = this.tableAddr + handId;
     // display Rebuy modal if state === 'waiting' and user stack is no greater than 0
-    if (
-      nextProps.state === 'waiting' &&
-      nextProps.myStack !== null && nextProps.myStack <= 0 &&
-      (
-        nextProps.state !== this.props.state ||
-        (nextProps.myStack !== this.props.myStack && this.props.myStack > 0)
-      ) &&
-      !nextProps.standingUp && !storageService.getItem(`rebuyModal[${toggleKey}]`)
-    ) {
+    if (isRebuyNeeded(this.props, nextProps)) {
       const balance = this.token.balanceOf(nextProps.account.proxy);
 
       this.props.modalDismiss();
@@ -578,6 +587,7 @@ const mapStateToProps = createStructuredSelector({
   board: makeBoardSelector(),
   data: makeTableDataSelector(),
   hand: makeHandSelector(),
+  prevHand: makePrevHandSelector(),
   isMyTurn: makeIsMyTurnSelector(),
   lineup: makeLineupSelector(),
   latestHand: makeLatestHandSelector(),
@@ -603,9 +613,10 @@ Table.propTypes = {
   state: PropTypes.string,
   board: PropTypes.array,
   hand: PropTypes.object,
+  prevHand: PropTypes.object, // eslint-disable-line
+  myStack: PropTypes.number, // eslint-disable-line
   isMyTurn: PropTypes.bool,
   myHand: PropTypes.object,
-  myStack: PropTypes.number,
   lineup: PropTypes.object,
   sitout: PropTypes.any,
   params: PropTypes.object,
