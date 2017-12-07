@@ -92,17 +92,33 @@ const SpinnerWrapper = styled.div`
 function isRebuyNeeded(props, nextProps) {
   const prevHand = nextProps.prevHand && nextProps.prevHand.toJS();
   const hand = nextProps.hand && nextProps.hand.toJS();
+  const bb = nextProps.data ? nextProps.data.get('smallBlind') * 2 : 0;
 
   if (!prevHand || !hand) {
     return false;
   }
 
+  const { myStack, standingUp, state } = nextProps;
+  const { myStack: prevStack } = props;
+
+  const rebuyModal = storageService.getItem(`rebuyModal[${props.params.tableAddr}${nextProps.latestHand}]`);
+
+  if (prevHand) {
+    return !!(
+      hand.state === 'waiting' &&
+      myStack !== null && (myStack <= 0 || myStack < bb) &&
+      !standingUp &&
+      !rebuyModal &&
+      !!prevHand.distribution
+    );
+  }
+
   return !!(
-    nextProps.state === 'waiting' &&
-    nextProps.myStack !== null && nextProps.myStack <= 0 &&
+    state === 'waiting' &&
+    myStack !== null && (myStack <= 0 || myStack < bb) &&
+    (state !== this.state || (myStack !== prevStack && prevStack > bb)) &&
     !nextProps.standingUp &&
-    !storageService.getItem(`rebuyModal[${props.params.tableAddr + hand.handId}]`) &&
-    !!prevHand.distribution
+    !rebuyModal
   );
 }
 
@@ -258,8 +274,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
   handleRebuy(amount) {
     const handId = this.props.latestHand;
-    const toggleKey = this.tableAddr + handId;
-    storageService.setItem(`rebuyModal[${toggleKey}]`, true);
+    storageService.setItem(`rebuyModal[${this.tableAddr}${handId}]`, true);
 
     const { signerAddr, myPos, account } = this.props;
 
@@ -272,7 +287,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
     return Promise.resolve(account.isLocked ? null : promise).then(() => {
       this.props.modalDismiss();
-      storageService.removeItem(`rebuyModal[${toggleKey}]`);
     });
   }
 
@@ -288,12 +302,14 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
   async handleJoin(pos, amount) {
     const { signerAddr, account } = this.props;
+    const handId = this.props.latestHand;
 
     const promise = promisifyWeb3Call(this.token.transData.sendTransaction)(
       this.tableAddr,
       amount,
       `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`,
     );
+    storageService.setItem(`rebuyModal[${this.tableAddr}${handId}]`, true);
 
     const reserve = async () => {
       const txHash = await promise;
