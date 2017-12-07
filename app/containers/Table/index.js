@@ -99,9 +99,9 @@ function isRebuyNeeded(props, nextProps) {
   }
 
   const { myStack, standingUp, state } = nextProps;
-  const { myStack: prevStack } = props;
+  const { myStack: prevStack, state: prevState } = props;
 
-  const rebuyModal = storageService.getItem(`rebuyModal[${props.params.tableAddr}${nextProps.latestHand}]`);
+  const rebuyModal = storageService.getItem(`rebuyModal[${props.params.tableAddr}${nextProps.latestHand}1]`);
 
   if (prevHand) {
     return !!(
@@ -116,7 +116,7 @@ function isRebuyNeeded(props, nextProps) {
   return !!(
     state === 'waiting' &&
     myStack !== null && (myStack <= 0 || myStack < bb) &&
-    (state !== this.state || (myStack !== prevStack && prevStack > bb)) &&
+    (state !== prevState || (myStack !== prevStack && prevStack > bb)) &&
     !nextProps.standingUp &&
     !rebuyModal
   );
@@ -273,9 +273,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   handleRebuy(amount) {
-    const handId = this.props.latestHand;
-    storageService.setItem(`rebuyModal[${this.tableAddr}${handId}]`, true);
-
     const { signerAddr, myPos, account } = this.props;
 
     const promise = promisifyWeb3Call(this.token.transData.sendTransaction)(
@@ -286,6 +283,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
 
     return Promise.resolve(account.isLocked ? null : promise).then(() => {
+      storageService.setItem(`rebuyModal[${this.tableAddr}${this.props.latestHand}]`, true);
       this.props.modalDismiss();
     });
   }
@@ -302,14 +300,12 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
   async handleJoin(pos, amount) {
     const { signerAddr, account } = this.props;
-    const handId = this.props.latestHand;
 
     const promise = promisifyWeb3Call(this.token.transData.sendTransaction)(
       this.tableAddr,
       amount,
       `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`,
     );
-    storageService.setItem(`rebuyModal[${this.tableAddr}${handId}]`, true);
 
     const reserve = async () => {
       const txHash = await promise;
@@ -339,6 +335,8 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       signerChannel.bind('update', this.handleUpdate);
       await reserve();
     }
+
+    storageService.setItem(`rebuyModal[${this.tableAddr}${this.props.latestHand}]`, true);
   }
 
   estimateJoin(pos, amount) {
@@ -424,7 +422,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
     const exitHand = this.props.state !== 'waiting' ? handId : handId - 1;
 
     this.props.setExitHand(this.tableAddr, this.props.latestHand, pos, exitHand);
-    storageService.removeItem(`rebuyModal[${this.tableAddr + handId}]`);
+    storageService.removeItem(`rebuyModal[${this.tableAddr}${handId}]`);
 
     this.props.modalDismiss();
     this.tableService.leave(exitHand, this.props.lineup.getIn([pos, 'address']))
