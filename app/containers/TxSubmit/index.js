@@ -103,7 +103,7 @@ class TxSubmit extends React.Component {
 
     return (
       <div>
-        {!invalid && canSendTx && this.renderAlert()}
+        {!invalid && canSendTx && !submitting && this.renderAlert()}
 
         <ButtonContainer>
           <SubmitButton
