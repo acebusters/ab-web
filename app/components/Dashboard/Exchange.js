@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import BigNumber from 'bignumber.js';
 
 import { NTZ_DECIMALS, ETH_DECIMALS, formatNtz, formatEth } from '../../utils/amountFormatter';
@@ -50,12 +50,17 @@ const Exchange = (props) => {
               label={<FormattedMessage {...messages.amount} />}
               title={<FormattedMessage {...messages.sellTitle} />}
               descr={
-                <Alert theme="info" style={{ textAlign: 'center' }}>
-                  <FormattedMessage
-                    {...messages.floorPrice}
-                    values={{ amount: formatNtz(floor.mul(NTZ_DECIMALS)) }}
-                  />
-                </Alert>
+                <div>
+                  <Alert theme="info" style={{ textAlign: 'center' }}>
+                    <FormattedMessage
+                      {...messages.floorPrice}
+                      values={{ amount: formatNtz(floor.mul(NTZ_DECIMALS)) }}
+                    />
+                  </Alert>
+                  <Alert theme="info" style={{ textAlign: 'center' }}>
+                    <FormattedHTMLMessage {...messages.ethPayoutInfo} />
+                  </Alert>
+                </div>
               }
               amountUnit={NTZ}
               calcExpectedAmount={calcExpectedAmountETH}
