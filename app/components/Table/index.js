@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BoardCards from 'components/Card/BoardCards';
+import Seat from 'containers/Seat';
 import TableMenu from '../../containers/TableMenu';
 import ActionBar from '../../containers/ActionBar';
 import tableImage from './tableBG.svg';
 import Pot from '../Pot';
 import Curtain from '../../containers/Curtain';
 import { tableNameByAddress } from '../../services/tableNames';
+import { nickNameByAddress } from '../../services/nicknames';
+import { formatNtz } from '../../utils/amountFormatter';
+import { SEAT_COORDS } from '../../app.config';
+import { getPosCoords } from '../../containers/Seat/utils';
 
 import {
   TableName,
@@ -17,53 +22,138 @@ import {
   Winner,
 } from './styles';
 
-const TableComponent = (props) => (
-  <div name="table-component">
-    <Curtain {...props} />
+const defaultPotPos = { left: '50%', top: '58%' };
 
-    <TableContainer name="table-container">
-      <TableName>
-        {tableNameByAddress(props.params.tableAddr)}
-      </TableName>
+const getPosByAddr = (lineup, addr) => lineup.findIndex((seat) => seat.get('address') === addr);
 
-      <TableAndChairs id="table-and-chairs" >
-        <PokerTable>
-          <img src={tableImage} alt="" />
-          { props.potSize > 0 &&
-            <Pot className="pot" potSize={props.potSize} top="58%" left="50%" />
-          }
+class TableComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      win: false,
+      potsPositions: [defaultPotPos],
+    };
+  }
 
-          { props.seats }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.winners && !nextProps.winners) {
+      this.setState({
+        potsPositions: [defaultPotPos],
+      });
+    }
 
-          <BoardCards board={props.board} />
+    if (!this.props.winners && nextProps.winners) {
+      this.setState({
+        potsPositions: nextProps.winners.map(() => defaultPotPos),
+      });
 
-          { props.winners.length > 0 &&
-            <Winner className="winner">{ props.winners }</Winner>
-          }
-        </PokerTable>
-      </TableAndChairs>
+      setTimeout(() => {
+        this.setState((state, props) => ({
+          potsPositions: props.winners.map((winner) => {
+            const pos = getPosByAddr(props.lineup, winner.addr);
+            const coords = getPosCoords(SEAT_COORDS, props.lineup.size, pos);
+            return {
+              left: `calc(${coords[0]}% + 15px)`,
+              top: `calc(${coords[1]}% + 75px)`,
+            };
+          }),
+        }));
+      }, 0);
+    }
+  }
 
-      {props.myHand &&
-        <HandBox className="hand-box">{props.myHand.descr}</HandBox>
+  makePots(winners, potSize) {
+    if (winners) {
+      if (winners.length === 1) {
+        return [Math.min(potSize, winners[0].amount)];
       }
 
-      <TableMenu {...props} />
+      return winners.map(({ amount }) => amount);
+    }
 
-      <ActionBar className="action-bar" {...props} sb={props.sb}></ActionBar>
+    return [potSize];
+  }
 
-    </TableContainer>
+  renderWinners() {
+    const winners = this.props.winners || [];
+    return winners.map((winner, i) => (
+      <div key={i}>
+        {nickNameByAddress(winner.addr)} won {formatNtz(winner.amount - winner.maxBet)} NTZ {(winner.hand) ? `with ${winner.hand}` : ''}
+      </div>
+    ));
+  }
 
-  </div>
-);
+  render() {
+    const { params, potSize, seats, board, winners, myHand, sb } = this.props;
+    const { potsPositions } = this.state;
+
+    return (
+      <div name="table-component">
+        <Curtain {...this.props} />
+
+        <TableContainer name="table-container">
+          <TableName>
+            {tableNameByAddress(params.tableAddr)}
+          </TableName>
+
+          <TableAndChairs id="table-and-chairs" >
+            <PokerTable>
+              <img src={tableImage} alt="" />
+
+              {this.makePots(winners, potSize).map((pot, i) => (
+                <Pot
+                  className="pot"
+                  potSize={pot}
+                  top={potsPositions[i].top}
+                  left={potsPositions[i].left}
+                  key={i}
+                />
+              )).filter((el) => el.props.potSize > 0)}
+
+              {seats.map((seat, i) => (
+                <Seat
+                  key={i}
+                  pos={i}
+                  sitout={seat.sitout}
+                  signerAddr={seat.address}
+                  params={this.props.params}
+                  isTaken={this.props.isTaken}
+                />
+              ))}
+
+              <BoardCards board={board} />
+
+              {winners &&
+                <Winner className="winner">
+                  {this.renderWinners()}
+                </Winner>
+              }
+            </PokerTable>
+          </TableAndChairs>
+
+          {myHand &&
+            <HandBox className="hand-box">{myHand.descr}</HandBox>
+          }
+
+          <TableMenu {...this.props} />
+          <ActionBar className="action-bar" {...this.props} sb={sb} />
+        </TableContainer>
+
+      </div>
+    );
+  }
+}
 
 TableComponent.propTypes = {
+  seats: PropTypes.array.isRequired,
+  isTaken: PropTypes.func.isRequired,
   board: PropTypes.array,
-  seats: PropTypes.array,
   potSize: PropTypes.number,
   winners: PropTypes.array,
   myHand: PropTypes.object,
   sb: PropTypes.number,
   params: PropTypes.object,
+  lineup: PropTypes.object,
 };
 
 export default TableComponent;

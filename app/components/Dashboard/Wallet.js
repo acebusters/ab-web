@@ -49,6 +49,7 @@ function Wallet(props) {
               placeholder="0.00"
               messages={props.messages}
               amountUnit={ETH}
+              form="transfer-eth"
             />
           }
 
@@ -61,6 +62,7 @@ function Wallet(props) {
               placeholder="0"
               messages={props.messages}
               amountUnit={NTZ}
+              form="transfer-ntz"
             />
           }
         </SendContainer>
@@ -79,7 +81,7 @@ Wallet.propTypes = {
   amountUnit: PropTypes.string,
   messages: PropTypes.object,
   account: PropTypes.object.isRequired,
-  floor: PropTypes.object.isRequired,
+  floor: PropTypes.object,
 };
 
 export default Wallet;

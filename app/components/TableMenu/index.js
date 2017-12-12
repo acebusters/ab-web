@@ -23,15 +23,16 @@ function isSioutDisabled(props) {
   const {
     sitout, standingUp, sitoutInProgress,
     myPos, myPending, myLastReceipt, myStack,
-    state,
+    state, smallBlind,
   } = props;
   const isSitoutFlag = typeof sitout === 'number';
+  const bb = (smallBlind || 0) * 2;
   return (
     myPending ||
     myPos === undefined ||
     sitout === 0 || sitout === null ||
     standingUp || sitoutInProgress !== undefined ||
-    (isSitoutFlag && !myStack) || // player can't sit-in if his balance is empty
+    (isSitoutFlag && (!myStack || myStack < bb || myStack <= 0)) || // player can't sit-in if his balance is empty
     // player can't sit-in in the hand he sit-out after game started
     (
       isSitoutFlag &&
@@ -74,6 +75,9 @@ class TableMenu extends React.Component {
     if (typeof this.props.onCallOpponent === 'function') {
       this.props.onCallOpponent();
       this.setState({ calledOpponent: true });
+      setTimeout(() => {
+        this.setState({ calledOpponent: false });
+      }, 5 * 60 * 1000);
     }
   }
 
@@ -81,11 +85,19 @@ class TableMenu extends React.Component {
     const {
       loggedIn, open, sitout, isMuted, standingUp,
       handleClickLogout, onLeave, onSitout, handleClickMuteToggle,
+      myPos, myPending, tableIsFull,
     } = this.props;
     const { calledOpponent } = this.state;
 
     const isSitoutFlag = typeof sitout === 'number';
     const menuClose = [
+      {
+        name: 'mute',
+        icon: `fa ${isMuted ? 'fa-volume-off' : 'fa-volume-up'}`,
+        title: isMuted ? 'Unmute' : 'Mute',
+        onClick: () => handleClickMuteToggle(!isMuted),
+        disabled: false,
+      },
       {
         name: 'sitout',
         icon: isSitoutFlag ? 'fa fa-play' : 'fa fa-pause',
@@ -101,13 +113,6 @@ class TableMenu extends React.Component {
         pending: standingUp,
         disabled: isStadingUpDisabled(this.props),
       },
-      {
-        name: 'mute',
-        icon: `fa ${isMuted ? 'fa-volume-off' : 'fa-volume-up'}`,
-        title: isMuted ? 'Unmute' : 'Mute',
-        onClick: () => handleClickMuteToggle(!isMuted),
-        disabled: false,
-      },
     ];
 
     if (!calledOpponent) {
@@ -116,7 +121,7 @@ class TableMenu extends React.Component {
         icon: 'fa fa-bullhorn',
         title: 'Call an opponent',
         onClick: this.handleOpponentCall,
-        disabled: false,
+        disabled: tableIsFull || standingUp || myPending || myPos === undefined,
       });
     }
 
@@ -212,6 +217,10 @@ TableMenu.propTypes = {
   standingUp: PropTypes.bool,
   handleClickMuteToggle: PropTypes.func,
   onCallOpponent: PropTypes.func,
+  myPos: PropTypes.number,
+  smallBlind: PropTypes.number, // eslint-disable-line
+  myPending: PropTypes.bool,
+  tableIsFull: PropTypes.bool,
 };
 
 export default onClickOutside(TableMenu);
