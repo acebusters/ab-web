@@ -98,18 +98,18 @@ class UpgradeDialog extends React.Component {
         </H2>
 
         <p>
-          After unlock you will be able:<br />
-          — deposit more than 0.1 ETH<br />
-          — controll your wallet with own private key<br />
-          — <A href="http://help.acebusters.com/how-to-participate-in-the-crowdsale/invest-using-the-acebusters-dapp-recommended" target="_blank">PowerUp</A> after the crowdsale ends
+          After you unlock your account you will be able to:<br />
+          – make deposits greater than 0.1 ETH<br />
+          – control your wallet with your own private key<br />
+          – <A href="http://help.acebusters.com/how-to-participate-in-the-crowdsale/invest-using-the-acebusters-dapp-recommended" target="_blank">powerUp</A> your NTZ to ABP after the crowdsale
         </p>
         <p>
-          Here is an article{' '}
+          Here’s more info on{' '}
           <A
             href="http://help.acebusters.com/quick-guide-to-acebusters/winning-the-pots/how-to-upgrade-to-a-shark-account"
             target="_blank"
           >
-            about account unlocking
+            account unlocking
           </A>
         </p>
 
