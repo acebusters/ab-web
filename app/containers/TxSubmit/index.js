@@ -8,6 +8,7 @@ import { } from 'react-addons-shallow-compare';
 import { makeSelectIsLocked, makeSelectProxyAddr, makeSelectCanSendTx } from '../AccountProvider/selectors';
 import Alert from '../../components/Alert';
 import SubmitButton from '../../components/SubmitButton';
+import { makeCancelable } from '../../utils/makeCancelable';
 
 import { ButtonContainer } from './styles';
 
@@ -45,17 +46,19 @@ class TxSubmit extends React.Component {
     this.state = {
       gas: null,
     };
+  }
 
-    this.runEstimate(props);
+  componentWillMount() {
+    this.refreshGas(this.props);
 
     /*
-     * Sometimes, estimate can be extremely high
-     * even if transaction will be successful.
-     * Rerun estimate will help in such situation
-     */
+    * Sometimes, estimate can be extremely high
+    * even if transaction will be successful.
+    * Rerun estimate will help in such situation
+    */
     this.interval = setInterval(() => {
       if (!this.state.gas || this.gasTooHigh) {
-        this.runEstimate(this.props);
+        this.refreshGas(this.props);
       }
     }, 1000);
   }
@@ -68,7 +71,14 @@ class TxSubmit extends React.Component {
       props.submitting !== this.props.submitting ||
       props.estimateArgs !== this.props.estimateArgs
     ) {
-      this.runEstimate(props);
+      this.refreshGas(props);
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+    if (this.gasPromise) {
+      this.gasPromise.cancel();
     }
   }
 
@@ -76,14 +86,23 @@ class TxSubmit extends React.Component {
     return this.state.gas > this.props.gasThreshold;
   }
 
-  runEstimate(props) {
+  refreshGas(props) {
+    this.gasPromise = makeCancelable(this.estimateGas(props));
+    this.gasPromise.then((gas) => {
+      if (gas) {
+        this.setState({ gas });
+      }
+    });
+  }
+
+  estimateGas(props) {
     const { estimate, estimateArgs } = props;
     if (canRunEstimate(props)) {
       const args = Array.isArray(estimateArgs) ? estimateArgs : [estimateArgs];
-      return estimate(...args).then((gas) => this.setState({ gas }));
+      return estimate(...args);
     }
 
-    return Promise.resolve();
+    return Promise.resolve(null);
   }
 
   renderAlert() {
