@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedNumber } from 'react-intl';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { } from 'react-addons-shallow-compare';
 
 import { makeSelectIsLocked, makeSelectProxyAddr, makeSelectCanSendTx } from '../AccountProvider/selectors';
 import Alert from '../../components/Alert';
@@ -10,10 +11,18 @@ import SubmitButton from '../../components/SubmitButton';
 
 import { ButtonContainer } from './styles';
 
+const canRunEstimate = ({ isLocked, invalid, submitting, canSendTx, estimateArgs }) => (
+  !isLocked &&
+  !invalid &&
+  !submitting &&
+  canSendTx &&
+  estimateArgs
+);
+
 class TxSubmit extends React.Component {
   static propTypes = {
     estimate: PropTypes.func.isRequired,
-    estimateArgs: PropTypes.array,
+    estimateArgs: PropTypes.any,
     isLocked: PropTypes.bool,
     submitButtonLabel: PropTypes.any,
     cancelButtonLabel: PropTypes.any,
@@ -36,7 +45,19 @@ class TxSubmit extends React.Component {
     this.state = {
       gas: null,
     };
+
     this.runEstimate(props);
+
+    /*
+     * Sometimes, estimate can be extremely high
+     * even if transaction will be successful.
+     * Rerun estimate will help in such situation
+     */
+    this.interval = setInterval(() => {
+      if (!this.state.gas || this.gasTooHigh) {
+        this.runEstimate(this.props);
+      }
+    }, 1000);
   }
 
   componentWillReceiveProps(props) {
@@ -44,6 +65,7 @@ class TxSubmit extends React.Component {
       props.estimate !== this.props.estimate ||
       props.invalid !== this.props.invalid ||
       props.canSendTx !== this.props.canSendTx ||
+      props.submitting !== this.props.submitting ||
       props.estimateArgs !== this.props.estimateArgs
     ) {
       this.runEstimate(props);
@@ -55,10 +77,13 @@ class TxSubmit extends React.Component {
   }
 
   runEstimate(props) {
-    const { isLocked, invalid, canSendTx, estimate, estimateArgs } = props;
-    if (!isLocked && !invalid && canSendTx && estimateArgs) {
-      estimate(...estimateArgs).then((gas) => this.setState({ gas }));
+    const { estimate, estimateArgs } = props;
+    if (canRunEstimate(props)) {
+      const args = Array.isArray(estimateArgs) ? estimateArgs : [estimateArgs];
+      return estimate(...args).then((gas) => this.setState({ gas }));
     }
+
+    return Promise.resolve();
   }
 
   renderAlert() {
@@ -99,7 +124,7 @@ class TxSubmit extends React.Component {
       isLocked,
     } = this.props;
     const { gas } = this.state;
-
+    const estimating = canRunEstimate(this.props) && !gas;
 
     return (
       <div>
@@ -108,11 +133,11 @@ class TxSubmit extends React.Component {
         <ButtonContainer>
           <SubmitButton
             disabled={!canSendTx || (!isLocked && !gas) || invalid || this.gasTooHigh}
-            submitting={submitting}
+            submitting={submitting || estimating}
             onClick={onSubmit}
             type={onSubmit ? 'button' : 'submit'}
           >
-            {submitButtonLabel}
+            {estimating ? 'Estimating gas' : submitButtonLabel}
           </SubmitButton>
           {onCancel &&
             <SubmitButton type="button" onClick={onCancel}>
