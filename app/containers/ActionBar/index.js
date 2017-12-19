@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Raven from 'raven-js';
+import BigNumber from 'bignumber.js';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
@@ -72,7 +73,7 @@ class ActionBarContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) { // eslint-disable-line consistent-return
-    const handId = this.props.latestHand;
+    const handId = nextProps.latestHand;
     const { isMyTurn, canICheck } = nextProps;
     // # if player <in turn> can <check>: send <check> by timeout
     if (isMyTurn && canICheck) {
@@ -81,14 +82,17 @@ class ActionBarContainer extends React.Component {
         this.checkTimeOut = null;
       }
 
-      const timeoutPeriod = TIMEOUT_PERIOD(nextProps.hand.get('state'));
-      const passed = Math.min(
-        Math.floor(Date.now() / 1000) - nextProps.hand.get('changed'),
-        timeoutPeriod,
-      );
+      const timeoutSeconds = TIMEOUT_PERIOD(nextProps.hand.get('state'));
+      // TODO: Make timeLeft count down from 100 - 0, right now is 360 - 0?
+      const changed = nextProps.hand.get('changed');
+      let timeLeft = timeoutSeconds;
+      if (changed) {
+        const deadline = changed + timeoutSeconds;
+        timeLeft = deadline - Math.floor(Date.now() / 1000);
+      }
 
       // autoCheckTimeOut should be earlier than usual timeout, so -1.5 sec
-      const autoCheckTimeOut = ((timeoutPeriod * 1000) - (passed * 1000)) - 1500;
+      const autoCheckTimeOut = (timeLeft * 1000) - 1500;
 
       if (autoCheckTimeOut > 0) {
         this.checkTimeOut = setTimeout(() => {
@@ -157,9 +161,9 @@ class ActionBarContainer extends React.Component {
   }
 
   updateAmount(value) {
-    let amount = parseInt(value, 10);
-    amount = (amount > this.props.myStack) ? this.props.myStack : amount;
-    this.setState({ amount });
+    this.setState({
+      amount: BigNumber.min(value, this.props.myStack).toNumber(),
+    });
   }
 
   resetActionBar() {
