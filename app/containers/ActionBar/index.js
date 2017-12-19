@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
-import { TIMEOUT_PERIOD } from '../../app.config';
+import { getTimeLeft } from '../Seat/index';
 
 import { playIsPlayerTurn } from '../../sounds';
 
@@ -82,22 +82,13 @@ class ActionBarContainer extends React.Component {
         this.checkTimeOut = null;
       }
 
-      const timeoutSeconds = TIMEOUT_PERIOD(nextProps.hand.get('state'));
-      // TODO: Make timeLeft count down from 100 - 0, right now is 360 - 0?
-      const changed = nextProps.hand.get('changed');
-      let timeLeft = timeoutSeconds;
-      if (changed) {
-        const deadline = changed + timeoutSeconds;
-        timeLeft = deadline - Math.floor(Date.now() / 1000);
-      }
-
       // autoCheckTimeOut should be earlier than usual timeout, so -1.5 sec
-      const autoCheckTimeOut = (timeLeft * 1000) - 1500;
+      const timeLeft = getTimeLeft(nextProps.hand) - 1.5;
 
-      if (autoCheckTimeOut > 0) {
+      if (timeLeft > 0) {
         this.checkTimeOut = setTimeout(() => {
           this.handleCheck(nextProps);
-        }, autoCheckTimeOut);
+        }, timeLeft * 1000);
       }
     } else if (this.checkTimeOut) {
       clearTimeout(this.checkTimeOut);
