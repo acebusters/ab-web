@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BigNumber from 'bignumber.js';
 
 import { FlagBet } from './styles';
-import { toNtz, NTZ_DECIMALS } from '../../utils/amountFormatter';
+import { formatNtz, NTZ_DECIMALS } from '../../utils/amountFormatter';
 
 import {
   BET,
@@ -29,17 +29,17 @@ class FlagAmountBet extends React.Component {
   }
 
   handleKeyDown(e) {
-    const { sb } = this.props;
+    const { sb, amount } = this.props;
 
     switch (e.keyCode) { // eslint-disable-line default-case
       case 38: // ↑
         e.preventDefault();
-        this.handleIncrement(sb * 2);
+        this.handleUpdate(amount + (sb * 2));
         break;
 
       case 40: // ↓
         e.preventDefault();
-        this.handleIncrement(-sb * 2);
+        this.handleUpdate(amount - (sb * 2));
         break;
     }
   }
@@ -55,13 +55,15 @@ class FlagAmountBet extends React.Component {
   }
 
   handleChange(e) {
-    const { updateAmount, myStack, minRaise } = this.props;
+    this.handleUpdate(NTZ_DECIMALS.mul(Number(e.target.value)));
+  }
+
+  handleUpdate(amount) {
+    const { updateAmount, minRaise, myStack } = this.props;
+
     updateAmount(
       BigNumber.min(
-        BigNumber.max(
-          NTZ_DECIMALS.mul(Number(e.target.value)),
-          minRaise
-        ),
+        BigNumber.max(amount, minRaise),
         myStack
       )
     );
@@ -71,28 +73,23 @@ class FlagAmountBet extends React.Component {
     this.input = input;
   }
 
-  handleIncrement(value) {
-    const { amount, updateAmount, minRaise } = this.props;
-    updateAmount(BigNumber.max(amount + value, minRaise));
-  }
-
   render() {
     const { amount, sliderOpen, sb } = this.props;
 
     return (
       <FlagBet sliderOpen={sliderOpen}>
-        <button onClick={() => this.handleIncrement(-sb * 2)}>
+        <button onClick={() => this.handleUpdate(amount - (sb * 2))}>
           -
         </button>
         <input
           ref={this.handleRef}
           type="number"
-          value={toNtz(amount)}
+          value={formatNtz(amount)}
           onChange={this.handleChange}
           onKeyUp={this.handleKeyUp}
           onKeyDown={this.handleKeyDown}
         />
-        <button onClick={() => this.handleIncrement(sb * 2)}>
+        <button onClick={() => this.handleUpdate(amount + (sb * 2))}>
           +
         </button>
       </FlagBet>
