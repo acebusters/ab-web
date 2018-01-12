@@ -26,7 +26,7 @@ module.exports = require('./webpack.base.babel')({
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks: Infinity,
+      minChunks: 2,
     }),
 
     // Minify and optimize the index.html
