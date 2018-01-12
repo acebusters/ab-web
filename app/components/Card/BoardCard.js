@@ -1,7 +1,76 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TweenMax, TimelineLite } from 'gsap';
+import styled, { keyframes } from 'styled-components';
 import Card from 'components/Card';
+
+const prop = (propName) => (props) => props[propName];
+
+const Container = styled.div`
+  position: relative;
+  width: ${prop('cardWidth')}px;
+  height: ${prop('cardHeight')}px;
+
+  & + & {
+    margin-left: 0.5em;
+  }
+`;
+
+const CardWrapper = styled.div`
+  position: absolute;
+  width: ${prop('cardWidth')}px;
+  height: ${prop('cardHeight')}px;
+  backface-visibility: hidden;
+`;
+
+const enter = (front = true) => keyframes`
+  0% {
+    opacity: 0.3;
+    transform: rotateY(${front ? 180 : 0}deg) translateY(-400px);
+  }
+
+  70% {
+    opacity: 1;
+    transform: rotateY(${front ? 180 : 0}deg) translateY(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotateY(${front ? 0 : 180}deg);
+  }
+`;
+
+const leave = (front = true) => keyframes`
+  0% {
+    opacity: 1;
+    transform: rotateY(${front ? 0 : 180}deg);
+  }
+
+  30% {
+    opacity: 1;
+    transform: rotateY(${front ? 180 : 0}deg) translateY(0);
+  }
+
+  100% {
+    opacity: 0.3;
+    transform: rotateY(${front ? 180 : 0}deg) translateY(-400px);
+  }
+`;
+
+const animationFn = (props) => props.leaving ? leave : enter;
+
+const FrontWrapper = styled(CardWrapper)`
+  opacity: 0;
+  animation: ${(props) => animationFn(props)(true)} 1.5s;
+  animation-delay: ${(props) => props.animNum * (props.leaving ? 0 : 0.1)}s;
+  animation-fill-mode: forwards;
+`;
+
+const BackWrapper = styled(CardWrapper)`
+  opacity: 0;
+  animation: ${(props) => animationFn(props)(false)} 1.5s;
+  animation-delay: ${(props) => props.animNum * (props.leaving ? 0 : 0.1)}s;
+  animation-fill-mode: forwards;
+`;
 
 // eslint-disable-next-line react/prefer-stateless-function
 class BoardCard extends React.Component {
@@ -10,84 +79,50 @@ class BoardCard extends React.Component {
     cardNumber: PropTypes.number.isRequired,
     cardHeight: PropTypes.number.isRequired,
     cardWidth: PropTypes.number.isRequired,
-  }
+  };
 
-  componentDidMount() {
-    TweenMax.set(this.front, { rotationY: 180 });
-    this.tl = new TimelineLite();
-    this.timeline();
-  }
+  constructor(props) {
+    super(props);
 
-  animDelay(animNum) {
-    let delay = 0.3;
-    if (animNum <= 2) {
-      delay += (animNum * 0.3);
-    }
-    return delay;
-  }
-
-  timeline() {
-    const delay = this.animDelay(this.props.animNum);
-    this.tl.fromTo(
-      this.wrap,
-      delay,
-      { y: -400, opacity: 0.3 },
-      { y: 0, opacity: 1 },
-    );
-    this.tl.to(this.front, 0.6, { rotationY: 0 }, 'flip');
-    this.tl.to(this.back, 0.6, { rotationY: 180 }, 'flip');
-    this.tl.addPause('leave');
-    this.tl.to(this.front, 0.6, { rotationY: 180 }, 'flop');
-    this.tl.to(this.back, 0.6, { rotationY: 0 }, 'flop');
-    this.tl.fromTo(
-      this.wrap,
-      0.6,
-      { y: 0, opacity: 1 },
-      { y: -400, opacity: 0, immediateRender: false },
-    );
-  }
-
-  componentWillEnter(callback) {
-    const timeout = (this.animDelay(this.props.animNum) + 0.6) * 1000;
-    this.tl.play();
-    setTimeout(() => {
-      callback();
-    }, timeout);
+    this.state = {
+      leaving: false,
+    };
   }
 
   componentWillLeave(callback) {
-    const timeout = 1200;
-    this.tl.resume('leave');
-    setTimeout(() => {
-      callback();
-    }, timeout);
+    this.setState({ leaving: true, entered: false });
+    setTimeout(callback, 1500);
   }
 
   render() {
     const { cardHeight, cardWidth, cardNumber } = this.props;
-    const styles = {
-      cont: {
-        marginLeft: '0.5em',
-        height: cardHeight,
-        width: cardWidth,
-        position: 'relative',
-      },
-      wrapper: {
-        position: 'absolute',
-        height: cardHeight,
-        width: cardWidth,
-        backfaceVisibility: 'hidden',
-      },
-    };
+
     return (
-      <div style={styles.cont} ref={(c) => { this.wrap = c; }}>
-        <div style={styles.wrapper} ref={(c) => { this.front = c; }}>
+      <Container
+        ref={(c) => { this.wrap = c; }}
+        cardWidth={cardWidth}
+        cardHeight={cardHeight}
+        {...this.state}
+      >
+        <FrontWrapper
+          ref={(c) => { this.front = c; }}
+          cardWidth={cardWidth}
+          cardHeight={cardHeight}
+          animNum={this.props.animNum}
+          {...this.state}
+        >
           <Card {...{ cardNumber, cardHeight }} />
-        </div>
-        <div style={styles.wrapper} ref={(c) => { this.back = c; }}>
+        </FrontWrapper>
+        <BackWrapper
+          ref={(c) => { this.back = c; }}
+          cardWidth={cardWidth}
+          cardHeight={cardHeight}
+          animNum={this.props.animNum}
+          {...this.state}
+        >
           <Card {...{ cardNumber: -1, cardHeight }} />
-        </div>
-      </div>
+        </BackWrapper>
+      </Container>
     );
   }
 }
