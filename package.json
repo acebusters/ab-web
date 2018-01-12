@@ -187,8 +187,6 @@
       "sanitize.css"
     ],
     "include": [
-      "core-js",
-      "lodash",
       "eventsource-polyfill"
     ]
   },
@@ -263,9 +261,9 @@
     "react-addons-transition-group": "^15.6.2",
     "react-dom": "^15.6.2",
     "react-ga": "^2.2.0",
-    "react-google-recaptcha": "^0.5.4",
     "react-intl": "^2.4.0",
     "react-onclickoutside": "^6.1.1",
+    "react-recaptcha": "^2.3.5",
     "react-redux": "^4.4.8",
     "react-router": "^3.2.0",
     "react-router-redux": "4.0.6",
