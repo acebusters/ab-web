@@ -10,6 +10,7 @@ module.exports = require('./webpack.base.babel')({
     main: path.join(process.cwd(), 'app/app.js'),
     vendor: [
       'redux-form',
+      'redux-form/immutable',
       'redux-saga',
       'react-intl',
       'styled-components',
