@@ -5,9 +5,10 @@ import { createStructuredSelector } from 'reselect';
 import { tableReceived, lineupReceived, updateReceived } from '../Table/actions';
 import { makeSelectLobby } from './selectors';
 import web3Connect from '../AccountProvider/web3Connect';
+import { getWeb3 } from '../AccountProvider/utils';
 
-import { fetchTableState, fetchTables } from '../../services/tableService';
-import { ABI_TABLE } from '../../app.config';
+import { fetchTableState, fetchTables, fetchEthTables } from '../../services/tableService';
+import { ABI_TABLE, ABI_ETH_TABLE } from '../../app.config';
 
 async function getTableData(table, action) {
   const [lineup, sb] = await Promise.all([
@@ -38,10 +39,17 @@ class LobbyContainer extends React.PureComponent {
     this.setState({ refreshing: true });
     try {
       const tables = await fetchTables();
+      fetchEthTables().then((l) => {
+        console.log(l);
+        const c = getWeb3().eth.contract(ABI_ETH_TABLE).at(l[1]);
+        console.log(c.getLineup.call);
+        c.getLineup.call((e, lup) => console.log(e, lup));
+      });
       if (tables) {
         await Promise.all(tables.map((tableAddr) => {
           const contract = this.web3.eth.contract(ABI_TABLE).at(tableAddr);
           this.props.tableReceived(tableAddr);
+          contract.getLineup.callPromise().then((lup) => console.log('c2', lup));
 
           return Promise.all([
             getTableData(contract, this.props.lineupReceived),
