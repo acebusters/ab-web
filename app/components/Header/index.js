@@ -28,39 +28,54 @@ class Header extends React.Component {
     }
   }
 
-  render() {
-    const toggleCollapsedMenu = () => this.props.setCollapsed(!this.props.collapsed);
-    const navButtons = this.props.loggedIn ? ([
-      <NavToggle
-        onClick={toggleCollapsedMenu}
-        key="nav-toggle"
-      >
-        <i className="fa fa-bars fa-2"></i>
-      </NavToggle>,
-      <NavItem
-        to="/lobby"
-        collapsed={this.props.collapsed}
-        key="2"
-        title="Lobby"
-        location={this.props.location}
-      />,
-      <NavItem
-        to="/dashboard"
-        key="3"
-        collapsed={this.props.collapsed}
-        title={<span>
-          <StyledUserImage src={this.props.blocky} />
-          <StyledUserName>{this.props.nickName}</StyledUserName>
-        </span>}
-        location={this.props.location}
-      />,
-      <NavItem
-        onClick={this.props.onClickLogout}
-        key="4"
-        collapsed={this.props.collapsed}
-        title="Sign Out"
-      />,
-    ]) : ([
+  get navButtons() {
+    const {
+      accountIsGenerated, loggedIn, blocky, nickName,
+      setCollapsed, collapsed, onClickLogout,
+    } = this.props;
+
+    if (loggedIn) {
+      const buttons = [
+        <NavToggle
+          onClick={() => setCollapsed(!collapsed)}
+          key="nav-toggle"
+        >
+          <i className="fa fa-bars fa-2"></i>
+        </NavToggle>,
+        <NavItem
+          to="/lobby"
+          collapsed={collapsed}
+          key="2"
+          title="Lobby"
+          location={location}
+        />,
+        <NavItem
+          to="/dashboard"
+          key="3"
+          collapsed={collapsed}
+          title={<span>
+            <StyledUserImage src={blocky} />
+            <StyledUserName>{nickName}</StyledUserName>
+          </span>}
+          location={location}
+        />,
+      ];
+
+      if (!accountIsGenerated) {
+        buttons.push(
+          <NavItem
+            onClick={onClickLogout}
+            key="4"
+            collapsed={collapsed}
+            title="Sign Out"
+          />
+        );
+      }
+
+      return buttons;
+    }
+
+    return [
       <NavItem
         collapseOnMobile={false}
         to="/register"
@@ -75,7 +90,10 @@ class Header extends React.Component {
         title="Login"
         location={this.props.location}
       />,
-    ]);
+    ];
+  }
+
+  render() {
     return (
       <StyledHeader
         onMouseLeave={this.handleClickOutside}
@@ -88,7 +106,7 @@ class Header extends React.Component {
               <Logo />
             </LogoWrapper>
           </Link>
-          {navButtons}
+          {this.navButtons}
         </Navbar>
       </StyledHeader>
     );
@@ -99,6 +117,7 @@ Header.propTypes = {
   fixed: PropTypes.bool,
   location: PropTypes.object,
   loggedIn: PropTypes.bool,
+  accountIsGenerated: PropTypes.bool,
   onClickLogout: PropTypes.func,
   setCollapsed: PropTypes.func.isRequired,
   collapsed: PropTypes.bool,

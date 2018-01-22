@@ -6,6 +6,7 @@ import {
   makeBlockySelector,
   makeNickNameSelector,
   makeSelectLoggedIn,
+  makeSelectGenerated,
 } from '../AccountProvider/selectors';
 import { setAuthState } from '../AccountProvider/actions';
 import { getHeaderCollapsed } from './selectors';
@@ -26,6 +27,7 @@ const mapStateToProps = createStructuredSelector({
   signerAddr: makeSignerAddrSelector(),
   nickName: makeNickNameSelector(),
   blocky: makeBlockySelector(),
+  accountIsGenerated: makeSelectGenerated(),
   collapsed: getHeaderCollapsed(),
 });
 

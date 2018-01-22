@@ -55,30 +55,17 @@ const makeSelectEmail = () => createSelector(
 );
 
 // return if current user is loggedIn or not
-const makeSelectLoggedIn = () => createSelector(
+const selectAccountKey = (key) => createSelector(
   selectAccount,
-  (account) => account.get('loggedIn')
+  (account) => account.get(key)
 );
 
-const makeSelectPrivKey = () => createSelector(
-  selectAccount,
-  (account) => account.get('privKey')
-);
-
-const makeSelectInjected = () => createSelector(
-  selectAccount,
-  (account) => account.get('injected'),
-);
-
-const makeSelectOwner = () => createSelector(
-  selectAccount,
-  (account) => account.get('owner'),
-);
-
-const makeSelectIsLocked = () => createSelector(
-  selectAccount,
-  (account) => !!account.get('isLocked'),
-);
+const makeSelectLoggedIn = () => selectAccountKey('loggedIn');
+const makeSelectPrivKey = () => selectAccountKey('privKey');
+const makeSelectInjected = () => selectAccountKey('injected');
+const makeSelectGenerated = () => selectAccountKey('generated');
+const makeSelectOwner = () => selectAccountKey('owner');
+const makeSelectIsLocked = () => selectAccountKey('isLocked');
 
 const makeSelectHasWeb3 = () => createSelector(
   makeSelectIsLocked(),
@@ -134,6 +121,7 @@ export {
   makeSelectPrivKey,
   makeSelectProxyAddr,
   makeSelectEmail,
+  makeSelectGenerated,
   makeSelectLoggedIn,
   makeSelectIsWeb3Connected,
   makeSelectWeb3ErrMsg,

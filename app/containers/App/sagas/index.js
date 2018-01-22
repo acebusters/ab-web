@@ -33,6 +33,7 @@ function* walletSaga() {
   yield put(setAuthState({
     privKey: wallet.privateKey,
     loggedIn: true,
+    generated: true,
   }));
 }
 

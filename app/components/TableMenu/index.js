@@ -83,7 +83,7 @@ class TableMenu extends React.Component {
 
   render() {
     const {
-      loggedIn, open, sitout, isMuted, standingUp,
+      loggedIn, accountIsGenerated, open, sitout, isMuted, standingUp,
       handleClickLogout, onLeave, onSitout, handleClickMuteToggle,
     } = this.props;
 
@@ -138,21 +138,17 @@ class TableMenu extends React.Component {
         to: '/dashboard',
         disabled: false,
       },
-      {
-        name: 'preferences',
-        icon: 'fa fa-cog',
-        title: 'Preferences',
-        onClick: () => {},
-        disabled: true,
-      },
-      {
+    ];
+    if (!accountIsGenerated) {
+      menuUserOpen.push({
         name: 'logout',
         icon: 'fa fa-sign-out',
         title: 'Log-Out',
         onClick: () => handleClickLogout(),
         disabled: false,
-      },
-    ];
+      });
+    }
+
     const menuGuestOpen = [
       {
         name: 'lobby',
@@ -205,6 +201,7 @@ class TableMenu extends React.Component {
 
 TableMenu.propTypes = {
   loggedIn: PropTypes.bool,
+  accountIsGenerated: PropTypes.bool,
   handleClickLogout: PropTypes.func,
   onLeave: PropTypes.func,
   sitout: PropTypes.any, // TODO change to only number
