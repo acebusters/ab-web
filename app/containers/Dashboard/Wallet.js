@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import web3Connect from '../AccountProvider/web3Connect';
 import { ETH_DECIMALS, NTZ_DECIMALS } from '../../utils/amountFormatter';
 import { notifyCreate } from '../Notifications/actions';
-import { TRANSFER_NTZ, TRANSFER_ETH } from '../Notifications/constants';
+import { TRANSFER_NTZ } from '../Notifications/constants';
 
 import makeSelectAccountData from '../AccountProvider/selectors';
 import messages from './messages';
@@ -24,8 +24,6 @@ class Wallet extends React.Component {
 
     this.handleNTZTransfer = this.handleNTZTransfer.bind(this);
     this.estimateNTZTransfer = this.estimateNTZTransfer.bind(this);
-    this.handleETHTransfer = this.handleETHTransfer.bind(this);
-    this.estimateETHTransfer = this.estimateETHTransfer.bind(this);
 
     this.web3 = props.web3Redux.web3;
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
@@ -70,26 +68,10 @@ class Wallet extends React.Component {
     return this.token.transfer.estimateGas(to, new BigNumber(amount).mul(NTZ_DECIMALS));
   }
 
-  handleETHTransfer(amount, to) {
-    this.props.notifyCreate(TRANSFER_ETH, { amount });
-    return this.handleTxSubmit((callback) => {
-      this.proxy.forward.sendTransaction(
-        to,
-        new BigNumber(amount).mul(ETH_DECIMALS),
-        '',
-        callback
-      );
-    });
-  }
-
-  estimateETHTransfer(amount, to) {
-    return this.proxy.forward.estimateGas(to, new BigNumber(amount).mul(ETH_DECIMALS), '');
-  }
-
   render() {
     const { account } = this.props;
-    const weiBalance = this.web3.eth.balance(account.proxy);
-    const babzBalance = this.token.balanceOf(account.proxy);
+    const weiBalance = this.web3.eth.balance(account.injected);
+    const babzBalance = this.token.balanceOf(account.injected);
 
     return (
       <WalletComponent
