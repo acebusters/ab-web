@@ -10,6 +10,7 @@ import { Receipt } from 'poker-helper';
 import * as storageService from '../../services/sessionStorage';
 
 // components and styles
+import { getWeb3 } from '../../containers/AccountProvider/utils';
 import TableDebug from '../../containers/TableDebug';
 import NotFoundPage from '../../containers/NotFoundPage';
 
@@ -191,7 +192,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
     // display Rebuy modal if state === 'waiting' and user stack is no greater than 0
     if (isRebuyNeeded(this.props, nextProps)) {
-      const balance = this.token.balanceOf(nextProps.account.proxy);
+      const balance = this.token.balanceOf(nextProps.account.injected);
 
       this.props.modalDismiss();
       this.props.modalAdd({
@@ -280,11 +281,14 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
   async handleJoin(pos, amount) {
     const { signerAddr, account } = this.props;
+    const web3 = getWeb3(true);
+    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
 
-    const promise = promisifyWeb3Call(this.token.transData.sendTransaction)(
+    const promise = promisifyWeb3Call(token.transData.sendTransaction)(
       this.tableAddr,
       amount,
       `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`,
+      { from: account.injected },
     );
 
     const reserve = async () => {
@@ -339,7 +343,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       return;
     }
 
-    const balance = this.token.balanceOf(account.proxy);
+    const balance = this.token.balanceOf(account.injected);
 
     if (open && myPos === undefined && !pending) {
       this.props.modalAdd({

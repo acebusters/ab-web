@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { FormattedNumber } from 'react-intl';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { } from 'react-addons-shallow-compare';
 
 import { makeSelectIsLocked, makeSelectProxyAddr, makeSelectCanSendTx } from '../AccountProvider/selectors';
 import Alert from '../../components/Alert';
@@ -143,18 +142,20 @@ class TxSubmit extends React.Component {
       submitting,
       canSendTx,
       invalid,
-      isLocked,
+      // isLocked,
     } = this.props;
-    const { gas } = this.state;
-    const estimating = canRunEstimate(this.props) && !gas;
+    // const { gas } = this.state;
+    // const estimating = canRunEstimate(this.props) && !gas;
+    const estimating = false;
 
+    // disabled={!canSendTx || (!isLocked && !gas) || invalid || this.gasTooHigh}
     return (
       <div>
         {!invalid && canSendTx && !submitting && this.renderAlert()}
 
         <ButtonContainer>
           <SubmitButton
-            disabled={!canSendTx || (!isLocked && !gas) || invalid || this.gasTooHigh}
+            disabled={!canSendTx || invalid}
             submitting={submitting || estimating}
             onClick={onSubmit}
             type={onSubmit ? 'button' : 'submit'}

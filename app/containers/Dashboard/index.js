@@ -60,11 +60,11 @@ class DashboardRoot extends React.Component {
 
   render() {
     const { account } = this.props;
-    const weiBalance = this.web3.eth.balance(account.proxy);
-    const babzBalance = this.token.balanceOf(account.proxy);
+    const weiBalance = this.web3.eth.balance(account.injected);
+    const babzBalance = this.token.balanceOf(account.injected);
 
     // before crowdsale end, disable INVEST tab on production
-    const disabledTabs = !investIsAvailable(account.proxy) ? [INVEST] : [];
+    const disabledTabs = !investIsAvailable(account.injected) ? [INVEST] : [];
     return (
       <Container>
         <Tabs

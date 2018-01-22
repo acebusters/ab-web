@@ -108,22 +108,16 @@ const makeSelectWeb3MethodValue = (address, methodName, args = []) => createSele
 );
 
 const makeSelectCanSendTx = () => createSelector(
-  makeSelectIsLocked(),
   makeSelectHasWeb3(),
   makeSelectNetworkSupported(),
-  makeSelectWrongInjected(),
   makeSelectIsWeb3Connected(),
   makeSelectWeb3MethodValue(conf().contrAddr, 'paused'),
-  (isLocked, hasWeb3, networkSupported, wrongInjected, isConnected, paused) => {
+  (hasWeb3, networkSupported, isConnected, paused) => {
     if (paused || !isConnected) {
       return false;
     }
 
-    if (isLocked) {
-      return true;
-    }
-
-    return hasWeb3 && networkSupported && !wrongInjected;
+    return hasWeb3 && networkSupported;
   },
 );
 

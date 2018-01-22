@@ -80,14 +80,14 @@ class Overview extends React.Component {
     const completeSupplyBabz = this.controller.completeSupply();
     const activeSupplyPwr = this.power.activeSupply();
     const activeSupplyBabz = this.token.activeSupply();
-    const babzBalance = this.token.balanceOf(account.proxy);
-    const downs = this.power.downs(account.proxy);
-    const [ethAllowance, ethPayoutDate] = this.pullPayment.paymentOf(account.proxy) || [];
+    const babzBalance = this.token.balanceOf(account.injected);
+    const downs = this.power.downs(account.injected);
+    const [ethAllowance, ethPayoutDate] = this.pullPayment.paymentOf(account.injected) || [];
     const tables = this.tableFactory.getTables();
     const listTxns = txnsToList(
       this.props.dashboardTxs,
       tables,
-      account.proxy
+      account.injected
     );
     return (
       <OverviewComponent

@@ -1,7 +1,7 @@
 import { call, fork, takeEvery, put } from 'redux-saga/effects';
 import ethers from 'ethers';
 
-import { ACCOUNT_LOADED, setAuthState } from '../../AccountProvider/actions';
+import { INJECT_ACCOUNT_UPDATE, ACCOUNT_LOADED, setAuthState } from '../../AccountProvider/actions';
 
 import * as storageService from '../../../services/localStorage';
 
@@ -39,8 +39,8 @@ function* walletSaga() {
 export function* appSaga(dispatch) {
   yield fork(gtmSaga);
   yield fork(walletSaga);
-  yield fork(balancesLoadingSaga, dispatch);
   yield takeEvery(ACCOUNT_LOADED, unsupportedModalSaga);
+  yield takeEvery(INJECT_ACCOUNT_UPDATE, balancesLoadingSaga, dispatch);
 }
 
 export default [appSaga];
