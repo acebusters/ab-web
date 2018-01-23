@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import BigNumber from 'bignumber.js';
 
 import web3Connect from '../AccountProvider/web3Connect';
-import { ETH_DECIMALS, NTZ_DECIMALS } from '../../utils/amountFormatter';
+import { NTZ_DECIMALS } from '../../utils/amountFormatter';
 import { notifyCreate } from '../Notifications/actions';
 import { TRANSFER_NTZ } from '../Notifications/constants';
 
@@ -14,7 +14,7 @@ import { getAmountUnit } from './selectors';
 
 import WalletComponent from '../../components/Dashboard/Wallet';
 
-import { ABI_TOKEN_CONTRACT, ABI_PROXY, conf } from '../../app.config';
+import { ABI_TOKEN_CONTRACT, conf } from '../../app.config';
 
 const confParams = conf();
 
@@ -27,18 +27,6 @@ class Wallet extends React.Component {
 
     this.web3 = props.web3Redux.web3;
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(confParams.ntzAddr);
-    if (props.account.proxy) {
-      this.proxy = this.web3.eth.contract(ABI_PROXY).at(props.account.proxy);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { account } = this.props;
-    const { account: nextAccount } = nextProps;
-
-    if (account.proxy === undefined && nextAccount.proxy) {
-      this.proxy = this.web3.eth.contract(ABI_PROXY).at(nextAccount.account.proxy);
-    }
   }
 
   handleTxSubmit(txFn) {
@@ -70,23 +58,14 @@ class Wallet extends React.Component {
 
   render() {
     const { account } = this.props;
-    const weiBalance = this.web3.eth.balance(account.injected);
     const babzBalance = this.token.balanceOf(account.injected);
 
     return (
       <WalletComponent
-        {...{
-          account,
-          floor: this.token.floor(),
-          ethBalance: weiBalance && weiBalance.div(ETH_DECIMALS),
-          nutzBalance: babzBalance && babzBalance.div(NTZ_DECIMALS),
-          messages,
-          handleNTZTransfer: this.handleNTZTransfer,
-          estimateNTZTransfer: this.estimateNTZTransfer,
-          handleETHTransfer: this.handleETHTransfer,
-          estimateETHTransfer: this.estimateETHTransfer,
-          amountUnit: this.props.amountUnit,
-        }}
+        nutzBalance={babzBalance && babzBalance.div(NTZ_DECIMALS)}
+        messages={messages}
+        handleNTZTransfer={this.handleNTZTransfer}
+        estimateNTZTransfer={this.estimateNTZTransfer}
       />
     );
   }
@@ -95,7 +74,6 @@ Wallet.propTypes = {
   account: PropTypes.object,
   web3Redux: PropTypes.any,
   notifyCreate: PropTypes.func,
-  amountUnit: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
