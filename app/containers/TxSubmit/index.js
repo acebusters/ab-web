@@ -142,20 +142,17 @@ class TxSubmit extends React.Component {
       submitting,
       canSendTx,
       invalid,
-      // isLocked,
     } = this.props;
-    // const { gas } = this.state;
-    // const estimating = canRunEstimate(this.props) && !gas;
-    const estimating = false;
+    const { gas } = this.state;
+    const estimating = canRunEstimate(this.props) && !gas;
 
-    // disabled={!canSendTx || (!isLocked && !gas) || invalid || this.gasTooHigh}
     return (
       <div>
         {!invalid && canSendTx && !submitting && this.renderAlert()}
 
         <ButtonContainer>
           <SubmitButton
-            disabled={!canSendTx || invalid}
+            disabled={!canSendTx || !gas || invalid || this.gasTooHigh}
             submitting={submitting || estimating}
             onClick={onSubmit}
             type={onSubmit ? 'button' : 'submit'}

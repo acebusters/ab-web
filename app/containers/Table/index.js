@@ -10,7 +10,7 @@ import { Receipt } from 'poker-helper';
 import * as storageService from '../../services/sessionStorage';
 
 // components and styles
-import { getWeb3 } from '../../containers/AccountProvider/utils';
+// import { getWeb3 } from '../../containers/AccountProvider/utils';
 import TableDebug from '../../containers/TableDebug';
 import NotFoundPage from '../../containers/NotFoundPage';
 
@@ -262,7 +262,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       `0x0${(myPos).toString(16)}${signerAddr.replace('0x', '')}`
     );
 
-
     return Promise.resolve(account.isLocked ? null : promise).then(() => {
       storageService.setItem(`rebuyModal[${this.tableAddr}${this.props.latestHand}]`, true);
       this.props.modalDismiss();
@@ -281,14 +280,11 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
   async handleJoin(pos, amount) {
     const { signerAddr, account } = this.props;
-    const web3 = getWeb3(true);
-    const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
 
-    const promise = promisifyWeb3Call(token.transData.sendTransaction)(
+    const promise = promisifyWeb3Call(this.token.transData.sendTransaction)(
       this.tableAddr,
       amount,
       `0x0${(pos).toString(16)}${signerAddr.replace('0x', '')}`,
-      { from: account.injected },
     );
 
     const reserve = async () => {

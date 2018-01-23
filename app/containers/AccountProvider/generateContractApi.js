@@ -6,8 +6,6 @@ import { last } from '../../utils';
 import { getMethodKey } from './utils';
 import { promisifyWeb3Call } from '../../utils/promisifyWeb3Call';
 
-import { ABI_PROXY } from '../../app.config';
-
 function degrade(fn, fallback) {
   try {
     return fn();
@@ -15,19 +13,6 @@ function degrade(fn, fallback) {
     return fallback;
   }
 }
-
-function isForward(methodName, contractInstance) {
-  return methodName === 'forward' && contractInstance.abi === ABI_PROXY;
-}
-
-// function proxyInstance(proxyAddr) {
-//   proxyInstance.cache = proxyInstance.cache || {};
-//   if (!proxyInstance.cache[proxyAddr]) {
-//     proxyInstance.cache[proxyAddr] = getWeb3().eth.contract(ABI_PROXY).at(proxyAddr);
-//   }
-
-//   return proxyInstance.cache[proxyAddr];
-// }
 
 function generateContractInstanceApi({ abi, address, getState, dispatch }) {
   // cached version doesn't exist, create it
@@ -55,11 +40,6 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         key: getMethodKey({ methodName, args }),
         dest: address,
         estimateGas: estimateGas(...args),
-        data: (
-          !isForward(methodName, contractInstance)
-            ? contractInstance[methodName].getData(...args)
-            : ''
-        ),
         privKey: getState().get('privKey'),
         callback: typeof last(args) === 'function' ? last(args) : undefined,
       }),
@@ -81,17 +61,13 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         return resolve(value);
       });
     });
-    const estimateGas = (...args) => {
-      // const options = typeof last(args) === 'function' ? args[args.length - 2] : last(args);
-      // const isForwardCall = isForward(methodName, contractInstance);
-      // const data = !isForwardCall ? contractInstance[methodName].getData(...args) : '';
-      const txArgs = args;
-      // const proxy = proxyInstance(getState().get('proxy'));
-
-      return promisifyWeb3Call(contractInstance[methodName].estimateGas)(...txArgs, {
-        from: getState().get('injected'),
-      }).then((gas) => Math.round((gas * 1.1) / 1000) * 1000);
-    };
+    const estimateGas = (...args) => (
+      promisifyWeb3Call(contractInstance[methodName].estimateGas)(
+        ...args,
+        { from: getState().get('injected') },
+      )
+      .then((gas) => Math.round((gas * 1.1) / 1000) * 1000)
+    );
     // add actions to base getter
     contractMethod.call = actions.call;
     contractMethod.sendTransaction = actions.sendTransaction;
