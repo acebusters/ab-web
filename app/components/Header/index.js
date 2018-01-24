@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import onClickOutside from 'react-onclickoutside';
 
 import Navbar from './Navbar';
 import NavItem from './NavItem';
 
 import {
   StyledHeader,
-  NavToggle,
   StyledUserName,
   StyledUserImage,
   LogoWrapper,
@@ -19,81 +17,20 @@ import Link from '../Link';
 class Header extends React.Component {
   constructor(props) {
     super(props);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleMenuClick = this.handleMenuClick.bind(this);
   }
 
-  handleClickOutside() {
-    if (!this.props.collapsed) {
-      this.props.setCollapsed(true);
+  handleMenuClick(menuIndex) {
+    const { onImport, onExport, onLogout } = this.props;
+    const handler = [onImport, onExport, onLogout][menuIndex];
+    if (typeof handler === 'function') {
+      handler();
     }
-  }
-
-  get navButtons() {
-    const {
-      accountIsGenerated, loggedIn, blocky, nickName,
-      setCollapsed, collapsed, onClickLogout,
-    } = this.props;
-
-    if (loggedIn) {
-      const buttons = [
-        <NavToggle
-          onClick={() => setCollapsed(!collapsed)}
-          key="nav-toggle"
-        >
-          <i className="fa fa-bars fa-2"></i>
-        </NavToggle>,
-        <NavItem
-          to="/lobby"
-          collapsed={collapsed}
-          key="2"
-          title="Lobby"
-          location={location}
-        />,
-        <NavItem
-          to="/dashboard"
-          key="3"
-          collapsed={collapsed}
-          title={<span>
-            <StyledUserImage src={blocky} />
-            <StyledUserName>{nickName}</StyledUserName>
-          </span>}
-          location={location}
-        />,
-      ];
-
-      if (!accountIsGenerated) {
-        buttons.push(
-          <NavItem
-            onClick={onClickLogout}
-            key="4"
-            collapsed={collapsed}
-            title="Sign Out"
-          />
-        );
-      }
-
-      return buttons;
-    }
-
-    return [
-      <NavItem
-        collapseOnMobile={false}
-        to="/register"
-        key="1"
-        title="Register"
-        location={this.props.location}
-      />,
-      <NavItem
-        collapseOnMobile={false}
-        to="/login"
-        key="2"
-        title="Login"
-        location={this.props.location}
-      />,
-    ];
   }
 
   render() {
+    const { blocky, nickName, location } = this.props;
+
     return (
       <StyledHeader
         onMouseLeave={this.handleClickOutside}
@@ -106,7 +43,25 @@ class Header extends React.Component {
               <Logo />
             </LogoWrapper>
           </Link>
-          {this.navButtons}
+
+          <NavItem
+            to="/lobby"
+            title="Lobby"
+            location={location}
+          />
+
+          <NavItem
+            to="/dashboard"
+            title={
+              <span>
+                <StyledUserImage src={blocky} />
+                <StyledUserName>{nickName}</StyledUserName>
+              </span>
+            }
+            location={location}
+            menu={['Import account', 'Export account', 'Logout']}
+            onMenuClick={this.handleMenuClick}
+          />
         </Navbar>
       </StyledHeader>
     );
@@ -115,14 +70,13 @@ class Header extends React.Component {
 
 Header.propTypes = {
   fixed: PropTypes.bool,
-  location: PropTypes.object,
   loggedIn: PropTypes.bool,
-  accountIsGenerated: PropTypes.bool,
-  onClickLogout: PropTypes.func,
-  setCollapsed: PropTypes.func.isRequired,
-  collapsed: PropTypes.bool,
+  location: PropTypes.object,
   nickName: PropTypes.string,
   blocky: PropTypes.string,
+  onLogout: PropTypes.func,
+  onImport: PropTypes.func,
+  onExport: PropTypes.func,
 };
 
 Header.defaultProps = {
@@ -132,4 +86,4 @@ Header.defaultProps = {
   logoSm: <span><b>A</b>B</span>,
 };
 
-export default onClickOutside(Header);
+export default Header;

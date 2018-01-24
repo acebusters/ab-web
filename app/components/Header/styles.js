@@ -210,3 +210,31 @@ export const LogoWrapper = styled.div`
 
   text-decoration: none;
 `;
+
+export const MenuWrapper = styled.ul`
+  position: absolute;
+  top: 100%;
+  right: 0;
+
+  padding: 5px 0;
+  display: none;
+
+  background-color: #333333;
+  border-top: 1px solid #ececec;
+
+  ${StyledItem}:hover & {
+    display: block;
+  }
+`;
+
+export const MenuItem = styled.li`
+  padding: 10px 15px;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: #000;
+  }
+`;

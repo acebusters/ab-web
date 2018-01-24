@@ -67,13 +67,13 @@ export default function configureStore(initialState = {}, history) {
   }
 
   if (isLoggedIn()) {
-    store.dispatch(setAuthState({
-      loggedIn: true,
-      privKey: storageService.getItem('privKey'),
-      email: storageService.getItem('email'),
-      accountId: storageService.getItem('accountId'),
-      proxyAddr: storageService.getItem('proxyAddr'),
-    }));
+    // store.dispatch(setAuthState({
+    //   loggedIn: true,
+    //   privKey: storageService.getItem('privKey'),
+    //   email: storageService.getItem('email'),
+    //   accountId: storageService.getItem('accountId'),
+    //   proxyAddr: storageService.getItem('proxyAddr'),
+    // }));
   } else {
     store.dispatch(setAuthState({ loggedIn: false }));
   }

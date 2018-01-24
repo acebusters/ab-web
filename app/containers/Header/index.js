@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import { createStructuredSelector } from 'reselect';
 import {
   makeSignerAddrSelector,
@@ -11,12 +10,13 @@ import {
 import { setAuthState } from '../AccountProvider/actions';
 import { getHeaderCollapsed } from './selectors';
 import { setCollapsed } from './actions';
+import * as localStorage from '../../services/localStorage';
 
 import Header from '../../components/Header';
 
 const mapDispatchToProps = (dispatch) => ({
-  onClickLogout: () => {
-    browserHistory.push('/login');
+  onLogout: () => {
+    localStorage.removeItem('wallet');
     return dispatch(setAuthState({ loggedIn: false }));
   },
   setCollapsed: (val) => dispatch(setCollapsed(val)),
