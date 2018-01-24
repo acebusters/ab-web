@@ -1,9 +1,12 @@
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import ethers from 'ethers';
 
 import { setAuthState, walletLoaded } from '../../AccountProvider/actions';
+import { makeSelectWallet } from '../../AccountProvider/selectors';
 
 import * as localStorage from '../../../services/localStorage';
+import { modalDismiss, modalAdd } from '../../App/actions';
+import { LOGOUT_DIALOG } from '../../Modal/constants';
 
 const totalBits = 768;
 const bitsToBytes = (bits) => bits / 8;
@@ -36,8 +39,24 @@ export function* walletSaga() {
 
 export function* logoutSaga({ newAuthState }) {
   if (!newAuthState.loggedIn) {
+    const wallet = yield select(makeSelectWallet());
     yield put(walletLoaded());
+    yield put(modalAdd({
+      modalType: LOGOUT_DIALOG,
+      modalProps: { wallet },
+    }));
     localStorage.removeItem('wallet');
-    console.log('show modal with instructions how to restore wallet');
   }
+}
+
+export function* importSaga({ payload: mnemonic }) {
+  const wallet = ethers.Wallet.fromMnemonic(mnemonic);
+  yield put(walletLoaded(wallet));
+  yield put(setAuthState({
+    privKey: wallet.privateKey,
+    loggedIn: true,
+    generated: true,
+  }));
+  yield put(modalDismiss());
+  localStorage.setItem('wallet', JSON.stringify(wallet));
 }

@@ -64,6 +64,7 @@ const makeSelectLoggedIn = () => selectAccountKey('loggedIn');
 const makeSelectPrivKey = () => selectAccountKey('privKey');
 const makeSelectInjected = () => selectAccountKey('injected');
 const makeSelectGenerated = () => selectAccountKey('generated');
+const makeSelectWallet = () => selectAccountKey('wallet');
 const makeSelectOwner = () => selectAccountKey('owner');
 const makeSelectIsLocked = () => selectAccountKey('isLocked');
 
@@ -133,4 +134,5 @@ export {
   makeSelectCanSendTx,
   makeSelectIsLocked,
   makeSelectWeb3MethodValue,
+  makeSelectWallet,
 };

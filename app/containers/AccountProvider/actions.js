@@ -30,6 +30,7 @@ export const PROXY_EVENTS = 'acebusters/AccountProvider/PROXY_EVENTS';
 export const CONTRACT_EVENTS = 'acebusters/AccountProvider/CONTRACT_EVENTS';
 
 export const WALLET_LOADED = 'acebusters/App/WALLET_LOADED';
+export const WALLET_IMPORTED = 'acebusters/App/WALLET_IMPORTED';
 
 // Note: refer to  https://developer.mozilla.org/en-US/docs/Web/API/WebSocket#Ready_state_constants
 export const READY_STATE = {
@@ -202,4 +203,8 @@ export function contractEvents(events, proxy) {
 
 export function walletLoaded(wallet) {
   return { type: WALLET_LOADED, payload: wallet };
+}
+
+export function walletImported(mnemonic) {
+  return { type: WALLET_IMPORTED, payload: mnemonic };
 }

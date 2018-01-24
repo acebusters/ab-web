@@ -1,9 +1,9 @@
 import { takeLatest, fork, takeEvery } from 'redux-saga/effects';
 
-import { WEB3_CONNECT, WEB3_METHOD_CALL, CONTRACT_METHOD_CALL, SET_AUTH } from '../actions';
+import { WEB3_CONNECT, WEB3_METHOD_CALL, CONTRACT_METHOD_CALL, SET_AUTH, WALLET_IMPORTED } from '../actions';
 
 import { injectedWeb3ListenerSaga } from './injectedWeb3ListenerSaga';
-import { walletSaga, logoutSaga } from './walletSagas';
+import { walletSaga, logoutSaga, importSaga } from './walletSagas';
 import { websocketSaga } from './websocketSaga';
 import { web3ConnectSaga } from './web3ConnectSaga';
 import { unsupportedNetworkDetectSaga } from './unsupportedNetworkDetectSaga';
@@ -20,6 +20,7 @@ export function* accountSaga() {
   yield takeEvery(WEB3_METHOD_CALL, web3MethodCallSaga);
   yield takeEvery(CONTRACT_METHOD_CALL, contractMethodCallSaga);
   yield takeEvery(SET_AUTH, logoutSaga);
+  yield takeEvery(WALLET_IMPORTED, importSaga);
   yield fork(txMonitoringSaga);
   yield fork(persistentTxSaga);
   yield fork(websocketSaga);

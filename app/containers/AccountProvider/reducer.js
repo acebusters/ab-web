@@ -107,7 +107,6 @@ function accountProviderReducer(state = initialState, action) {
         .withMutations((newState) => {
           if (!action.newAuthState.loggedIn) {
             return newState
-              .delete('wallet')
               .delete('privKey')
               .delete('email')
               .delete('accountId')

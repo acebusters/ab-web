@@ -7,11 +7,15 @@ import {
   makeSelectGenerated,
 } from '../AccountProvider/selectors';
 import { setAuthState } from '../AccountProvider/actions';
+import { modalAdd } from '../App/actions';
+import { IMPORT_DIALOG, EXPORT_DIALOG } from '../Modal/constants';
 
 import Header from '../../components/Header';
 
 const mapDispatchToProps = (dispatch) => ({
   onLogout: () => dispatch(setAuthState({ loggedIn: false })),
+  onImport: () => dispatch(modalAdd({ modalType: IMPORT_DIALOG })),
+  onExport: () => dispatch(modalAdd({ modalType: EXPORT_DIALOG })),
 });
 
 const mapStateToProps = createStructuredSelector({
