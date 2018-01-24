@@ -3,11 +3,8 @@ import { fromJS } from 'immutable';
 import {
   MODAL_ADD,
   MODAL_DISMISS,
-  WALLET_LOADED,
   GLOBAL_PROGRESS,
 } from './actions';
-
-import { SET_AUTH } from '../AccountProvider/actions';
 
 // The initial state of the App
 const initialState = fromJS({
@@ -18,15 +15,6 @@ const initialState = fromJS({
 
 function appReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_AUTH:
-      return state.set(
-        'wallet',
-        action.newAuthState.loggedIn
-        ? state.get('wallet')
-        : undefined
-      );
-    case WALLET_LOADED:
-      return state.set('wallet', action.payload);
     case MODAL_ADD:
       return state
         .set('modalStack', state.get('modalStack').push({

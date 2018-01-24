@@ -17,6 +17,7 @@ import {
   INJECT_ACCOUNT_UPDATE,
   NETWORK_SUPPORT_UPDATE,
   READY_STATE,
+  WALLET_LOADED,
 } from './actions';
 import { ACCOUNT_TX_HASH_RECEIVED } from '../GeneratePage/constants';
 
@@ -37,6 +38,9 @@ const initialState = fromJS({
 
 function accountProviderReducer(state = initialState, action) {
   switch (action.type) {
+    case WALLET_LOADED:
+      return state.set('wallet', action.payload);
+
     case WEB3_CONNECTED:
       return state.set('web3ReadyState', READY_STATE.OPEN);
 
@@ -103,6 +107,7 @@ function accountProviderReducer(state = initialState, action) {
         .withMutations((newState) => {
           if (!action.newAuthState.loggedIn) {
             return newState
+              .delete('wallet')
               .delete('privKey')
               .delete('email')
               .delete('accountId')
