@@ -38,6 +38,7 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         methodName,
         contractInstance,
         key: getMethodKey({ methodName, args }),
+        data: contractInstance[methodName].getData(...args),
         dest: address,
         estimateGas: estimateGas(...args),
         privKey: getState().get('privKey'),
@@ -61,13 +62,18 @@ function generateContractInstanceApi({ abi, address, getState, dispatch }) {
         return resolve(value);
       });
     });
-    const estimateGas = (...args) => (
-      promisifyWeb3Call(contractInstance[methodName].estimateGas)(
-        ...args,
-        { from: getState().get('injected') },
-      )
-      .then((gas) => Math.round((gas * 1.1) / 1000) * 1000)
-    );
+    const estimateGas = (...args) => {
+      const tx = {
+        to: contractInstance.address,
+        from: getState().get('wallet').address,
+        data: contractInstance[methodName].getData(...args),
+        value: '0x0',
+      };
+      return (
+        promisifyWeb3Call(getWeb3().eth.estimateGas)(tx)
+        .then((gas) => Math.round((gas * 1.1) / 1000) * 1000)
+      );
+    };
     // add actions to base getter
     contractMethod.call = actions.call;
     contractMethod.sendTransaction = actions.sendTransaction;

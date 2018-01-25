@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
-import { browserHistory } from 'react-router';
 import Pusher from 'pusher-js';
 import Raven from 'raven-js';
 import { Receipt } from 'poker-helper';
 import * as storageService from '../../services/sessionStorage';
 
 // components and styles
-// import { getWeb3 } from '../../containers/AccountProvider/utils';
 import TableDebug from '../../containers/TableDebug';
 import NotFoundPage from '../../containers/NotFoundPage';
 
@@ -192,7 +190,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
     // display Rebuy modal if state === 'waiting' and user stack is no greater than 0
     if (isRebuyNeeded(this.props, nextProps)) {
-      const balance = this.token.balanceOf(nextProps.account.injected);
+      const balance = this.token.balanceOf(nextProps.signerAddr);
 
       this.props.modalDismiss();
       this.props.modalAdd({
@@ -254,7 +252,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   handleRebuy(amount) {
-    const { signerAddr, myPos, account } = this.props;
+    const { signerAddr, myPos } = this.props;
 
     const promise = promisifyWeb3Call(this.token.transData.sendTransaction)(
       this.tableAddr,
@@ -262,7 +260,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       `0x0${(myPos).toString(16)}${signerAddr.replace('0x', '')}`
     );
 
-    return Promise.resolve(account.isLocked ? null : promise).then(() => {
+    return promise.then(() => {
       storageService.setItem(`rebuyModal[${this.tableAddr}${this.props.latestHand}]`, true);
       this.props.modalDismiss();
     });
@@ -279,7 +277,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   async handleJoin(pos, amount) {
-    const { signerAddr, account } = this.props;
+    const { signerAddr } = this.props;
 
     const promise = promisifyWeb3Call(this.token.transData.sendTransaction)(
       this.tableAddr,
@@ -298,9 +296,7 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       );
     };
 
-    if (!account.isLocked) {
-      await reserve();
-    }
+    await reserve();
 
     this.props.modalDismiss();
     this.props.setPending(
@@ -310,17 +306,12 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
       { signerAddr: this.props.signerAddr, stackSize: amount }
     );
 
-    if (account.isLocked) {
-      const signerChannel = this.pusher.subscribe(signerAddr);
-      signerChannel.bind('update', this.handleUpdate);
-      await reserve();
-    }
-
     storageService.setItem(`rebuyModal[${this.tableAddr}${this.props.latestHand}]`, true);
   }
 
   estimateJoin(pos, amount) {
     const { signerAddr } = this.props;
+
     return this.token.transData.estimateGas(
       this.tableAddr,
       amount,
@@ -329,17 +320,9 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   isTaken(open, myPos, pending, pos) {
-    const { account } = this.props;
+    const { signerAddr } = this.props;
 
-    if (!account.loggedIn) {
-      const loc = this.props.location;
-      const curUrl = `${loc.pathname}${loc.search}${loc.hash}`;
-
-      browserHistory.push(`/login?redirect=${curUrl}`);
-      return;
-    }
-
-    const balance = this.token.balanceOf(account.injected);
+    const balance = this.token.balanceOf(signerAddr);
 
     if (open && myPos === undefined && !pending) {
       this.props.modalAdd({
@@ -637,8 +620,6 @@ Table.propTypes = {
   updateReceived: PropTypes.func,
   loadTable: PropTypes.func,
   addMessage: PropTypes.func,
-  location: PropTypes.object,
-  account: PropTypes.object,
   myPendingSeat: PropTypes.number,
   tableLoadingState: PropTypes.string,
 };

@@ -1,6 +1,6 @@
 import { select } from 'redux-saga/effects';
 
-import { makeSelectInjected, selectAccount } from '../../AccountProvider/selectors';
+import { makeSignerAddrSelector, selectAccount } from '../../AccountProvider/selectors';
 import { generateNetworkApi } from '../../AccountProvider/web3Connect';
 import {
   ABI_TOKEN_CONTRACT,
@@ -10,14 +10,14 @@ import {
 
 export default function* balancesLoadingSaga(dispatch) {
   const account = yield select(selectAccount);
-  const injectedAddr = yield select(makeSelectInjected());
+  const signerAddr = yield select(makeSignerAddrSelector());
 
   const { web3 } = generateNetworkApi(account, dispatch);
 
   const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
   const controller = web3.eth.contract(ABI_CONTROLLER_CONTRACT).at(conf().contrAddr);
 
-  web3.eth.getBalance(injectedAddr);
-  token.balanceOf.call(injectedAddr);
+  web3.eth.getBalance(signerAddr);
+  token.balanceOf.call(signerAddr);
   controller.paused.call();
 }

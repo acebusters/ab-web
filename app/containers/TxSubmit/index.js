@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedNumber } from 'react-intl';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -125,12 +124,7 @@ class TxSubmit extends React.Component {
       );
     }
 
-    return (
-      <Alert theme="success" key="estimate">
-        Be sure to give at least <FormattedNumber value={gas} /> gas limit for your transaction.
-        Otherwise&nbsp;transaction can fail
-      </Alert>
-    );
+    return null;
   }
 
   render() {
