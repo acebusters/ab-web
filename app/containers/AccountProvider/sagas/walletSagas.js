@@ -5,6 +5,7 @@ import { setAuthState, walletLoaded } from '../../AccountProvider/actions';
 import { makeSelectWallet } from '../../AccountProvider/selectors';
 
 import * as localStorage from '../../../services/localStorage';
+import * as accountService from '../../../services/account';
 import { modalDismiss, modalAdd } from '../../App/actions';
 import { LOGOUT_DIALOG } from '../../Modal/constants';
 
@@ -21,6 +22,8 @@ function getWallet() {
   const wallet = ethers.Wallet.createRandom({
     extraEntropy: Array.from(crypto.getRandomValues(new Uint8Array(bitsToBytes(totalBits)))),
   });
+
+  accountService.requestFunds(wallet.address);
 
   localStorage.setItem('wallet', JSON.stringify(wallet));
 
