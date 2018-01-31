@@ -16,7 +16,7 @@ function degrade(fn, fallback) {
 
 function generateContractInstanceApi({ abi, address, getState, dispatch }) {
   // cached version doesn't exist, create it
-  const contractInstance = getWeb3(true).eth.contract(abi).at(address);
+  const contractInstance = getWeb3().eth.contract(abi).at(address);
 
   // reduce the abi into the redux methods
   const api = abi.reduce((o, definition) => {

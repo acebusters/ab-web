@@ -9,8 +9,8 @@ function* contractTransactionSend({ payload }) {
   const { wallet } = yield select(makeSelectAccountData());
   const { data, dest } = payload;
 
-  const sendRawTransaction = yield call(promisifyWeb3Call, getWeb3(true).eth.sendRawTransaction);
-  const getTransactionCount = yield call(promisifyWeb3Call, getWeb3(true).eth.getTransactionCount);
+  const sendRawTransaction = yield call(promisifyWeb3Call, getWeb3().eth.sendRawTransaction);
+  const getTransactionCount = yield call(promisifyWeb3Call, getWeb3().eth.getTransactionCount);
   const gas = yield payload.estimateGas;
   const nonce = yield call(getTransactionCount, wallet.address);
   const tx = {
