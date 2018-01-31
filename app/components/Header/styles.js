@@ -197,10 +197,6 @@ export const StyledItem = styled.li`
   color: ${(props) => props.theme.navbarFontColor || '#fff'};
   border-left: ${(props) => props.theme.navbarItemBorder || 'none'};
 
-  @media (max-width: ${screenXsMax}) {
-    width: ${(props) => props.collapseOnMobile ? '100%' : 'auto'};
-    display: ${(props) => props.collapsed ? 'none' : 'block'};
-  }
 `;
 
 export const LogoWrapper = styled.div`
@@ -209,6 +205,10 @@ export const LogoWrapper = styled.div`
   top: 13px;
 
   text-decoration: none;
+
+  @media (max-width: ${screenXsMax}) {
+    display: none;
+  }
 `;
 
 export const MenuWrapper = styled.ul`

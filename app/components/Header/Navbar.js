@@ -6,7 +6,6 @@ import {
   transitionSpeed,
   transitionFn,
   navbarHeight,
-  screenXsMax,
   black,
 } from '../../variables';
 
@@ -27,9 +26,6 @@ const StyledNavbarMenu = styled.div`
   box-sizing: border-box;
   display: block;
   float: right;
-  @media (max-width: ${screenXsMax}) {
-    width: ${(props) => props.loggedIn ? '100%' : 'auto'};
-  }
 `;
 
 const StyledNavbar = styled.nav`
