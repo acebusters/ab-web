@@ -37,11 +37,11 @@ class Overview extends React.Component {
       <OverviewComponent
         account={account}
         messages={messages}
-        babzBalance={this.token.balanceOf(account.injected)}
+        babzBalance={this.token.balanceOf(account.signerAddr)}
         listTxns={txnsToList(
           this.props.dashboardTxs,
           this.tableFactory.getTables(),
-          account.injected
+          account.signerAddr
         )}
       />
     );

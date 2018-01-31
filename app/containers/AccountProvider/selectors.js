@@ -96,17 +96,9 @@ const makeSelectWeb3MethodValue = (address, methodName, args = []) => createSele
 );
 
 const makeSelectCanSendTx = () => createSelector(
-  makeSelectHasWeb3(),
-  makeSelectNetworkSupported(),
   makeSelectIsWeb3Connected(),
   makeSelectWeb3MethodValue(conf().contrAddr, 'paused'),
-  (hasWeb3, networkSupported, isConnected, paused) => {
-    if (paused || !isConnected) {
-      return false;
-    }
-
-    return hasWeb3 && networkSupported;
-  },
+  (isConnected, paused) => isConnected && !paused,
 );
 
 /**
