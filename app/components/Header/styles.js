@@ -154,18 +154,19 @@ export const StyledLink = styled.a`
   position: relative;
   background-color: transparent;
 
-  border-bottom: 2px solid transparent;
+  border-top: 2px solid transparent;
+  padding-bottom: 10px;
 
   &:hover {
     color: ${(props) => props.theme.navbarHoverColor || '#fff'};
     text-decoration: none !important;
-    border-bottom-color: ${baseColor};
+    border-top-color: ${baseColor};
   }
 `;
 
 export const ActiveLink = styled(StyledLink)`
   cursor: default;
-  border-bottom: 2px solid ${navbarColorCurrent};
+  border-top: 2px solid ${navbarColorCurrent};
   background-color: ${navbarColorCurrent};
 
   &:hover {
@@ -219,8 +220,8 @@ export const MenuWrapper = styled.ul`
   padding: 5px 0;
   display: none;
 
-  background-color: #333333;
-  border-top: 1px solid #ececec;
+  background-color: #5d5d5d;
+  border-top: 2px solid ${baseColor};;
 
   ${StyledItem}:hover & {
     display: block;
@@ -235,6 +236,6 @@ export const MenuItem = styled.li`
   cursor: pointer;
 
   &:hover {
-    background-color: #000;
+    background-color: #353535;
   }
 `;

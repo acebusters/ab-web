@@ -6,7 +6,7 @@ import { StyledTable, TableNotificationsWrapper } from './styles';
 
 const TableFrame = (props) => (
   <StyledTable name="styled-table">
-    <Header />
+    <Header transparent />
     {props.children}
     <TableNotificationsWrapper>
       <Notifications location={props.location} />

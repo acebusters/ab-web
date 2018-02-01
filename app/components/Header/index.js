@@ -37,7 +37,7 @@ class Header extends React.Component {
         fixed={this.props.fixed}
         id="header"
       >
-        <Navbar loggedIn={this.props.loggedIn}>
+        <Navbar loggedIn={this.props.loggedIn} transparent={this.props.transparent}>
           <Link to="/">
             <LogoWrapper>
               <Logo />
@@ -70,6 +70,7 @@ class Header extends React.Component {
 
 Header.propTypes = {
   fixed: PropTypes.bool,
+  transparent: PropTypes.bool,
   loggedIn: PropTypes.bool,
   location: PropTypes.object,
   nickName: PropTypes.string,
@@ -80,6 +81,7 @@ Header.propTypes = {
 };
 
 Header.defaultProps = {
+  transparent: false,
   fixed: false,
   sidebarMini: false,
   logoLg: <span><b>Ace</b>Busters</span>,
