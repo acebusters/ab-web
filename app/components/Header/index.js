@@ -6,18 +6,29 @@ import NavItem from './NavItem';
 
 import {
   StyledHeader,
+  StyledUser,
   StyledUserName,
   StyledUserImage,
   LogoWrapper,
+  Balances,
 } from './styles';
 
 import { Logo } from '../Logo';
 import Link from '../Link';
 
+import { formatEth, formatNtz } from '../../utils/amountFormatter';
+import { ABI_TOKEN_CONTRACT, conf } from '../../app.config';
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
     this.handleMenuClick = this.handleMenuClick.bind(this);
+
+    this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
+  }
+
+  get web3() {
+    return this.props.web3Redux.web3;
   }
 
   handleMenuClick(menuIndex) {
@@ -29,7 +40,9 @@ class Header extends React.Component {
   }
 
   render() {
-    const { blocky, nickName, location } = this.props;
+    const { blocky, nickName, location, signerAddr } = this.props;
+    const weiBalance = this.web3.eth.balance(signerAddr);
+    const babzBalance = this.token.balanceOf(signerAddr);
 
     return (
       <StyledHeader
@@ -53,10 +66,17 @@ class Header extends React.Component {
           <NavItem
             to="/dashboard"
             title={
-              <span>
+              <StyledUser>
                 <StyledUserImage src={blocky} />
-                <StyledUserName>{nickName}</StyledUserName>
-              </span>
+                <StyledUserName>
+                  {nickName}
+
+                  <Balances>
+                    {babzBalance && <span>{formatNtz(babzBalance)} NTZ</span>}
+                    {weiBalance && <span>{formatEth(weiBalance, 2)} ETH</span>}
+                  </Balances>
+                </StyledUserName>
+              </StyledUser>
             }
             location={location}
             menu={['Import account', 'Export account', 'Logout']}
@@ -78,6 +98,8 @@ Header.propTypes = {
   onLogout: PropTypes.func,
   onImport: PropTypes.func,
   onExport: PropTypes.func,
+  web3Redux: PropTypes.object,
+  signerAddr: PropTypes.string,
 };
 
 Header.defaultProps = {

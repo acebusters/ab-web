@@ -1,11 +1,11 @@
-import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {
   makeBlockySelector,
   makeNickNameSelector,
   makeSelectLoggedIn,
-  makeSelectGenerated,
+  makeSignerAddrSelector,
 } from '../AccountProvider/selectors';
+import web3Connect from '../AccountProvider/web3Connect';
 import { setAuthState } from '../AccountProvider/actions';
 import { modalAdd } from '../App/actions';
 import { IMPORT_DIALOG, EXPORT_DIALOG } from '../Modal/constants';
@@ -21,11 +21,11 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = createStructuredSelector({
   loggedIn: makeSelectLoggedIn(),
   nickName: makeNickNameSelector(),
+  signerAddr: makeSignerAddrSelector(),
   blocky: makeBlockySelector(),
-  accountIsGenerated: makeSelectGenerated(),
 });
 
-export default connect(
+export default web3Connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Header);

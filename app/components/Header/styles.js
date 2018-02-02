@@ -56,6 +56,21 @@ export const StyledUserName = styled.span`
   user-select: none; /* Non-prefixed version, currently not supported by any browser */
 `;
 
+export const StyledUser = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: -6px;
+`;
+
+export const Balances = styled.div`
+  font-size: 11px;
+  opacity: 0.8;
+
+  span + span {
+    margin-left: 8px;
+  }
+`;
+
 // Header
 export const StyledHeader = styled.header`
   &:before, &:after {
@@ -150,7 +165,8 @@ export const StyledLink = styled.a`
   color: inherit;
   display: block;
   cursor: pointer;
-  padding: ${navbarPaddingVertical} ${navbarPaddingHorizontal};
+  height: 55px;
+  padding: ${navbarPaddingVertical} ${navbarPaddingHorizontal} 0;
   position: relative;
   background-color: transparent;
 
@@ -217,8 +233,9 @@ export const MenuWrapper = styled.ul`
   top: 100%;
   right: 0;
 
-  padding: 5px 0;
   display: none;
+  min-width: 100%;
+  padding: 5px 0;
 
   background-color: #5d5d5d;
   border-top: 2px solid ${baseColor};;
@@ -229,6 +246,7 @@ export const MenuWrapper = styled.ul`
 `;
 
 export const MenuItem = styled.li`
+  width: 100%;
   padding: 10px 15px;
 
   white-space: nowrap;
