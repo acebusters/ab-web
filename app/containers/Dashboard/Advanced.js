@@ -4,9 +4,9 @@ import { modalAdd } from 'containers/App/actions';
 
 import Advanced from 'components/Dashboard/Advanced';
 
-const mapDispatchToProps = (dispatch) => ({
-  onImport: () => dispatch(modalAdd({ modalType: IMPORT_DIALOG })),
-  onExport: () => dispatch(modalAdd({ modalType: EXPORT_DIALOG })),
+const mapDispatchToProps = () => ({
+  onImport: () => modalAdd({ modalType: IMPORT_DIALOG }),
+  onExport: () => modalAdd({ modalType: EXPORT_DIALOG }),
 });
 
 export default web3Connect(
