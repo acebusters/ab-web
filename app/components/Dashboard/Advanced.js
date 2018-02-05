@@ -1,24 +1,50 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import Alert from 'components/Alert';
+import Button from 'components/Button';
+import H2 from 'components/H2';
+
+import {
+  Pane,
+  Section,
+  SendContainer as ButtonGroup,
+  TabIcon as ModeIcon,
+} from './styles';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Advanced extends React.Component {
-  // static propTypes = {}
-  // constructor(props) {
-  //   super(props);
-  // }
-
+  static propTypes = {
+    onImport: PropTypes.func.isRequired,
+    onExport: PropTypes.func.isRequired,
+  }
   render() {
+    const { onImport, onExport } = this.props;
     return (
-      <div>
-        <h3>Wallet Recovery</h3>
-        <p>Explanation of these functions</p>
-        <i>Testnet only warning!</i>
-        <ul>
-          <li>Import Wallet</li>
-          <li>Export Wallet</li>
-        </ul>
-      </div>
+      <Pane name="dashboard-advanced">
+        <Section>
+          <H2><ModeIcon className="fa fa-suitcase" />Wallet Recovery</H2>
+          These functions import and export the wallet seed from/to localstorage. Please be careful as this operation can cause loss of funds.
+          <Alert theme="warning" style={{ textAlign: 'center' }}>
+            Warning: Testnet ETH and NTZ only!
+          </Alert>
+          <ButtonGroup>
+            <Button
+              icon="fa fa-download"
+              size="medium"
+              onClick={onImport}
+            >
+              Import Wallet
+            </Button>
+            <Button
+              icon="fa fa-upload"
+              size="medium"
+              onClick={onExport}
+            >
+              Export Wallet
+            </Button>
+          </ButtonGroup>
+        </Section>
+      </Pane>
     );
   }
 }

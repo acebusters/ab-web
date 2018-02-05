@@ -32,8 +32,8 @@ class Header extends React.Component {
   }
 
   handleMenuClick(menuIndex) {
-    const { onImport, onExport, onLogout } = this.props;
-    const handler = [onImport, onExport, onLogout][menuIndex];
+    const { onLogout } = this.props;
+    const handler = [onLogout][menuIndex];
     if (typeof handler === 'function') {
       handler();
     }
@@ -79,7 +79,7 @@ class Header extends React.Component {
               </StyledUser>
             }
             location={location}
-            menu={['Import account', 'Export account', 'Logout']}
+            menu={['Logout']}
             onMenuClick={this.handleMenuClick}
           />
         </Navbar>
@@ -96,8 +96,6 @@ Header.propTypes = {
   nickName: PropTypes.string,
   blocky: PropTypes.string,
   onLogout: PropTypes.func,
-  onImport: PropTypes.func,
-  onExport: PropTypes.func,
   web3Redux: PropTypes.object,
   signerAddr: PropTypes.string,
 };

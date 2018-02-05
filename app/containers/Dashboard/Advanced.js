@@ -1,14 +1,15 @@
-import React from 'react';
-// import PropTypes from 'prop-types';
+import web3Connect from 'containers/AccountProvider/web3Connect';
+import { IMPORT_DIALOG, EXPORT_DIALOG } from 'containers/Modal/constants';
+import { modalAdd } from 'containers/App/actions';
 
-import AdvancedComponent from 'components/Dashboard/Advanced';
+import Advanced from 'components/Dashboard/Advanced';
 
-// eslint-disable-next-line react/prefer-stateless-function
-class Advanced extends React.Component {
-  // static propTypes = {};
-  render() {
-    return <AdvancedComponent />;
-  }
-}
+const mapDispatchToProps = (dispatch) => ({
+  onImport: () => dispatch(modalAdd({ modalType: IMPORT_DIALOG })),
+  onExport: () => dispatch(modalAdd({ modalType: EXPORT_DIALOG })),
+});
 
-export default Advanced;
+export default web3Connect(
+  () => {},
+  mapDispatchToProps,
+)(Advanced);
