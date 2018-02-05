@@ -11,15 +11,18 @@ function* contractTransactionSend({ payload }) {
 
   const sendRawTransaction = yield call(promisifyWeb3Call, getWeb3().eth.sendRawTransaction);
   const getTransactionCount = yield call(promisifyWeb3Call, getWeb3().eth.getTransactionCount);
+  const getGasPrice = yield call(promisifyWeb3Call, getWeb3().eth.getGasPrice);
   const gas = yield payload.estimateGas;
   const nonce = yield call(getTransactionCount, wallet.address);
+  const gasPrice = yield call(getGasPrice);
+
   const tx = {
     nonce,
     to: dest,
     from: wallet.address,
     value: '0x0',
     gasLimit: getWeb3().toHex(gas),
-    gasPrice: getWeb3().toHex(5000000000), // ToDo: do not hardcode gasPrice
+    gasPrice: getWeb3().toHex(gasPrice.toNumber()),
     data,
   };
 
