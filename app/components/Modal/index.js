@@ -45,7 +45,7 @@ const Modal = ({ modal, handleClose }) => {
   return (
     <ModalsTransitionGroup>
       {modal && // required for leaveAnim
-        <ContainerTransitionGroup component={Wrapper} style={{ zIndex: 7 }}>
+        <ContainerTransitionGroup component={Wrapper} style={{ zIndex: 2040 }}>
           <DialogTransitionGroup component={Modals}>
             <Background onClick={modal.modalProps.backdrop ? handleClose : null} />
             <DialogWrapper>
