@@ -38,7 +38,7 @@ class ImportDialog extends React.Component {
       <DialogContents>
         <DialogTitle>Import Wallet</DialogTitle>
         <DialogText>
-          Enter the 12 word mnemonic phrase to recreate your wallet to this account (testnet only).
+          Enter the 12 word mnemonic phrase to recreate your wallet to this account (testnet only). Please backup your existing private key first. This will replace your existing account private key.
         </DialogText>
         <Form onSubmit={handleSubmit(this.handleSubmit)} style={{ width: 500 }}>
           <Field
