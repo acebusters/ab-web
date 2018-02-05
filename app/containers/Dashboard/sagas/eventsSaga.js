@@ -7,7 +7,8 @@ import { generateNetworkApi } from '../../AccountProvider/web3Connect';
 import { contractEvents } from '../../AccountProvider/actions';
 import { ABI_TOKEN_CONTRACT, conf } from '../../../app.config';
 import { promisifyWeb3Call } from '../../../utils/promisifyWeb3Call';
-import { LOOK_BEHIND_PERIOD } from '../constants';
+
+const LOOK_BEHIND_PERIOD = 4 * 60 * 24;
 
 function* initEvents(contract, fromBlock, signerAddr, action) {
   const allEvents = contract.allEvents({

@@ -11,10 +11,18 @@ import RebuyDialog from 'components/RebuyDialog';
 
 import { formatNtz } from '../../utils/amountFormatter';
 
+import { ABI_TOKEN_CONTRACT, conf } from '../../app.config';
+
 export class JoinDialog extends React.Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
+  }
+
+  get web3() {
+    return this.props.web3Redux.web3;
   }
 
   handleSubmit(values) {
@@ -23,19 +31,20 @@ export class JoinDialog extends React.Component {
 
   render() {
     const {
-      balance,
       handleSubmit,
       estimate,
       amount,
       submitting,
       onLeave,
       rebuy,
+      signerAddr,
       tableStakes: {
         sb,
         min,
         tableMax,
       },
     } = this.props;
+    const balance = this.token.balanceOf(signerAddr) || 0;
     const max = BigNumber.min(balance, tableMax).div(sb).floor().mul(sb);
 
     if (balance < min) {
@@ -81,9 +90,11 @@ JoinDialog.propTypes = {
   handleSubmit: PropTypes.func,
   estimate: PropTypes.func,
   tableStakes: PropTypes.object,
+  web3Redux: PropTypes.object,
+  signerAddr: PropTypes.string,
   submitting: PropTypes.bool,
   amount: PropTypes.number,
-  balance: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.object]),
+  // balance: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.object]),
   changeFieldValue: PropTypes.func,
 };
 

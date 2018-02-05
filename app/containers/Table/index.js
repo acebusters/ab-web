@@ -190,8 +190,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
 
     // display Rebuy modal if state === 'waiting' and user stack is no greater than 0
     if (isRebuyNeeded(this.props, nextProps)) {
-      const balance = this.token.balanceOf(nextProps.signerAddr);
-
       this.props.modalDismiss();
       this.props.modalAdd({
         modalType: JOIN_DIALOG,
@@ -200,7 +198,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
           estimate: this.estimateRebuy,
           onLeave: () => this.handleLeave(this.props.myPos),
           params: this.props.params,
-          balance,
           rebuy: true,
         },
         closeHandler: () => this.handleLeave(this.props.myPos),
@@ -320,10 +317,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
   }
 
   isTaken(open, myPos, pending, pos) {
-    const { signerAddr } = this.props;
-
-    const balance = this.token.balanceOf(signerAddr);
-
     if (open && myPos === undefined && !pending) {
       this.props.modalAdd({
         modalType: JOIN_DIALOG,
@@ -332,7 +325,6 @@ export class Table extends React.PureComponent { // eslint-disable-line react/pr
           estimate: (amount) => this.estimateJoin(pos, amount),
           modalDismiss: this.props.modalDismiss,
           params: this.props.params,
-          balance,
         },
         backdrop: true,
       });
