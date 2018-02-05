@@ -7,7 +7,8 @@ import Slider from 'components/Form/Slider';
 import Web3Alerts from 'containers/Web3Alerts';
 import TxSubmit from 'containers/TxSubmit';
 import messages from 'containers/JoinDialog/messages';
-import RebuyDialog from 'components/RebuyDialog';
+import H2 from 'components/H2';
+import SubmitButton from 'components/SubmitButton';
 
 import { formatNtz } from '../../utils/amountFormatter';
 
@@ -38,6 +39,7 @@ export class JoinDialog extends React.Component {
       onLeave,
       rebuy,
       signerAddr,
+      modalDismiss,
       tableStakes: {
         sb,
         min,
@@ -48,7 +50,27 @@ export class JoinDialog extends React.Component {
     const max = BigNumber.min(balance, tableMax).div(sb).floor().mul(sb);
 
     if (balance < min) {
-      return <RebuyDialog messages={messages} {...this.props} />;
+      if (!new BigNumber(0).eq(balance)) {
+        return (
+          <div style={{ minWidth: '20em' }}>
+            <H2><FormattedMessage {...messages.sorry} /></H2>
+            <p><FormattedMessage {...(rebuy ? messages.balanceOutRebuy : messages.balanceOutJoin)} /></p>
+            <SubmitButton onClick={modalDismiss}>
+              <FormattedMessage {...messages.ok} />
+            </SubmitButton>
+          </div>
+        );
+      }
+
+      return (
+        <div style={{ minWidth: '20em' }}>
+          <H2><FormattedMessage {...messages.fundRequestInProgress} /></H2>
+          <p><FormattedMessage {...messages.fundRequestInProgressMessage} /></p>
+          <SubmitButton onClick={modalDismiss}>
+            <FormattedMessage {...messages.ok} />
+          </SubmitButton>
+        </div>
+      );
     }
 
     return (
@@ -86,6 +108,7 @@ export class JoinDialog extends React.Component {
 JoinDialog.propTypes = {
   onJoin: PropTypes.func,
   onLeave: PropTypes.func,
+  modalDismiss: PropTypes.func,
   rebuy: PropTypes.bool,
   handleSubmit: PropTypes.func,
   estimate: PropTypes.func,
