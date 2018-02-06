@@ -43,11 +43,13 @@ export function* walletSaga() {
 export function* logoutSaga({ newAuthState }) {
   if (!newAuthState.loggedIn) {
     const wallet = yield select(makeSelectWallet());
-    yield put(walletLoaded());
-    yield put(modalAdd({
-      modalType: LOGOUT_DIALOG,
-      modalProps: { wallet },
-    }));
+    if (wallet) {
+      yield put(walletLoaded());
+      yield put(modalAdd({
+        modalType: LOGOUT_DIALOG,
+        modalProps: { wallet },
+      }));
+    }
     localStorage.removeItem('wallet');
   }
 }
