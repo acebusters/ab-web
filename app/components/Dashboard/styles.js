@@ -30,6 +30,11 @@ export const SectionOverview = styled(Section)`
   width: 100%;
 `;
 
+export const Text = styled.p`
+  padding-right: 10px;
+  padding-left: 10px;
+`;
+
 // Wallet
 export const WalletContainer = styled.div`
   display: flex;

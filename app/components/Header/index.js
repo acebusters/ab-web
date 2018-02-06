@@ -31,12 +31,12 @@ class Header extends React.Component {
     return this.props.web3Redux.web3;
   }
 
-  handleMenuClick(menuIndex) {
-    const { onLogout } = this.props;
-    const handler = [onLogout][menuIndex];
-    if (typeof handler === 'function') {
-      handler();
-    }
+  handleMenuClick() {
+  //   const { onLogout } = this.props;
+  //   const handler = [onLogout][menuIndex];
+  //   if (typeof handler === 'function') {
+  //     handler();
+  //   }
   }
 
   render() {
@@ -79,7 +79,7 @@ class Header extends React.Component {
               </StyledUser>
             }
             location={location}
-            menu={['Logout']}
+            menu={[]}
             onMenuClick={this.handleMenuClick}
           />
         </Navbar>
@@ -95,7 +95,6 @@ Header.propTypes = {
   location: PropTypes.object,
   nickName: PropTypes.string,
   blocky: PropTypes.string,
-  onLogout: PropTypes.func,
   web3Redux: PropTypes.object,
   signerAddr: PropTypes.string,
 };
