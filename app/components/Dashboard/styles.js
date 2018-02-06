@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Button } from '../../utils/styleUtils';
-import AppButton from '../../components/Button';
 
 import {
   baseColor,
@@ -176,17 +175,6 @@ export const TabIcon = styled.i`
 export const TabTitle = styled.span`
   padding-bottom: 4px;
   font-weight: 400;
-`;
-
-export const DBButton = styled(AppButton)`
-  @media (max-width: 500px) {
-    display: block;
-
-    & + & {
-      margin-left: 0;
-      margin-top: 15px;
-    }
-  }
 `;
 
 export const Description = styled.div`
