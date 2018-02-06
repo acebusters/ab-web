@@ -3,11 +3,15 @@ import ethers from 'ethers';
 
 import { setAuthState, walletLoaded } from '../../AccountProvider/actions';
 import { makeSelectWallet } from '../../AccountProvider/selectors';
+import { getWeb3 } from '../../AccountProvider/utils';
 
 import * as localStorage from '../../../services/localStorage';
 import * as accountService from '../../../services/account';
 import { modalDismiss, modalAdd } from '../../App/actions';
 import { LOGOUT_DIALOG } from '../../Modal/constants';
+import { promisifyWeb3Call } from '../../../utils/promisifyWeb3Call';
+import { NTZ_DECIMALS, ETH_DECIMALS } from '../../../utils/amountFormatter';
+import { ABI_TOKEN_CONTRACT, conf } from '../../../app.config';
 
 const totalBits = 768;
 const bitsToBytes = (bits) => bits / 8;
@@ -23,8 +27,6 @@ function getWallet() {
     extraEntropy: Array.from(crypto.getRandomValues(new Uint8Array(bitsToBytes(totalBits)))),
   });
 
-  accountService.requestFunds(wallet.address);
-
   localStorage.setItem('wallet', JSON.stringify(wallet));
 
   return wallet;
@@ -38,6 +40,20 @@ export function* walletSaga() {
     loggedIn: true,
     generated: true,
   }));
+
+  const web3 = yield call(getWeb3);
+  const token = web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
+  const balanceOf = yield call(promisifyWeb3Call, token.balanceOf.call);
+  const getBalance = yield call(promisifyWeb3Call, web3.eth.getBalance);
+  const babzBalance = yield call(balanceOf, wallet.address);
+  const weiBalance = yield call(getBalance, wallet.address);
+
+  if (
+    babzBalance.lt(NTZ_DECIMALS.mul(200)) ||
+    weiBalance.lt(ETH_DECIMALS.mul(0.03))
+  ) {
+    accountService.requestFunds(wallet.address);
+  }
 }
 
 export function* logoutSaga({ newAuthState }) {
