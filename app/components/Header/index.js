@@ -22,8 +22,6 @@ import { ABI_TOKEN_CONTRACT, conf } from '../../app.config';
 class Header extends React.Component {
   constructor(props) {
     super(props);
-    this.handleMenuClick = this.handleMenuClick.bind(this);
-
     this.token = this.web3.eth.contract(ABI_TOKEN_CONTRACT).at(conf().ntzAddr);
   }
 
