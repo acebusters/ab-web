@@ -17,10 +17,9 @@ class Advanced extends React.Component {
   static propTypes = {
     onImport: PropTypes.func.isRequired,
     onExport: PropTypes.func.isRequired,
-    onReset: PropTypes.func.isRequired,
   }
   render() {
-    const { onImport, onExport, onReset } = this.props;
+    const { onImport, onExport } = this.props;
     return (
       <Pane name="dashboard-advanced">
         <Section>
@@ -45,17 +44,6 @@ class Advanced extends React.Component {
               Export Wallet
             </Button>
           </ButtonGroup>
-        </Section>
-        <Section>
-          <H2><ModeIcon className="fa fa-trash" />Account Reset</H2>
-          <Text>This function will generate a new account. A previous account can be recovered using the &#39;Account Recovery: Import Wallet&#39; tool.</Text>
-          <Button
-            icon="fa fa-exclamation-triangle"
-            size="medium"
-            onClick={onReset}
-          >
-            Reset Account
-          </Button>
         </Section>
       </Pane>
     );
