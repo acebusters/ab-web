@@ -54,10 +54,6 @@ export default defineMessages({
     id: 'app.containers.Dashboard.overview',
     defaultMessage: 'Overview',
   },
-  wallet: {
-    id: 'app.containers.Dashboard.wallet',
-    defaultMessage: 'Wallet',
-  },
   exchange: {
     id: 'app.containers.Dashboard.exchange',
     defaultMessage: 'Exchange',
