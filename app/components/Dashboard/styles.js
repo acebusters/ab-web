@@ -34,14 +34,7 @@ export const Text = styled.p`
   padding-left: 10px;
 `;
 
-// Wallet
-export const WalletContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-export const SendContainer = styled.div`
+export const ButtonGroup = styled.div`
   display: flex;
   justify-content: center;
 `;
