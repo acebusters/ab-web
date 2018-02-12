@@ -86,10 +86,6 @@ export default defineMessages({
     id: 'app.containers.Dashboard.invitationsLeft',
     defaultMessage: '{allowance} {allowance, plural, one {invitation left} other {invitations left}}',
   },
-  ethPayoutInfo: {
-    id: 'app.containers.Dashboard.ethPayoutInfo',
-    defaultMessage: 'After an exchange, you will need to execute ETH payout.<br />Button will appear above this form',
-  },
   transactionErrorTitle: {
     id: 'app.containers.Dashboard.transactionErrorTitle',
     defaultMessage: 'Transaction error',
@@ -157,22 +153,6 @@ export default defineMessages({
   powerDownPrereq: {
     id: 'app.containers.Dashboard.powerDownPrereq',
     defaultMessage: 'To Power Down, first Power Up and purchase ABP',
-  },
-  sellTitle: {
-    id: 'app.containers.Dashboard.sellTitle',
-    defaultMessage: 'Exchange NTZ for ETH',
-  },
-  purchaseTitle: {
-    id: 'app.containers.Dashboard.purchaseTitle',
-    defaultMessage: 'Exchange ETH for NTZ',
-  },
-  floorPrice: {
-    id: 'app.containers.Dashboard.floorPrice',
-    defaultMessage: 'Sell Price: {amount} NTZ for 1 ETH',
-  },
-  ceilingPrice: {
-    id: 'app.containers.Dashboard.ceilingPrice',
-    defaultMessage: 'Purchase Price: 1 ETH for {amount} NTZ',
   },
   tableJoin: {
     id: 'app.containers.Dashboard.tableJoin',

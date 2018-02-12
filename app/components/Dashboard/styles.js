@@ -62,12 +62,6 @@ export const Input = styled.input`
   border-radius: 4px;
 `;
 
-// Exchange
-export const ExchangeContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 // Overview
 export const ReceiveSection = styled.div`
   display: flex;
