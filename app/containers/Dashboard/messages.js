@@ -54,14 +54,6 @@ export default defineMessages({
     id: 'app.containers.Dashboard.overview',
     defaultMessage: 'Overview',
   },
-  exchange: {
-    id: 'app.containers.Dashboard.exchange',
-    defaultMessage: 'Exchange',
-  },
-  invest: {
-    id: 'app.containers.Dashboard.invest',
-    defaultMessage: 'Invest',
-  },
   header: {
     id: 'app.containers.Dashboard.header',
     defaultMessage: 'Account Dashboard',
@@ -109,50 +101,6 @@ export default defineMessages({
   ethTransferTitle: {
     id: 'app.containers.Dashboard.ethTransferTitle',
     defaultMessage: 'Transfer ETH',
-  },
-  powerUpAmountLabel: {
-    id: 'app.containers.Dashboard.powerUpAmountLabel',
-    defaultMessage: 'Amount NTZ',
-  },
-  powerUpTitle: {
-    id: 'app.containers.Dashboard.powerUpTitle',
-    defaultMessage: 'Power Up',
-  },
-  powerUpDescr: {
-    id: 'app.containers.Dashboard.powerUpDescr',
-    defaultMessage: 'Power Up will convert NTZ to ABP and make you a shareholder in the Acebusters Economy. Holding ABP, you will profit from our growth and be able to vote on governance policies.',
-  },
-  powerUpAvailable: {
-    id: 'app.containers.Dashboard.powerUpAvailable',
-    defaultMessage: 'Available: ~{amount} ABP',
-  },
-  powerUpMinAmount: {
-    id: 'app.containers.Dashboard.powerUpMinAmount',
-    defaultMessage: 'Minimum Power Up Amount: ~{amount} NTZ',
-  },
-  powerUpRate: {
-    id: 'app.containers.Dashboard.powerUpRate',
-    defaultMessage: 'Purchase Price: 1 ABP for ~{amount} NTZ',
-  },
-  powerDownAmountLabel: {
-    id: 'app.containers.Dashboard.powerDownAmountLabel',
-    defaultMessage: 'Amount ABP',
-  },
-  powerDownTitle: {
-    id: 'app.containers.Dashboard.powerDownTitle',
-    defaultMessage: 'Power Down',
-  },
-  powerDownDescr: {
-    id: 'app.containers.Dashboard.powerDownDescr',
-    defaultMessage: 'Power Down will convert ABP back to NTZ. Powerdown is split over multiple payouts and a period of 3 months.',
-  },
-  powerDownMin: {
-    id: 'app.containers.Dashboard.powerDownMin',
-    defaultMessage: 'Minimum Power Down amount: ~{min} ABP',
-  },
-  powerDownPrereq: {
-    id: 'app.containers.Dashboard.powerDownPrereq',
-    defaultMessage: 'To Power Down, first Power Up and purchase ABP',
   },
   tableJoin: {
     id: 'app.containers.Dashboard.tableJoin',

@@ -21,6 +21,7 @@ export const setActiveTab = (whichTab) => ({
   whichTab,
 });
 
+// used in investTab
 export const setAmountUnit = (unit) => ({
   type: SET_AMOUNT_UNIT,
   unit,
