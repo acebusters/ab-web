@@ -86,10 +86,6 @@ export default defineMessages({
     id: 'app.containers.Dashboard.retryTransaction',
     defaultMessage: 'Retry',
   },
-  ethAlert: {
-    id: 'app.containers.Dashboard.ethAlert',
-    defaultMessage: 'Never send real ether to this address. It is a Rinkeby Testnet Address. Only send Rinkeby TestEther to this Address. Otherwise your Ether will be lost',
-  },
   ethLimit: {
     id: 'app.containers.Dashboard.ethLimit',
     defaultMessage: 'Warning: account limit {limit} ETH',

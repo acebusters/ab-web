@@ -62,12 +62,6 @@ export const Input = styled.input`
   border-radius: 4px;
 `;
 
-// Overview
-export const ReceiveSection = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 // Balances
 export const BalanceSection = styled.div`
   display: flex;

@@ -9,8 +9,6 @@ import LogoutDialog from '../../containers/LogoutDialog';
 import * as modals from '../../containers/Modal/constants';
 import ConfirmDialog from './ConfirmDialog';
 import SelectToken from './SelectToken';
-import FishWarningDialog from './FishWarningDialog';
-import DepositDialog from './DepositDialog';
 import ModalsTransitionGroup from './ModalsTransitionGroup';
 import { DialogTransitionGroup } from './DialogTransitionGroup';
 import { ContainerTransitionGroup } from './ContainerTransitionGroup';
@@ -26,8 +24,6 @@ import {
 
 const MODALS = {
   [modals.CONFIRM_DIALOG]: ConfirmDialog,
-  [modals.DEPOSIT_DIALOG]: DepositDialog,
-  [modals.FISH_WARNING_DIALOG]: FishWarningDialog,
   [modals.INVITE_DIALOG]: InviteDialog,
   [modals.JOIN_DIALOG]: JoinDialog,
   [modals.SELECT_TOKEN]: SelectToken,
