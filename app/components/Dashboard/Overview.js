@@ -8,7 +8,6 @@ import A from '../A';
 import H2 from '../H2';
 import List from '../List';
 
-import Refs from './Refs';
 import { Pane, SectionOverview, Subtitle } from './styles';
 
 const Overview = (props) => {
@@ -29,13 +28,6 @@ const Overview = (props) => {
             <strong>Account email:</strong>&nbsp;{account.email}
           </div>
         </SectionOverview>
-      }
-
-      {account.refs && account.refs.length &&
-        <Refs
-          refs={account.refs}
-          messages={messages}
-        />
       }
 
       <SectionOverview name="transaction-history">
