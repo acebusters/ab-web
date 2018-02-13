@@ -11,25 +11,11 @@ import List from '../List';
 import { Pane, SectionOverview, Subtitle } from './styles';
 
 const Overview = (props) => {
-  const { account, listTxns, messages } = props;
+  const { listTxns, messages } = props;
   const emptyColumnStyle = { width: 20 };
 
   return (
     <Pane name="dashboard-overview">
-      {account.email &&
-        <SectionOverview
-          name="account-info"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ margin: '1em' }}>
-            <strong>Account email:</strong>&nbsp;{account.email}
-          </div>
-        </SectionOverview>
-      }
-
       <SectionOverview name="transaction-history">
         <H2><FormattedMessage {...messages.included} /></H2>
         <Subtitle>
@@ -62,7 +48,6 @@ const Overview = (props) => {
   );
 };
 Overview.propTypes = {
-  account: PropTypes.object,
   listTxns: PropTypes.array,
   messages: PropTypes.object,
 };
