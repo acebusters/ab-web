@@ -9,11 +9,7 @@ import makeSelectAccountData from '../AccountProvider/selectors';
 import { toggleInvestTour } from './actions';
 import messages from './messages';
 import { txnsToList } from './txnsToList';
-import {
-  createDashboardTxsSelector,
-  createPendingETHPayoutSelector,
-  createPendingABPPayoutSelector,
-} from './selectors';
+import { createDashboardTxsSelector } from './selectors';
 
 import OverviewComponent from '../../components/Dashboard/Overview';
 import { ABI_TOKEN_CONTRACT, ABI_TABLE_FACTORY, conf } from '../../app.config';
@@ -61,12 +57,9 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = createStructuredSelector({
   account: makeSelectAccountData(),
   dashboardTxs: createDashboardTxsSelector(),
-  pendingETHPayout: createPendingETHPayoutSelector(),
-  pendingABPPayout: createPendingABPPayoutSelector(),
 });
 
 export default web3Connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Overview);
-
