@@ -146,10 +146,6 @@ export default defineMessages({
     id: 'app.containers.Dashboard.powerDownPayoutStatus',
     defaultMessage: 'Power Down Payout',
   },
-  upgradeAccount: {
-    id: 'app.containers.Dashboard.upgradeAccount',
-    defaultMessage: 'Unlock your Account',
-  },
   investTutButton: {
     id: 'app.containers.Dashboard.investTutButton',
     defaultMessage: 'Invest Tutorial',

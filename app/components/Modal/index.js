@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import InviteDialog from '../../containers/InviteDialog';
 import JoinDialog from '../../containers/JoinDialog';
-import UpgradeDialog from '../../containers/UpgradeDialog';
 import ImportDialog from '../../containers/ImportDialog';
 import ExportDialog from '../../containers/ExportDialog';
 import LogoutDialog from '../../containers/LogoutDialog';
@@ -27,7 +26,6 @@ const MODALS = {
   [modals.INVITE_DIALOG]: InviteDialog,
   [modals.JOIN_DIALOG]: JoinDialog,
   [modals.SELECT_TOKEN]: SelectToken,
-  [modals.UPGRADE_DIALOG]: UpgradeDialog,
   [modals.IMPORT_DIALOG]: ImportDialog,
   [modals.EXPORT_DIALOG]: ExportDialog,
   [modals.LOGOUT_DIALOG]: LogoutDialog,
