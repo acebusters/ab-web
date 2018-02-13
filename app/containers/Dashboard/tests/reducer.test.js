@@ -10,7 +10,6 @@ describe('dashboard reducer tests', () => {
       amountUnit: NTZ,
       events: null,
       investType: POWERUP,
-      investTour: false,
       isFishWarned: false,
       proxy: null,
     });

@@ -134,10 +134,6 @@ export default defineMessages({
     id: 'app.containers.Dashboard.powerDownPayoutStatus',
     defaultMessage: 'Power Down Payout',
   },
-  investTutButton: {
-    id: 'app.containers.Dashboard.investTutButton',
-    defaultMessage: 'Invest Tutorial',
-  },
   ntzUnit: {
     id: 'app.containers.Dashboard.ntzUnit',
     defaultMessage: '{amount} NTZ',

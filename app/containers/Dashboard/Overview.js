@@ -6,7 +6,6 @@ import web3Connect from '../AccountProvider/web3Connect';
 import { notifyCreate } from '../Notifications/actions';
 
 import makeSelectAccountData from '../AccountProvider/selectors';
-import { toggleInvestTour } from './actions';
 import messages from './messages';
 import { txnsToList } from './txnsToList';
 import { createDashboardTxsSelector } from './selectors';
@@ -50,7 +49,6 @@ Overview.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  toggleInvestTour,
   notifyCreate: (type, props) => dispatch(notifyCreate(type, props)),
 });
 
