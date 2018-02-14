@@ -30,22 +30,6 @@ export default defineMessages({
     id: 'app.containers.Dashboard.amountZero',
     defaultMessage: 'The amount must be greater than 0',
   },
-  send: {
-    id: 'app.containers.Dashboard.send',
-    defaultMessage: 'Send',
-  },
-  receive: {
-    id: 'app.containers.Dashboard.receive',
-    defaultMessage: 'Receive',
-  },
-  ethereum: {
-    id: 'app.containers.Dashboard.ethereum',
-    defaultMessage: 'Ethereum',
-  },
-  nutz: {
-    id: 'app.containers.Dashboard.nutz',
-    defaultMessage: 'Nutz',
-  },
   ok: {
     id: 'app.containers.Dashboard.ok',
     defaultMessage: 'Ok',
@@ -73,18 +57,6 @@ export default defineMessages({
   retryTransaction: {
     id: 'app.containers.Dashboard.retryTransaction',
     defaultMessage: 'Retry',
-  },
-  ethLimit: {
-    id: 'app.containers.Dashboard.ethLimit',
-    defaultMessage: 'Warning: account limit {limit} ETH',
-  },
-  ntzTransferTitle: {
-    id: 'app.containers.Dashboard.ntzTransferTitle',
-    defaultMessage: 'Transfer NTZ',
-  },
-  ethTransferTitle: {
-    id: 'app.containers.Dashboard.ethTransferTitle',
-    defaultMessage: 'Transfer ETH',
   },
   tableJoin: {
     id: 'app.containers.Dashboard.tableJoin',
@@ -133,17 +105,5 @@ export default defineMessages({
   powerDownPayoutStatus: {
     id: 'app.containers.Dashboard.powerDownPayoutStatus',
     defaultMessage: 'Power Down Payout',
-  },
-  ntzUnit: {
-    id: 'app.containers.Dashboard.ntzUnit',
-    defaultMessage: '{amount} NTZ',
-  },
-  abpUnit: {
-    id: 'app.containers.Dashboard.abpUnit',
-    defaultMessage: '{amount} ABP',
-  },
-  percentUnit: {
-    id: 'app.containers.Dashboard.percentUnit',
-    defaultMessage: '{amount} %',
   },
 });
