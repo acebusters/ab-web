@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import dashboardReducer from '../reducer';
 import { contractEvent, proxyEvent, proxyEvents } from '../../AccountProvider/actions';
-import { OVERVIEW, NTZ, POWERUP } from '../actions';
+import { OVERVIEW, NTZ } from '../actions';
 
 describe('dashboard reducer tests', () => {
   it('should return the default state.', () => {
@@ -9,7 +9,6 @@ describe('dashboard reducer tests', () => {
       activeTab: OVERVIEW,
       amountUnit: NTZ,
       events: null,
-      investType: POWERUP,
       isFishWarned: false,
       proxy: null,
     });

@@ -14,11 +14,9 @@ import { MODAL_DISMISS } from '../App/actions';
 import {
   SET_ACTIVE_TAB,
   SET_AMOUNT_UNIT,
-  SET_INVEST_TYPE,
   SET_FISH_WARNED,
   OVERVIEW,
   NTZ,
-  POWERUP,
 } from './actions';
 
 import { composeReducers } from '../../utils/composeReducers';
@@ -46,7 +44,6 @@ const initialState = fromJS({
   events: null,
   activeTab: OVERVIEW,
   amountUnit: NTZ,
-  investType: POWERUP,
   isFishWarned: false,
 });
 
@@ -59,9 +56,6 @@ function dashboardReducer(state = initialState, action) {
 
     case SET_AMOUNT_UNIT:
       return state.set('amountUnit', action.unit);
-
-    case SET_INVEST_TYPE:
-      return state.set('investType', action.which);
 
     case ACCOUNT_LOADED:
       if (action.payload.proxy) {
@@ -108,8 +102,7 @@ function dashboardReducer(state = initialState, action) {
               .set('failedTx', null)
               .set('events', null)
               .set('activeTab', OVERVIEW)
-              .set('amountUnit', NTZ)
-              .set('investType', POWERUP);
+              .set('amountUnit', NTZ);
           }
           return state;
         });

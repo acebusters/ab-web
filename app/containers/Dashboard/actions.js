@@ -25,11 +25,6 @@ export const setAmountUnit = (unit) => ({
   unit,
 });
 
-export const setInvestType = (which) => ({
-  type: SET_INVEST_TYPE,
-  which,
-});
-
 export const setFishWarned = () => ({
   type: SET_FISH_WARNED,
 });
