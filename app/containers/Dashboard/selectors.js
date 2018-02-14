@@ -4,11 +4,6 @@ function selectDashboard(state) {
   return state.get('dashboard');
 }
 
-export const createIsFishWarnedSelector = () => createSelector(
-  selectDashboard,
-  (dashboard) => dashboard.get('isFishWarned'),
-);
-
 export const createDashboardTxsSelector = () => createSelector(
   selectDashboard,
   (dashboard) => dashboard.get('events') && dashboard.get('events').toList().toJS(),

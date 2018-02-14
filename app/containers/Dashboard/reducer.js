@@ -11,7 +11,7 @@ import {
 
 import { MODAL_DISMISS } from '../App/actions';
 
-import { SET_ACTIVE_TAB, SET_FISH_WARNED } from './actions';
+import { SET_ACTIVE_TAB } from './actions';
 import { OVERVIEW } from './constants';
 
 import { composeReducers } from '../../utils/composeReducers';
@@ -31,14 +31,12 @@ const confParams = conf();
  *   transactionHash: string;
  *   timestamp?: number;
  *   pending?: boolean;
- *   isFishWarned: false;
  * }
  */
 const initialState = fromJS({
   proxy: null,
   events: null,
   activeTab: OVERVIEW,
-  isFishWarned: false,
 });
 
 function dashboardReducer(state = initialState, action) {
@@ -96,9 +94,6 @@ function dashboardReducer(state = initialState, action) {
           }
           return state;
         });
-
-    case SET_FISH_WARNED:
-      return state.set('isFishWarned', true);
 
     default:
       return state;

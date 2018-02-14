@@ -8,7 +8,6 @@ describe('dashboard reducer tests', () => {
     expect(dashboardReducer(undefined, {}).toJS()).toEqual({
       activeTab: OVERVIEW,
       events: null,
-      isFishWarned: false,
       proxy: null,
     });
   });
