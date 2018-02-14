@@ -1,13 +1,12 @@
 import { fromJS } from 'immutable';
 import dashboardReducer from '../reducer';
 import { contractEvent, proxyEvent, proxyEvents } from '../../AccountProvider/actions';
-import { OVERVIEW, NTZ } from '../actions';
+import { OVERVIEW } from '../actions';
 
 describe('dashboard reducer tests', () => {
   it('should return the default state.', () => {
     expect(dashboardReducer(undefined, {}).toJS()).toEqual({
       activeTab: OVERVIEW,
-      amountUnit: NTZ,
       events: null,
       isFishWarned: false,
       proxy: null,

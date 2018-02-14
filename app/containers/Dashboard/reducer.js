@@ -13,10 +13,8 @@ import { MODAL_DISMISS } from '../App/actions';
 
 import {
   SET_ACTIVE_TAB,
-  SET_AMOUNT_UNIT,
   SET_FISH_WARNED,
   OVERVIEW,
-  NTZ,
 } from './actions';
 
 import { composeReducers } from '../../utils/composeReducers';
@@ -43,7 +41,6 @@ const initialState = fromJS({
   proxy: null,
   events: null,
   activeTab: OVERVIEW,
-  amountUnit: NTZ,
   isFishWarned: false,
 });
 
@@ -53,9 +50,6 @@ function dashboardReducer(state = initialState, action) {
   switch (action.type) {
     case SET_ACTIVE_TAB:
       return state.set('activeTab', action.whichTab);
-
-    case SET_AMOUNT_UNIT:
-      return state.set('amountUnit', action.unit);
 
     case ACCOUNT_LOADED:
       if (action.payload.proxy) {
@@ -101,8 +95,7 @@ function dashboardReducer(state = initialState, action) {
               .set('proxy', null)
               .set('failedTx', null)
               .set('events', null)
-              .set('activeTab', OVERVIEW)
-              .set('amountUnit', NTZ);
+              .set('activeTab', OVERVIEW);
           }
           return state;
         });
