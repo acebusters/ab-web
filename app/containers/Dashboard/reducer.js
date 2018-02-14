@@ -11,11 +11,8 @@ import {
 
 import { MODAL_DISMISS } from '../App/actions';
 
-import {
-  SET_ACTIVE_TAB,
-  SET_FISH_WARNED,
-  OVERVIEW,
-} from './actions';
+import { SET_ACTIVE_TAB, SET_FISH_WARNED } from './actions';
+import { OVERVIEW } from './constants';
 
 import { composeReducers } from '../../utils/composeReducers';
 

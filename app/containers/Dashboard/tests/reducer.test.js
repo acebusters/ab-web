@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import dashboardReducer from '../reducer';
 import { contractEvent, proxyEvent, proxyEvents } from '../../AccountProvider/actions';
-import { OVERVIEW } from '../actions';
+import { OVERVIEW } from '../constants';
 
 describe('dashboard reducer tests', () => {
   it('should return the default state.', () => {

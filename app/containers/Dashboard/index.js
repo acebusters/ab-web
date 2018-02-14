@@ -9,7 +9,8 @@ import Container from '../../components/Container';
 import Balances from '../../components/Dashboard/Balances';
 import Tabs from '../../components/Dashboard/Tabs';
 
-import { ADVANCED, OVERVIEW, setActiveTab } from './actions';
+import { setActiveTab } from './actions';
+import { ADVANCED, OVERVIEW } from './constants';
 import messages from './messages';
 import { getActiveTab } from './selectors';
 
