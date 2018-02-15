@@ -1,7 +1,6 @@
 import { fromJS, is } from 'immutable';
 
 import {
-  ACCOUNT_LOADED,
   CONTRACT_EVENTS,
   CONTRACT_TX_SENDED,
   CONTRACT_TX_FAILED,
@@ -44,12 +43,6 @@ function dashboardReducer(state = initialState, action) {
   switch (action.type) {
     case SET_ACTIVE_TAB:
       return state.set('activeTab', action.whichTab);
-
-    case ACCOUNT_LOADED:
-      if (action.payload.signerAddr) {
-        return state.set('userAddr', action.payload.signerAddr);
-      }
-      return state;
 
     case CONTRACT_TX_SENDED:
       return addPending(
