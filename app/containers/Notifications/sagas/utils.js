@@ -8,8 +8,6 @@ import { conf } from '../../../app.config';
 
 import { notifyAdd, notifyDelete, notifyRemoving } from '../actions';
 import {
-  SELL_NTZ,
-  PURCHASE_NTZ,
   ETH_PAYOUT,
   InfoIcon,
   txPending,
@@ -61,32 +59,6 @@ export function* createNotification({ notifyProps: { amount }, notifyType }) {
       details: <FormattedMessage values={{ amount }} {...msgs.ethPayout} />,
     };
     yield* createTransactionNotifications(matchMethod('withdraw', conf().pullAddr), pendingMsg, successMsg);
-  }
-  if (notifyType === SELL_NTZ) {
-    const pendingMsg = {
-      ...txPending,
-      category: <FormattedMessage {...msgs.exchangePending} />,
-      details: <FormattedMessage {...msgs.exchangeNtzToEth} />,
-    };
-    const successMsg = {
-      ...txSuccess,
-      category: <FormattedMessage {...msgs.exchangeSuccess} />,
-      details: <FormattedMessage {...msgs.exchangeNtzToEth} />,
-    };
-    yield* createTransactionNotifications(matchMethod('sell'), pendingMsg, successMsg);
-  }
-  if (notifyType === PURCHASE_NTZ) {
-    const pendingMsg = {
-      ...txPending,
-      category: <FormattedMessage {...msgs.exchangePending} />,
-      details: <FormattedMessage {...msgs.exchangeEthToNtz} />,
-    };
-    const successMsg = {
-      ...txSuccess,
-      category: <FormattedMessage {...msgs.exchangeSuccess} />,
-      details: <FormattedMessage {...msgs.exchangeEthToNtz} />,
-    };
-    yield* createTransactionNotifications(matchMethod('purchase'), pendingMsg, successMsg);
   }
 }
 
