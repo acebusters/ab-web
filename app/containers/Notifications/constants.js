@@ -5,8 +5,6 @@ import { Icon } from 'containers/Dashboard/styles';
 import Link from '../../components/Link';
 import { conf } from '../../app.config';
 
-export const TRANSFER_NTZ = 'transfer_ntz';
-export const TRANSFER_ETH = 'transfer_eth';
 export const SELL_NTZ = 'sell_ntz';
 export const ETH_PAYOUT = 'eth_payout';
 export const PURCHASE_NTZ = 'pruchase_ntz';

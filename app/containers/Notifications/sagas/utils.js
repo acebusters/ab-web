@@ -8,8 +8,6 @@ import { conf } from '../../../app.config';
 
 import { notifyAdd, notifyDelete, notifyRemoving } from '../actions';
 import {
-  TRANSFER_ETH,
-  TRANSFER_NTZ,
   SELL_NTZ,
   PURCHASE_NTZ,
   ETH_PAYOUT,
@@ -51,32 +49,6 @@ function matchMethod(methodName, address) {
 }
 
 export function* createNotification({ notifyProps: { amount }, notifyType }) {
-  if (notifyType === TRANSFER_ETH) {
-    const pendingMsg = {
-      ...txPending,
-      category: <FormattedMessage {...msgs.transferPending} />,
-      details: <FormattedMessage values={{ amount }} {...msgs.transferEthPend} />,
-    };
-    const successMsg = {
-      ...txSuccess,
-      category: <FormattedMessage {...msgs.transferSuccess} />,
-      details: <FormattedMessage values={{ amount }} {...msgs.transferEthSuccess} />,
-    };
-    yield* createTransactionNotifications(matchMethod('forward'), pendingMsg, successMsg);
-  }
-  if (notifyType === TRANSFER_NTZ) {
-    const pendingMsg = {
-      ...txPending,
-      category: <FormattedMessage {...msgs.transferPending} />,
-      details: <FormattedMessage values={{ amount }} {...msgs.transferNtzPend} />,
-    };
-    const successMsg = {
-      ...txSuccess,
-      category: <FormattedMessage {...msgs.transferSuccess} />,
-      details: <FormattedMessage values={{ amount }} {...msgs.transferNtzSuccess} />,
-    };
-    yield* createTransactionNotifications(matchMethod('transfer'), pendingMsg, successMsg);
-  }
   if (notifyType === ETH_PAYOUT) {
     const pendingMsg = {
       ...txPending,

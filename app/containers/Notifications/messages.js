@@ -1,30 +1,6 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  transferPending: {
-    id: 'app.containers.Notifications.transferPending',
-    defaultMessage: 'Transfer Pending ',
-  },
-  transferSuccess: {
-    id: 'app.containers.Notifications.transerSuccess',
-    defaultMessage: 'Transfer Success ',
-  },
-  transferEthPend: {
-    id: 'app.containers.Notifications.transferEthPend',
-    defaultMessage: 'Sending {amount} ETH',
-  },
-  transferEthSuccess: {
-    id: 'app.containers.Notifications.transferEthSuccess',
-    defaultMessage: 'Sent {amount} ETH',
-  },
-  transferNtzPend: {
-    id: 'app.containers.Notifications.transferNtzPend',
-    defaultMessage: 'Sending {amount} NTZ',
-  },
-  transferNtzSuccess: {
-    id: 'app.containers.Notifications.transferNtzSuccess',
-    defaultMessage: 'Sent {amount} NTZ',
-  },
   exchangePending: {
     id: 'app.containers.Notifications.exchangePending',
     defaultMessage: 'Exchange Pending ',
