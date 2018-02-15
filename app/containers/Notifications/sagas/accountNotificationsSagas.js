@@ -4,18 +4,9 @@ import { delay } from 'redux-saga';
 import { makeSelectInjected } from '../../AccountProvider/selectors';
 import { getWeb3 } from '../../AccountProvider/utils';
 import { notifyDelete } from '../actions';
-import { loggedInSuccess, noWeb3Danger, noInjectedDanger, firstLogin, notLoggedIn } from '../constants';
+import { noWeb3Danger, noInjectedDanger } from '../constants';
 
-import { createTempNotification, createPersistNotification, removeNotification } from './utils';
-
-export function* authNotification({ newAuthState }) {
-  const { loggedIn, generated } = newAuthState;
-  if (loggedIn && !generated) {
-    yield* removeNotification({ txId: notLoggedIn.txId });
-    yield* removeNotification({ txId: firstLogin.txId });
-    yield* createTempNotification(loggedInSuccess);
-  }
-}
+import { createPersistNotification, removeNotification } from './utils';
 
 function selectNotification(state, txId) {
   return state.get('notifications').find((item) => item.get('txId') === txId);
@@ -47,18 +38,5 @@ export function* injectedWeb3Notification({ payload: { isLocked } }) {
 export function* injectedWeb3NotificationDismiss({ payload: injected }) {
   if (typeof injected === 'string') {
     yield put(notifyDelete(noWeb3Danger.txId));
-  }
-}
-
-export function* visitorModeNotification({ payload: { pathname = '' } }) {
-  const state = yield select();
-  const loggedIn = yield call([state, state.getIn], ['account', 'loggedIn']);
-  if (!loggedIn) {
-    const isNotificationVisible = !pathname.match(/register|login/);
-    if (isNotificationVisible) {
-      yield* createPersistNotification(notLoggedIn);
-    } else {
-      yield* removeNotification({ txId: notLoggedIn.txId });
-    }
   }
 }
