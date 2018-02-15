@@ -37,17 +37,9 @@ export default defineMessages({
     id: 'app.containers.Notifications.exchangeNtzToEth',
     defaultMessage: 'ETH for NTZ',
   },
-  exchangeNtzToAbp: {
-    id: 'app.containers.Notifications.exchangeNtzToAbp',
-    defaultMessage: 'NTZ for ABP',
-  },
   exchangeNtzToEth: {
     id: 'app.containers.Notifications.exchangeNtzToEth',
     defaultMessage: 'NTZ for ETH',
-  },
-  exchangeAbpToNtz: {
-    id: 'app.containers.Notifications.exchangeAbpToNtz',
-    defaultMessage: 'ABP for NTZ',
   },
   payoutPending: {
     id: 'app.containers.Notifications.payoutPending',

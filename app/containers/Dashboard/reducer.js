@@ -171,18 +171,6 @@ function addPending(state, { methodName, args, txHash, address }) {
         transactionHash: txHash,
       }),
     );
-  } else if (methodName === 'powerUp') {
-    return state.setIn(
-      path,
-      fromJS({
-        address: conf().pwrAddr,
-        value: args[0].toString ? args[0].toString() : args[0],
-        type: 'outcome',
-        unit: 'ntz',
-        pending: true,
-        transactionHash: txHash,
-      }),
-    );
   } else if (methodName === 'sell') {
     return state.setIn(
       path,
@@ -209,18 +197,6 @@ function hasConflict(state, newEvent) {
 function transformNutzContractEvent(state, event) {
   if (event.event === 'Transfer') {
     const isIncome = event.args.to === state.get('userAddr');
-
-    if (event.address === conf().pwrAddr) {
-      if (isIncome) { // power up
-        return makeDashboardEvent(event, {
-          address: conf().pwrAddr,
-          unit: 'abp',
-          type: 'income',
-        });
-      }
-
-      return null;
-    }
 
     return makeDashboardEvent(event, {
       address: isIncome ? event.args.from : event.args.to,

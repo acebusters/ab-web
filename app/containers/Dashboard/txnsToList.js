@@ -6,16 +6,15 @@ import BigNumber from 'bignumber.js';
 import A from '../../components/A';
 import WithLoading from '../../components/WithLoading';
 import { conf } from '../../app.config';
-import { formatEth, formatNtz, formatAbp } from '../../utils/amountFormatter';
+import { formatEth, formatNtz } from '../../utils/amountFormatter';
 
 import { Icon, TypeIcon, Error, ErrorIcon, typeIcons } from './styles';
 import messages from './messages';
 import {
   isSellEvent,
   isETHPayoutEvent,
-  isABPPayoutEvent,
-  isPurchaseStartEvent, isPurchaseEndEvent,
-  isPowerUpEvent,
+  isPurchaseStartEvent,
+  isPurchaseEndEvent,
   formatDate,
 } from './utils';
 
@@ -85,7 +84,6 @@ function formatTxAddress(address, tableAddrs, userAddr) {
 }
 
 const formatters = {
-  abp: formatAbp,
   ntz: formatNtz,
   eth: formatEth,
 };
@@ -121,22 +119,6 @@ function txDescription(event, tableAddrs, address) {
       <FormattedMessage
         key="descr"
         {...(event.type === 'income' ? messages.tableLeave : messages.tableJoin)}
-      />
-    );
-  } else if (isPowerUpEvent(event)) {
-    return 'Power Up';
-  } else if (isABPPayoutEvent(event)) {
-    return (
-      <FormattedMessage
-        key="descr"
-        {...messages.powerDownPayoutStatus}
-      />
-    );
-  } else if (event.address === confParams.pwrAddr && event.type === 'outcome') {
-    return (
-      <FormattedMessage
-        key="descr"
-        {...messages.powerUpStatus}
       />
     );
   } else if (isETHPayoutEvent(event)) {

@@ -19,23 +19,12 @@ export function isETHPayoutEvent(event) {
   );
 }
 
-export function isABPPayoutEvent(event) {
-  return (
-    event.address === confParams.pwrAddr
-    && event.type === 'income'
-  );
-}
-
 export function isPurchaseEndEvent(event, address) {
   return event.address === address && event.unit === 'ntz';
 }
 
 export function isPurchaseStartEvent(event) {
   return event.address === confParams.ntzAddr && event.unit === 'eth';
-}
-
-export function isPowerUpEvent(event) {
-  return event.address === confParams.pwrAddr && event.unit === 'abp' && event.type === 'income';
 }
 
 export function formatDate(timestamp) {

@@ -4,7 +4,6 @@ import { delay } from 'redux-saga';
 import { put, take, race } from 'redux-saga/effects';
 
 import { CONTRACT_TX_SENDED, CONTRACT_TX_MINED, CONTRACT_TX_FAILED, CONTRACT_TX_NOT_EXISTS } from '../../AccountProvider/actions';
-import { POWERUP, POWERDOWN } from '../../Dashboard/constants';
 import { conf } from '../../../app.config';
 
 import { notifyAdd, notifyDelete, notifyRemoving } from '../actions';
@@ -103,32 +102,6 @@ export function* createNotification({ notifyProps: { amount }, notifyType }) {
       details: <FormattedMessage {...msgs.exchangeNtzToEth} />,
     };
     yield* createTransactionNotifications(matchMethod('sell'), pendingMsg, successMsg);
-  }
-  if (notifyType === POWERUP) {
-    const pendingMsg = {
-      ...txPending,
-      category: <FormattedMessage {...msgs.exchangePending} />,
-      details: <FormattedMessage {...msgs.exchangeNtzToAbp} />,
-    };
-    const successMsg = {
-      ...txSuccess,
-      category: <FormattedMessage {...msgs.exchangeSuccess} />,
-      details: <FormattedMessage {...msgs.exchangeNtzToAbp} />,
-    };
-    yield* createTransactionNotifications(matchMethod('powerUp'), pendingMsg, successMsg);
-  }
-  if (notifyType === POWERDOWN) {
-    const pendingMsg = {
-      ...txPending,
-      category: <FormattedMessage {...msgs.exchangePending} />,
-      details: <FormattedMessage {...msgs.exchangeAbpToNtz} />,
-    };
-    const successMsg = {
-      ...txSuccess,
-      category: <FormattedMessage {...msgs.exchangeSuccess} />,
-      details: <FormattedMessage {...msgs.exchangeAbpToNtz} />,
-    };
-    yield* createTransactionNotifications(matchMethod('transfer'), pendingMsg, successMsg);
   }
   if (notifyType === PURCHASE_NTZ) {
     const pendingMsg = {
