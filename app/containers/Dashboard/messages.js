@@ -74,14 +74,6 @@ export default defineMessages({
     id: 'app.containers.Dashboard.ethPayoutStatus',
     defaultMessage: 'ETH Pay-out',
   },
-  purchaseStart: {
-    id: 'app.containers.Dashboard.purchaseStart',
-    defaultMessage: 'Purchase start',
-  },
-  purchaseEnd: {
-    id: 'app.containers.Dashboard.purchaseEnd',
-    defaultMessage: 'Purchase end',
-  },
   acebusters: {
     id: 'app.containers.Dashboard.acebusters',
     defaultMessage: 'Acebusters',

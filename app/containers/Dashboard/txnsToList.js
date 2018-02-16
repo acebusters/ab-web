@@ -13,8 +13,6 @@ import messages from './messages';
 import {
   isSellEvent,
   isETHPayoutEvent,
-  isPurchaseStartEvent,
-  isPurchaseEndEvent,
   formatDate,
 } from './utils';
 
@@ -113,7 +111,7 @@ function infoIcon(event) {
   );
 }
 
-function txDescription(event, tableAddrs, address) {
+function txDescription(event, tableAddrs) {
   if (tableAddrs.indexOf(event.address) > -1) {
     return (
       <FormattedMessage
@@ -125,10 +123,6 @@ function txDescription(event, tableAddrs, address) {
     return <FormattedMessage key="descr" {...messages.ethPayoutStatus} />;
   } else if (isSellEvent(event)) {
     return <FormattedMessage key="descr" {...messages.sellStatus} />;
-  } else if (isPurchaseEndEvent(event, address)) {
-    return <FormattedMessage key="descr" {...messages.purchaseEnd} />;
-  } else if (isPurchaseStartEvent(event)) {
-    return <FormattedMessage key="descr" {...messages.purchaseStart} />;
   }
 
   return <FormattedMessage key="descr" {...messages.transferStatus} />;
