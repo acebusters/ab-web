@@ -1,19 +1,11 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { delay } from 'redux-saga';
 import { put, take, race } from 'redux-saga/effects';
 
 import { CONTRACT_TX_SENDED, CONTRACT_TX_MINED, CONTRACT_TX_FAILED, CONTRACT_TX_NOT_EXISTS } from '../../AccountProvider/actions';
-import { conf } from '../../../app.config';
 
 import { notifyAdd, notifyDelete, notifyRemoving } from '../actions';
-import {
-  ETH_PAYOUT,
-  InfoIcon,
-  txPending,
-  txSuccess,
-} from '../constants';
-import msgs from '../messages';
+import { InfoIcon } from '../constants';
 
 export function* createTempNotification(note) {
   yield put(notifyAdd(note));
@@ -34,32 +26,6 @@ export function* removeNotification({ txId }) {
   // remove element after animation finishes
   yield delay(400);
   yield put(notifyDelete(txId));
-}
-
-function matchMethod(methodName, address) {
-  return ({ payload }) => {
-    if (address) {
-      return payload.methodName === methodName && payload.address === address;
-    }
-
-    return payload.methodName === methodName;
-  };
-}
-
-export function* createNotification({ notifyProps: { amount }, notifyType }) {
-  if (notifyType === ETH_PAYOUT) {
-    const pendingMsg = {
-      ...txPending,
-      category: <FormattedMessage {...msgs.payoutPending} />,
-      details: <FormattedMessage values={{ amount }} {...msgs.ethPayout} />,
-    };
-    const successMsg = {
-      ...txSuccess,
-      category: <FormattedMessage {...msgs.payoutSuccess} />,
-      details: <FormattedMessage values={{ amount }} {...msgs.ethPayout} />,
-    };
-    yield* createTransactionNotifications(matchMethod('withdraw', conf().pullAddr), pendingMsg, successMsg);
-  }
 }
 
 export function* createTransactionNotifications(isNeededTx, pendingNotification, successNotification) {

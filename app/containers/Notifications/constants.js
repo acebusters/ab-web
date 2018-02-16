@@ -70,17 +70,3 @@ export const noConnectionDanger = {
   date: new Date(),
   type: 'danger',
 };
-
-export const txPending = {
-  removing: false,
-  dismissable: false,
-  date: new Date(),
-  type: 'info',
-};
-
-export const txSuccess = {
-  removing: false,
-  dismissable: true,
-  date: new Date(),
-  type: 'success',
-};
