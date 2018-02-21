@@ -10,11 +10,7 @@ import { formatEth, formatNtz } from '../../utils/amountFormatter';
 
 import { Icon, TypeIcon, Error, ErrorIcon, typeIcons } from './styles';
 import messages from './messages';
-import {
-  isSellEvent,
-  isETHPayoutEvent,
-  formatDate,
-} from './utils';
+import { formatDate } from './utils';
 
 const confParams = conf();
 
@@ -111,6 +107,7 @@ function infoIcon(event) {
   );
 }
 
+// eslint-disable-next-line consistent-return
 function txDescription(event, tableAddrs) {
   if (tableAddrs.indexOf(event.address) > -1) {
     return (
@@ -119,11 +116,5 @@ function txDescription(event, tableAddrs) {
         {...(event.type === 'income' ? messages.tableLeave : messages.tableJoin)}
       />
     );
-  } else if (isETHPayoutEvent(event)) {
-    return <FormattedMessage key="descr" {...messages.ethPayoutStatus} />;
-  } else if (isSellEvent(event)) {
-    return <FormattedMessage key="descr" {...messages.sellStatus} />;
   }
-
-  return <FormattedMessage key="descr" {...messages.transferStatus} />;
 }

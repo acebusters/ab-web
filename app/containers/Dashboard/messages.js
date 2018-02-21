@@ -66,14 +66,6 @@ export default defineMessages({
     id: 'app.containers.Dashboard.tableLeave',
     defaultMessage: 'Table leave',
   },
-  sellStatus: {
-    id: 'app.containers.Dashboard.sellStatus',
-    defaultMessage: 'Sell',
-  },
-  ethPayoutStatus: {
-    id: 'app.containers.Dashboard.ethPayoutStatus',
-    defaultMessage: 'ETH Pay-out',
-  },
   acebusters: {
     id: 'app.containers.Dashboard.acebusters',
     defaultMessage: 'Acebusters',
@@ -85,9 +77,5 @@ export default defineMessages({
   tableAddress: {
     id: 'app.containers.Dashboard.tableAddress',
     defaultMessage: 'Table {address}',
-  },
-  transferStatus: {
-    id: 'app.containers.Dashboard.transferStatus',
-    defaultMessage: 'Transfer',
   },
 });

@@ -1,23 +1,5 @@
 import React from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import { conf } from '../../app.config';
-const confParams = conf();
-
-export function isSellEvent(event) {
-  return (
-    event.address === confParams.ntzAddr &&
-    event.unit === 'ntz' &&
-    event.type === 'outcome'
-  );
-}
-
-export function isETHPayoutEvent(event) {
-  return (
-    event.address === confParams.pullAddr &&
-    event.unit === 'eth' &&
-    event.type === 'income'
-  );
-}
 
 export function formatDate(timestamp) {
   if (!timestamp) {
