@@ -8,7 +8,6 @@ import DashboardFrame from './components/Frames/Dashboard';
 import { getAsyncInjectors } from './utils/asyncInjectors';
 import { accountSaga } from './containers/AccountProvider/sagas';
 import { tableStateSaga } from './containers/Table/sagas';
-import { selectAccount } from './containers/AccountProvider/selectors';
 import { notificationsSaga } from './containers/Notifications/sagas';
 import { actionBarSaga } from './containers/ActionBar/sagas';
 import { tableMenuSaga } from './containers/TableMenu/sagas';
@@ -25,21 +24,6 @@ const loadModule = (cb) => (componentModule) => {
 export default function createRoutes(store) {
   // create reusable async injectors using getAsyncInjectors factory
   const { injectReducer, injectSagas } = getAsyncInjectors(store);
-
-  /**
-  * Checks authentication status on route change
-  * @param  {object}   nextState The state we want to change into when we change routes
-  * @param  {function} replace Function provided by React Router to replace the location
-  */
-  const checkAuth = (nextState, replace) => {
-    const { loggedIn } = selectAccount(store.getState()).toJS();
-    if (!loggedIn) {
-      replace({
-        pathname: '/login',
-        state: { nextPathname: nextState.location.pathname },
-      });
-    }
-  };
 
   injectSagas([
     accountSaga,
@@ -94,7 +78,6 @@ export default function createRoutes(store) {
       },
     },
     {
-      onEnter: checkAuth,
       path: 'dashboard',
       name: 'dashboard',
       indexRoute: {
