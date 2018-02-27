@@ -112,24 +112,6 @@ export default function createRoutes(store) {
       childRoutes: dashboard,
     },
     {
-      path: 'generate/:confCode',
-      name: 'generate',
-      getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          import('containers/GeneratePage/sagas'),
-          import('containers/GeneratePage'),
-        ]);
-        const renderRoute = loadModule(cb);
-
-        importModules.then(([sagas, component]) => {
-          injectSagas(sagas.default);
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
-      },
-    },
-    {
       path: 'confirm',
       name: 'confirmPage',
       getComponent(location, cb) {
