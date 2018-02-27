@@ -9,10 +9,6 @@ function uuid(a) {
 };
 /* eslint-enable */
 
-export function login(email) {
-  return request('post', 'query', { email });
-}
-
 export function unlock(unlockRequest) {
   return request('get', `unlock/${encodeURIComponent(unlockRequest)}`);
 }
