@@ -130,22 +130,6 @@ export default function createRoutes(store) {
       },
     },
     {
-      path: 'reset',
-      name: 'reset',
-      getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          import('containers/ResetPage'),
-        ]);
-        const renderRoute = loadModule(cb);
-
-        importModules.then(([component]) => {
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
-      },
-    },
-    {
       path: 'generate/:confCode',
       name: 'generate',
       getComponent(nextState, cb) {

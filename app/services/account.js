@@ -51,14 +51,6 @@ export function addWallet(sessionReceipt, wallet, proxyAddr) {
   });
 }
 
-export function reset(email, recapResponse, origin) {
-  return request('post', 'reset', {
-    email,
-    recapResponse,
-    origin,
-  });
-}
-
 export function resetWallet(sessionReceipt, wallet) {
   return request('put', 'wallet', {
     sessionReceipt,
