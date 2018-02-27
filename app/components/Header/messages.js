@@ -13,8 +13,4 @@ export default defineMessages({
     id: 'boilerplate.components.Header.logout',
     defaultMessage: 'Logout',
   },
-  register: {
-    id: 'boilerplate.components.Header.register',
-    defaultMessage: 'Register',
-  },
 });

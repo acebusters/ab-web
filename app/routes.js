@@ -112,24 +112,6 @@ export default function createRoutes(store) {
       childRoutes: dashboard,
     },
     {
-      path: 'register(/ref/:refCode)',
-      name: 'register',
-      getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          import('containers/RegisterPage/sagas'),
-          import('containers/RegisterPage'),
-        ]);
-        const renderRoute = loadModule(cb);
-
-        importModules.then(([sagas, component]) => {
-          injectSagas(sagas.default);
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
-      },
-    },
-    {
       path: 'generate/:confCode',
       name: 'generate',
       getComponent(nextState, cb) {

@@ -17,16 +17,6 @@ export function checkReferral(code) {
   return request('get', code ? `referral/${encodeURIComponent(code)}` : 'referral/');
 }
 
-export function register(email, recapResponse, origin, refCode) {
-  const accountId = uuid();
-  return request('post', `account/${accountId}`, {
-    email,
-    recapResponse,
-    origin,
-    refCode,
-  });
-}
-
 export function resendEmail(email, origin) {
   return request('post', 'resend', { email, origin });
 }
