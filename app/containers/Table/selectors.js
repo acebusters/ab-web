@@ -203,12 +203,12 @@ export const makePrevHandSelector = () => createSelector(
 );
 
 export const makeSbSelector = () => createSelector(
-  [makeTableDataSelector()],
-  (data) => {
-    if (!data || typeof data.get('smallBlind') === 'undefined') {
+  [handSelector],
+  (hand) => {
+    if (!hand || typeof hand.get('sb') === 'undefined') {
       return null;
     }
-    return data.get('smallBlind');
+    return hand.get('sb');
   }
 );
 
