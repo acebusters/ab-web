@@ -10,12 +10,9 @@ import { fetchTableState, fetchTables } from '../../services/tableService';
 import { ABI_TABLE } from '../../app.config';
 
 async function getTableData(table, action) {
-  const [lineup, sb] = await Promise.all([
-    table.getLineup.callPromise(),
-    table.smallBlind.callPromise(),
-  ]);
+  const lineup = await table.getLineup.callPromise();
 
-  action(table.address, lineup, sb);
+  action(table.address, lineup);
 }
 
 const getTableHand = (tableAddr, action) => fetchTableState(tableAddr).then((rsp) => action(tableAddr, rsp));
