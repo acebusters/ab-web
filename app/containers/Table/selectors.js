@@ -220,8 +220,18 @@ export const makeSbSelector = () => createSelector(
   }
 );
 
+export const makeContractSbSelector = () => createSelector(
+  [tableStateSelector],
+  (table) => {
+    if (!table || !table.hasIn(['data', 'smallBlind'])) {
+      return null;
+    }
+    return table.getIn(['data', 'smallBlind']);
+  }
+);
+
 export const makeTableStakesSelector = () => createSelector(
-  [makeSbSelector()],
+  [makeContractSbSelector()],
   (sb) => ({
     sb,
     min: sb * 40,
