@@ -35,7 +35,7 @@ class SeatComponent extends React.Component {
       blindLevelDuration,
     } = this.props;
     const now = Math.round(Date.now() / 1000);
-    const ableToJoin = started === 0 || (now - started) <= blindLevelDuration;
+    const ableToJoin = !started || (now - started) <= blindLevelDuration;
     if (open) {
       if ((ableToJoin && myPos === undefined && !myPending) || pending || reserved) {
         if (pending) {
